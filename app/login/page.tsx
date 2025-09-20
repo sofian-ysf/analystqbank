@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const message = searchParams.get("message");
@@ -215,7 +215,7 @@ export default function Login() {
           </div>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Don't have an account?</span>{" "}
+            <span className="text-gray-600">Don&apos;t have an account?</span>{" "}
             <Link href="/signup" className="font-medium text-gray-900 hover:underline">
               Sign up for free
             </Link>
@@ -223,5 +223,13 @@ export default function Login() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center"><div className="text-gray-600">Loading...</div></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }

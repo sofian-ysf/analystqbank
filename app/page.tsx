@@ -191,7 +191,7 @@ export default function Home() {
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600">
-              Join thousands of finance professionals who've secured their certification with our comprehensive question bank and proven study system.
+              Join thousands of finance professionals who&apos;ve secured their certification with our comprehensive question bank and proven study system.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -327,7 +327,7 @@ export default function Home() {
                     <span className="text-sm text-gray-600">2 days ago</span>
                   </div>
                   <p className="mb-2 font-semibold text-gray-900">Michael C. - Passed CFA Level 1</p>
-                  <p className="text-sm text-gray-600">"The question bank was exactly like the real exam. Scored in the 90th percentile thanks to this platform!"</p>
+                  <p className="text-sm text-gray-600">&ldquo;The question bank was exactly like the real exam. Scored in the 90th percentile thanks to this platform!&rdquo;</p>
                 </div>
 
                 <div className="rounded-lg bg-white p-4">
@@ -340,7 +340,7 @@ export default function Home() {
                     <span className="text-sm text-gray-600">1 week ago</span>
                   </div>
                   <p className="mb-2 font-semibold text-gray-900">Jennifer L. - FRM Part 1 Success</p>
-                  <p className="text-sm text-gray-600">"Failed my first attempt. Used this for 3 months and passed with confidence!"</p>
+                  <p className="text-sm text-gray-600">&ldquo;Failed my first attempt. Used this for 3 months and passed with confidence!&rdquo;</p>
                 </div>
 
                 <div className="rounded-lg bg-white p-4">
@@ -353,7 +353,7 @@ export default function Home() {
                     <span className="text-sm text-gray-600">2 weeks ago</span>
                   </div>
                   <p className="mb-2 font-semibold text-gray-900">David K. - CFA Level 2 Pass</p>
-                  <p className="text-sm text-gray-600">"The mock exams were harder than the real thing - exactly what I needed!"</p>
+                  <p className="text-sm text-gray-600">&ldquo;The mock exams were harder than the real thing - exactly what I needed!&rdquo;</p>
                 </div>
               </div>
             </div>
@@ -581,7 +581,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="mb-4 text-gray-600">
-                "I failed CFA Level 1 on my first attempt scoring below the MPS. After using this platform for 3 months, I passed with scores well above the 90th percentile! The detailed explanations really helped me understand the concepts."
+                &ldquo;I failed CFA Level 1 on my first attempt scoring below the MPS. After using this platform for 3 months, I passed with scores well above the 90th percentile! The detailed explanations really helped me understand the concepts.&rdquo;
               </p>
               <div className="border-t pt-4">
                 <p className="font-semibold text-gray-900">Rachel Thompson</p>
@@ -596,7 +596,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="mb-4 text-gray-600">
-                "The FRM mock exams were incredibly accurate. The quantitative questions were especially helpful - exactly like the real thing! Passed both parts on my first attempt."
+                &ldquo;The FRM mock exams were incredibly accurate. The quantitative questions were especially helpful - exactly like the real thing! Passed both parts on my first attempt.&rdquo;
               </p>
               <div className="border-t pt-4">
                 <p className="font-semibold text-gray-900">James Chen</p>
@@ -611,7 +611,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="mb-4 text-gray-600">
-                "Worth every penny! The performance tracking helped me focus on Ethics and Fixed Income. Went from failing mocks to passing CFA Level 2 comfortably. The study plan kept me on track."
+                &ldquo;Worth every penny! The performance tracking helped me focus on Ethics and Fixed Income. Went from failing mocks to passing CFA Level 2 comfortably. The study plan kept me on track.&rdquo;
               </p>
               <div className="border-t pt-4">
                 <p className="font-semibold text-gray-900">Sophie Martinez</p>
@@ -644,13 +644,13 @@ export default function Home() {
 
             <details className="group rounded-lg border border-gray-200 bg-white p-6">
               <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                What if I don't pass after using your platform?
+                What if I don&apos;t pass after using your platform?
                 <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </summary>
               <p className="mt-4 text-gray-600">
-                We offer a 100% money-back guarantee. If you complete at least 80% of our question bank and all mock exams but don't pass your finance certification exam, we'll refund your full purchase price. Additionally, you'll keep access to help you prepare for your retake at no extra cost.
+                We offer a 100% money-back guarantee. If you complete at least 80% of our question bank and all mock exams but don&apos;t pass your finance certification exam, we&apos;ll refund your full purchase price. Additionally, you&apos;ll keep access to help you prepare for your retake at no extra cost.
               </p>
             </details>
 

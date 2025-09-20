@@ -90,7 +90,7 @@ export default function Dashboard() {
             Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
           </h1>
           <p className="text-gray-200 mb-6">
-            Continue your journey to exam success. You're making great progress!
+            Continue your journey to exam success. You&apos;re making great progress!
           </p>
           <div className="flex gap-4">
             <Link
