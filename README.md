@@ -1,3 +1,16 @@
+# Finance Exam Prep - CFA Study Platform
+
+This is a comprehensive CFA exam preparation platform built with [Next.js](https://nextjs.org) and Supabase.
+
+## Features
+
+- 📚 Question Bank with 8 CFA topic categories
+- 🔬 Research Hubs with study materials
+- 📊 Progress tracking and achievements
+- ⚙️ Exam date planning and settings
+- 🔔 Discord notifications for new signups
+- 👤 User profiles and analytics
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
