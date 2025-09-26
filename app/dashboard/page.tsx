@@ -69,15 +69,34 @@ export default function Dashboard() {
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
-                {user?.email}
-              </span>
-              <button
-                onClick={handleSignOut}
+              <Link
+                href="/settings"
                 className="text-sm font-medium text-gray-700 hover:text-gray-900 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50"
               >
-                Sign Out
-              </button>
+                Settings
+              </Link>
+              <div className="relative group">
+                <button className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                  <span className="mr-2">{user?.email}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    Profile
+                  </Link>
+                  <Link href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                    Settings
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -86,24 +105,41 @@ export default function Dashboard() {
       {/* Welcome Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl p-8 text-white">
-          <h1 className="text-3xl font-bold mb-2">
-            Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
-          </h1>
-          <p className="text-gray-200 mb-6">
-            Continue your journey to exam success. You&apos;re making great progress!
-          </p>
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">
+                Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
+              </h1>
+              <p className="text-gray-200">
+                Continue your journey to exam success. You&apos;re making great progress!
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-gray-200 text-sm">Next Exam Date</p>
+              <p className="text-white font-bold text-lg">Not Set</p>
+              <Link href="/settings" className="text-gray-300 hover:text-white text-sm underline">
+                Set exam date
+              </Link>
+            </div>
+          </div>
           <div className="flex gap-4">
             <Link
-              href="/practice"
+              href="/question-bank"
               className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
             >
-              Start Practice Session
+              Question Bank
+            </Link>
+            <Link
+              href="/research-hubs"
+              className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-gray-900 transition-colors"
+            >
+              Research Hubs
             </Link>
             <Link
               href="/mock-exams"
               className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-gray-900 transition-colors"
             >
-              Take Mock Exam
+              Mock Exam
             </Link>
           </div>
         </div>

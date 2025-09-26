@@ -21,18 +21,24 @@ function LoginForm() {
     setError("");
     setLoading(true);
 
+    console.log("Attempting to sign in with:", email);
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
+    console.log("Sign in response:", { data, error });
+
     if (error) {
+      console.error("Sign in error:", error);
       setError(error.message);
       setLoading(false);
       return;
     }
 
     if (data?.user) {
+      console.log("Sign in successful, redirecting to dashboard");
       router.push("/dashboard");
       router.refresh();
     }

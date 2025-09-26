@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase";
 
 export default function SignUp() {
   const router = useRouter();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -34,7 +35,10 @@ export default function SignUp() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `http://192.0.0.2:3002/auth/callback`,
+        data: {
+          full_name: fullName || email.split('@')[0]
+        }
       },
     });
 
@@ -45,6 +49,23 @@ export default function SignUp() {
     }
 
     if (data?.user) {
+      // Send Discord notification
+      try {
+        await fetch('/api/notify-discord', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            type: 'new_user',
+          }),
+        });
+      } catch (notificationError) {
+        console.error('Failed to send Discord notification:', notificationError);
+        // Don't block the signup process if notification fails
+      }
+
       router.push("/login?message=Check your email to confirm your account");
     }
 
@@ -75,6 +96,26 @@ export default function SignUp() {
                 {error}
               </div>
             )}
+
+            <div>
+              <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Full Name
+              </label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                autoComplete="name"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-900 focus:border-gray-900"
+                placeholder="John Doe"
+              />
+            </div>
 
             <div>
               <label
