@@ -72,7 +72,7 @@ export default function Settings() {
         setMessage("Settings saved successfully!");
         setTimeout(() => setMessage(""), 3000);
       }
-    } catch (error) {
+    } catch {
       setMessage("An error occurred while saving settings.");
     }
 
