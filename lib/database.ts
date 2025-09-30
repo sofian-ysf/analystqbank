@@ -44,6 +44,7 @@ export interface StudySession {
   duration_minutes: number;
   score_percentage?: number;
   session_data?: Record<string, unknown>;
+  created_at?: string;
 }
 
 export interface UserAchievement {

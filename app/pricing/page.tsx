@@ -181,7 +181,7 @@ export default function Pricing() {
                 </div>
 
                 <div className="mt-8">
-                  <h4 className="font-semibold text-gray-900 mb-4">What's included:</h4>
+                  <h4 className="font-semibold text-gray-900 mb-4">What&apos;s included:</h4>
                   <ul className="space-y-3">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start">
@@ -235,7 +235,7 @@ export default function Pricing() {
                 Do you offer refunds?
               </h3>
               <p className="text-gray-600">
-                Yes, we offer a 30-day money-back guarantee. If you're not satisfied, we'll provide a full refund.
+                Yes, we offer a 30-day money-back guarantee. If you&apos;re not satisfied, we&apos;ll provide a full refund.
               </p>
             </div>
 

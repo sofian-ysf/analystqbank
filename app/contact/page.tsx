@@ -142,7 +142,7 @@ export default function Contact() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            Have questions about our platform? Need help with your studies? We're here to support your CFA journey.
+            Have questions about our platform? Need help with your studies? We&apos;re here to support your CFA journey.
           </p>
         </div>
       </section>
@@ -181,7 +181,7 @@ export default function Contact() {
               Send Us a Message
             </h2>
             <p className="text-xl text-gray-600">
-              Fill out the form below and we'll get back to you as soon as possible.
+              Fill out the form below and we&apos;ll get back to you as soon as possible.
             </p>
           </div>
 

@@ -107,7 +107,7 @@ export default function About() {
             About Finance Exam Prep
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            We're on a mission to make CFA exam preparation more accessible, effective, and successful for aspiring finance professionals worldwide.
+            We&apos;re on a mission to make CFA exam preparation more accessible, effective, and successful for aspiring finance professionals worldwide.
           </p>
         </div>
       </section>
@@ -124,7 +124,7 @@ export default function About() {
                 At Finance Exam Prep, we believe that success in the CFA program should be determined by dedication and hard work, not by access to expensive preparation materials.
               </p>
               <p className="text-lg text-gray-600 mb-6">
-                We've created a comprehensive, affordable platform that combines expert content, innovative technology, and proven teaching methods to help candidates achieve their goals.
+                We&apos;ve created a comprehensive, affordable platform that combines expert content, innovative technology, and proven teaching methods to help candidates achieve their goals.
               </p>
               <p className="text-lg text-gray-600">
                 Our platform has helped thousands of candidates pass their CFA exams and advance their careers in finance.

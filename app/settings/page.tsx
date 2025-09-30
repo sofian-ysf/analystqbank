@@ -258,7 +258,7 @@ export default function Settings() {
                 <select
                   id="examLevel"
                   value={examLevel}
-                  onChange={(e) => setExamLevel(e.target.value)}
+                  onChange={(e) => setExamLevel(e.target.value as 'Level I' | 'Level II' | 'Level III')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
                   <option value="Level I">Level I</option>

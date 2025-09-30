@@ -120,7 +120,7 @@ export default function Features() {
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
             Everything you need to pass your CFA exam in one integrated platform.
-            From practice questions to mock exams, we've got you covered.
+            From practice questions to mock exams, we&apos;ve got you covered.
           </p>
           <Link href="/signup" className="bg-white text-gray-900 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
             Start Your Preparation
