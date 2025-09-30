@@ -18,10 +18,64 @@ interface Category {
 
 const categories: Category[] = [
   {
+    id: "ethical-professional-standards",
+    name: "Ethical and Professional Standards",
+    description: "CFA Institute Code of Ethics, Standards of Professional Conduct, and GIPS",
+    questionCount: 320, // ~18% of 1800 total questions
+    completedCount: 0,
+    icon: "⚖️",
+    color: "bg-yellow-500"
+  },
+  {
+    id: "financial-statement-analysis",
+    name: "Financial Statement Analysis",
+    description: "Financial statements, ratios, IFRS, U.S. GAAP, and accounting methods",
+    questionCount: 230, // ~13% of 1800 total questions
+    completedCount: 0,
+    icon: "📋",
+    color: "bg-purple-500"
+  },
+  {
+    id: "equity-investments",
+    name: "Equity Investments",
+    description: "Equity securities, market organization, efficiency, and valuation models",
+    questionCount: 230, // ~13% of 1800 total questions
+    completedCount: 0,
+    icon: "📈",
+    color: "bg-red-500"
+  },
+  {
+    id: "fixed-income",
+    name: "Fixed Income",
+    description: "Bonds, fixed-income securities, valuation, yields, duration, and credit risk",
+    questionCount: 230, // ~13% of 1800 total questions
+    completedCount: 0,
+    icon: "🏦",
+    color: "bg-indigo-500"
+  },
+  {
+    id: "portfolio-management",
+    name: "Portfolio Management",
+    description: "Portfolio concepts, risk and return, behavioral biases, and risk management",
+    questionCount: 180, // ~10% of 1800 total questions
+    completedCount: 0,
+    icon: "💼",
+    color: "bg-teal-500"
+  },
+  {
+    id: "alternative-investments",
+    name: "Alternative Investments",
+    description: "Private equity, hedge funds, real estate, commodities, and portfolio role",
+    questionCount: 162, // ~9% of 1800 total questions
+    completedCount: 0,
+    icon: "🏗️",
+    color: "bg-orange-500"
+  },
+  {
     id: "quantitative-methods",
     name: "Quantitative Methods",
-    description: "Statistical concepts, probability, and hypothesis testing",
-    questionCount: 150,
+    description: "Time value of money, statistics, probability, hypothesis testing, regression",
+    questionCount: 140, // ~8% of 1800 total questions
     completedCount: 0,
     icon: "📊",
     color: "bg-blue-500"
@@ -29,65 +83,29 @@ const categories: Category[] = [
   {
     id: "economics",
     name: "Economics",
-    description: "Microeconomics, macroeconomics, and international trade",
-    questionCount: 120,
+    description: "Microeconomics, macroeconomics, business cycles, monetary and fiscal policy",
+    questionCount: 140, // ~8% of 1800 total questions
     completedCount: 0,
-    icon: "📈",
+    icon: "🌍",
     color: "bg-green-500"
   },
   {
-    id: "financial-reporting",
-    name: "Financial Reporting & Analysis",
-    description: "Financial statements, ratios, and accounting principles",
-    questionCount: 200,
+    id: "corporate-issuers",
+    name: "Corporate Issuers",
+    description: "Corporate governance, working capital, capital investments, and capital structure",
+    questionCount: 140, // ~8% of 1800 total questions
     completedCount: 0,
-    icon: "📋",
-    color: "bg-purple-500"
-  },
-  {
-    id: "ethics",
-    name: "Ethics & Professional Standards",
-    description: "CFA Institute Code of Ethics and Standards of Practice",
-    questionCount: 80,
-    completedCount: 0,
-    icon: "⚖️",
-    color: "bg-yellow-500"
-  },
-  {
-    id: "fixed-income",
-    name: "Fixed Income",
-    description: "Bonds, yields, duration, and fixed income analytics",
-    questionCount: 140,
-    completedCount: 0,
-    icon: "🏦",
-    color: "bg-indigo-500"
-  },
-  {
-    id: "equity",
-    name: "Equity Investments",
-    description: "Equity markets, valuation, and equity portfolio management",
-    questionCount: 160,
-    completedCount: 0,
-    icon: "📊",
-    color: "bg-red-500"
+    icon: "🏢",
+    color: "bg-gray-500"
   },
   {
     id: "derivatives",
     name: "Derivatives",
-    description: "Options, futures, forwards, and swaps",
-    questionCount: 100,
+    description: "Forwards, futures, swaps, options, and arbitrage concepts",
+    questionCount: 108, // ~6% of 1800 total questions
     completedCount: 0,
     icon: "🔄",
     color: "bg-pink-500"
-  },
-  {
-    id: "portfolio-management",
-    name: "Portfolio Management",
-    description: "Asset allocation, risk management, and performance evaluation",
-    questionCount: 130,
-    completedCount: 0,
-    icon: "💼",
-    color: "bg-teal-500"
   }
 ];
 
@@ -142,7 +160,7 @@ export default function QuestionBank() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link href="/dashboard" className="text-xl font-bold text-gray-900">
-                Finance Exam Prep
+                CFA Level 1 Prep
               </Link>
               <nav className="ml-10 flex space-x-8">
                 <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
@@ -173,9 +191,9 @@ export default function QuestionBank() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Question Bank</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">CFA Level 1 Question Bank</h1>
           <p className="text-gray-600">
-            Select categories to practice questions or access research materials. Track your progress across all topics.
+            Practice questions across all 10 CFA Level 1 topic areas. Question distribution follows official exam weightings: 180 total questions with 90 per session.
           </p>
         </div>
 

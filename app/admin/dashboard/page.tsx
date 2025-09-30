@@ -266,7 +266,7 @@ export default function AdminDashboard() {
                       value={questionData.topic}
                       onChange={(e) => setQuestionData({ ...questionData, topic: e.target.value })}
                       className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-                      placeholder="e.g., Financial Reporting and Analysis"
+                      placeholder="e.g., Ethical and Professional Standards"
                       required
                     />
                   </div>

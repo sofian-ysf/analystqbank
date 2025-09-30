@@ -31,71 +31,70 @@ export default function MockExams() {
       id: 1,
       title: "CFA Level I - Practice Exam 1",
       level: "Level I",
-      duration: "6 hours",
+      duration: "4.5 hours",
       questions: 180,
-      topics: ["Ethics", "Quantitative Methods", "Economics", "Financial Reporting"],
+      sessions: "2 sessions (90 questions each)",
+      topics: ["Ethics (18%)", "Financial Statement Analysis (13%)", "Quantitative Methods (8%)", "Economics (8%)"],
       difficulty: "Beginner",
       completed: false,
-      score: null
+      score: null,
+      description: "Computer-based exam format with multiple-choice questions only"
     },
     {
       id: 2,
       title: "CFA Level I - Practice Exam 2",
       level: "Level I",
-      duration: "6 hours",
+      duration: "4.5 hours",
       questions: 180,
-      topics: ["Corporate Finance", "Portfolio Management", "Equity Investments"],
+      sessions: "2 sessions (90 questions each)",
+      topics: ["Equity Investments (13%)", "Fixed Income (13%)", "Corporate Issuers (8%)", "Portfolio Management (10%)"],
       difficulty: "Intermediate",
       completed: true,
-      score: 78
+      score: 78,
+      description: "Focus on investment analysis and portfolio management topics"
     },
     {
       id: 3,
       title: "CFA Level I - Mock Exam (Full)",
       level: "Level I",
-      duration: "6 hours",
+      duration: "4.5 hours",
       questions: 180,
-      topics: ["All Topics Covered"],
+      sessions: "2 sessions (90 questions each)",
+      topics: ["All 10 Topic Areas Covered"],
       difficulty: "Advanced",
       completed: false,
-      score: null
+      score: null,
+      description: "Complete mock exam following official CFA Level I format and timing"
     },
     {
       id: 4,
-      title: "CFA Level II - Practice Exam 1",
-      level: "Level II",
-      duration: "8.5 hours",
-      questions: 88,
-      topics: ["Asset Valuation", "Portfolio Management", "Financial Reporting"],
+      title: "CFA Level I - Derivatives & Alternatives",
+      level: "Level I",
+      duration: "2.25 hours",
+      questions: 90,
+      sessions: "1 session focused practice",
+      topics: ["Derivatives (6%)", "Alternative Investments (9%)"],
       difficulty: "Intermediate",
       completed: false,
-      score: null
+      score: null,
+      description: "Focused practice on lower-weighted but important topic areas"
     },
     {
       id: 5,
-      title: "CFA Level II - Mock Exam (Full)",
-      level: "Level II",
-      duration: "8.5 hours",
-      questions: 88,
-      topics: ["All Topics Covered"],
+      title: "CFA Level I - Ethics Deep Dive",
+      level: "Level I",
+      duration: "1.5 hours",
+      questions: 60,
+      sessions: "Ethics-focused session",
+      topics: ["Ethical and Professional Standards (100%)"],
       difficulty: "Advanced",
       completed: true,
-      score: 72
-    },
-    {
-      id: 6,
-      title: "CFA Level III - Practice Exam 1",
-      level: "Level III",
-      duration: "8.5 hours",
-      questions: 22,
-      topics: ["Portfolio Management", "Wealth Planning", "Trading"],
-      difficulty: "Advanced",
-      completed: false,
-      score: null
+      score: 85,
+      description: "Critical ethics preparation - can be a tie-breaker for borderline candidates"
     }
   ];
 
-  const filteredExams = mockExams.filter(exam => exam.level === selectedLevel);
+  const filteredExams = mockExams;
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {

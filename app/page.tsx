@@ -125,7 +125,7 @@ export default function Home() {
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/" className="text-xl font-bold text-gray-900">
-                Finance Exam Prep
+                CFA Level 1 Prep
               </Link>
             </div>
 
@@ -186,12 +186,12 @@ export default function Home() {
             </div>
 
             <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              Pass Your Finance Certification
+              Pass CFA Level 1
               <span className="block text-gray-900">On Your First Try</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600">
-              Join thousands of finance professionals who&apos;ve secured their certification with our comprehensive question bank and proven study system.
+              Master all 10 CFA Level 1 topic areas with 1800+ practice questions, realistic mock exams, and comprehensive study materials designed for the computer-based exam format.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">

@@ -1,0 +1,92 @@
+The following is a detailed and comprehensive overview of the CFA Level 1 exam, designed for training an agent. It covers the curriculum, exam structure, question format, and logistics.
+
+1. CFA Level 1 Curriculum and Sections
+The CFA Level 1 curriculum is the foundational level of the CFA Program, focusing on a broad range of investment tools, asset classes, and professional standards. It is divided into 10 main topic areas, each with a specific weighting on the exam. The topic weights are provided in ranges, meaning the exact number of questions per topic can vary slightly from one exam administration to another.
+
+Topic Areas and Weights (Approximate)
+
+Topic Area	Exam Weight (%)
+Ethical and Professional Standards	15-20%
+Quantitative Methods	6-9%
+Economics	6-9%
+Financial Statement Analysis	11-14%
+Corporate Issuers	6-9%
+Equity Investments	11-14%
+Fixed Income	11-14%
+Derivatives	5-8%
+Alternative Investments	7-10%
+Portfolio Management	8-12%
+
+Export to Sheets
+Content of Each Section:
+
+Ethical and Professional Standards: This is a crucial section, as it holds the highest weight and is a key focus of the CFA Institute. It covers the CFA Institute Code of Ethics and Standards of Professional Conduct, as well as the Global Investment Performance Standards (GIPS).
+
+Quantitative Methods: This section provides the mathematical and statistical tools necessary for financial analysis. Key concepts include time value of money, descriptive statistics, probability, hypothesis testing, and regression analysis.
+
+Economics: This topic introduces microeconomic and macroeconomic principles. It covers topics like supply and demand, firm and market structures, business cycles, monetary and fiscal policy, international trade, and currency exchange rates.
+
+Financial Statement Analysis (FSA): A significant part of the exam, FSA focuses on understanding and interpreting financial statements (income statement, balance sheet, and statement of cash flows). It also covers financial reporting quality, analysis techniques, and accounting methods like IFRS and U.S. GAAP.
+
+Corporate Issuers: This section explores corporate finance topics such as corporate governance, working capital management, capital investments (NPV, IRR), and capital structure.
+
+Equity Investments: This topic covers the characteristics of equity securities, market organization, market efficiency, and various valuation models like the dividend discount model (DDM) and free cash flow models.
+
+Fixed Income: This section introduces bonds and other fixed-income securities. It covers bond features, valuation, yields, duration, and credit risk.
+
+Derivatives: An introductory section covering the fundamentals of derivatives and their markets. It focuses on key instruments like forwards, futures, swaps, and options, as well as concepts like arbitrage.
+
+Alternative Investments: This topic defines and explores alternative investment types, including private equity, hedge funds, real estate, and commodities. It focuses on their characteristics and role in a portfolio.
+
+Portfolio Management: This section provides an overview of portfolio management concepts, including risk and return, behavioral biases, and an introduction to risk management.
+
+2. CFA Level 1 Exam Structure
+The CFA Level 1 exam is a computer-based test consisting of 180 multiple-choice questions.
+
+Total Questions: 180 questions.
+
+Sessions: The exam is divided into two 135-minute sessions.
+
+Question Distribution: Each session contains 90 multiple-choice questions.
+
+Total Exam Time: The total testing time is 4.5 hours (2 hours and 15 minutes per session).
+
+Appointment Time: The total appointment time, including tutorials, a break, and surveys, is approximately 5.5 hours.
+
+Break: There is an optional break between the two sessions.
+
+3. Question Structure and Format
+The CFA Level 1 exam uses a single-answer, multiple-choice format.
+
+Format: Each question consists of a stem (the question, a statement, and/or a table) and three answer choices (A, B, or C).
+
+Question Independence: All questions are stand-alone and not part of vignettes or case studies. This is a key difference from Level 2 and 3 exams.
+
+Qualifiers: Question stems may include qualifiers such as "most likely," "least likely," "best described," "most appropriate," etc. These are important for understanding what the question is truly asking.
+
+Answer Ordering:
+
+Words/Sentences: Choices are typically ordered from shortest to longest.
+
+Quantitative: Choices are ordered from the smallest number to the largest number.
+
+No Penalty for Incorrect Answers: There is no negative marking for incorrect answers, so candidates are advised to answer all questions.
+
+Permitted Calculators: Only two models are permitted: the Texas Instruments BA II Plus and the Hewlett Packard 12C. Candidates must be highly proficient with their chosen calculator.
+
+4. Exam Logistics and Scoring
+Passing Score: The CFA Institute does not publish a single, fixed minimum passing score (MPS). The MPS is set by a group of CFA charterholders after each exam administration using a "Modified Angoff" method. This process ensures the passing score is fair, accounting for the difficulty of a specific exam version.
+
+Results: Candidates receive a "Pass" or "Did Not Pass" result.
+
+Score Report: The score report provides a breakdown of a candidate's performance by topic area. This is presented in three ranges:
+
+70%
+
+50% - 70%
+
+< 50%
+
+No Minimum per Topic: It is important to note that there is no minimum passing score for each topic. Strong performance in one area can compensate for weaker performance in another.
+
+Ethics Adjustment: While not an official rule, there is a widely acknowledged "Ethics adjustment" where a candidate's performance in the Ethics section can act as a tie-breaker if their overall score is on the borderline of passing. This underscores the importance of mastering this topic.
