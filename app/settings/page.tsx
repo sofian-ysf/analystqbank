@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { getUserProfile, updateUserProfile, UserProfile } from "@/lib/database";
 
 export default function Settings() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -17,8 +19,8 @@ export default function Settings() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [examDate, setExamDate] = useState("");
-  const [examLevel, setExamLevel] = useState("Level I");
-  const [studyGoal, setStudyGoal] = useState("2");
+  const [examLevel, setExamLevel] = useState<"Level I" | "Level II" | "Level III">("Level I");
+  const [studyGoal, setStudyGoal] = useState(2);
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,
@@ -26,7 +28,7 @@ export default function Settings() {
     progressUpdates: true
   });
   const [privacy, setPrivacy] = useState({
-    profileVisibility: "private",
+    profileVisibility: "private" as "public" | "private",
     dataSharing: false,
     analytics: true
   });
@@ -41,7 +43,44 @@ export default function Settings() {
       } else {
         setUser(user);
         setEmail(user.email || "");
-        setFullName(user.user_metadata?.full_name || "");
+
+        // Load user profile from database
+        const profile = await getUserProfile(user.id);
+        if (profile) {
+          setUserProfile(profile);
+          setFullName(profile.full_name || "");
+          setExamDate(profile.exam_date || "");
+          setExamLevel(profile.exam_level);
+          setStudyGoal(profile.study_goal);
+          setNotifications(profile.notifications);
+          setPrivacy(profile.privacy_settings);
+        } else {
+          // Create default profile if doesn't exist
+          const defaultProfile: UserProfile = {
+            id: user.id,
+            email: user.email || "",
+            full_name: user.user_metadata?.full_name || "",
+            exam_level: "Level I",
+            study_goal: 2,
+            notifications: {
+              email: true,
+              push: false,
+              studyReminders: true,
+              progressUpdates: true
+            },
+            privacy_settings: {
+              profileVisibility: "private",
+              dataSharing: false,
+              analytics: true
+            },
+            subscription_plan: "free"
+          };
+
+          await updateUserProfile(user.id, defaultProfile);
+          setUserProfile(defaultProfile);
+          setFullName(defaultProfile.full_name || "");
+        }
+
         setLoading(false);
       }
     };
@@ -53,26 +92,45 @@ export default function Settings() {
     setSaving(true);
     setMessage("");
 
-    try {
-      // Update user metadata
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          full_name: fullName,
-          exam_date: examDate,
-          exam_level: examLevel,
-          study_goal: studyGoal,
-          notifications: notifications,
-          privacy: privacy
-        }
-      });
+    if (!user) {
+      setMessage("User not found");
+      setSaving(false);
+      return;
+    }
 
-      if (error) {
-        setMessage(`Error: ${error.message}`);
-      } else {
+    try {
+      // Update user profile in database
+      const updatedProfile: Partial<UserProfile> = {
+        full_name: fullName,
+        exam_date: examDate || undefined,
+        exam_level: examLevel,
+        study_goal: studyGoal,
+        notifications: notifications,
+        privacy_settings: privacy
+      };
+
+      const success = await updateUserProfile(user.id, updatedProfile);
+
+      if (success) {
+        // Also update auth metadata for compatibility
+        await supabase.auth.updateUser({
+          data: {
+            full_name: fullName,
+          }
+        });
+
         setMessage("Settings saved successfully!");
         setTimeout(() => setMessage(""), 3000);
+
+        // Update local state
+        if (userProfile) {
+          setUserProfile({ ...userProfile, ...updatedProfile });
+        }
+      } else {
+        setMessage("Error saving settings. Please try again.");
       }
-    } catch {
+    } catch (error) {
+      console.error("Error saving settings:", error);
       setMessage("An error occurred while saving settings.");
     }
 
@@ -227,14 +285,14 @@ export default function Settings() {
                 <select
                   id="studyGoal"
                   value={studyGoal}
-                  onChange={(e) => setStudyGoal(e.target.value)}
+                  onChange={(e) => setStudyGoal(parseInt(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 >
-                  <option value="1">1 hour</option>
-                  <option value="2">2 hours</option>
-                  <option value="3">3 hours</option>
-                  <option value="4">4 hours</option>
-                  <option value="5">5+ hours</option>
+                  <option value={1}>1 hour</option>
+                  <option value={2}>2 hours</option>
+                  <option value={3}>3 hours</option>
+                  <option value={4}>4 hours</option>
+                  <option value={5}>5+ hours</option>
                 </select>
               </div>
             </div>

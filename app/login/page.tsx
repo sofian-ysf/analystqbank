@@ -80,6 +80,40 @@ function LoginForm() {
     }
   };
 
+  const handleAppleSignIn = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleLinkedInSignIn = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "linkedin_oidc",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -216,6 +250,33 @@ function LoginForm() {
                   <path d="M10.2 3.977c1.502 0 2.85.516 3.91 1.53l2.934-2.934C15.277.981 12.963 0 10.2 0A9.995 9.995 0 001.052 5.243l3.423 2.653c.804-2.418 3.06-4.218 5.725-4.218z" fill="#EA4335"/>
                 </svg>
                 <span className="ml-2">Google</span>
+              </button>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={handleAppleSignIn}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M15.71 10.21c-.02-2.19 1.79-3.24 1.87-3.3-.98-1.43-2.5-1.63-3.06-1.66-1.31-.13-2.54.77-3.2.77-.67 0-1.69-.75-2.78-.73-1.43.02-2.74.83-3.47 2.11-1.48 2.58-.38 6.39 1.06 8.48.71 1.02 1.54 2.17 2.64 2.13 1.07-.04 1.47-.69 2.76-.69 1.28 0 1.65.69 2.78.67 1.15-.02 1.86-1.03 2.55-2.06.8-1.19 1.13-2.35 1.15-2.41-.02-.01-2.21-.85-2.23-3.36l-.01.05z"/>
+                  <path d="M12.96 3.5c.58-.69.97-1.64.86-2.6-.83.03-1.84.55-2.44 1.25-.54.62-.1 1.61.07 1.76.78.06 1.58-.4 1.97-1.02l-.46.61z"/>
+                </svg>
+                <span className="ml-2">Apple</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLinkedInSignIn}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="#0A66C2">
+                  <path d="M4.47 2.68c0 .73-.59 1.32-1.32 1.32S1.83 3.41 1.83 2.68C1.83 1.95 2.42 1.36 3.15 1.36s1.32.59 1.32 1.32zM1.95 18.26V6.38h2.4v11.88h-2.4zM14.86 6.11c-2.3 0-3.33 1.26-3.89 2.15V6.38H8.57v11.88h2.4v-5.91c0-1.01.19-1.98 1.44-1.98 1.23 0 1.25 1.15 1.25 2.04v5.85h2.4v-6.59c0-2.07-.45-3.66-2.87-3.66l.67 1.1z"/>
+                </svg>
+                <span className="ml-2">LinkedIn</span>
               </button>
             </div>
           </div>

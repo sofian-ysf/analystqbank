@@ -35,7 +35,7 @@ export default function SignUp() {
       email,
       password,
       options: {
-        emailRedirectTo: `http://192.0.0.2:3002/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
           full_name: fullName || email.split('@')[0]
         }
@@ -70,6 +70,74 @@ export default function SignUp() {
     }
 
     setLoading(false);
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleGithubSignUp = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleAppleSignUp = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleLinkedInSignUp = async () => {
+    setError("");
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "linkedin_oidc",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
   };
 
   return (
@@ -219,7 +287,9 @@ export default function SignUp() {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                onClick={handleGithubSignUp}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" />
@@ -229,15 +299,44 @@ export default function SignUp() {
 
               <button
                 type="button"
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                onClick={handleGoogleSignUp}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <svg className="w-5 h-5" viewBox="0 0 20 20">
                   <path d="M19.998 10.223c0-.696-.063-1.369-.178-2.017H10.2v3.818h5.51a4.708 4.708 0 01-2.044 3.093v2.57h3.31c1.936-1.782 3.052-4.408 3.052-7.464z" fill="#4285F4"/>
                   <path d="M10.2 20c2.764 0 5.08-.917 6.774-2.48l-3.31-2.57c-.917.614-2.089.976-3.464.976-2.665 0-4.921-1.8-5.725-4.218H1.052v2.653A9.995 9.995 0 0010.2 20z" fill="#34A853"/>
                   <path d="M4.475 11.708a6.005 6.005 0 01-.313-1.906c0-.662.114-1.305.313-1.906V5.243H1.052A9.995 9.995 0 000 10.002c0 1.613.388 3.139 1.052 4.48l3.423-2.653z" fill="#FBBC05"/>
                   <path d="M10.2 3.977c1.502 0 2.85.516 3.91 1.53l2.934-2.934C15.277.981 12.963 0 10.2 0A9.995 9.995 0 001.052 5.243l3.423 2.653c.804-2.418 3.06-4.218 5.725-4.218z" fill="#EA4335"/>
                 </svg>
                 <span className="ml-2">Google</span>
+              </button>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={handleAppleSignUp}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M15.71 10.21c-.02-2.19 1.79-3.24 1.87-3.3-.98-1.43-2.5-1.63-3.06-1.66-1.31-.13-2.54.77-3.2.77-.67 0-1.69-.75-2.78-.73-1.43.02-2.74.83-3.47 2.11-1.48 2.58-.38 6.39 1.06 8.48.71 1.02 1.54 2.17 2.64 2.13 1.07-.04 1.47-.69 2.76-.69 1.28 0 1.65.69 2.78.67 1.15-.02 1.86-1.03 2.55-2.06.8-1.19 1.13-2.35 1.15-2.41-.02-.01-2.21-.85-2.23-3.36l-.01.05z"/>
+                  <path d="M12.96 3.5c.58-.69.97-1.64.86-2.6-.83.03-1.84.55-2.44 1.25-.54.62-.1 1.61.07 1.76.78.06 1.58-.4 1.97-1.02l-.46.61z"/>
+                </svg>
+                <span className="ml-2">Apple</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLinkedInSignUp}
+                disabled={loading}
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="#0A66C2">
+                  <path d="M4.47 2.68c0 .73-.59 1.32-1.32 1.32S1.83 3.41 1.83 2.68C1.83 1.95 2.42 1.36 3.15 1.36s1.32.59 1.32 1.32zM1.95 18.26V6.38h2.4v11.88h-2.4zM14.86 6.11c-2.3 0-3.33 1.26-3.89 2.15V6.38H8.57v11.88h2.4v-5.91c0-1.01.19-1.98 1.44-1.98 1.23 0 1.25 1.15 1.25 2.04v5.85h2.4v-6.59c0-2.07-.45-3.66-2.87-3.66l.67 1.1z"/>
+                </svg>
+                <span className="ml-2">LinkedIn</span>
               </button>
             </div>
           </div>
