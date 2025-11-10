@@ -1,0 +1,34 @@
+CFA Level I Exam: Frequently Asked Questions Summary
+=====================================================
+
+1. STUDY TIME COMMITMENT
+-----------------------
+Average Study Hours: Successful candidates report spending over 300 hours preparing for the Level I exam.
+Preparation: Candidates should tailor their preparation to individual needs and circumstances.
+
+2. EXAM FORMAT AND STRUCTURE
+----------------------------
+Total Questions: 180 multiple-choice questions.
+Sessions: Divided into two sessions (sittings) of 135 minutes each.
+    Questions per Session: Each session contains 90 questions.
+Pacing: Advised to spend approximately 90 seconds per question.
+Question Structure: Each item has a stem (question, statement, and/or table) and three unique answer choices (A, B, or C).
+    Formats Used: 1. Sentence completion. 2. Direct questions.
+
+3. CURRICULUM TOPICS AND WEIGHTS
+-------------------------------
+The curriculum is organized into topics, each with Learning Outcome Statements (LOS).
+
+Session | Topic | Exam Weight
+-----------------------------------------------------
+Session 1 | Ethical and Professional Standards | 15–20%
+Session 1 | Quantitative Methods | 6–9%
+Session 1 | Economics | 6–9%
+Session 1 | Financial Statement Analysis | 11–14%
+Session 1 | Corporate Issuers | 6–9%
+Session 2 | Equity Investments | 11–14%
+Session 2 | Fixed Income | 11–14%
+Session 2 | Derivatives | 5–8%
+Session 2 | Alternative Investments | 7–10%
+Session 2 | Portfolio Management | 8–12%
+-----------------------------------------------------
