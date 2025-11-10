@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { cfaLevel1Curriculum } from '@/lib/curriculum';
 
 interface User {
   id: string;
@@ -10,6 +11,19 @@ interface User {
   exam_level: string;
   subscription_plan: string;
   created_at: string;
+}
+
+interface GeneratedQuestion {
+  question_text: string;
+  option_a: string;
+  option_b: string;
+  option_c: string;
+  correct_answer: string;
+  explanation: string;
+  difficulty_level: string;
+  topic_area: string;
+  subtopic?: string;
+  keywords: string[];
 }
 
 interface UserStats {
@@ -24,7 +38,7 @@ export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<UserStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions' | 'ai-generator'>('overview');
   const [questionData, setQuestionData] = useState({
     topic: '',
     difficulty: 'intermediate',
@@ -32,6 +46,14 @@ export default function AdminDashboard() {
     options: ['', '', '', ''],
     correctAnswer: 0,
     explanation: ''
+  });
+  const [aiGeneratorData, setAiGeneratorData] = useState({
+    topic_area: 'Ethical and Professional Standards',
+    difficulty: 'intermediate',
+    subtopic: '',
+    source_context: '',
+    generating: false,
+    generatedQuestion: null as GeneratedQuestion | null
   });
   const router = useRouter();
 
@@ -87,6 +109,49 @@ export default function AdminDashboard() {
     setQuestionData({ ...questionData, options: newOptions });
   };
 
+  const handleAIGeneration = async (saveToDatabase = false) => {
+    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestion: null });
+
+    try {
+      const response = await fetch('/api/admin/generate-question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic_area: aiGeneratorData.topic_area,
+          difficulty: aiGeneratorData.difficulty,
+          subtopic: aiGeneratorData.subtopic || undefined,
+          source_context: aiGeneratorData.source_context || undefined,
+          save_to_database: saveToDatabase,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setAiGeneratorData({
+          ...aiGeneratorData,
+          generating: false,
+          generatedQuestion: data.question
+        });
+
+        if (saveToDatabase && data.saved) {
+          alert('Question generated and saved to database successfully!');
+        }
+      } else {
+        throw new Error(data.error || 'Failed to generate question');
+      }
+    } catch (error) {
+      console.error('Error generating question:', error);
+      alert(`Failed to generate question: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setAiGeneratorData({ ...aiGeneratorData, generating: false });
+    }
+  };
+
+  // Use the comprehensive curriculum structure
+  const CFA_TOPICS = cfaLevel1Curriculum.map(topic => topic.name);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -116,7 +181,7 @@ export default function AdminDashboard() {
       <nav className="bg-gray-800 border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
-            {['overview', 'users', 'questions'].map((tab) => (
+            {['overview', 'users', 'questions', 'ai-generator'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as 'overview' | 'users' | 'questions')}
@@ -126,7 +191,7 @@ export default function AdminDashboard() {
                     : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300'
                 }`}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'ai-generator' ? 'AI Generator' : tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </div>
@@ -349,6 +414,176 @@ export default function AdminDashboard() {
                   Save Question (Dummy)
                 </button>
               </form>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'ai-generator' && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white">AI Question Generator</h2>
+            <p className="text-gray-400">Generate high-quality CFA Level 1 questions using AI trained on official curriculum</p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* AI Generator Form */}
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-white mb-4">Generate Question</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Topic Area
+                    </label>
+                    <select
+                      value={aiGeneratorData.topic_area}
+                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, topic_area: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      {CFA_TOPICS.map((topic) => (
+                        <option key={topic} value={topic}>{topic}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Difficulty Level
+                    </label>
+                    <select
+                      value={aiGeneratorData.difficulty}
+                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, difficulty: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="advanced">Advanced</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Subtopic (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={aiGeneratorData.subtopic}
+                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, subtopic: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      placeholder="e.g., Code of Ethics, Bond Valuation"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Source Context (Optional)
+                    </label>
+                    <textarea
+                      value={aiGeneratorData.source_context}
+                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, source_context: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      rows={4}
+                      placeholder="Paste CFA curriculum text or learning objectives to base the question on..."
+                    />
+                  </div>
+
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => handleAIGeneration(false)}
+                      disabled={aiGeneratorData.generating}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                    >
+                      {aiGeneratorData.generating ? 'Generating...' : 'Generate Question'}
+                    </button>
+                    <button
+                      onClick={() => handleAIGeneration(true)}
+                      disabled={aiGeneratorData.generating || !aiGeneratorData.generatedQuestion}
+                      className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                    >
+                      Generate & Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Generated Question Preview */}
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-white mb-4">Generated Question</h3>
+
+                {aiGeneratorData.generating && (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                    <span className="ml-3 text-gray-300">AI is generating your question...</span>
+                  </div>
+                )}
+
+                {aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-gray-300 mb-2">Question:</h4>
+                      <p className="text-white bg-gray-700 p-3 rounded">{aiGeneratorData.generatedQuestion.question_text}</p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-gray-300 mb-2">Options:</h4>
+                      <div className="space-y-2">
+                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'A' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                          <span className="font-bold text-white">A. </span>
+                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_a}</span>
+                        </div>
+                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'B' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                          <span className="font-bold text-white">B. </span>
+                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_b}</span>
+                        </div>
+                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'C' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                          <span className="font-bold text-white">C. </span>
+                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_c}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-medium text-gray-300 mb-2">Explanation:</h4>
+                      <p className="text-white bg-gray-700 p-3 rounded">{aiGeneratorData.generatedQuestion.explanation}</p>
+                    </div>
+
+                    <div className="flex justify-between text-sm text-gray-400">
+                      <span>Difficulty: {aiGeneratorData.generatedQuestion.difficulty_level}</span>
+                      <span>Correct Answer: {aiGeneratorData.generatedQuestion.correct_answer}</span>
+                    </div>
+
+                    {aiGeneratorData.generatedQuestion.keywords && (
+                      <div>
+                        <h4 className="font-medium text-gray-300 mb-2">Keywords:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {aiGeneratorData.generatedQuestion.keywords.map((keyword: string, index: number) => (
+                            <span key={index} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                              {keyword}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {!aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400">No question generated yet. Click &quot;Generate Question&quot; to create a new CFA Level 1 question using AI.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Instructions */}
+            <div className="bg-gray-800 p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-white mb-4">Instructions</h3>
+              <div className="space-y-2 text-gray-300">
+                <p>• <strong>Topic Area:</strong> Select from the 10 official CFA Level 1 topic areas</p>
+                <p>• <strong>Difficulty:</strong> Choose appropriate level for your target audience</p>
+                <p>• <strong>Subtopic:</strong> Optional - specify a particular area within the topic</p>
+                <p>• <strong>Source Context:</strong> Optional - paste curriculum text to base questions on specific content</p>
+                <p>• <strong>Generate Question:</strong> Creates a preview without saving to database</p>
+                <p>• <strong>Generate & Save:</strong> Creates and immediately saves to the questions database</p>
+              </div>
             </div>
           </div>
         )}

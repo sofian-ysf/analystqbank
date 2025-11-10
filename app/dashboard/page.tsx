@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { cfaLevel1Curriculum } from "@/lib/curriculum";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -267,77 +268,34 @@ export default function Dashboard() {
 
           {/* Performance Overview */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Performance by Topic</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Quantitative Methods</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Performance by Topic</h3>
+              <Link href="/question-bank" className="text-sm text-gray-600 hover:text-gray-900">
+                View All →
+              </Link>
+            </div>
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {cfaLevel1Curriculum.map((topic) => (
+                <div key={topic.id}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <div className="flex items-center">
+                      <span className="mr-2">{topic.icon}</span>
+                      <span className="text-gray-900 font-medium">{topic.name}</span>
+                    </div>
+                    <span className="text-gray-600 text-xs">Not Started</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full ${topic.color}`}
+                      style={{ width: '0%' }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>{topic.subtopics.length} subtopics</span>
+                    <span>{topic.examWeight}</span>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Economics</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Financial Reporting</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Ethics</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Fixed Income</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Equity</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-600">Portfolio Management</span>
-                  <span className="text-gray-900 font-medium">Not Started</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gray-400 h-2 rounded-full" style={{ width: '0%' }}></div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

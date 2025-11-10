@@ -5,115 +5,14 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
-
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  questionCount: number;
-  completedCount: number;
-  icon: string;
-  color: string;
-}
-
-const categories: Category[] = [
-  {
-    id: "ethical-professional-standards",
-    name: "Ethical and Professional Standards",
-    description: "CFA Institute Code of Ethics, Standards of Professional Conduct, and GIPS",
-    questionCount: 320, // ~18% of 1800 total questions
-    completedCount: 0,
-    icon: "⚖️",
-    color: "bg-yellow-500"
-  },
-  {
-    id: "financial-statement-analysis",
-    name: "Financial Statement Analysis",
-    description: "Financial statements, ratios, IFRS, U.S. GAAP, and accounting methods",
-    questionCount: 230, // ~13% of 1800 total questions
-    completedCount: 0,
-    icon: "📋",
-    color: "bg-purple-500"
-  },
-  {
-    id: "equity-investments",
-    name: "Equity Investments",
-    description: "Equity securities, market organization, efficiency, and valuation models",
-    questionCount: 230, // ~13% of 1800 total questions
-    completedCount: 0,
-    icon: "📈",
-    color: "bg-red-500"
-  },
-  {
-    id: "fixed-income",
-    name: "Fixed Income",
-    description: "Bonds, fixed-income securities, valuation, yields, duration, and credit risk",
-    questionCount: 230, // ~13% of 1800 total questions
-    completedCount: 0,
-    icon: "🏦",
-    color: "bg-indigo-500"
-  },
-  {
-    id: "portfolio-management",
-    name: "Portfolio Management",
-    description: "Portfolio concepts, risk and return, behavioral biases, and risk management",
-    questionCount: 180, // ~10% of 1800 total questions
-    completedCount: 0,
-    icon: "💼",
-    color: "bg-teal-500"
-  },
-  {
-    id: "alternative-investments",
-    name: "Alternative Investments",
-    description: "Private equity, hedge funds, real estate, commodities, and portfolio role",
-    questionCount: 162, // ~9% of 1800 total questions
-    completedCount: 0,
-    icon: "🏗️",
-    color: "bg-orange-500"
-  },
-  {
-    id: "quantitative-methods",
-    name: "Quantitative Methods",
-    description: "Time value of money, statistics, probability, hypothesis testing, regression",
-    questionCount: 140, // ~8% of 1800 total questions
-    completedCount: 0,
-    icon: "📊",
-    color: "bg-blue-500"
-  },
-  {
-    id: "economics",
-    name: "Economics",
-    description: "Microeconomics, macroeconomics, business cycles, monetary and fiscal policy",
-    questionCount: 140, // ~8% of 1800 total questions
-    completedCount: 0,
-    icon: "🌍",
-    color: "bg-green-500"
-  },
-  {
-    id: "corporate-issuers",
-    name: "Corporate Issuers",
-    description: "Corporate governance, working capital, capital investments, and capital structure",
-    questionCount: 140, // ~8% of 1800 total questions
-    completedCount: 0,
-    icon: "🏢",
-    color: "bg-gray-500"
-  },
-  {
-    id: "derivatives",
-    name: "Derivatives",
-    description: "Forwards, futures, swaps, options, and arbitrage concepts",
-    questionCount: 108, // ~6% of 1800 total questions
-    completedCount: 0,
-    icon: "🔄",
-    color: "bg-pink-500"
-  }
-];
+import { cfaLevel1Curriculum } from "@/lib/curriculum";
 
 export default function QuestionBank() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
@@ -134,6 +33,14 @@ export default function QuestionBank() {
       prev.includes(categoryId)
         ? prev.filter(id => id !== categoryId)
         : [...prev, categoryId]
+    );
+  };
+
+  const handleTopicToggle = (topicId: string) => {
+    setExpandedTopics(prev =>
+      prev.includes(topicId)
+        ? prev.filter(id => id !== topicId)
+        : [...prev, topicId]
     );
   };
 
@@ -205,16 +112,16 @@ export default function QuestionBank() {
               id="select-all"
               onChange={(e) => {
                 if (e.target.checked) {
-                  setSelectedCategories(categories.map(cat => cat.id));
+                  setSelectedCategories(cfaLevel1Curriculum.map(topic => topic.id));
                 } else {
                   setSelectedCategories([]);
                 }
               }}
-              checked={selectedCategories.length === categories.length}
+              checked={selectedCategories.length === cfaLevel1Curriculum.length}
               className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
             />
             <label htmlFor="select-all" className="text-sm font-medium text-gray-700">
-              Select All Categories
+              Select All Topics
             </label>
           </div>
           {selectedCategories.length > 0 && (
@@ -235,73 +142,122 @@ export default function QuestionBank() {
           )}
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {categories.map((category) => {
-            const isSelected = selectedCategories.includes(category.id);
-            const progressPercentage = getProgressPercentage(category.completedCount, category.questionCount);
+        {/* Topics and Subtopics List */}
+        <div className="space-y-4">
+          {cfaLevel1Curriculum.map((topic) => {
+            const isTopicSelected = selectedCategories.includes(topic.id);
+            const isExpanded = expandedTopics.includes(topic.id);
+            const progressPercentage = getProgressPercentage(0, topic.questionCount); // TODO: Get actual progress from database
 
             return (
-              <div
-                key={category.id}
-                className={`bg-white rounded-xl p-6 shadow-sm border transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'border-gray-900 ring-2 ring-gray-900 ring-opacity-20'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleCategoryToggle(category.id)}
-              >
-                {/* Category Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center">
-                    <div className={`w-10 h-10 ${category.color} rounded-lg flex items-center justify-center text-white text-lg`}>
-                      {category.icon}
+              <div key={topic.id} className="bg-white rounded-xl shadow-sm border border-gray-200">
+                {/* Main Topic Header */}
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center flex-1">
+                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white text-xl`}>
+                        {topic.icon}
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="font-bold text-gray-900 text-lg">{topic.name}</h3>
+                          <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium">
+                            {topic.examWeight}
+                          </span>
+                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
+                            {topic.questionCount} questions
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{topic.description}</p>
+                      </div>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => handleCategoryToggle(category.id)}
-                      className="ml-3 h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
-                      onClick={(e) => e.stopPropagation()}
-                    />
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={isTopicSelected}
+                        onChange={() => handleCategoryToggle(topic.id)}
+                        className="h-5 w-5 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                      />
+                      <button
+                        onClick={() => handleTopicToggle(topic.id)}
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        <svg
+                          className={`w-5 h-5 text-gray-600 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Overall Progress</span>
+                      <span>0/{topic.questionCount}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${topic.color}`}
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Topic Action Buttons */}
+                  <div className="flex space-x-3 mt-4">
+                    <Link
+                      href={`/practice/${topic.id}`}
+                      className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
+                    >
+                      Practice Topic
+                    </Link>
+                    <Link
+                      href={`/research-hubs/${topic.id}`}
+                      className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50"
+                    >
+                      Study Materials
+                    </Link>
                   </div>
                 </div>
 
-                {/* Category Info */}
-                <h3 className="font-semibold text-gray-900 mb-2">{category.name}</h3>
-                <p className="text-sm text-gray-600 mb-4">{category.description}</p>
-
-                {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>Progress</span>
-                    <span>{category.completedCount}/{category.questionCount}</span>
+                {/* Subtopics (Expandable) */}
+                {isExpanded && (
+                  <div className="border-t border-gray-200 bg-gray-50 p-6">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-4">
+                      Subtopics ({topic.subtopics.length})
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {topic.subtopics.map((subtopic) => (
+                        <div
+                          key={subtopic.id}
+                          className="bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-all"
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <h5 className="text-sm font-medium text-gray-900 flex-1">
+                              {subtopic.name}
+                            </h5>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-600">
+                              {subtopic.learningOutcomes} LOs
+                            </span>
+                            <Link
+                              href={`/practice/${topic.id}/${subtopic.id}`}
+                              className="text-xs text-gray-900 font-medium hover:underline"
+                            >
+                              Practice →
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full ${category.color}`}
-                      style={{ width: `${progressPercentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-2">
-                  <Link
-                    href={`/practice/${category.id}`}
-                    className="flex-1 bg-gray-900 text-white text-center py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-800"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Practice
-                  </Link>
-                  <Link
-                    href={`/research-hubs/${category.id}`}
-                    className="flex-1 border border-gray-300 text-gray-700 text-center py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-50"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Study
-                  </Link>
-                </div>
+                )}
               </div>
             );
           })}
@@ -309,24 +265,30 @@ export default function QuestionBank() {
 
         {/* Statistics Summary */}
         <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Overall Progress</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Curriculum Overview</h3>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div className="text-center">
-              <p className="text-3xl font-bold text-gray-900">{categories.reduce((sum, cat) => sum + cat.questionCount, 0)}</p>
+              <p className="text-3xl font-bold text-gray-900">
+                {cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.questionCount, 0)}
+              </p>
               <p className="text-sm text-gray-600">Total Questions</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-green-600">{categories.reduce((sum, cat) => sum + cat.completedCount, 0)}</p>
+              <p className="text-3xl font-bold text-green-600">0</p>
               <p className="text-sm text-gray-600">Completed</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-blue-600">{categories.length}</p>
-              <p className="text-sm text-gray-600">Categories</p>
+              <p className="text-3xl font-bold text-blue-600">{cfaLevel1Curriculum.length}</p>
+              <p className="text-sm text-gray-600">Main Topics</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-purple-600">
-                {Math.round((categories.reduce((sum, cat) => sum + cat.completedCount, 0) / categories.reduce((sum, cat) => sum + cat.questionCount, 0)) * 100) || 0}%
+              <p className="text-3xl font-bold text-orange-600">
+                {cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.subtopics.length, 0)}
               </p>
+              <p className="text-sm text-gray-600">Subtopics</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-purple-600">0%</p>
               <p className="text-sm text-gray-600">Overall Progress</p>
             </div>
           </div>
