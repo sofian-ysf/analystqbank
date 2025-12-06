@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { openai, GeneratedQuestion } from './openai';
+import { getOpenAIClient, GeneratedQuestion } from './openai';
 
 // Lazy-load pdf-parse to avoid build-time errors
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -165,7 +165,7 @@ Create ONE high-quality CFA Level 1 multiple-choice question that:
 
 IMPORTANT: The question MUST be based on actual content from the source material. Do not invent concepts.
 
-Return the response in the following JSON format:
+Return ONLY a valid JSON object with no additional text before or after. Use this exact format:
 {
   "question_text": "The question with appropriate qualifiers...",
   "option_a": "First option text",
@@ -181,26 +181,26 @@ Return the response in the following JSON format:
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, accurate questions based ONLY on the provided source material. Ensure all questions are factually correct and directly supported by the source text."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1200,
-      response_format: { type: "json_object" }
+    const genAI = getOpenAIClient(); // getOpenAIClient is aliased to getGeminiClient
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2000,
+        responseMimeType: "application/json",
+      }
     });
 
-    const content = completion.choices[0]?.message?.content;
+    const fullPrompt = `You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, accurate questions based ONLY on the provided source material. Ensure all questions are factually correct and directly supported by the source text.
+
+${prompt}`;
+
+    const result = await model.generateContent(fullPrompt);
+    const response = result.response;
+    const content = response.text();
+
     if (!content) {
-      throw new Error('No response from OpenAI');
+      throw new Error('No response from Gemini');
     }
 
     const question: GeneratedQuestion = JSON.parse(content);

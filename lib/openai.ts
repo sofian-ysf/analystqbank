@@ -1,8 +1,18 @@
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy-load Gemini client to avoid build-time errors
+let geminiInstance: GoogleGenerativeAI | null = null;
+
+function getGeminiClient(): GoogleGenerativeAI {
+  if (!geminiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY environment variable is not set');
+    }
+    geminiInstance = new GoogleGenerativeAI(apiKey);
+  }
+  return geminiInstance;
+}
 
 export interface GeneratedQuestion {
   question_text: string;
@@ -70,7 +80,9 @@ Requirements:
 5. List 3-5 relevant keywords for the question
 6. Ensure the question tests conceptual understanding
 
-Return the response in the following JSON format:
+You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, exam-realistic multiple-choice questions that follow CFA Institute standards.
+
+IMPORTANT: Return ONLY a valid JSON object with no additional text before or after. Use this exact format:
 {
   "question_text": "The question with appropriate qualifiers...",
   "option_a": "First option text",
@@ -86,26 +98,22 @@ Return the response in the following JSON format:
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, exam-realistic multiple-choice questions that follow CFA Institute standards."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-      response_format: { type: "json_object" }
+    const genAI = getGeminiClient();
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2000,
+        responseMimeType: "application/json",
+      }
     });
 
-    const content = completion.choices[0]?.message?.content;
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const content = response.text();
+
     if (!content) {
-      throw new Error('No response from OpenAI');
+      throw new Error('No response from Gemini');
     }
 
     const question: GeneratedQuestion = JSON.parse(content);
@@ -177,30 +185,40 @@ The question should:
 3. Follow CFA Level 1 standards and format
 4. Include appropriate qualifiers and terminology
 
-Return in JSON format as specified earlier.
+You are an expert CFA Level 1 question writer. Create questions based on provided source material that test key concepts and understanding.
+
+IMPORTANT: Return ONLY a valid JSON object with no additional text. Use this exact format:
+{
+  "question_text": "The question with appropriate qualifiers...",
+  "option_a": "First option text",
+  "option_b": "Second option text",
+  "option_c": "Third option text",
+  "correct_answer": "A|B|C",
+  "explanation": "Detailed explanation referencing the source material",
+  "difficulty_level": "${difficulty}",
+  "topic_area": "${topicArea}",
+  "subtopic": "",
+  "keywords": ["keyword1", "keyword2", "keyword3"]
+}
 `;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "You are an expert CFA Level 1 question writer. Create questions based on provided source material that test key concepts and understanding."
-        },
-        {
-          role: "user",
-          content: contextPrompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: 1000,
-      response_format: { type: "json_object" }
+    const genAI = getGeminiClient();
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-pro",
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 2000,
+        responseMimeType: "application/json",
+      }
     });
 
-    const content = completion.choices[0]?.message?.content;
+    const result = await model.generateContent(contextPrompt);
+    const response = result.response;
+    const content = response.text();
+
     if (!content) {
-      throw new Error('No response from OpenAI');
+      throw new Error('No response from Gemini');
     }
 
     return JSON.parse(content);
@@ -211,4 +229,4 @@ Return in JSON format as specified earlier.
   }
 }
 
-export { openai };
+export { getGeminiClient as getOpenAIClient };
