@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Lazy-load Gemini client to avoid build-time errors
+// Using Gemini 1.5 Pro for CFA question generation
 let geminiInstance: GoogleGenerativeAI | null = null;
 
 function getGeminiClient(): GoogleGenerativeAI {
