@@ -15,7 +15,7 @@ export default function AdminLogin() {
     setLoading(true);
     setError('');
 
-    if (email === 'cfatraininglevels@gmail.com' && password === 'Stafford6323!') {
+    if (email === 'youssefab95@outlook.com' && password === 'Stafford123!') {
       localStorage.setItem('admin_logged_in', 'true');
       router.push('/admin/dashboard');
     } else {
