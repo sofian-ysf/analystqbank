@@ -235,6 +235,12 @@ export async function generateQuestionFromPDFMaterial(
   const sourceFiles: string[] = [];
 
   try {
+    // Check if cfatrainingmaterial folder exists
+    const materialPath = path.join(process.cwd(), 'cfatrainingmaterial');
+    if (!fs.existsSync(materialPath)) {
+      throw new Error('Training material folder not found. PDF files are not available in this deployment. Please use the AI Generator instead, which generates questions without requiring PDF files.');
+    }
+
     // Get PDF files for this topic
     const pdfFiles = getPDFFilesForTopic(topicId, subtopicName);
 

@@ -5,15 +5,26 @@ export async function GET() {
   try {
     const supabase = createClient();
 
-    const { data: users, error } = await supabase
-      .from('user_profiles')
-      .select('id, email, full_name, exam_level, subscription_plan, created_at')
-      .order('created_at', { ascending: false });
+    // Fetch users from Supabase Auth
+    const { data: { users: authUsers }, error: authError } = await supabase.auth.admin.listUsers();
 
-    if (error) {
-      console.error('Error fetching users:', error);
+    if (authError) {
+      console.error('Error fetching auth users:', authError);
       return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
     }
+
+    // Transform auth users to match expected format
+    const users = authUsers?.map(user => ({
+      id: user.id,
+      email: user.email || 'No email',
+      full_name: user.user_metadata?.full_name || 'No name',
+      exam_level: user.user_metadata?.exam_level || 'CFA Level 1',
+      subscription_plan: user.user_metadata?.subscription_plan || 'free',
+      created_at: user.created_at
+    })) || [];
+
+    // Keep the error variable for later use but silence the unused variable warning
+    const error = authError;
 
     const totalUsers = users?.length || 0;
 

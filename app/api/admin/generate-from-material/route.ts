@@ -4,6 +4,13 @@ import { createClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if GEMINI_API_KEY is set
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({
+        error: 'GEMINI_API_KEY environment variable is not set'
+      }, { status: 500 });
+    }
+
     const body = await request.json();
     const {
       topic_id,
