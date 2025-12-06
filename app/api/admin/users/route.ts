@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = createAdminClient();
 
-    // Fetch users from Supabase Auth
+    // Fetch users from Supabase Auth using admin client
     const { data: { users: authUsers }, error: authError } = await supabase.auth.admin.listUsers();
 
     if (authError) {
