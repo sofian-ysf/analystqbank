@@ -2,16 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { getOpenAIClient, GeneratedQuestion } from './openai';
 
-// Lazy-load pdf-parse to avoid build-time errors
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let pdfParser: any = null;
-async function getPDFParser() {
-  if (!pdfParser) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    pdfParser = require('pdf-parse');
-  }
-  return pdfParser;
-}
+// PDF parsing currently disabled - using Gemini's native capabilities instead
+// This file is kept for future RAG implementation
 
 interface GenerateQuestionOptions {
   topicId: string;
@@ -48,15 +40,9 @@ const TOPIC_FOLDER_MAP: Record<string, string> = {
  * Extract text from a PDF file
  */
 async function extractPDFText(filePath: string): Promise<string> {
-  try {
-    const pdf = await getPDFParser();
-    const dataBuffer = fs.readFileSync(filePath);
-    const data = await pdf(dataBuffer);
-    return data.text;
-  } catch (error) {
-    console.error(`Error extracting text from ${filePath}:`, error);
-    throw new Error(`Failed to extract PDF text: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
+  // PDF extraction temporarily disabled - returning placeholder
+  // Use the AI Generator tab instead (works without PDF processing)
+  throw new Error('PDF extraction currently unavailable. Please use the AI Generator tab which works with Gemini directly.');
 }
 
 /**
