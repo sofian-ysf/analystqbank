@@ -166,25 +166,8 @@ Return ONLY a valid JSON object with no additional text before or after. Use thi
 }
 `;
 
-  try {
-    // Material generator temporarily disabled - PDF parsing issues
-    throw new Error('Material-based generator is currently unavailable. Please use the AI Generator tab instead.');
-
-    // Validate the generated question
-    if (!question.question_text || !question.option_a || !question.option_b || !question.option_c) {
-      throw new Error('Invalid question format: missing required fields');
-    }
-
-    if (!['A', 'B', 'C'].includes(question.correct_answer)) {
-      throw new Error('Invalid correct answer: must be A, B, or C');
-    }
-
-    return question;
-
-  } catch (error) {
-    console.error('Error generating question from PDF text:', error);
-    throw new Error(`Failed to generate question: ${error instanceof Error ? error.message : 'Unknown error'}`);
-  }
+  // Material generator temporarily disabled - PDF parsing issues
+  throw new Error('Material-based generator is currently unavailable. Please use the AI Generator tab instead.');
 }
 
 /**
