@@ -167,29 +167,8 @@ Return ONLY a valid JSON object with no additional text before or after. Use thi
 `;
 
   try {
-    const genAI = getOpenAIClient(); // getOpenAIClient is aliased to getGeminiClient
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2000,
-        responseMimeType: "application/json",
-      }
-    });
-
-    const fullPrompt = `You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, accurate questions based ONLY on the provided source material. Ensure all questions are factually correct and directly supported by the source text.
-
-${prompt}`;
-
-    const result = await model.generateContent(fullPrompt);
-    const response = result.response;
-    const content = response.text();
-
-    if (!content) {
-      throw new Error('No response from Gemini');
-    }
-
-    const question: GeneratedQuestion = JSON.parse(content);
+    // Material generator temporarily disabled - PDF parsing issues
+    throw new Error('Material-based generator is currently unavailable. Please use the AI Generator tab instead.');
 
     // Validate the generated question
     if (!question.question_text || !question.option_a || !question.option_b || !question.option_c) {
