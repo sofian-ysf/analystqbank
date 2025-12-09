@@ -169,7 +169,7 @@ Return ONLY a valid JSON object with no additional text before or after. Use thi
   try {
     const genAI = getOpenAIClient(); // getOpenAIClient is aliased to getGeminiClient
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-pro-latest",
+      model: "gemini-1.5-flash",
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2000,
