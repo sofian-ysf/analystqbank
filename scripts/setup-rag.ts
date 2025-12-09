@@ -10,11 +10,15 @@
  * Run: npx tsx scripts/setup-rag.ts
  */
 
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 import { Pinecone } from '@pinecone-database/pinecone';
 import OpenAI from 'openai';
+
+// Load environment variables from .env.local
+dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 
 // Configuration
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -158,8 +162,8 @@ async function uploadPDFsToStorage(pdfs: PDFMetadata[]) {
 async function extractAndChunkPDFs(pdfs: PDFMetadata[]): Promise<any[]> {
   console.log('\n📝 Extracting text from PDFs...');
 
-  // Lazy load pdf-parse
-  const pdfParse = require('pdf-parse');
+  // Lazy load pdfjs-dist
+  const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
   const chunks: any[] = [];
 
   for (const pdf of pdfs) {
@@ -167,8 +171,16 @@ async function extractAndChunkPDFs(pdfs: PDFMetadata[]): Promise<any[]> {
 
     try {
       const dataBuffer = fs.readFileSync(pdf.filePath);
-      const data = await pdfParse(dataBuffer);
-      const text = data.text;
+      const loadingTask = pdfjsLib.getDocument({ data: dataBuffer });
+      const pdfDocument = await loadingTask.promise;
+
+      let text = '';
+      for (let i = 1; i <= pdfDocument.numPages; i++) {
+        const page = await pdfDocument.getPage(i);
+        const content = await page.getTextContent();
+        const pageText = content.items.map((item: any) => item.str).join(' ');
+        text += pageText + '\n';
+      }
 
       // Split into chunks of ~1000 characters with overlap
       const chunkSize = 1000;
