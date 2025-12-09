@@ -99,22 +99,27 @@ IMPORTANT: Return ONLY a valid JSON object with no additional text before or aft
 `;
 
   try {
-    const genAI = getGeminiClient();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2000,
-        responseMimeType: "application/json",
-      }
+    const openai = getOpenAIClient();
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Fast and cost-effective
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert CFA Level 1 question writer with deep knowledge of the CFA curriculum. Generate high-quality, exam-realistic multiple-choice questions that follow CFA Institute standards."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: "json_object" }
     });
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const content = response.text();
-
+    const content = completion.choices[0]?.message?.content;
     if (!content) {
-      throw new Error('No response from Gemini');
+      throw new Error('No response from OpenAI');
     }
 
     const question: GeneratedQuestion = JSON.parse(content);
@@ -204,22 +209,27 @@ IMPORTANT: Return ONLY a valid JSON object with no additional text. Use this exa
 `;
 
   try {
-    const genAI = getGeminiClient();
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2000,
-        responseMimeType: "application/json",
-      }
+    const openai = getOpenAIClient();
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are an expert CFA Level 1 question writer. Create questions based on provided source material that test key concepts and understanding."
+        },
+        {
+          role: "user",
+          content: contextPrompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: "json_object" }
     });
 
-    const result = await model.generateContent(contextPrompt);
-    const response = result.response;
-    const content = response.text();
-
+    const content = completion.choices[0]?.message?.content;
     if (!content) {
-      throw new Error('No response from Gemini');
+      throw new Error('No response from OpenAI');
     }
 
     return JSON.parse(content);
@@ -230,4 +240,4 @@ IMPORTANT: Return ONLY a valid JSON object with no additional text. Use this exa
   }
 }
 
-export { getGeminiClient as getOpenAIClient };
+export { getOpenAIClient };
