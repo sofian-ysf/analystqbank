@@ -1,18 +1,17 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
-// Lazy-load Gemini client to avoid build-time errors
-// Using Gemini 1.5 Pro for CFA question generation
-let geminiInstance: GoogleGenerativeAI | null = null;
+// Lazy-load OpenAI client to avoid build-time errors
+let openaiInstance: OpenAI | null = null;
 
-function getGeminiClient(): GoogleGenerativeAI {
-  if (!geminiInstance) {
-    const apiKey = process.env.GEMINI_API_KEY;
+function getOpenAIClient(): OpenAI {
+  if (!openaiInstance) {
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY environment variable is not set');
+      throw new Error('OPENAI_API_KEY environment variable is not set');
     }
-    geminiInstance = new GoogleGenerativeAI(apiKey);
+    openaiInstance = new OpenAI({ apiKey });
   }
-  return geminiInstance;
+  return openaiInstance;
 }
 
 export interface GeneratedQuestion {
