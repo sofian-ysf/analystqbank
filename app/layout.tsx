@@ -13,9 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
+  title: {
+    default: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
+    template: "%s | Finance Exam Prep",
+  },
   description: "Prepare for your finance certification exams with 2500+ practice questions, mock exams, and detailed explanations. 92% pass rate. Start your free trial today!",
-  keywords: "CFA exam, FRM exam, finance certification, CFA practice questions, FRM practice test, CPA exam prep, ACCA preparation, finance exam questions",
+  keywords: "CFA exam, CFA Level 1, FRM exam, finance certification, CFA practice questions, CFA study guide, CFA mock exam, FRM practice test, CPA exam prep, ACCA preparation, finance exam questions, CFA formula sheet, investment analysis, portfolio management, financial statement analysis",
   authors: [{ name: "Finance Exam Prep" }],
   creator: "Finance Exam Prep",
   publisher: "Finance Exam Prep",
@@ -25,9 +28,6 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL("https://financeexamprep.co.uk"),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
     description: "Prepare for your finance certification exams with 2500+ practice questions, mock exams, and detailed explanations. 92% pass rate. Start your free trial today!",
@@ -64,6 +64,12 @@ export const metadata: Metadata = {
   },
   verification: {
     google: "google-site-verification-code",
+    other: {
+      "msvalidate.01": "bing-verification-code",
+    },
+  },
+  other: {
+    "llms-txt": "https://financeexamprep.co.uk/llms.txt",
   },
 };
 
