@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cfaLevel1Curriculum } from '@/lib/curriculum';
+import { createClient } from '@/lib/supabase';
 
 interface User {
   id: string;
@@ -115,7 +116,7 @@ export default function AdminDashboard() {
     setQuestionData({ ...questionData, options: newOptions });
   };
 
-  const handleAIGeneration = async (saveToDatabase = false) => {
+  const handleAIGeneration = async () => {
     setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestion: null });
 
     try {
@@ -129,7 +130,7 @@ export default function AdminDashboard() {
           difficulty: aiGeneratorData.difficulty,
           subtopic: aiGeneratorData.subtopic || undefined,
           source_context: aiGeneratorData.source_context || undefined,
-          save_to_database: saveToDatabase,
+          save_to_database: false,
         }),
       });
 
@@ -141,10 +142,6 @@ export default function AdminDashboard() {
           generating: false,
           generatedQuestion: data.question
         });
-
-        if (saveToDatabase && data.saved) {
-          alert('Question generated and saved to database successfully!');
-        }
       } else {
         throw new Error(data.error || 'Failed to generate question');
       }
@@ -152,6 +149,43 @@ export default function AdminDashboard() {
       console.error('Error generating question:', error);
       alert(`Failed to generate question: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setAiGeneratorData({ ...aiGeneratorData, generating: false });
+    }
+  };
+
+  const handleSaveQuestion = async () => {
+    if (!aiGeneratorData.generatedQuestion) return;
+
+    try {
+      const supabase = createClient();
+
+      const questionData = {
+        topic_area: aiGeneratorData.generatedQuestion.topic_area,
+        subtopic: aiGeneratorData.generatedQuestion.subtopic || null,
+        difficulty_level: aiGeneratorData.generatedQuestion.difficulty_level,
+        question_text: aiGeneratorData.generatedQuestion.question_text,
+        option_a: aiGeneratorData.generatedQuestion.option_a,
+        option_b: aiGeneratorData.generatedQuestion.option_b,
+        option_c: aiGeneratorData.generatedQuestion.option_c,
+        correct_answer: aiGeneratorData.generatedQuestion.correct_answer,
+        explanation: aiGeneratorData.generatedQuestion.explanation,
+        keywords: aiGeneratorData.generatedQuestion.keywords,
+        is_active: true
+      };
+
+      const { error } = await supabase
+        .from('questions')
+        .insert([questionData]);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      alert('Question saved to database successfully!');
+      // Clear the generated question after saving
+      setAiGeneratorData({ ...aiGeneratorData, generatedQuestion: null });
+    } catch (error) {
+      console.error('Error saving question:', error);
+      alert(`Failed to save question: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -555,21 +589,22 @@ export default function AdminDashboard() {
                     />
                   </div>
 
-                  <div className="flex space-x-3">
+                  <div className="space-y-3">
                     <button
-                      onClick={() => handleAIGeneration(false)}
+                      onClick={() => handleAIGeneration()}
                       disabled={aiGeneratorData.generating}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                     >
                       {aiGeneratorData.generating ? 'Generating...' : 'Generate Question'}
                     </button>
-                    <button
-                      onClick={() => handleAIGeneration(true)}
-                      disabled={aiGeneratorData.generating || !aiGeneratorData.generatedQuestion}
-                      className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                    >
-                      Generate & Save
-                    </button>
+                    {aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                      <button
+                        onClick={() => handleSaveQuestion()}
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      >
+                        Save to Database
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
