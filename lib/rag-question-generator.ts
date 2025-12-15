@@ -63,16 +63,36 @@ WHAT TO AVOID:
 - DO NOT reference "source material" or "the reading" in explanations
 
 EXPLANATION FORMAT (CRITICAL - follow this exact structure):
-Write the explanation as if YOU are the instructor explaining to a student. Use this format:
-1. Start with: "[Correct answer letter] is correct. [Explain why this answer is correct using the underlying concept]"
-2. Then for each wrong answer: "[Wrong answer letter] is incorrect because [specific reason why it's wrong]"
+Write the explanation as if YOU are the instructor explaining to a student. Use clear paragraph breaks.
 
-Example explanation format:
+FORMAT:
+1. First paragraph: State the correct answer and explain WHY it's correct
+2. If the question involves calculations or formulas: Include the relevant formula/equation and show the calculation
+3. Separate paragraphs for each wrong answer explaining why it's incorrect
+
+FOR FORMULAIC/CALCULATION QUESTIONS - ALWAYS include:
+- The relevant formula written out (e.g., "PV = FV / (1 + r)^n")
+- The calculation steps if applicable
+- Why the formula applies to this situation
+
+EXAMPLE for conceptual question:
 "B is correct. The equity risk premium represents the additional return investors require for holding equities over risk-free assets, calculated as the difference between expected equity returns and the risk-free rate.
 
 A is incorrect because the market risk premium specifically refers to systematic risk compensation, not the total return on equities.
 
 C is incorrect because the required return on equity includes both the risk-free rate and the equity risk premium, making it a broader measure than the premium itself."
+
+EXAMPLE for formulaic question:
+"A is correct. The present value is calculated using the formula:
+
+PV = FV / (1 + r)^n
+
+Where FV = $10,000, r = 5% (0.05), and n = 3 years:
+PV = $10,000 / (1.05)^3 = $10,000 / 1.1576 = $8,638.38
+
+B is incorrect because it uses simple interest (FV / (1 + r × n)) rather than compound interest, which would give $8,696.
+
+C is incorrect because it calculates future value instead of present value, multiplying rather than dividing by the discount factor."
 `;
 
 /**
@@ -141,9 +161,11 @@ ${learningObjectiveText ? '2. The question MUST test the specified learning obje
 6. List 3-5 relevant keywords from the source material
 
 EXPLANATION FORMAT - Follow this EXACTLY:
-- Start with "[Letter] is correct." then explain WHY using the concept (not referencing any material)
-- Then explain why each wrong answer is incorrect
+- Start with "[Letter] is correct." then explain WHY using the concept
+- For formulaic questions: Include the relevant formula and calculation steps
+- Then explain why each wrong answer is incorrect (separate paragraph for each)
 - Write as if you are the instructor explaining to a student
+- Use line breaks between paragraphs for readability
 - NEVER mention "source material", "the reading", "the text", or "according to"
 
 Return ONLY a valid JSON object with no additional text. Use this exact format:

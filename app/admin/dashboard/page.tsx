@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cfaLevel1Curriculum } from '@/lib/curriculum';
 import { createClient } from '@/lib/supabase';
@@ -45,6 +45,7 @@ interface TopicQuestionStats {
   beginner: number;
   intermediate: number;
   advanced: number;
+  learningObjectives: Record<string, number>;
 }
 
 interface QuestionStats {
@@ -53,6 +54,7 @@ interface QuestionStats {
     totalQuestions: number;
     totalActive: number;
     totalTopics: number;
+    totalWithLO: number;
   };
 }
 
@@ -88,6 +90,7 @@ export default function AdminDashboard() {
   const [generationResults, setGenerationResults] = useState<{
     [key: string]: { success: boolean; message: string; count?: number };
   }>({});
+  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
   const router = useRouter();
 
   useEffect(() => {
@@ -522,7 +525,7 @@ export default function AdminDashboard() {
             ) : questionStats ? (
               <>
                 {/* Summary Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-lg font-medium text-gray-300">Total Questions</h3>
                     <p className="text-4xl font-bold text-white">{questionStats.summary.totalQuestions.toLocaleString()}</p>
@@ -530,6 +533,10 @@ export default function AdminDashboard() {
                   <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-lg font-medium text-gray-300">Active Questions</h3>
                     <p className="text-4xl font-bold text-green-400">{questionStats.summary.totalActive.toLocaleString()}</p>
+                  </div>
+                  <div className="bg-gray-800 p-6 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-300">With Learning Objective</h3>
+                    <p className="text-4xl font-bold text-purple-400">{questionStats.summary.totalWithLO?.toLocaleString() || 0}</p>
                   </div>
                   <div className="bg-gray-800 p-6 rounded-lg">
                     <h3 className="text-lg font-medium text-gray-300">Categories</h3>
@@ -562,6 +569,9 @@ export default function AdminDashboard() {
                             Advanced
                           </th>
                           <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            LOs Covered
+                          </th>
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
                             Active
                           </th>
                         </tr>
@@ -573,45 +583,104 @@ export default function AdminDashboard() {
                             active: 0,
                             beginner: 0,
                             intermediate: 0,
-                            advanced: 0
+                            advanced: 0,
+                            learningObjectives: {}
                           };
+                          const loCount = Object.keys(topicData.learningObjectives || {}).length;
+                          const totalLOsForTopic = getLearningObjectivesForTopic(topic.name).length;
+                          const isExpanded = expandedTopics.has(topic.name);
+
                           return (
-                            <tr key={topic.id} className="hover:bg-gray-750">
-                              <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white text-lg mr-3 flex-shrink-0`}>
-                                    {topic.icon}
+                            <React.Fragment key={topic.id}>
+                              <tr
+                                className={`hover:bg-gray-750 ${loCount > 0 ? 'cursor-pointer' : ''}`}
+                                onClick={() => {
+                                  if (loCount > 0) {
+                                    setExpandedTopics(prev => {
+                                      const newSet = new Set(prev);
+                                      if (newSet.has(topic.name)) {
+                                        newSet.delete(topic.name);
+                                      } else {
+                                        newSet.add(topic.name);
+                                      }
+                                      return newSet;
+                                    });
+                                  }
+                                }}
+                              >
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    {loCount > 0 && (
+                                      <span className="mr-2 text-gray-400">
+                                        {isExpanded ? '▼' : '▶'}
+                                      </span>
+                                    )}
+                                    <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white text-lg mr-3 flex-shrink-0`}>
+                                      {topic.icon}
+                                    </div>
+                                    <div>
+                                      <div className="text-sm font-medium text-white">{topic.name}</div>
+                                      <div className="text-xs text-gray-400">{topic.examWeight}</div>
+                                    </div>
                                   </div>
-                                  <div>
-                                    <div className="text-sm font-medium text-white">{topic.name}</div>
-                                    <div className="text-xs text-gray-400">{topic.examWeight}</div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-center">
-                                <span className="text-lg font-bold text-white">{topicData.total}</span>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-center">
-                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">
-                                  {topicData.beginner}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-center">
-                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900 text-yellow-300">
-                                  {topicData.intermediate}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-center">
-                                <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300">
-                                  {topicData.advanced}
-                                </span>
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-center">
-                                <span className={`text-sm font-medium ${topicData.active === topicData.total ? 'text-green-400' : 'text-yellow-400'}`}>
-                                  {topicData.active}/{topicData.total}
-                                </span>
-                              </td>
-                            </tr>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className="text-lg font-bold text-white">{topicData.total}</span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">
+                                    {topicData.beginner}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-900 text-yellow-300">
+                                    {topicData.intermediate}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-900 text-red-300">
+                                    {topicData.advanced}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${loCount > 0 ? 'bg-purple-900 text-purple-300' : 'bg-gray-700 text-gray-400'}`}>
+                                    {loCount}/{totalLOsForTopic}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-center">
+                                  <span className={`text-sm font-medium ${topicData.active === topicData.total ? 'text-green-400' : 'text-yellow-400'}`}>
+                                    {topicData.active}/{topicData.total}
+                                  </span>
+                                </td>
+                              </tr>
+                              {isExpanded && loCount > 0 && (
+                                <tr>
+                                  <td colSpan={7} className="px-6 py-4 bg-gray-850">
+                                    <div className="ml-8 p-4 bg-gray-900 rounded-lg">
+                                      <h4 className="text-sm font-semibold text-purple-300 mb-3">Learning Objectives Coverage</h4>
+                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                        {Object.entries(topicData.learningObjectives || {})
+                                          .sort(([a], [b]) => a.localeCompare(b))
+                                          .map(([loId, count]) => {
+                                            const loData = getLearningObjectivesForTopic(topic.name).find(lo => lo.id === loId);
+                                            return (
+                                              <div key={loId} className="flex items-center justify-between bg-gray-800 px-3 py-2 rounded text-xs">
+                                                <span className="text-gray-300 truncate mr-2" title={loData?.text || loId}>
+                                                  <span className="font-semibold text-purple-400">{loId}</span>
+                                                  {loData && <span className="text-gray-500 ml-1">- {loData.text.substring(0, 40)}...</span>}
+                                                </span>
+                                                <span className="bg-purple-600 text-white px-2 py-0.5 rounded-full font-semibold flex-shrink-0">
+                                                  {count}
+                                                </span>
+                                              </div>
+                                            );
+                                          })}
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
                           );
                         })}
                       </tbody>

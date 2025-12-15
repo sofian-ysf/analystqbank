@@ -5,10 +5,10 @@ export async function GET() {
   try {
     const supabase = createAdminClient();
 
-    // Fetch all questions with their topic and difficulty
+    // Fetch all questions with their topic, difficulty, and learning objective
     const { data: questions, error } = await supabase
       .from('questions')
-      .select('topic_area, difficulty_level, is_active');
+      .select('topic_area, difficulty_level, is_active, learning_objective_id');
 
     if (error) {
       console.error('Error fetching questions:', error);
@@ -22,15 +22,18 @@ export async function GET() {
       beginner: number;
       intermediate: number;
       advanced: number;
+      learningObjectives: Record<string, number>;
     }> = {};
 
     let totalQuestions = 0;
     let totalActive = 0;
+    let totalWithLO = 0;
 
     questions?.forEach((question) => {
       const topic = question.topic_area || 'Uncategorized';
       const difficulty = question.difficulty_level || 'intermediate';
       const isActive = question.is_active !== false;
+      const loId = question.learning_objective_id;
 
       if (!topicStats[topic]) {
         topicStats[topic] = {
@@ -38,7 +41,8 @@ export async function GET() {
           active: 0,
           beginner: 0,
           intermediate: 0,
-          advanced: 0
+          advanced: 0,
+          learningObjectives: {}
         };
       }
 
@@ -57,6 +61,15 @@ export async function GET() {
       } else if (difficulty === 'advanced') {
         topicStats[topic].advanced++;
       }
+
+      // Track learning objective counts
+      if (loId) {
+        totalWithLO++;
+        if (!topicStats[topic].learningObjectives[loId]) {
+          topicStats[topic].learningObjectives[loId] = 0;
+        }
+        topicStats[topic].learningObjectives[loId]++;
+      }
     });
 
     return NextResponse.json({
@@ -64,7 +77,8 @@ export async function GET() {
       summary: {
         totalQuestions,
         totalActive,
-        totalTopics: Object.keys(topicStats).length
+        totalTopics: Object.keys(topicStats).length,
+        totalWithLO
       }
     });
   } catch (error) {
