@@ -46,8 +46,11 @@ QUESTION STYLE:
 - Make wrong answers plausible but clearly incorrect upon analysis
 - Questions should require candidates to THINK, not just remember
 
-QUESTION STRUCTURE:
+ANSWER REQUIREMENTS:
 - Exactly 3 options (A, B, C)
+- ONE and ONLY ONE option must be definitively correct - not "closest" or "best approximation"
+- The correct answer must be unambiguously right based on CFA curriculum concepts
+- Wrong answers must be clearly incorrect when analyzed properly (not partially correct)
 - Each option should be similar in length and structure
 - Avoid "all of the above" or "none of the above"
 - The correct answer should not be obvious from wording alone
@@ -57,11 +60,19 @@ WHAT TO AVOID:
 - DO NOT create fill-in-the-blank style questions
 - DO NOT make questions that can be answered without understanding the concept
 - DO NOT include obvious wrong answers
+- DO NOT reference "source material" or "the reading" in explanations
 
-EXPLANATION QUALITY:
-- Explain WHY the correct answer is correct using the underlying concept
-- Explain WHY each wrong answer is incorrect
-- Reference the principle being tested, not just the source text
+EXPLANATION FORMAT (CRITICAL - follow this exact structure):
+Write the explanation as if YOU are the instructor explaining to a student. Use this format:
+1. Start with: "[Correct answer letter] is correct. [Explain why this answer is correct using the underlying concept]"
+2. Then for each wrong answer: "[Wrong answer letter] is incorrect because [specific reason why it's wrong]"
+
+Example explanation format:
+"B is correct. The equity risk premium represents the additional return investors require for holding equities over risk-free assets, calculated as the difference between expected equity returns and the risk-free rate.
+
+A is incorrect because the market risk premium specifically refers to systematic risk compensation, not the total return on equities.
+
+C is incorrect because the required return on equity includes both the risk-free rate and the equity risk premium, making it a broader measure than the premium itself."
 `;
 
 /**
@@ -125,9 +136,15 @@ CRITICAL REQUIREMENTS:
 1. The question MUST be directly based on concepts from the source material above
 ${learningObjectiveText ? '2. The question MUST test the specified learning objective' : '2. Do NOT invent facts, figures, or concepts not present in the source'}
 3. Create one high-quality multiple-choice question with 3 options (A, B, C)
-4. Include appropriate CFA-style qualifiers in the question
-5. Provide detailed explanation referencing the source material
+4. ONE option must be definitively correct (not "closest" or "most appropriate among imperfect choices")
+5. Include appropriate CFA-style qualifiers in the question
 6. List 3-5 relevant keywords from the source material
+
+EXPLANATION FORMAT - Follow this EXACTLY:
+- Start with "[Letter] is correct." then explain WHY using the concept (not referencing any material)
+- Then explain why each wrong answer is incorrect
+- Write as if you are the instructor explaining to a student
+- NEVER mention "source material", "the reading", "the text", or "according to"
 
 Return ONLY a valid JSON object with no additional text. Use this exact format:
 {
@@ -136,7 +153,7 @@ Return ONLY a valid JSON object with no additional text. Use this exact format:
   "option_b": "Second option text",
   "option_c": "Third option text",
   "correct_answer": "A|B|C",
-  "explanation": "Detailed explanation referencing the source material and explaining why the correct answer is correct",
+  "explanation": "[Letter] is correct. [Why it's correct]. [Letter] is incorrect because [reason]. [Letter] is incorrect because [reason].",
   "difficulty_level": "${difficulty}",
   "topic_area": "${topicArea}",
   "subtopic": "${subtopic || ''}",
@@ -150,7 +167,7 @@ Return ONLY a valid JSON object with no additional text. Use this exact format:
       messages: [
         {
           role: "system",
-          content: "You are a senior CFA exam question writer with 20 years of experience. Your questions are known for testing deep understanding through realistic scenarios. You never write simple recall questions. Every question you create requires candidates to apply concepts to solve problems. Base all questions strictly on the provided source material - never invent facts."
+          content: "You are a senior CFA exam question writer with 20 years of experience. Your questions are known for testing deep understanding through realistic scenarios. You never write simple recall questions. Every question you create requires candidates to apply concepts to solve problems. Each question has exactly ONE correct answer that is definitively right - never use 'closest' or 'best approximation' answers. When writing explanations, write as an instructor teaching a student - never reference 'source material', 'the text', or 'the reading'. Base all questions strictly on the provided source material - never invent facts."
         },
         {
           role: "user",
