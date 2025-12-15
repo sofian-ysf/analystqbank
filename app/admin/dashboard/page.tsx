@@ -593,28 +593,24 @@ export default function AdminDashboard() {
                           return (
                             <React.Fragment key={topic.id}>
                               <tr
-                                className={`hover:bg-gray-750 ${loCount > 0 ? 'cursor-pointer' : ''}`}
+                                className="hover:bg-gray-750 cursor-pointer"
                                 onClick={() => {
-                                  if (loCount > 0) {
-                                    setExpandedTopics(prev => {
-                                      const newSet = new Set(prev);
-                                      if (newSet.has(topic.name)) {
-                                        newSet.delete(topic.name);
-                                      } else {
-                                        newSet.add(topic.name);
-                                      }
-                                      return newSet;
-                                    });
-                                  }
+                                  setExpandedTopics(prev => {
+                                    const newSet = new Set(prev);
+                                    if (newSet.has(topic.name)) {
+                                      newSet.delete(topic.name);
+                                    } else {
+                                      newSet.add(topic.name);
+                                    }
+                                    return newSet;
+                                  });
                                 }}
                               >
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="flex items-center">
-                                    {loCount > 0 && (
-                                      <span className="mr-2 text-gray-400">
-                                        {isExpanded ? '▼' : '▶'}
-                                      </span>
-                                    )}
+                                    <span className="mr-2 text-gray-400 w-4">
+                                      {isExpanded ? '▼' : '▶'}
+                                    </span>
                                     <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white text-lg mr-3 flex-shrink-0`}>
                                       {topic.icon}
                                     </div>
@@ -653,29 +649,70 @@ export default function AdminDashboard() {
                                   </span>
                                 </td>
                               </tr>
-                              {isExpanded && loCount > 0 && (
+                              {isExpanded && (
                                 <tr>
-                                  <td colSpan={7} className="px-6 py-4 bg-gray-850">
-                                    <div className="ml-8 p-4 bg-gray-900 rounded-lg">
-                                      <h4 className="text-sm font-semibold text-purple-300 mb-3">Learning Objectives Coverage</h4>
-                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                                        {Object.entries(topicData.learningObjectives || {})
-                                          .sort(([a], [b]) => a.localeCompare(b))
-                                          .map(([loId, count]) => {
-                                            const loData = getLearningObjectivesForTopic(topic.name).find(lo => lo.id === loId);
-                                            return (
-                                              <div key={loId} className="flex items-center justify-between bg-gray-800 px-3 py-2 rounded text-xs">
-                                                <span className="text-gray-300 truncate mr-2" title={loData?.text || loId}>
-                                                  <span className="font-semibold text-purple-400">{loId}</span>
-                                                  {loData && <span className="text-gray-500 ml-1">- {loData.text.substring(0, 40)}...</span>}
+                                  <td colSpan={7} className="px-6 py-4 bg-gray-900/50">
+                                    <div className="ml-8 space-y-4">
+                                      {getReadingsForTopic(topic.name).map((reading) => {
+                                        const readingLOs = reading.learningObjectives;
+                                        const readingQuestionCount = readingLOs.reduce((sum, lo) =>
+                                          sum + (topicData.learningObjectives?.[lo.id] || 0), 0
+                                        );
+                                        const coveredLOsInReading = readingLOs.filter(lo =>
+                                          (topicData.learningObjectives?.[lo.id] || 0) > 0
+                                        ).length;
+
+                                        return (
+                                          <div key={reading.name} className="bg-gray-800 rounded-lg overflow-hidden">
+                                            {/* Reading Header */}
+                                            <div className="px-4 py-3 bg-gray-700 flex items-center justify-between">
+                                              <div className="flex items-center">
+                                                <span className="text-blue-400 mr-2">📖</span>
+                                                <span className="text-sm font-semibold text-white">{reading.name}</span>
+                                              </div>
+                                              <div className="flex items-center gap-3">
+                                                <span className="text-xs text-gray-400">
+                                                  {coveredLOsInReading}/{readingLOs.length} LOs covered
                                                 </span>
-                                                <span className="bg-purple-600 text-white px-2 py-0.5 rounded-full font-semibold flex-shrink-0">
-                                                  {count}
+                                                <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                                  {readingQuestionCount} Q{readingQuestionCount !== 1 ? 's' : ''}
                                                 </span>
                                               </div>
-                                            );
-                                          })}
-                                      </div>
+                                            </div>
+
+                                            {/* Learning Objectives */}
+                                            <div className="p-3 space-y-1">
+                                              {readingLOs.map((lo) => {
+                                                const questionCount = topicData.learningObjectives?.[lo.id] || 0;
+                                                return (
+                                                  <div
+                                                    key={lo.id}
+                                                    className={`flex items-start justify-between px-3 py-2 rounded text-xs ${
+                                                      questionCount > 0 ? 'bg-gray-700' : 'bg-gray-800/50'
+                                                    }`}
+                                                  >
+                                                    <div className="flex-1 mr-3">
+                                                      <span className={`font-semibold ${questionCount > 0 ? 'text-purple-400' : 'text-gray-500'}`}>
+                                                        {lo.id}
+                                                      </span>
+                                                      <span className={`ml-2 ${questionCount > 0 ? 'text-gray-300' : 'text-gray-500'}`}>
+                                                        {lo.text}
+                                                      </span>
+                                                    </div>
+                                                    <span className={`px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${
+                                                      questionCount > 0
+                                                        ? 'bg-purple-600 text-white'
+                                                        : 'bg-gray-700 text-gray-500'
+                                                    }`}>
+                                                      {questionCount}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              })}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                   </td>
                                 </tr>
