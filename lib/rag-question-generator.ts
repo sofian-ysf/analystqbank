@@ -64,35 +64,44 @@ WHAT TO AVOID:
 
 EXPLANATION FORMAT (CRITICAL - follow this exact structure):
 Write the explanation as if YOU are the instructor explaining to a student. Use clear paragraph breaks.
+BE SPECIFIC - always reference the exact CFA standard, principle, formula, or concept BY NAME.
 
 FORMAT:
-1. First paragraph: State the correct answer and explain WHY it's correct
+1. First paragraph: State the correct answer and explain WHY it's correct, citing the SPECIFIC standard/concept/formula by name
 2. If the question involves calculations or formulas: Include the relevant formula/equation and show the calculation
 3. Separate paragraphs for each wrong answer explaining why it's incorrect
 
-FOR FORMULAIC/CALCULATION QUESTIONS - ALWAYS include:
-- The relevant formula written out (e.g., "PV = FV / (1 + r)^n")
-- The calculation steps if applicable
-- Why the formula applies to this situation
+CRITICAL - BE SPECIFIC:
+- For Ethics: Reference the exact Standard number and name (e.g., "Under Standard III(A) Loyalty, Prudence, and Care...")
+- For Formulas: Write out the exact formula with variable definitions
+- For Concepts: Name the specific principle, theory, or framework (e.g., "According to the Capital Asset Pricing Model (CAPM)...")
+- For Accounting: Reference specific standards or treatments (e.g., "Under IFRS 16 lease accounting...")
 
-EXAMPLE for conceptual question:
-"B is correct. The equity risk premium represents the additional return investors require for holding equities over risk-free assets, calculated as the difference between expected equity returns and the risk-free rate.
+EXAMPLE for Ethics question:
+"B is correct. Under Standard III(A) Loyalty, Prudence, and Care, members and candidates who manage a company's pension fund owe these duties to the participants and beneficiaries of the pension plan, not to the management of the company or the company's shareholders. The duty of loyalty requires acting in the best interests of the beneficial owners.
 
-A is incorrect because the market risk premium specifically refers to systematic risk compensation, not the total return on equities.
+A is incorrect because Standard III(A) specifically identifies plan participants and beneficiaries as the parties to whom fiduciary duties are owed, not company management.
 
-C is incorrect because the required return on equity includes both the risk-free rate and the equity risk premium, making it a broader measure than the premium itself."
+C is incorrect because shareholders are owners of the company, not beneficiaries of the pension plan. The pension fund manager's fiduciary duty runs to the pension beneficiaries."
 
 EXAMPLE for formulaic question:
-"A is correct. The present value is calculated using the formula:
+"A is correct. Using the Gordon Growth Model (Dividend Discount Model for constant growth):
 
-PV = FV / (1 + r)^n
+P₀ = D₁ / (r - g)
 
-Where FV = $10,000, r = 5% (0.05), and n = 3 years:
-PV = $10,000 / (1.05)^3 = $10,000 / 1.1576 = $8,638.38
+Where D₁ = $2.00 (next year's dividend), r = 10% (required return), and g = 4% (growth rate):
+P₀ = $2.00 / (0.10 - 0.04) = $2.00 / 0.06 = $33.33
 
-B is incorrect because it uses simple interest (FV / (1 + r × n)) rather than compound interest, which would give $8,696.
+B is incorrect because it uses the current dividend D₀ instead of the expected dividend D₁, which would undervalue the stock.
 
-C is incorrect because it calculates future value instead of present value, multiplying rather than dividing by the discount factor."
+C is incorrect because it adds rather than subtracts the growth rate in the denominator, which is a common error that significantly overvalues the stock."
+
+EXAMPLE for conceptual question:
+"C is correct. According to the Efficient Market Hypothesis (EMH) in its semi-strong form, stock prices fully reflect all publicly available information. This means that fundamental analysis based on public information cannot consistently generate excess returns, as the information is already incorporated into prices.
+
+A is incorrect because the semi-strong form specifically addresses public information, not all information including insider information (which is the strong form).
+
+B is incorrect because technical analysis relies on historical price data, which is addressed by the weak form of EMH, not the semi-strong form."
 `;
 
 /**
@@ -205,7 +214,7 @@ Return ONLY a valid JSON object with no additional text. Use this exact format:
       messages: [
         {
           role: "system",
-          content: "You are a senior CFA exam question writer with 20 years of experience. Your questions are known for testing deep understanding through realistic scenarios. You never write simple recall questions. Every question you create requires candidates to apply concepts to solve problems. Each question has exactly ONE correct answer that is definitively right - never use 'closest' or 'best approximation' answers. When writing explanations, write as an instructor teaching a student - never reference 'source material', 'the text', or 'the reading'. Base all questions strictly on the provided source material - never invent facts."
+          content: "You are a senior CFA exam question writer with 20 years of experience. Your questions are known for testing deep understanding through realistic scenarios. You never write simple recall questions. Every question you create requires candidates to apply concepts to solve problems. Each question has exactly ONE correct answer that is definitively right - never use 'closest' or 'best approximation' answers. When writing explanations, BE SPECIFIC: always cite the exact CFA Standard by number and name (e.g., 'Standard III(A) Loyalty, Prudence, and Care'), name specific formulas (e.g., 'Gordon Growth Model'), reference specific theories (e.g., 'Efficient Market Hypothesis'), and cite accounting standards where relevant (e.g., 'IFRS 16'). Write as an instructor teaching a student - never reference 'source material', 'the text', or 'the reading'. Base all questions strictly on the provided source material - never invent facts."
         },
         {
           role: "user",
