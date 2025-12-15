@@ -129,18 +129,44 @@ export async function retrieveContext(
   }
 }
 
+// Map UI topic names to Pinecone metadata names (handles mismatches from folder names)
+const TOPIC_NAME_MAP: Record<string, string> = {
+  'Ethical and Professional Standards': 'Ethical and professional Standards',
+  'Fixed Income': 'Fixed Income ',  // Trailing space in folder name
+  'Portfolio Management': 'Portfolio Management '  // Trailing space in folder name
+};
+
+export interface RetrievedQuestionContext {
+  context: string;
+  sourceFiles: string[];
+  chunkCount: number;
+}
+
 /**
  * Retrieve context specifically for generating CFA questions
  */
 export async function retrieveContextForQuestion(
   topicArea: string,
   subtopic?: string,
-  difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate'
-): Promise<string> {
+  difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate',
+  learningObjectiveText?: string
+): Promise<RetrievedQuestionContext> {
+  // Map topic name to what's stored in Pinecone (handles folder name mismatches)
+  const pineconeTopicName = TOPIC_NAME_MAP[topicArea] || topicArea;
+
+  console.log(`[RAG] Retrieving context for topic: "${topicArea}" -> Pinecone filter: "${pineconeTopicName}"`);
+
   // Build a query that targets relevant content
   let query = `CFA Level 1 ${topicArea}`;
   if (subtopic) {
     query += ` ${subtopic}`;
+  }
+
+  // If a learning objective is provided, use it as the primary search term
+  // This helps find content most relevant to the specific learning outcome
+  if (learningObjectiveText) {
+    query = `${learningObjectiveText} ${topicArea}`;
+    console.log(`[RAG] Using learning objective for search: "${learningObjectiveText.substring(0, 50)}..."`);
   }
 
   // Add difficulty context to the query
@@ -150,17 +176,25 @@ export async function retrieveContextForQuestion(
     query += ' advanced complex application';
   }
 
+  console.log(`[RAG] Query: "${query.substring(0, 100)}..."`);
+
   // Retrieve relevant contexts
   const contexts = await retrieveContext(query, {
-    topicName: topicArea,
+    topicName: pineconeTopicName,
     subtopic,
     difficulty,
     topK: 3 // Get top 3 most relevant chunks
   });
 
+  console.log(`[RAG] Retrieved ${contexts.length} chunks from Pinecone`);
+
   if (contexts.length === 0) {
     throw new Error(`No relevant content found for topic: ${topicArea}`);
   }
+
+  // Get unique source files
+  const sourceFiles = [...new Set(contexts.map(ctx => ctx.metadata.fileName))];
+  console.log(`[RAG] Source files: ${sourceFiles.join(', ')}`);
 
   // Combine contexts into a single string
   const combinedContext = contexts
@@ -169,7 +203,11 @@ export async function retrieveContextForQuestion(
     })
     .join('\n---\n\n');
 
-  return combinedContext;
+  return {
+    context: combinedContext,
+    sourceFiles,
+    chunkCount: contexts.length
+  };
 }
 
 /**

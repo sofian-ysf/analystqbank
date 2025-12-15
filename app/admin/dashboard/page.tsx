@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cfaLevel1Curriculum } from '@/lib/curriculum';
 import { createClient } from '@/lib/supabase';
+import { CFA_2026_LEARNING_OBJECTIVES, getLearningObjectivesForTopic, getReadingsForTopic, type LearningObjective, type Reading } from '@/lib/learning-objectives-2026';
 
 interface User {
   id: string;
@@ -25,6 +26,9 @@ interface GeneratedQuestion {
   topic_area: string;
   subtopic?: string;
   keywords: string[];
+  source_material?: string;
+  learning_objective_id?: string;
+  learning_objective_text?: string;
 }
 
 interface UserStats {
@@ -71,10 +75,13 @@ export default function AdminDashboard() {
     topic_area: 'Ethical and Professional Standards',
     difficulty: 'intermediate',
     subtopic: '',
-    source_context: '',
+    learning_objective_id: '',
     generating: false,
     generatedQuestion: null as GeneratedQuestion | null
   });
+  const [availableReadings, setAvailableReadings] = useState<Reading[]>([]);
+  const [availableLOs, setAvailableLOs] = useState<LearningObjective[]>([]);
+  const [selectedReading, setSelectedReading] = useState<string>('');
   const [materialGeneratorData, setMaterialGeneratorData] = useState<{
     [key: string]: { generating: boolean; count: number; difficulty: string };
   }>({});
@@ -93,6 +100,28 @@ export default function AdminDashboard() {
     fetchUserData();
     fetchQuestionStats();
   }, [router]);
+
+  // Update available readings and LOs when topic changes
+  useEffect(() => {
+    const readings = getReadingsForTopic(aiGeneratorData.topic_area);
+    setAvailableReadings(readings);
+    setSelectedReading('');
+    setAvailableLOs([]);
+    setAiGeneratorData(prev => ({ ...prev, learning_objective_id: '', subtopic: '' }));
+  }, [aiGeneratorData.topic_area]);
+
+  // Update available LOs when reading changes
+  useEffect(() => {
+    if (selectedReading) {
+      const reading = availableReadings.find(r => r.name === selectedReading);
+      if (reading) {
+        setAvailableLOs(reading.learningObjectives);
+        setAiGeneratorData(prev => ({ ...prev, subtopic: selectedReading }));
+      }
+    } else {
+      setAvailableLOs([]);
+    }
+  }, [selectedReading, availableReadings]);
 
   const fetchQuestionStats = async () => {
     try {
@@ -157,8 +186,12 @@ export default function AdminDashboard() {
   const handleAIGeneration = async () => {
     setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestion: null });
 
+    // Find the selected learning objective text if one is selected
+    const selectedLO = availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id);
+
     try {
-      const response = await fetch('/api/admin/generate-question', {
+      // Use RAG endpoint to ground questions on training materials
+      const response = await fetch('/api/admin/generate-rag-question', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +200,9 @@ export default function AdminDashboard() {
           topic_area: aiGeneratorData.topic_area,
           difficulty: aiGeneratorData.difficulty,
           subtopic: aiGeneratorData.subtopic || undefined,
-          source_context: aiGeneratorData.source_context || undefined,
+          learning_objective_id: aiGeneratorData.learning_objective_id || undefined,
+          learning_objective_text: selectedLO?.text || undefined,
+          count: 1,
           save_to_database: false,
         }),
       });
@@ -175,11 +210,17 @@ export default function AdminDashboard() {
       const data = await response.json();
 
       if (response.ok) {
-        setAiGeneratorData({
-          ...aiGeneratorData,
-          generating: false,
-          generatedQuestion: data.question
-        });
+        // RAG endpoint returns questions array
+        const question = data.questions?.[0];
+        if (question) {
+          setAiGeneratorData({
+            ...aiGeneratorData,
+            generating: false,
+            generatedQuestion: question
+          });
+        } else {
+          throw new Error('No question returned from RAG system');
+        }
       } else {
         throw new Error(data.error || 'Failed to generate question');
       }
@@ -207,6 +248,7 @@ export default function AdminDashboard() {
         correct_answer: aiGeneratorData.generatedQuestion.correct_answer,
         explanation: aiGeneratorData.generatedQuestion.explanation,
         keywords: aiGeneratorData.generatedQuestion.keywords,
+        learning_objective_id: aiGeneratorData.generatedQuestion.learning_objective_id || null,
         is_active: true
       };
 
@@ -244,14 +286,14 @@ export default function AdminDashboard() {
     });
 
     try {
-      const response = await fetch('/api/admin/generate-from-material', {
+      // Use RAG endpoint to ground questions on training materials
+      const response = await fetch('/api/admin/generate-rag-question', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          topic_id: topicId,
-          topic_name: topicName,
+          topic_area: topicName,
           difficulty,
           count,
           save_to_database: true
@@ -265,8 +307,8 @@ export default function AdminDashboard() {
           ...prev,
           [key]: {
             success: true,
-            message: `Successfully generated and saved ${data.saved_count} questions!`,
-            count: data.saved_count
+            message: `Successfully generated and saved ${data.saved_count || data.questions?.length || 0} questions from training materials!`,
+            count: data.saved_count || data.questions?.length || 0
           }
         }));
       } else {
@@ -606,8 +648,11 @@ export default function AdminDashboard() {
 
         {activeTab === 'ai-generator' && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white">AI Question Generator</h2>
-            <p className="text-gray-400">Generate high-quality CFA Level 1 questions using AI trained on official curriculum</p>
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl font-bold text-white">AI Question Generator</h2>
+              <span className="bg-green-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">RAG-Powered</span>
+            </div>
+            <p className="text-gray-400">Generate high-quality CFA Level 1 questions grounded on your training materials in cfatrainingmaterial/</p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* AI Generator Form */}
@@ -632,6 +677,48 @@ export default function AdminDashboard() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Reading / Section
+                    </label>
+                    <select
+                      value={selectedReading}
+                      onChange={(e) => setSelectedReading(e.target.value)}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">-- Select a Reading --</option>
+                      {availableReadings.map((reading) => (
+                        <option key={reading.name} value={reading.name}>{reading.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedReading && availableLOs.length > 0 && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Learning Objective
+                        <span className="text-xs text-blue-400 ml-2">({availableLOs.length} available)</span>
+                      </label>
+                      <select
+                        value={aiGeneratorData.learning_objective_id}
+                        onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: e.target.value })}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                      >
+                        <option value="">-- Any Learning Objective --</option>
+                        {availableLOs.map((lo) => (
+                          <option key={lo.id} value={lo.id} title={lo.text}>
+                            {lo.id}: {lo.text.length > 80 ? lo.text.substring(0, 80) + '...' : lo.text}
+                          </option>
+                        ))}
+                      </select>
+                      {aiGeneratorData.learning_objective_id && (
+                        <div className="mt-2 p-2 bg-blue-900/30 border border-blue-700 rounded text-xs text-blue-200">
+                          <strong>Selected LO:</strong> {availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id)?.text}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       Difficulty Level
                     </label>
                     <select
@@ -643,32 +730,6 @@ export default function AdminDashboard() {
                       <option value="intermediate">Intermediate</option>
                       <option value="advanced">Advanced</option>
                     </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Subtopic (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={aiGeneratorData.subtopic}
-                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, subtopic: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-                      placeholder="e.g., Code of Ethics, Bond Valuation"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Source Context (Optional)
-                    </label>
-                    <textarea
-                      value={aiGeneratorData.source_context}
-                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, source_context: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-                      rows={4}
-                      placeholder="Paste CFA curriculum text or learning objectives to base the question on..."
-                    />
                   </div>
 
                   <div className="space-y-3">
@@ -693,7 +754,14 @@ export default function AdminDashboard() {
 
               {/* Generated Question Preview */}
               <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-white mb-4">Generated Question</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-white">Generated Question</h3>
+                  {aiGeneratorData.generatedQuestion && (
+                    <span className="bg-green-700 text-green-100 text-xs font-medium px-2 py-1 rounded">
+                      Grounded on Training Materials
+                    </span>
+                  )}
+                </div>
 
                 {aiGeneratorData.generating && (
                   <div className="flex items-center justify-center py-8">
@@ -749,6 +817,23 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     )}
+
+                    {aiGeneratorData.generatedQuestion.learning_objective_id && (
+                      <div className="mt-4 p-3 bg-blue-900/30 border border-blue-700 rounded">
+                        <h4 className="font-medium text-blue-300 mb-1 text-sm">Learning Objective:</h4>
+                        <p className="text-blue-200 text-xs">
+                          <strong>{aiGeneratorData.generatedQuestion.learning_objective_id}:</strong>{' '}
+                          {aiGeneratorData.generatedQuestion.learning_objective_text}
+                        </p>
+                      </div>
+                    )}
+
+                    {aiGeneratorData.generatedQuestion.source_material && (
+                      <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
+                        <h4 className="font-medium text-green-300 mb-1 text-sm">Source Materials Used:</h4>
+                        <p className="text-green-200 text-xs">{aiGeneratorData.generatedQuestion.source_material}</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -762,14 +847,26 @@ export default function AdminDashboard() {
 
             {/* Instructions */}
             <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-white mb-4">Instructions</h3>
+              <h3 className="text-xl font-semibold text-white mb-4">How RAG-Powered Generation Works</h3>
               <div className="space-y-2 text-gray-300">
+                <p>• <strong>Grounded on Your Materials:</strong> Questions are generated using content from your cfatrainingmaterial/ folder</p>
+                <p>• <strong>No Hallucinations:</strong> AI retrieves relevant chunks from Pinecone vector database before generating</p>
                 <p>• <strong>Topic Area:</strong> Select from the 10 official CFA Level 1 topic areas</p>
+                <p>• <strong>Reading / Section:</strong> Select a specific reading within the topic to narrow the focus</p>
+                <p>• <strong>Learning Objective:</strong> Target a specific 2026 CFA Learning Outcome - questions will be labeled with this LO</p>
                 <p>• <strong>Difficulty:</strong> Choose appropriate level for your target audience</p>
-                <p>• <strong>Subtopic:</strong> Optional - specify a particular area within the topic</p>
-                <p>• <strong>Source Context:</strong> Optional - paste curriculum text to base questions on specific content</p>
                 <p>• <strong>Generate Question:</strong> Creates a preview without saving to database</p>
-                <p>• <strong>Generate & Save:</strong> Creates and immediately saves to the questions database</p>
+                <p>• <strong>Save to Database:</strong> Saves the generated question with LO label to your question bank</p>
+              </div>
+              <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
+                <p className="text-green-300 text-sm">
+                  <strong>Source:</strong> 4,145 text chunks from 61 PDF files indexed in Pinecone
+                </p>
+              </div>
+              <div className="mt-2 p-3 bg-blue-900/30 border border-blue-700 rounded">
+                <p className="text-blue-300 text-sm">
+                  <strong>2026 Learning Objectives:</strong> {CFA_2026_LEARNING_OBJECTIVES.reduce((sum, t) => sum + t.readings.reduce((s, r) => s + r.learningObjectives.length, 0), 0)} learning outcomes across all topics
+                </p>
               </div>
             </div>
           </div>
@@ -777,19 +874,25 @@ export default function AdminDashboard() {
 
         {activeTab === 'material-generator' && (
           <div className="space-y-6">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Material-Based Question Generator</h2>
-              <p className="text-gray-400">Generate questions from your CFA Level 1 training materials (PDF files)</p>
+            <div className="flex items-center gap-3">
+              <h2 className="text-3xl font-bold text-white">Batch Question Generator</h2>
+              <span className="bg-green-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">RAG-Powered</span>
             </div>
+            <p className="text-gray-400">Generate multiple questions per topic, all grounded on your training materials</p>
 
             {/* Instructions */}
             <div className="bg-gray-800 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-4">How It Works</h3>
               <div className="space-y-2 text-gray-300">
-                <p>• <strong>Trained on Your Materials:</strong> Questions are generated from the actual PDF files in your cfatrainingmaterial folder</p>
-                <p>• <strong>Accurate & Relevant:</strong> AI reads the source material to ensure questions are factually correct</p>
+                <p>• <strong>RAG-Powered:</strong> Uses Pinecone vector search to find relevant content from your 61 PDF files</p>
+                <p>• <strong>No Hallucinations:</strong> Questions are grounded on actual text chunks from your training materials</p>
                 <p>• <strong>Auto-Save:</strong> Generated questions are automatically saved to your database</p>
-                <p>• <strong>Batch Generation:</strong> Generate multiple questions at once for each topic</p>
+                <p>• <strong>Batch Generation:</strong> Generate up to 20 questions at once for each topic</p>
+              </div>
+              <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
+                <p className="text-green-300 text-sm">
+                  <strong>Source:</strong> 4,145 text chunks indexed from cfatrainingmaterial/
+                </p>
               </div>
             </div>
 

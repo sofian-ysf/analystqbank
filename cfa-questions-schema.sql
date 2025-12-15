@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS public.questions (
     explanation TEXT NOT NULL,
     reference TEXT,
     keywords TEXT[],
+    learning_objective_id TEXT, -- CFA Learning Objective ID (e.g., QM-RR-1)
+    source TEXT, -- Source of question (e.g., RAG-Generated, Manual)
     created_by UUID REFERENCES public.user_profiles(id),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -140,6 +142,7 @@ INSERT INTO public.mock_exams (title, description) VALUES
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_questions_topic_area ON public.questions(topic_area);
 CREATE INDEX IF NOT EXISTS idx_questions_difficulty ON public.questions(difficulty_level);
+CREATE INDEX IF NOT EXISTS idx_questions_learning_objective ON public.questions(learning_objective_id);
 CREATE INDEX IF NOT EXISTS idx_user_attempts_user_id ON public.user_question_attempts(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_attempts_question_id ON public.user_question_attempts(question_id);
 CREATE INDEX IF NOT EXISTS idx_mock_exam_attempts_user_id ON public.user_mock_exam_attempts(user_id);

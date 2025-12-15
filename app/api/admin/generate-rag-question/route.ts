@@ -19,6 +19,8 @@ export async function POST(request: NextRequest) {
       topic_area,
       difficulty = 'intermediate',
       subtopic,
+      learning_objective_id,
+      learning_objective_text,
       count = 1,
       save_to_database = false,
       created_by
@@ -31,9 +33,9 @@ export async function POST(request: NextRequest) {
     // Generate questions using RAG
     let questions;
     if (count > 1) {
-      questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic);
+      questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic, learning_objective_id, learning_objective_text);
     } else {
-      const question = await generateRAGQuestion(topic_area, difficulty, subtopic);
+      const question = await generateRAGQuestion(topic_area, difficulty, subtopic, learning_objective_id, learning_objective_text);
       questions = [question];
     }
 
@@ -52,6 +54,7 @@ export async function POST(request: NextRequest) {
         correct_answer: q.correct_answer,
         explanation: q.explanation,
         keywords: q.keywords,
+        learning_objective_id: q.learning_objective_id || null,
         created_by: created_by || null,
         is_active: true,
         source: 'RAG-Generated'
