@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateRAGQuestion, generateMultipleRAGQuestions } from '@/lib/rag-question-generator';
 import { isRAGConfigured } from '@/lib/rag';
 import { createClient } from '@/lib/supabase';
+import { createAdminClient } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,12 +31,38 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Topic area is required' }, { status: 400 });
     }
 
+    // Fetch existing questions from database to avoid duplicates
+    const supabaseAdmin = createAdminClient();
+    let existingQuestions: string[] = [];
+
+    try {
+      let query = supabaseAdmin
+        .from('questions')
+        .select('question_text')
+        .eq('topic_area', topic_area);
+
+      // If learning objective is specified, also get questions for that LO
+      if (learning_objective_id) {
+        query = query.eq('learning_objective_id', learning_objective_id);
+      }
+
+      const { data } = await query.limit(50); // Get up to 50 existing questions
+
+      if (data) {
+        existingQuestions = data.map(q => q.question_text);
+      }
+      console.log(`[RAG] Found ${existingQuestions.length} existing questions to avoid duplicates`);
+    } catch (err) {
+      console.error('Error fetching existing questions:', err);
+      // Continue without existing questions if fetch fails
+    }
+
     // Generate questions using RAG
     let questions;
     if (count > 1) {
-      questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic, learning_objective_id, learning_objective_text);
+      questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic, learning_objective_id, learning_objective_text, existingQuestions);
     } else {
-      const question = await generateRAGQuestion(topic_area, difficulty, subtopic, learning_objective_id, learning_objective_text);
+      const question = await generateRAGQuestion(topic_area, difficulty, subtopic, learning_objective_id, learning_objective_text, existingQuestions);
       questions = [question];
     }
 

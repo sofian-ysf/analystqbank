@@ -103,7 +103,8 @@ export async function generateRAGQuestion(
   difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate',
   subtopic?: string,
   learningObjectiveId?: string,
-  learningObjectiveText?: string
+  learningObjectiveText?: string,
+  existingQuestions: string[] = []
 ): Promise<GeneratedQuestion> {
 
   try {
@@ -113,6 +114,7 @@ export async function generateRAGQuestion(
     console.log(`Subtopic: ${subtopic || 'None'}`);
     console.log(`Learning Objective: ${learningObjectiveId || 'None'}`);
     console.log(`Difficulty: ${difficulty}`);
+    console.log(`Existing questions to avoid: ${existingQuestions.length}`);
     console.log(`----------------------------------------------`);
 
     const { context, sourceFiles, chunkCount } = await retrieveContextForQuestion(topicArea, subtopic, difficulty, learningObjectiveText);
@@ -136,6 +138,20 @@ CRITICAL: Your question MUST test this specific learning objective. The question
 `
       : '';
 
+    // Build existing questions section to avoid duplicates
+    const existingQuestionsSection = existingQuestions.length > 0
+      ? `
+===== EXISTING QUESTIONS TO AVOID (DO NOT DUPLICATE) =====
+The following questions already exist. Your new question MUST be DIFFERENT from all of these.
+Do NOT ask about the same specific concept, scenario, or calculation as any of these:
+
+${existingQuestions.slice(0, 20).map((q, i) => `${i + 1}. ${q}`).join('\n')}
+
+IMPORTANT: Create a UNIQUE question that tests a DIFFERENT aspect of the topic/learning objective than the questions above.
+==========================================================
+`
+      : '';
+
     // Step 2: Generate question using OpenAI with the retrieved context
     const prompt = `
 ${CFA_QUESTION_GUIDELINES}
@@ -145,7 +161,7 @@ You are generating a CFA Level 1 exam question based STRICTLY on the following s
 ===== SOURCE MATERIAL START =====
 ${context}
 ===== SOURCE MATERIAL END =====
-${learningObjectiveSection}
+${learningObjectiveSection}${existingQuestionsSection}
 Generate a ${difficulty} level CFA Level 1 multiple-choice question for:
 - Topic Area: ${topicArea}
 ${subtopic ? `- Subtopic: ${subtopic}` : ''}
@@ -252,15 +268,32 @@ export async function generateMultipleRAGQuestions(
   difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate',
   subtopic?: string,
   learningObjectiveId?: string,
-  learningObjectiveText?: string
+  learningObjectiveText?: string,
+  existingQuestions: string[] = []
 ): Promise<GeneratedQuestion[]> {
   const questions: GeneratedQuestion[] = [];
 
+  // Start with existing questions from database
+  const allExistingQuestions = [...existingQuestions];
+
   for (let i = 0; i < count; i++) {
     try {
-      console.log(`Generating question ${i + 1}/${count}...`);
-      const question = await generateRAGQuestion(topicArea, difficulty, subtopic, learningObjectiveId, learningObjectiveText);
+      console.log(`Generating question ${i + 1}/${count}... (avoiding ${allExistingQuestions.length} existing questions)`);
+
+      // Pass all existing questions (from DB + previously generated in this batch)
+      const question = await generateRAGQuestion(
+        topicArea,
+        difficulty,
+        subtopic,
+        learningObjectiveId,
+        learningObjectiveText,
+        allExistingQuestions
+      );
+
       questions.push(question);
+
+      // Add this question to the list to avoid for subsequent generations
+      allExistingQuestions.push(question.question_text);
 
       // Add delay to avoid rate limiting
       if (i < count - 1) {
