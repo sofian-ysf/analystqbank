@@ -64,7 +64,7 @@ export default function AdminDashboard() {
   const [questionStats, setQuestionStats] = useState<QuestionStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [questionStatsLoading, setQuestionStatsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions' | 'ai-generator' | 'material-generator'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions' | 'ai-generator'>('overview');
   const [questionData, setQuestionData] = useState({
     topic: '',
     difficulty: 'intermediate',
@@ -79,18 +79,13 @@ export default function AdminDashboard() {
     subtopic: '',
     learning_objective_id: '',
     generating: false,
-    generatedQuestion: null as GeneratedQuestion | null
+    generatedQuestions: [] as GeneratedQuestion[]
   });
   const [availableReadings, setAvailableReadings] = useState<Reading[]>([]);
   const [availableLOs, setAvailableLOs] = useState<LearningObjective[]>([]);
   const [selectedReading, setSelectedReading] = useState<string>('');
-  const [materialGeneratorData, setMaterialGeneratorData] = useState<{
-    [key: string]: { generating: boolean; count: number; difficulty: string };
-  }>({});
-  const [generationResults, setGenerationResults] = useState<{
-    [key: string]: { success: boolean; message: string; count?: number };
-  }>({});
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -187,7 +182,8 @@ export default function AdminDashboard() {
   };
 
   const handleAIGeneration = async () => {
-    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestion: null });
+    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+    setSelectedQuestionIndex(0);
 
     // Find the selected learning objective text if one is selected
     const selectedLO = availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id);
@@ -205,7 +201,7 @@ export default function AdminDashboard() {
           subtopic: aiGeneratorData.subtopic || undefined,
           learning_objective_id: aiGeneratorData.learning_objective_id || undefined,
           learning_objective_text: selectedLO?.text || undefined,
-          count: 1,
+          count: 5,
           save_to_database: false,
         }),
       });
@@ -214,123 +210,104 @@ export default function AdminDashboard() {
 
       if (response.ok) {
         // RAG endpoint returns questions array
-        const question = data.questions?.[0];
-        if (question) {
+        const questions = data.questions || [];
+        if (questions.length > 0) {
           setAiGeneratorData({
             ...aiGeneratorData,
             generating: false,
-            generatedQuestion: question
+            generatedQuestions: questions
           });
         } else {
-          throw new Error('No question returned from RAG system');
+          throw new Error('No questions returned from RAG system');
         }
       } else {
-        throw new Error(data.error || 'Failed to generate question');
+        throw new Error(data.error || 'Failed to generate questions');
       }
     } catch (error) {
-      console.error('Error generating question:', error);
-      alert(`Failed to generate question: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Error generating questions:', error);
+      alert(`Failed to generate questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setAiGeneratorData({ ...aiGeneratorData, generating: false });
     }
   };
 
-  const handleSaveQuestion = async () => {
-    if (!aiGeneratorData.generatedQuestion) return;
+  const handleSaveQuestion = async (index: number) => {
+    const question = aiGeneratorData.generatedQuestions[index];
+    if (!question) return;
 
     try {
       const supabase = createClient();
 
-      const questionData = {
-        topic_area: aiGeneratorData.generatedQuestion.topic_area,
-        subtopic: aiGeneratorData.generatedQuestion.subtopic || null,
-        difficulty_level: aiGeneratorData.generatedQuestion.difficulty_level,
-        question_text: aiGeneratorData.generatedQuestion.question_text,
-        option_a: aiGeneratorData.generatedQuestion.option_a,
-        option_b: aiGeneratorData.generatedQuestion.option_b,
-        option_c: aiGeneratorData.generatedQuestion.option_c,
-        correct_answer: aiGeneratorData.generatedQuestion.correct_answer,
-        explanation: aiGeneratorData.generatedQuestion.explanation,
-        keywords: aiGeneratorData.generatedQuestion.keywords,
-        learning_objective_id: aiGeneratorData.generatedQuestion.learning_objective_id || null,
+      const questionToSave = {
+        topic_area: question.topic_area,
+        subtopic: question.subtopic || null,
+        difficulty_level: question.difficulty_level,
+        question_text: question.question_text,
+        option_a: question.option_a,
+        option_b: question.option_b,
+        option_c: question.option_c,
+        correct_answer: question.correct_answer,
+        explanation: question.explanation,
+        keywords: question.keywords,
+        learning_objective_id: question.learning_objective_id || null,
         is_active: true
       };
 
       const { error } = await supabase
         .from('questions')
-        .insert([questionData]);
+        .insert([questionToSave]);
 
       if (error) {
         throw new Error(error.message);
       }
 
       alert('Question saved to database successfully!');
-      // Clear the generated question after saving
-      setAiGeneratorData({ ...aiGeneratorData, generatedQuestion: null });
+      // Remove the saved question from the list
+      const updatedQuestions = aiGeneratorData.generatedQuestions.filter((_, i) => i !== index);
+      setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: updatedQuestions });
+      if (selectedQuestionIndex >= updatedQuestions.length && updatedQuestions.length > 0) {
+        setSelectedQuestionIndex(updatedQuestions.length - 1);
+      }
     } catch (error) {
       console.error('Error saving question:', error);
       alert(`Failed to save question: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
-  const handleMaterialGeneration = async (topicId: string, topicName: string, count: number, difficulty: string) => {
-    const key = topicId;
-
-    // Set generating state
-    setMaterialGeneratorData(prev => ({
-      ...prev,
-      [key]: { generating: true, count, difficulty }
-    }));
-
-    // Clear previous results
-    setGenerationResults(prev => {
-      const newResults = { ...prev };
-      delete newResults[key];
-      return newResults;
-    });
+  const handleSaveAllQuestions = async () => {
+    if (aiGeneratorData.generatedQuestions.length === 0) return;
 
     try {
-      // Use RAG endpoint to ground questions on training materials
-      const response = await fetch('/api/admin/generate-rag-question', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          topic_area: topicName,
-          difficulty,
-          count,
-          save_to_database: true
-        }),
-      });
+      const supabase = createClient();
 
-      const data = await response.json();
+      const questionsToSave = aiGeneratorData.generatedQuestions.map(q => ({
+        topic_area: q.topic_area,
+        subtopic: q.subtopic || null,
+        difficulty_level: q.difficulty_level,
+        question_text: q.question_text,
+        option_a: q.option_a,
+        option_b: q.option_b,
+        option_c: q.option_c,
+        correct_answer: q.correct_answer,
+        explanation: q.explanation,
+        keywords: q.keywords,
+        learning_objective_id: q.learning_objective_id || null,
+        is_active: true
+      }));
 
-      if (response.ok) {
-        setGenerationResults(prev => ({
-          ...prev,
-          [key]: {
-            success: true,
-            message: `Successfully generated and saved ${data.saved_count || data.questions?.length || 0} questions from training materials!`,
-            count: data.saved_count || data.questions?.length || 0
-          }
-        }));
-      } else {
-        throw new Error(data.error || 'Failed to generate questions');
+      const { error } = await supabase
+        .from('questions')
+        .insert(questionsToSave);
+
+      if (error) {
+        throw new Error(error.message);
       }
+
+      alert(`${questionsToSave.length} questions saved to database successfully!`);
+      setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: [] });
+      setSelectedQuestionIndex(0);
     } catch (error) {
-      console.error('Error generating questions from material:', error);
-      setGenerationResults(prev => ({
-        ...prev,
-        [key]: {
-          success: false,
-          message: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`
-        }
-      }));
-    } finally {
-      setMaterialGeneratorData(prev => ({
-        ...prev,
-        [key]: { ...prev[key], generating: false }
-      }));
+      console.error('Error saving questions:', error);
+      alert(`Failed to save questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
@@ -366,7 +343,7 @@ export default function AdminDashboard() {
       <nav className="bg-gray-800 border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
-            {['overview', 'users', 'questions', 'ai-generator', 'material-generator'].map((tab) => (
+            {['overview', 'users', 'questions', 'ai-generator'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as typeof activeTab)}
@@ -377,7 +354,6 @@ export default function AdminDashboard() {
                 }`}
               >
                 {tab === 'ai-generator' ? 'AI Generator' :
-                 tab === 'material-generator' ? 'Material Generator' :
                  tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
@@ -844,108 +820,173 @@ export default function AdminDashboard() {
                       disabled={aiGeneratorData.generating}
                       className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                     >
-                      {aiGeneratorData.generating ? 'Generating...' : 'Generate Question'}
+                      {aiGeneratorData.generating ? 'Generating 5 Questions...' : 'Generate 5 Questions'}
                     </button>
-                    {aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                    {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
                       <button
-                        onClick={() => handleSaveQuestion()}
+                        onClick={() => handleSaveAllQuestions()}
                         className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                       >
-                        Save to Database
+                        Save All {aiGeneratorData.generatedQuestions.length} Questions
                       </button>
                     )}
+                  </div>
+
+                  {/* Token Estimation */}
+                  <div className="mt-4 p-3 bg-gray-700 rounded text-xs text-gray-400">
+                    <strong>Estimated tokens per batch:</strong> ~17,000 tokens (5 questions)
+                    <br />
+                    <span className="text-gray-500">~3,000 input + ~400 output per question</span>
                   </div>
                 </div>
               </div>
 
-              {/* Generated Question Preview */}
+              {/* Generated Questions Preview */}
               <div className="bg-gray-800 p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-white">Generated Question</h3>
-                  {aiGeneratorData.generatedQuestion && (
+                  <h3 className="text-xl font-semibold text-white">Generated Questions</h3>
+                  {aiGeneratorData.generatedQuestions.length > 0 && (
                     <span className="bg-green-700 text-green-100 text-xs font-medium px-2 py-1 rounded">
-                      Grounded on Training Materials
+                      {aiGeneratorData.generatedQuestions.length} Questions Ready
                     </span>
                   )}
                 </div>
 
                 {aiGeneratorData.generating && (
-                  <div className="flex items-center justify-center py-8">
+                  <div className="flex flex-col items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                    <span className="ml-3 text-gray-300">AI is generating your question...</span>
+                    <span className="mt-3 text-gray-300">AI is generating 5 questions...</span>
+                    <span className="text-xs text-gray-500 mt-1">This may take 30-60 seconds</span>
                   </div>
                 )}
 
-                {aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
                   <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-gray-300 mb-2">Question:</h4>
-                      <p className="text-white bg-gray-700 p-3 rounded">{aiGeneratorData.generatedQuestion.question_text}</p>
+                    {/* Question Navigation */}
+                    <div className="flex items-center justify-between bg-gray-700 p-2 rounded-lg">
+                      <button
+                        onClick={() => setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1))}
+                        disabled={selectedQuestionIndex === 0}
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm"
+                      >
+                        ← Prev
+                      </button>
+                      <div className="flex gap-1">
+                        {aiGeneratorData.generatedQuestions.map((_, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => setSelectedQuestionIndex(idx)}
+                            className={`w-8 h-8 rounded-full text-sm font-semibold ${
+                              idx === selectedQuestionIndex
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                            }`}
+                          >
+                            {idx + 1}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => setSelectedQuestionIndex(Math.min(aiGeneratorData.generatedQuestions.length - 1, selectedQuestionIndex + 1))}
+                        disabled={selectedQuestionIndex === aiGeneratorData.generatedQuestions.length - 1}
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm"
+                      >
+                        Next →
+                      </button>
                     </div>
 
-                    <div>
-                      <h4 className="font-medium text-gray-300 mb-2">Options:</h4>
-                      <div className="space-y-2">
-                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'A' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                          <span className="font-bold text-white">A. </span>
-                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_a}</span>
+                    {/* Current Question Display */}
+                    {(() => {
+                      const currentQuestion = aiGeneratorData.generatedQuestions[selectedQuestionIndex];
+                      if (!currentQuestion) return null;
+                      return (
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="font-medium text-gray-300 mb-2">Question {selectedQuestionIndex + 1}:</h4>
+                            <p className="text-white bg-gray-700 p-3 rounded">{currentQuestion.question_text}</p>
+                          </div>
+
+                          <div>
+                            <h4 className="font-medium text-gray-300 mb-2">Options:</h4>
+                            <div className="space-y-2">
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'A' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                                <span className="font-bold text-white">A. </span>
+                                <span className="text-white">{currentQuestion.option_a}</span>
+                              </div>
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'B' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                                <span className="font-bold text-white">B. </span>
+                                <span className="text-white">{currentQuestion.option_b}</span>
+                              </div>
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'C' ? 'bg-green-700' : 'bg-gray-700'}`}>
+                                <span className="font-bold text-white">C. </span>
+                                <span className="text-white">{currentQuestion.option_c}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 className="font-medium text-gray-300 mb-2">Explanation:</h4>
+                            <div className="text-white bg-gray-700 p-3 rounded whitespace-pre-line">{currentQuestion.explanation}</div>
+                          </div>
+
+                          <div className="flex justify-between text-sm text-gray-400">
+                            <span>Difficulty: {currentQuestion.difficulty_level}</span>
+                            <span>Correct Answer: {currentQuestion.correct_answer}</span>
+                          </div>
+
+                          {currentQuestion.keywords && (
+                            <div>
+                              <h4 className="font-medium text-gray-300 mb-2">Keywords:</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {currentQuestion.keywords.map((keyword: string, index: number) => (
+                                  <span key={index} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                                    {keyword}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {currentQuestion.learning_objective_id && (
+                            <div className="p-3 bg-blue-900/30 border border-blue-700 rounded">
+                              <h4 className="font-medium text-blue-300 mb-1 text-sm">Learning Objective:</h4>
+                              <p className="text-blue-200 text-xs">
+                                <strong>{currentQuestion.learning_objective_id}:</strong>{' '}
+                                {currentQuestion.learning_objective_text}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Individual Save/Discard Buttons */}
+                          <div className="flex gap-2 pt-2 border-t border-gray-700">
+                            <button
+                              onClick={() => handleSaveQuestion(selectedQuestionIndex)}
+                              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+                            >
+                              Save This Question
+                            </button>
+                            <button
+                              onClick={() => {
+                                const updated = aiGeneratorData.generatedQuestions.filter((_, i) => i !== selectedQuestionIndex);
+                                setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: updated });
+                                if (selectedQuestionIndex >= updated.length && updated.length > 0) {
+                                  setSelectedQuestionIndex(updated.length - 1);
+                                }
+                              }}
+                              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors text-sm"
+                            >
+                              Discard
+                            </button>
+                          </div>
                         </div>
-                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'B' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                          <span className="font-bold text-white">B. </span>
-                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_b}</span>
-                        </div>
-                        <div className={`p-2 rounded ${aiGeneratorData.generatedQuestion.correct_answer === 'C' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                          <span className="font-bold text-white">C. </span>
-                          <span className="text-white">{aiGeneratorData.generatedQuestion.option_c}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="font-medium text-gray-300 mb-2">Explanation:</h4>
-                      <p className="text-white bg-gray-700 p-3 rounded">{aiGeneratorData.generatedQuestion.explanation}</p>
-                    </div>
-
-                    <div className="flex justify-between text-sm text-gray-400">
-                      <span>Difficulty: {aiGeneratorData.generatedQuestion.difficulty_level}</span>
-                      <span>Correct Answer: {aiGeneratorData.generatedQuestion.correct_answer}</span>
-                    </div>
-
-                    {aiGeneratorData.generatedQuestion.keywords && (
-                      <div>
-                        <h4 className="font-medium text-gray-300 mb-2">Keywords:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {aiGeneratorData.generatedQuestion.keywords.map((keyword: string, index: number) => (
-                            <span key={index} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
-                              {keyword}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {aiGeneratorData.generatedQuestion.learning_objective_id && (
-                      <div className="mt-4 p-3 bg-blue-900/30 border border-blue-700 rounded">
-                        <h4 className="font-medium text-blue-300 mb-1 text-sm">Learning Objective:</h4>
-                        <p className="text-blue-200 text-xs">
-                          <strong>{aiGeneratorData.generatedQuestion.learning_objective_id}:</strong>{' '}
-                          {aiGeneratorData.generatedQuestion.learning_objective_text}
-                        </p>
-                      </div>
-                    )}
-
-                    {aiGeneratorData.generatedQuestion.source_material && (
-                      <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
-                        <h4 className="font-medium text-green-300 mb-1 text-sm">Source Materials Used:</h4>
-                        <p className="text-green-200 text-xs">{aiGeneratorData.generatedQuestion.source_material}</p>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 )}
 
-                {!aiGeneratorData.generatedQuestion && !aiGeneratorData.generating && (
+                {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && (
                   <div className="text-center py-8">
-                    <p className="text-gray-400">No question generated yet. Click &quot;Generate Question&quot; to create a new CFA Level 1 question using AI.</p>
+                    <p className="text-gray-400">No questions generated yet. Click &quot;Generate 5 Questions&quot; to create CFA Level 1 questions using AI.</p>
                   </div>
                 )}
               </div>
@@ -955,14 +996,13 @@ export default function AdminDashboard() {
             <div className="bg-gray-800 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-4">How RAG-Powered Generation Works</h3>
               <div className="space-y-2 text-gray-300">
+                <p>• <strong>Batch Generation:</strong> Generates 5 questions at once for efficient content creation</p>
                 <p>• <strong>Grounded on Your Materials:</strong> Questions are generated using content from your cfatrainingmaterial/ folder</p>
                 <p>• <strong>No Hallucinations:</strong> AI retrieves relevant chunks from Pinecone vector database before generating</p>
                 <p>• <strong>Topic Area:</strong> Select from the 10 official CFA Level 1 topic areas</p>
                 <p>• <strong>Reading / Section:</strong> Select a specific reading within the topic to narrow the focus</p>
                 <p>• <strong>Learning Objective:</strong> Target a specific 2026 CFA Learning Outcome - questions will be labeled with this LO</p>
-                <p>• <strong>Difficulty:</strong> Choose appropriate level for your target audience</p>
-                <p>• <strong>Generate Question:</strong> Creates a preview without saving to database</p>
-                <p>• <strong>Save to Database:</strong> Saves the generated question with LO label to your question bank</p>
+                <p>• <strong>Review &amp; Save:</strong> Navigate between questions, save individually or all at once</p>
               </div>
               <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
                 <p className="text-green-300 text-sm">
@@ -973,152 +1013,6 @@ export default function AdminDashboard() {
                 <p className="text-blue-300 text-sm">
                   <strong>2026 Learning Objectives:</strong> {CFA_2026_LEARNING_OBJECTIVES.reduce((sum, t) => sum + t.readings.reduce((s, r) => s + r.learningObjectives.length, 0), 0)} learning outcomes across all topics
                 </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'material-generator' && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <h2 className="text-3xl font-bold text-white">Batch Question Generator</h2>
-              <span className="bg-green-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">RAG-Powered</span>
-            </div>
-            <p className="text-gray-400">Generate multiple questions per topic, all grounded on your training materials</p>
-
-            {/* Instructions */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-white mb-4">How It Works</h3>
-              <div className="space-y-2 text-gray-300">
-                <p>• <strong>RAG-Powered:</strong> Uses Pinecone vector search to find relevant content from your 61 PDF files</p>
-                <p>• <strong>No Hallucinations:</strong> Questions are grounded on actual text chunks from your training materials</p>
-                <p>• <strong>Auto-Save:</strong> Generated questions are automatically saved to your database</p>
-                <p>• <strong>Batch Generation:</strong> Generate up to 20 questions at once for each topic</p>
-              </div>
-              <div className="mt-4 p-3 bg-green-900/30 border border-green-700 rounded">
-                <p className="text-green-300 text-sm">
-                  <strong>Source:</strong> 4,145 text chunks indexed from cfatrainingmaterial/
-                </p>
-              </div>
-            </div>
-
-            {/* Topics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {cfaLevel1Curriculum.map((topic) => {
-                const topicData = materialGeneratorData[topic.id] || { generating: false, count: 5, difficulty: 'intermediate' };
-                const result = generationResults[topic.id];
-
-                return (
-                  <div key={topic.id} className="bg-gray-800 p-6 rounded-lg">
-                    <div className="flex items-start mb-4">
-                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white text-xl mr-4 flex-shrink-0`}>
-                        {topic.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-white mb-1">{topic.name}</h3>
-                        <p className="text-sm text-gray-400">
-                          {topic.examWeight} • {topic.subtopics.length} subtopics
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Generation Controls */}
-                    <div className="space-y-3 mb-4">
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">
-                            Questions
-                          </label>
-                          <select
-                            value={topicData.count}
-                            onChange={(e) => setMaterialGeneratorData(prev => ({
-                              ...prev,
-                              [topic.id]: { ...topicData, count: parseInt(e.target.value) }
-                            }))}
-                            disabled={topicData.generating}
-                            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded text-sm focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="1">1</option>
-                            <option value="3">3</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">
-                            Difficulty
-                          </label>
-                          <select
-                            value={topicData.difficulty}
-                            onChange={(e) => setMaterialGeneratorData(prev => ({
-                              ...prev,
-                              [topic.id]: { ...topicData, difficulty: e.target.value }
-                            }))}
-                            disabled={topicData.generating}
-                            className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded text-sm focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Generate Button */}
-                    <button
-                      onClick={() => handleMaterialGeneration(topic.id, topic.name, topicData.count, topicData.difficulty)}
-                      disabled={topicData.generating}
-                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                    >
-                      {topicData.generating ? (
-                        <div className="flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                          Generating...
-                        </div>
-                      ) : (
-                        `Generate ${topicData.count} Question${topicData.count > 1 ? 's' : ''}`
-                      )}
-                    </button>
-
-                    {/* Result Message */}
-                    {result && (
-                      <div className={`mt-4 p-3 rounded ${
-                        result.success ? 'bg-green-900 border border-green-700' : 'bg-red-900 border border-red-700'
-                      }`}>
-                        <p className={`text-sm ${result.success ? 'text-green-200' : 'text-red-200'}`}>
-                          {result.message}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Statistics */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-white mb-4">Generation Statistics</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-blue-400">
-                    {Object.values(generationResults).reduce((sum, r) => sum + (r.count || 0), 0)}
-                  </p>
-                  <p className="text-sm text-gray-400">Total Generated</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-green-400">
-                    {Object.values(generationResults).filter(r => r.success).length}
-                  </p>
-                  <p className="text-sm text-gray-400">Successful Batches</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-3xl font-bold text-red-400">
-                    {Object.values(generationResults).filter(r => !r.success).length}
-                  </p>
-                  <p className="text-sm text-gray-400">Failed Batches</p>
-                </div>
               </div>
             </div>
           </div>
