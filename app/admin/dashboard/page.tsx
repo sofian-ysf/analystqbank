@@ -15,6 +15,16 @@ interface User {
   created_at: string;
 }
 
+interface TableData {
+  title: string;
+  headers: string[];
+  rows: Array<{
+    label?: string;
+    values: (string | number)[];
+  }>;
+  footnote?: string;
+}
+
 interface GeneratedQuestion {
   question_text: string;
   option_a: string;
@@ -29,6 +39,8 @@ interface GeneratedQuestion {
   source_material?: string;
   learning_objective_id?: string;
   learning_objective_text?: string;
+  has_table?: boolean;
+  table_data?: TableData;
 }
 
 interface UserStats {
@@ -101,6 +113,7 @@ export default function AdminDashboard() {
     currentLOId: '',
     completedLOs: []
   });
+  const [generatingTable, setGeneratingTable] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -349,6 +362,49 @@ export default function AdminDashboard() {
     }
   };
 
+  // Handle table question generation
+  const handleTableGeneration = async () => {
+    setGeneratingTable(true);
+    setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: [] });
+    setSelectedQuestionIndex(0);
+
+    // Find the selected learning objective text if one is selected
+    const selectedLO = availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id);
+
+    try {
+      const response = await fetch('/api/admin/generate-rag-question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic_area: aiGeneratorData.topic_area,
+          difficulty: aiGeneratorData.difficulty,
+          learning_objective_id: aiGeneratorData.learning_objective_id || undefined,
+          learning_objective_text: selectedLO?.text || undefined,
+          generate_table: true,
+          save_to_database: false,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.questions?.length > 0) {
+        setAiGeneratorData({
+          ...aiGeneratorData,
+          generatedQuestions: data.questions
+        });
+      } else {
+        throw new Error(data.error || 'Failed to generate table question');
+      }
+    } catch (error) {
+      console.error('Error generating table question:', error);
+      alert(`Failed to generate table question: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setGeneratingTable(false);
+    }
+  };
+
   const handleSaveQuestion = async (index: number) => {
     const question = aiGeneratorData.generatedQuestions[index];
     if (!question) return;
@@ -368,7 +424,10 @@ export default function AdminDashboard() {
         explanation: question.explanation,
         keywords: question.keywords,
         learning_objective_id: question.learning_objective_id || null,
-        is_active: true
+        is_active: true,
+        has_table: question.has_table || false,
+        table_data: question.table_data || null,
+        source: question.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated'
       };
 
       const { error } = await supabase
@@ -410,7 +469,10 @@ export default function AdminDashboard() {
         explanation: q.explanation,
         keywords: q.keywords,
         learning_objective_id: q.learning_objective_id || null,
-        is_active: true
+        is_active: true,
+        has_table: q.has_table || false,
+        table_data: q.table_data || null,
+        source: q.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated'
       }));
 
       const { error } = await supabase
@@ -982,7 +1044,7 @@ export default function AdminDashboard() {
                     {generateAllLOs && selectedReading ? (
                       <button
                         onClick={() => handleBatchLOGeneration()}
-                        disabled={aiGeneratorData.generating}
+                        disabled={aiGeneratorData.generating || generatingTable}
                         className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                       >
                         {aiGeneratorData.generating
@@ -990,17 +1052,36 @@ export default function AdminDashboard() {
                           : `Generate for All ${availableLOs.length} Learning Objectives`}
                       </button>
                     ) : (
-                      <button
-                        onClick={() => handleAIGeneration()}
-                        disabled={aiGeneratorData.generating}
-                        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                      >
-                        {aiGeneratorData.generating
-                          ? `Generating ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
-                          : `Generate ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}`}
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleAIGeneration()}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                        >
+                          {aiGeneratorData.generating
+                            ? `Generating ${aiGeneratorData.questionCount} Q...`
+                            : `Generate ${aiGeneratorData.questionCount} Q`}
+                        </button>
+                        <button
+                          onClick={() => handleTableGeneration()}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          title="Generate a question with table data"
+                        >
+                          {generatingTable ? (
+                            <>Generating...</>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                              Table Q
+                            </>
+                          )}
+                        </button>
+                      </div>
                     )}
-                    {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
+                    {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && !generatingTable && (
                       <button
                         onClick={() => handleSaveAllQuestions()}
                         className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
@@ -1064,15 +1145,22 @@ export default function AdminDashboard() {
                   )}
                 </div>
 
-                {aiGeneratorData.generating && (
+                {(aiGeneratorData.generating || generatingTable) && (
                   <div className="flex flex-col items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                    <span className="mt-3 text-gray-300">AI is generating {aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''}...</span>
-                    <span className="text-xs text-gray-500 mt-1">~{aiGeneratorData.questionCount * 10}-{aiGeneratorData.questionCount * 15} seconds</span>
+                    <div className={`animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 ${generatingTable ? 'border-amber-500' : 'border-blue-500'}`}></div>
+                    <span className="mt-3 text-gray-300">
+                      {generatingTable
+                        ? 'AI is generating table question...'
+                        : `AI is generating ${aiGeneratorData.questionCount} question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
+                      }
+                    </span>
+                    <span className="text-xs text-gray-500 mt-1">
+                      {generatingTable ? '~15-20 seconds' : `~${aiGeneratorData.questionCount * 10}-${aiGeneratorData.questionCount * 15} seconds`}
+                    </span>
                   </div>
                 )}
 
-                {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
+                {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && !generatingTable && (
                   <div className="space-y-4">
                     {/* Question Navigation */}
                     <div className="flex items-center justify-between bg-gray-700 p-2 rounded-lg">
@@ -1114,9 +1202,59 @@ export default function AdminDashboard() {
                       return (
                         <div className="space-y-4">
                           <div>
-                            <h4 className="font-medium text-gray-300 mb-2">Question {selectedQuestionIndex + 1}:</h4>
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-medium text-gray-300">Question {selectedQuestionIndex + 1}:</h4>
+                              {currentQuestion.has_table && (
+                                <span className="bg-amber-600 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                                  Table
+                                </span>
+                              )}
+                            </div>
                             <p className="text-white bg-gray-700 p-3 rounded">{currentQuestion.question_text}</p>
                           </div>
+
+                          {/* Table Display */}
+                          {currentQuestion.has_table && currentQuestion.table_data && (
+                            <div className="bg-gray-900 border border-amber-700 rounded-lg overflow-hidden">
+                              <div className="bg-amber-900/30 px-4 py-2 border-b border-amber-700">
+                                <h4 className="font-medium text-amber-300 text-sm">{currentQuestion.table_data.title}</h4>
+                              </div>
+                              <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                  <thead>
+                                    <tr className="bg-gray-800">
+                                      {currentQuestion.table_data.headers.map((header: string, idx: number) => (
+                                        <th key={idx} className="px-4 py-2 text-left text-gray-300 font-semibold border-b border-gray-700">
+                                          {header}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {currentQuestion.table_data.rows.map((row: { label?: string; values: (string | number)[] }, rowIdx: number) => (
+                                      <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-gray-800/50' : 'bg-gray-800/30'}>
+                                        {row.label && (
+                                          <td className="px-4 py-2 text-gray-300 font-medium border-b border-gray-700/50">
+                                            {row.label}
+                                          </td>
+                                        )}
+                                        {row.values.map((value: string | number, valIdx: number) => (
+                                          <td key={valIdx} className="px-4 py-2 text-white border-b border-gray-700/50">
+                                            {typeof value === 'number' ? value.toLocaleString() : value}
+                                          </td>
+                                        ))}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                              {currentQuestion.table_data.footnote && (
+                                <div className="px-4 py-2 text-xs text-gray-400 italic border-t border-gray-700">
+                                  {currentQuestion.table_data.footnote}
+                                </div>
+                              )}
+                            </div>
+                          )}
 
                           <div>
                             <h4 className="font-medium text-gray-300 mb-2">Options:</h4>
@@ -1196,9 +1334,9 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && (
+                {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && !generatingTable && (
                   <div className="text-center py-8">
-                    <p className="text-gray-400">No questions generated yet. Click &quot;Generate 5 Questions&quot; to create CFA Level 1 questions using AI.</p>
+                    <p className="text-gray-400">No questions generated yet. Click &quot;Generate Q&quot; for regular questions or &quot;Table Q&quot; for questions with data tables.</p>
                   </div>
                 )}
               </div>
@@ -1208,7 +1346,8 @@ export default function AdminDashboard() {
             <div className="bg-gray-800 p-6 rounded-lg">
               <h3 className="text-xl font-semibold text-white mb-4">How RAG-Powered Generation Works</h3>
               <div className="space-y-2 text-gray-300">
-                <p>• <strong>Batch Generation:</strong> Generates 5 questions at once for efficient content creation</p>
+                <p>• <strong>Batch Generation:</strong> Generates multiple questions at once for efficient content creation</p>
+                <p>• <strong>Table Questions:</strong> Generate questions with data tables (cash flows, ratios, etc.) for calculation-based problems</p>
                 <p>• <strong>Grounded on Your Materials:</strong> Questions are generated using content from your cfatrainingmaterial/ folder</p>
                 <p>• <strong>No Hallucinations:</strong> AI retrieves relevant chunks from Pinecone vector database before generating</p>
                 <p>• <strong>Topic Area:</strong> Select from the 10 official CFA Level 1 topic areas</p>

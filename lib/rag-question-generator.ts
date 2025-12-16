@@ -20,6 +20,16 @@ function getOpenAIClient(): OpenAI {
   return openaiInstance;
 }
 
+export interface TableData {
+  title: string;
+  headers: string[];
+  rows: Array<{
+    label?: string;
+    values: (string | number)[];
+  }>;
+  footnote?: string;
+}
+
 export interface GeneratedQuestion {
   question_text: string;
   option_a: string;
@@ -34,6 +44,8 @@ export interface GeneratedQuestion {
   source_material?: string; // Which material it was based on
   learning_objective_id?: string;
   learning_objective_text?: string;
+  has_table?: boolean;
+  table_data?: TableData;
 }
 
 const CFA_QUESTION_GUIDELINES = `
@@ -315,4 +327,259 @@ export async function generateMultipleRAGQuestions(
   }
 
   return questions;
+}
+
+/**
+ * Generate a CFA question with table data
+ * Tables are commonly used for: cash flows, financial ratios, investment comparisons, etc.
+ */
+export async function generateTableQuestion(
+  topicArea: string,
+  difficulty: 'beginner' | 'intermediate' | 'advanced' = 'intermediate',
+  learningObjectiveId?: string,
+  learningObjectiveText?: string,
+  existingQuestions: string[] = []
+): Promise<GeneratedQuestion> {
+  try {
+    console.log(`\n========== TABLE QUESTION GENERATION ==========`);
+    console.log(`Topic: ${topicArea}`);
+    console.log(`Difficulty: ${difficulty}`);
+
+    // Retrieve context for the topic
+    const { context, sourceFiles } = await retrieveContextForQuestion(topicArea, undefined, difficulty, learningObjectiveText);
+
+    if (!context || context.trim().length === 0) {
+      throw new Error('No relevant training material found for this topic');
+    }
+
+    // Build learning objective section
+    const learningObjectiveSection = learningObjectiveId && learningObjectiveText
+      ? `
+LEARNING OBJECTIVE TO TEST:
+ID: ${learningObjectiveId}
+The candidate should be able to: ${learningObjectiveText}
+`
+      : '';
+
+    // Build existing questions section to avoid duplicates
+    const existingQuestionsSection = existingQuestions.length > 0
+      ? `
+===== EXISTING QUESTIONS TO AVOID =====
+${existingQuestions.slice(0, 15).map((q, i) => `${i + 1}. ${q}`).join('\n')}
+Create a UNIQUE question different from these.
+=======================================
+`
+      : '';
+
+    // Determine table type based on topic
+    const tableTypeGuidance = getTableTypeGuidance(topicArea);
+
+    const prompt = `
+${CFA_QUESTION_GUIDELINES}
+
+You are generating a CFA Level 1 exam question that includes a DATA TABLE. The question should require the candidate to analyze the table data to find the answer.
+
+===== SOURCE MATERIAL =====
+${context}
+===========================
+${learningObjectiveSection}${existingQuestionsSection}
+TABLE QUESTION REQUIREMENTS:
+1. Create a realistic financial scenario that presents data in a table format
+2. The table should contain numerical data that must be analyzed to answer the question
+3. The question should require calculation or comparison using the table data
+4. Include realistic but fictional company names/scenarios
+
+${tableTypeGuidance}
+
+TOPIC: ${topicArea}
+DIFFICULTY: ${difficulty}
+${learningObjectiveId ? `LEARNING OBJECTIVE: ${learningObjectiveId}` : ''}
+
+TABLE DATA FORMAT REQUIREMENTS:
+- title: Brief descriptive title for the table
+- headers: Column headers (e.g., ["Year", "Cash Flow ($)", "Discount Factor"])
+- rows: Array of row objects with optional label and values array
+- footnote: Optional note about the data (e.g., "All figures in millions")
+
+Return ONLY a valid JSON object:
+{
+  "question_text": "Based on the following data, [question with appropriate qualifiers]...",
+  "option_a": "First option",
+  "option_b": "Second option",
+  "option_c": "Third option",
+  "correct_answer": "A|B|C",
+  "explanation": "[Letter] is correct. [Detailed explanation showing calculations using table data]...",
+  "difficulty_level": "${difficulty}",
+  "topic_area": "${topicArea}",
+  "keywords": ["keyword1", "keyword2", "keyword3"],
+  "has_table": true,
+  "table_data": {
+    "title": "Table title",
+    "headers": ["Column1", "Column2", "Column3"],
+    "rows": [
+      {"label": "Row 1", "values": [100, 200, 300]},
+      {"label": "Row 2", "values": [150, 250, 350]}
+    ],
+    "footnote": "Optional footnote"
+  }
+}
+`;
+
+    const openai = getOpenAIClient();
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "system",
+          content: "You are a senior CFA exam question writer specializing in questions that present data in tabular format. Your questions require candidates to analyze, calculate, or compare data from tables to find the correct answer. Create realistic financial scenarios with fictional but believable numbers. The table data should be essential to answering the question - not just decorative. Always include step-by-step calculations in your explanations that reference specific values from the table."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.8,
+      max_tokens: 2500,
+      response_format: { type: "json_object" }
+    });
+
+    const content = completion.choices[0]?.message?.content;
+
+    if (!content) {
+      throw new Error('No response from OpenAI');
+    }
+
+    const question: GeneratedQuestion = JSON.parse(content);
+
+    // Validate the generated question
+    if (!question.question_text || !question.option_a || !question.option_b || !question.option_c) {
+      throw new Error('Invalid question format: missing required fields');
+    }
+
+    if (!['A', 'B', 'C'].includes(question.correct_answer)) {
+      throw new Error('Invalid correct answer: must be A, B, or C');
+    }
+
+    if (!question.table_data || !question.table_data.headers || !question.table_data.rows) {
+      throw new Error('Invalid table data: missing required table fields');
+    }
+
+    // Set flags and metadata
+    question.has_table = true;
+    question.source_material = sourceFiles.length > 0
+      ? `RAG: ${sourceFiles.join(', ')}`
+      : 'CFA Training Materials (RAG)';
+
+    if (learningObjectiveId) {
+      question.learning_objective_id = learningObjectiveId;
+      question.learning_objective_text = learningObjectiveText;
+    }
+
+    console.log(`[TABLE] Question generated with ${question.table_data.rows.length} rows`);
+    console.log(`==============================================\n`);
+
+    return question;
+
+  } catch (error) {
+    console.error('Error generating table question:', error);
+    throw new Error(`Failed to generate table question: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
+/**
+ * Get topic-specific guidance for table types
+ */
+function getTableTypeGuidance(topicArea: string): string {
+  const topicGuidance: Record<string, string> = {
+    'Quantitative Methods': `
+SUGGESTED TABLE TYPES for Quantitative Methods:
+- Cash flow schedule (Year 0, 1, 2, 3... with cash flows)
+- Investment comparison (Investment A, B, C with maturity, liquidity, default risk, interest rates)
+- Probability distributions (Outcomes and probabilities)
+- Time value of money data (PV, FV, N, I/Y for different scenarios)
+- Regression data (X, Y values)
+Example: Create a cash flow table for NPV/IRR calculations or investment comparison for TVM problems.`,
+
+    'Financial Statement Analysis': `
+SUGGESTED TABLE TYPES for Financial Statement Analysis:
+- Financial ratios over multiple years (Year 1, 2, 3 with ROE, ROA, margins)
+- Balance sheet excerpts (Assets, Liabilities, Equity items)
+- Income statement data (Revenue, COGS, Operating expenses, Net income)
+- Common-size analysis (Line items as % of revenue or assets)
+- DuPont decomposition data
+Example: Create a ratio comparison table or financial statement excerpt for analysis.`,
+
+    'Corporate Issuers': `
+SUGGESTED TABLE TYPES for Corporate Issuers:
+- Capital structure data (Debt, Equity, WACC components)
+- Project cash flows for capital budgeting
+- Dividend payment history
+- Cost of capital components
+Example: Create project cash flows for NPV analysis or capital structure comparison.`,
+
+    'Equity Investments': `
+SUGGESTED TABLE TYPES for Equity Investments:
+- Stock valuation data (Price, EPS, Dividends, Growth rates)
+- Company comparison metrics (P/E, P/B, ROE for multiple companies)
+- Market index components and weights
+- DDM inputs (D0, g, r for different scenarios)
+Example: Create valuation multiples comparison or dividend data for DDM.`,
+
+    'Fixed Income': `
+SUGGESTED TABLE TYPES for Fixed Income:
+- Bond characteristics (Coupon, Maturity, YTM, Price)
+- Yield curve data (Maturity vs Yield)
+- Duration/Convexity calculations
+- Credit spreads by rating
+Example: Create bond comparison table or yield curve data.`,
+
+    'Derivatives': `
+SUGGESTED TABLE TYPES for Derivatives:
+- Option payoff data (Stock price, Call value, Put value)
+- Forward/Futures prices at different maturities
+- Hedging scenarios (Spot, Forward, Net position)
+- Option Greeks for different strikes
+Example: Create option payoff table or futures pricing data.`,
+
+    'Portfolio Management': `
+SUGGESTED TABLE TYPES for Portfolio Management:
+- Asset allocation weights and returns
+- Correlation matrix
+- Portfolio statistics (Expected return, Std dev, Sharpe ratio)
+- Security characteristics (Beta, Expected return, Residual risk)
+Example: Create asset return/risk table or correlation matrix.`,
+
+    'Ethical and Professional Standards': `
+SUGGESTED TABLE TYPES for Ethics:
+- Scenario comparison (Actions and their compliance status)
+- Timeline of events
+- Stakeholder interests matrix
+- Compensation structure data
+Example: Create a scenario table comparing compliant vs non-compliant actions.`,
+
+    'Economics': `
+SUGGESTED TABLE TYPES for Economics:
+- GDP components over time
+- Interest rate/Inflation data
+- Currency exchange rates
+- Supply/Demand schedule
+- Country comparison (GDP growth, inflation, interest rates)
+Example: Create economic indicators table or currency data.`,
+
+    'Alternative Investments': `
+SUGGESTED TABLE TYPES for Alternative Investments:
+- Fund performance data (Returns, Fees, AUM)
+- Real estate metrics (Cap rate, NOI, Price)
+- Hedge fund statistics
+- Commodity prices over time
+Example: Create fund comparison or real estate valuation data.`
+  };
+
+  return topicGuidance[topicArea] || `
+SUGGESTED TABLE TYPES:
+- Numerical data comparison across multiple items
+- Time series data (Year 1, 2, 3...)
+- Financial metrics comparison
+- Calculation input data
+Create a table appropriate for the topic that requires analysis to answer the question.`;
 }

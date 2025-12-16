@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateRAGQuestion, generateMultipleRAGQuestions } from '@/lib/rag-question-generator';
+import { generateRAGQuestion, generateMultipleRAGQuestions, generateTableQuestion } from '@/lib/rag-question-generator';
 import { isRAGConfigured } from '@/lib/rag';
 import { createClient } from '@/lib/supabase';
 import { createAdminClient } from '@/lib/supabase';
@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
       learning_objective_text,
       count = 1,
       save_to_database = false,
-      created_by
+      created_by,
+      generate_table = false
     } = body;
 
     if (!topic_area) {
@@ -59,7 +60,11 @@ export async function POST(request: NextRequest) {
 
     // Generate questions using RAG
     let questions;
-    if (count > 1) {
+    if (generate_table) {
+      // Generate table-based question
+      const question = await generateTableQuestion(topic_area, difficulty, learning_objective_id, learning_objective_text, existingQuestions);
+      questions = [question];
+    } else if (count > 1) {
       questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic, learning_objective_id, learning_objective_text, existingQuestions);
     } else {
       const question = await generateRAGQuestion(topic_area, difficulty, subtopic, learning_objective_id, learning_objective_text, existingQuestions);
@@ -84,7 +89,9 @@ export async function POST(request: NextRequest) {
         learning_objective_id: q.learning_objective_id || null,
         created_by: created_by || null,
         is_active: true,
-        source: 'RAG-Generated'
+        source: q.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated',
+        has_table: q.has_table || false,
+        table_data: q.table_data || null
       }));
 
       const { data, error } = await supabase
@@ -140,7 +147,8 @@ export async function GET() {
           'subtopic': 'Optional - specific subtopic within the topic area',
           'count': 'Optional - number of questions to generate (default: 1)',
           'save_to_database': 'Optional - boolean to save questions to database',
-          'created_by': 'Optional - user ID of question creator'
+          'created_by': 'Optional - user ID of question creator',
+          'generate_table': 'Optional - boolean to generate question with table data (default: false)'
         }
       },
       setup_instructions: !ragConfigured ? 'Run: npx tsx scripts/setup-rag.ts' : undefined
