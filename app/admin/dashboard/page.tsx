@@ -78,6 +78,7 @@ export default function AdminDashboard() {
     difficulty: 'intermediate',
     subtopic: '',
     learning_objective_id: '',
+    questionCount: 5,
     generating: false,
     generatedQuestions: [] as GeneratedQuestion[]
   });
@@ -201,7 +202,7 @@ export default function AdminDashboard() {
           subtopic: aiGeneratorData.subtopic || undefined,
           learning_objective_id: aiGeneratorData.learning_objective_id || undefined,
           learning_objective_text: selectedLO?.text || undefined,
-          count: 5,
+          count: aiGeneratorData.questionCount,
           save_to_database: false,
         }),
       });
@@ -799,19 +800,38 @@ export default function AdminDashboard() {
                     </div>
                   )}
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Difficulty Level
-                    </label>
-                    <select
-                      value={aiGeneratorData.difficulty}
-                      onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, difficulty: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Difficulty Level
+                      </label>
+                      <select
+                        value={aiGeneratorData.difficulty}
+                        onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, difficulty: e.target.value })}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Number of Questions
+                      </label>
+                      <select
+                        value={aiGeneratorData.questionCount}
+                        onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, questionCount: parseInt(e.target.value) })}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value={1}>1 Question</option>
+                        <option value={2}>2 Questions</option>
+                        <option value={3}>3 Questions</option>
+                        <option value={4}>4 Questions</option>
+                        <option value={5}>5 Questions</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div className="space-y-3">
@@ -820,21 +840,23 @@ export default function AdminDashboard() {
                       disabled={aiGeneratorData.generating}
                       className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                     >
-                      {aiGeneratorData.generating ? 'Generating 5 Questions...' : 'Generate 5 Questions'}
+                      {aiGeneratorData.generating
+                        ? `Generating ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
+                        : `Generate ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}`}
                     </button>
                     {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
                       <button
                         onClick={() => handleSaveAllQuestions()}
                         className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
                       >
-                        Save All {aiGeneratorData.generatedQuestions.length} Questions
+                        Save All {aiGeneratorData.generatedQuestions.length} Question{aiGeneratorData.generatedQuestions.length > 1 ? 's' : ''}
                       </button>
                     )}
                   </div>
 
                   {/* Token Estimation */}
                   <div className="mt-4 p-3 bg-gray-700 rounded text-xs text-gray-400">
-                    <strong>Estimated tokens per batch:</strong> ~17,000 tokens (5 questions)
+                    <strong>Estimated tokens:</strong> ~{(aiGeneratorData.questionCount * 3400).toLocaleString()} tokens ({aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''})
                     <br />
                     <span className="text-gray-500">~3,000 input + ~400 output per question</span>
                   </div>
@@ -855,8 +877,8 @@ export default function AdminDashboard() {
                 {aiGeneratorData.generating && (
                   <div className="flex flex-col items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                    <span className="mt-3 text-gray-300">AI is generating 5 questions...</span>
-                    <span className="text-xs text-gray-500 mt-1">This may take 30-60 seconds</span>
+                    <span className="mt-3 text-gray-300">AI is generating {aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''}...</span>
+                    <span className="text-xs text-gray-500 mt-1">~{aiGeneratorData.questionCount * 10}-{aiGeneratorData.questionCount * 15} seconds</span>
                   </div>
                 )}
 
