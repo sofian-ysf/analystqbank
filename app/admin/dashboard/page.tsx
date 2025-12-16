@@ -87,6 +87,20 @@ export default function AdminDashboard() {
   const [selectedReading, setSelectedReading] = useState<string>('');
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
+  const [generateAllLOs, setGenerateAllLOs] = useState(false);
+  const [batchProgress, setBatchProgress] = useState<{
+    isRunning: boolean;
+    currentLOIndex: number;
+    totalLOs: number;
+    currentLOId: string;
+    completedLOs: string[];
+  }>({
+    isRunning: false,
+    currentLOIndex: 0,
+    totalLOs: 0,
+    currentLOId: '',
+    completedLOs: []
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -228,6 +242,110 @@ export default function AdminDashboard() {
       console.error('Error generating questions:', error);
       alert(`Failed to generate questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
       setAiGeneratorData({ ...aiGeneratorData, generating: false });
+    }
+  };
+
+  // Handle batch generation for all LOs in the selected topic/reading
+  const handleBatchLOGeneration = async () => {
+    // Get all LOs to process - either from selected reading or entire topic
+    const losToProcess = selectedReading
+      ? availableLOs
+      : getLearningObjectivesForTopic(aiGeneratorData.topic_area);
+
+    if (losToProcess.length === 0) {
+      alert('No learning objectives found for the selected topic/reading');
+      return;
+    }
+
+    // Initialize batch progress
+    setBatchProgress({
+      isRunning: true,
+      currentLOIndex: 0,
+      totalLOs: losToProcess.length,
+      currentLOId: losToProcess[0].id,
+      completedLOs: []
+    });
+    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+    setSelectedQuestionIndex(0);
+
+    const allGeneratedQuestions: GeneratedQuestion[] = [];
+
+    for (let i = 0; i < losToProcess.length; i++) {
+      const lo = losToProcess[i];
+
+      // Update progress
+      setBatchProgress(prev => ({
+        ...prev,
+        currentLOIndex: i,
+        currentLOId: lo.id
+      }));
+
+      try {
+        console.log(`[Batch] Generating for LO ${i + 1}/${losToProcess.length}: ${lo.id}`);
+
+        const response = await fetch('/api/admin/generate-rag-question', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            topic_area: aiGeneratorData.topic_area,
+            difficulty: aiGeneratorData.difficulty,
+            learning_objective_id: lo.id,
+            learning_objective_text: lo.text,
+            count: aiGeneratorData.questionCount,
+            save_to_database: false,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.questions?.length > 0) {
+          allGeneratedQuestions.push(...data.questions);
+
+          // Update progress with completed LO
+          setBatchProgress(prev => ({
+            ...prev,
+            completedLOs: [...prev.completedLOs, lo.id]
+          }));
+
+          // Update generated questions in real-time so user can see progress
+          setAiGeneratorData(prev => ({
+            ...prev,
+            generatedQuestions: [...allGeneratedQuestions]
+          }));
+        } else {
+          console.error(`Failed to generate for LO ${lo.id}:`, data.error);
+        }
+      } catch (error) {
+        console.error(`Error generating for LO ${lo.id}:`, error);
+        // Continue with next LO
+      }
+
+      // Small delay between LOs to avoid rate limiting
+      if (i < losToProcess.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    // Finalize
+    setBatchProgress({
+      isRunning: false,
+      currentLOIndex: 0,
+      totalLOs: 0,
+      currentLOId: '',
+      completedLOs: []
+    });
+    setAiGeneratorData(prev => ({
+      ...prev,
+      generating: false,
+      generatedQuestions: allGeneratedQuestions
+    }));
+
+    if (allGeneratedQuestions.length > 0) {
+      alert(`Generated ${allGeneratedQuestions.length} questions across ${losToProcess.length} learning objectives!`);
+    } else {
+      alert('No questions were generated. Please check the console for errors.');
     }
   };
 
@@ -776,25 +894,51 @@ export default function AdminDashboard() {
 
                   {selectedReading && availableLOs.length > 0 && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Learning Objective
-                        <span className="text-xs text-blue-400 ml-2">({availableLOs.length} available)</span>
-                      </label>
-                      <select
-                        value={aiGeneratorData.learning_objective_id}
-                        onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: e.target.value })}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
-                      >
-                        <option value="">-- Any Learning Objective --</option>
-                        {availableLOs.map((lo) => (
-                          <option key={lo.id} value={lo.id} title={lo.text}>
-                            {lo.id}: {lo.text.length > 80 ? lo.text.substring(0, 80) + '...' : lo.text}
-                          </option>
-                        ))}
-                      </select>
-                      {aiGeneratorData.learning_objective_id && (
-                        <div className="mt-2 p-2 bg-blue-900/30 border border-blue-700 rounded text-xs text-blue-200">
-                          <strong>Selected LO:</strong> {availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id)?.text}
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block text-sm font-medium text-gray-300">
+                          Learning Objective
+                          <span className="text-xs text-blue-400 ml-2">({availableLOs.length} available)</span>
+                        </label>
+                        <label className="flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={generateAllLOs}
+                            onChange={(e) => {
+                              setGenerateAllLOs(e.target.checked);
+                              if (e.target.checked) {
+                                setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: '' });
+                              }
+                            }}
+                            className="mr-2 w-4 h-4 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500"
+                          />
+                          <span className="text-xs text-purple-400 font-medium">Generate for ALL LOs</span>
+                        </label>
+                      </div>
+                      {!generateAllLOs ? (
+                        <>
+                          <select
+                            value={aiGeneratorData.learning_objective_id}
+                            onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: e.target.value })}
+                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                          >
+                            <option value="">-- Any Learning Objective --</option>
+                            {availableLOs.map((lo) => (
+                              <option key={lo.id} value={lo.id} title={lo.text}>
+                                {lo.id}: {lo.text.length > 80 ? lo.text.substring(0, 80) + '...' : lo.text}
+                              </option>
+                            ))}
+                          </select>
+                          {aiGeneratorData.learning_objective_id && (
+                            <div className="mt-2 p-2 bg-blue-900/30 border border-blue-700 rounded text-xs text-blue-200">
+                              <strong>Selected LO:</strong> {availableLOs.find(lo => lo.id === aiGeneratorData.learning_objective_id)?.text}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="p-3 bg-purple-900/30 border border-purple-700 rounded text-sm text-purple-200">
+                          <strong>Batch Mode:</strong> Will generate {aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''} for each of the {availableLOs.length} learning objectives in this reading.
+                          <br />
+                          <span className="text-xs text-purple-400">Total: ~{availableLOs.length * aiGeneratorData.questionCount} questions</span>
                         </div>
                       )}
                     </div>
@@ -835,15 +979,27 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-3">
-                    <button
-                      onClick={() => handleAIGeneration()}
-                      disabled={aiGeneratorData.generating}
-                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                    >
-                      {aiGeneratorData.generating
-                        ? `Generating ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
-                        : `Generate ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}`}
-                    </button>
+                    {generateAllLOs && selectedReading ? (
+                      <button
+                        onClick={() => handleBatchLOGeneration()}
+                        disabled={aiGeneratorData.generating}
+                        className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      >
+                        {aiGeneratorData.generating
+                          ? `Generating for All ${availableLOs.length} LOs...`
+                          : `Generate for All ${availableLOs.length} Learning Objectives`}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleAIGeneration()}
+                        disabled={aiGeneratorData.generating}
+                        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      >
+                        {aiGeneratorData.generating
+                          ? `Generating ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
+                          : `Generate ${aiGeneratorData.questionCount} Question${aiGeneratorData.questionCount > 1 ? 's' : ''}`}
+                      </button>
+                    )}
                     {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && (
                       <button
                         onClick={() => handleSaveAllQuestions()}
@@ -854,11 +1010,45 @@ export default function AdminDashboard() {
                     )}
                   </div>
 
+                  {/* Batch Progress */}
+                  {batchProgress.isRunning && (
+                    <div className="mt-4 p-4 bg-purple-900/30 border border-purple-700 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium text-purple-300">Batch Progress</span>
+                        <span className="text-xs text-purple-400">
+                          {batchProgress.currentLOIndex + 1} / {batchProgress.totalLOs} LOs
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                        <div
+                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                          style={{ width: `${((batchProgress.currentLOIndex + 1) / batchProgress.totalLOs) * 100}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-purple-200">
+                        Currently generating: <strong>{batchProgress.currentLOId}</strong>
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        Questions generated so far: {aiGeneratorData.generatedQuestions.length}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Token Estimation */}
                   <div className="mt-4 p-3 bg-gray-700 rounded text-xs text-gray-400">
-                    <strong>Estimated tokens:</strong> ~{(aiGeneratorData.questionCount * 3400).toLocaleString()} tokens ({aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''})
-                    <br />
-                    <span className="text-gray-500">~3,000 input + ~400 output per question</span>
+                    {generateAllLOs && selectedReading ? (
+                      <>
+                        <strong>Estimated tokens (batch):</strong> ~{(availableLOs.length * aiGeneratorData.questionCount * 3400).toLocaleString()} tokens
+                        <br />
+                        <span className="text-gray-500">{availableLOs.length} LOs × {aiGeneratorData.questionCount} questions × ~3,400 tokens each</span>
+                      </>
+                    ) : (
+                      <>
+                        <strong>Estimated tokens:</strong> ~{(aiGeneratorData.questionCount * 3400).toLocaleString()} tokens ({aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''})
+                        <br />
+                        <span className="text-gray-500">~3,000 input + ~400 output per question</span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
