@@ -6,6 +6,16 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 
+interface TableData {
+  title: string;
+  headers: string[];
+  rows: Array<{
+    label?: string;
+    values: (string | number)[];
+  }>;
+  footnote?: string;
+}
+
 interface Question {
   id: number;
   topic_area: string;
@@ -19,6 +29,8 @@ interface Question {
   explanation: string;
   keywords: string[];
   created_at: string;
+  has_table?: boolean;
+  table_data?: TableData;
 }
 
 const topicAreaMap: { [key: string]: string } = {
@@ -282,14 +294,64 @@ export default function CategoryPractice() {
         <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 mb-6">
           <div className="mb-6">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Question {currentQuestionIndex + 1}
-              </h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Question {currentQuestionIndex + 1}
+                </h2>
+                {currentQuestion.has_table && (
+                  <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-medium">
+                    Table
+                  </span>
+                )}
+              </div>
               <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
                 {currentQuestion.difficulty_level}
               </span>
             </div>
             <p className="text-gray-800 leading-relaxed">{currentQuestion.question_text}</p>
+
+            {/* Table Display */}
+            {currentQuestion.has_table && currentQuestion.table_data && (
+              <div className="mt-4 bg-white border border-amber-200 rounded-lg overflow-hidden shadow-sm">
+                <div className="bg-amber-50 px-4 py-2 border-b border-amber-200">
+                  <h4 className="font-medium text-amber-900 text-sm">{currentQuestion.table_data.title}</h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-50">
+                        {currentQuestion.table_data.headers.map((header: string, idx: number) => (
+                          <th key={idx} className="px-4 py-3 text-left text-gray-700 font-semibold border-b border-gray-200">
+                            {header}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentQuestion.table_data.rows.map((row: { label?: string; values: (string | number)[] }, rowIdx: number) => (
+                        <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                          {row.label && (
+                            <td className="px-4 py-3 text-gray-700 font-medium border-b border-gray-100">
+                              {row.label}
+                            </td>
+                          )}
+                          {row.values.map((value: string | number, valIdx: number) => (
+                            <td key={valIdx} className="px-4 py-3 text-gray-900 border-b border-gray-100">
+                              {typeof value === 'number' ? value.toLocaleString() : value}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {currentQuestion.table_data.footnote && (
+                  <div className="px-4 py-2 text-xs text-gray-500 italic border-t border-gray-200 bg-gray-50">
+                    {currentQuestion.table_data.footnote}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Answer Options */}
