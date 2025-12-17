@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cfaLevel1Curriculum } from '@/lib/curriculum';
-import { createClient } from '@/lib/supabase';
 import { CFA_2026_LEARNING_OBJECTIVES, getLearningObjectivesForTopic, getReadingsForTopic, type LearningObjective, type Reading } from '@/lib/learning-objectives-2026';
 
 interface User {
@@ -410,32 +409,35 @@ export default function AdminDashboard() {
     if (!question) return;
 
     try {
-      const supabase = createClient();
+      const response = await fetch('/api/admin/save-questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questions: [{
+            topic_area: question.topic_area,
+            subtopic: question.subtopic || null,
+            difficulty_level: question.difficulty_level,
+            question_text: question.question_text,
+            option_a: question.option_a,
+            option_b: question.option_b,
+            option_c: question.option_c,
+            correct_answer: question.correct_answer,
+            explanation: question.explanation,
+            keywords: question.keywords,
+            learning_objective_id: question.learning_objective_id || null,
+            has_table: question.has_table || false,
+            table_data: question.table_data || null,
+            source: question.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated'
+          }]
+        }),
+      });
 
-      const questionToSave = {
-        topic_area: question.topic_area,
-        subtopic: question.subtopic || null,
-        difficulty_level: question.difficulty_level,
-        question_text: question.question_text,
-        option_a: question.option_a,
-        option_b: question.option_b,
-        option_c: question.option_c,
-        correct_answer: question.correct_answer,
-        explanation: question.explanation,
-        keywords: question.keywords,
-        learning_objective_id: question.learning_objective_id || null,
-        is_active: true,
-        has_table: question.has_table || false,
-        table_data: question.table_data || null,
-        source: question.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated'
-      };
+      const data = await response.json();
 
-      const { error } = await supabase
-        .from('questions')
-        .insert([questionToSave]);
-
-      if (error) {
-        throw new Error(error.message);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to save question');
       }
 
       alert('Question saved to database successfully!');
@@ -455,8 +457,6 @@ export default function AdminDashboard() {
     if (aiGeneratorData.generatedQuestions.length === 0) return;
 
     try {
-      const supabase = createClient();
-
       const questionsToSave = aiGeneratorData.generatedQuestions.map(q => ({
         topic_area: q.topic_area,
         subtopic: q.subtopic || null,
@@ -469,21 +469,26 @@ export default function AdminDashboard() {
         explanation: q.explanation,
         keywords: q.keywords,
         learning_objective_id: q.learning_objective_id || null,
-        is_active: true,
         has_table: q.has_table || false,
         table_data: q.table_data || null,
         source: q.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated'
       }));
 
-      const { error } = await supabase
-        .from('questions')
-        .insert(questionsToSave);
+      const response = await fetch('/api/admin/save-questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ questions: questionsToSave }),
+      });
 
-      if (error) {
-        throw new Error(error.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to save questions');
       }
 
-      alert(`${questionsToSave.length} questions saved to database successfully!`);
+      alert(`${data.saved_count} questions saved to database successfully!`);
       setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: [] });
       setSelectedQuestionIndex(0);
     } catch (error) {
