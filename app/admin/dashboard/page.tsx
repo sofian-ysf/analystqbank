@@ -267,7 +267,7 @@ export default function AdminDashboard() {
   };
 
   // Handle batch generation for all LOs in the selected topic/reading
-  const handleBatchLOGeneration = async () => {
+  const handleBatchLOGeneration = async (generateTable: boolean = false) => {
     // Get all LOs to process - either from selected reading or entire topic
     const losToProcess = selectedReading
       ? availableLOs
@@ -290,7 +290,13 @@ export default function AdminDashboard() {
       completedLOs: [],
       completedReadings: []
     });
-    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+
+    if (generateTable) {
+      setGeneratingTable(true);
+    } else {
+      setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+    }
+    setAiGeneratorData(prev => ({ ...prev, generatedQuestions: [] }));
     setSelectedQuestionIndex(0);
 
     const allGeneratedQuestions: GeneratedQuestion[] = [];
@@ -306,7 +312,7 @@ export default function AdminDashboard() {
       }));
 
       try {
-        console.log(`[Batch] Generating for LO ${i + 1}/${losToProcess.length}: ${lo.id}`);
+        console.log(`[Batch${generateTable ? ' Table' : ''}] Generating for LO ${i + 1}/${losToProcess.length}: ${lo.id}`);
 
         const response = await fetch('/api/admin/generate-rag-question', {
           method: 'POST',
@@ -318,8 +324,9 @@ export default function AdminDashboard() {
             difficulty: aiGeneratorData.difficulty,
             learning_objective_id: lo.id,
             learning_objective_text: lo.text,
-            count: aiGeneratorData.questionCount,
+            count: generateTable ? 1 : aiGeneratorData.questionCount,
             save_to_database: false,
+            generate_table: generateTable,
           }),
         });
 
@@ -347,9 +354,9 @@ export default function AdminDashboard() {
         // Continue with next LO
       }
 
-      // Small delay between LOs to avoid rate limiting
+      // Small delay between LOs to avoid rate limiting (longer for table questions)
       if (i < losToProcess.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, generateTable ? 2000 : 1000));
       }
     }
 
@@ -365,6 +372,7 @@ export default function AdminDashboard() {
       completedLOs: [],
       completedReadings: []
     });
+    setGeneratingTable(false);
     setAiGeneratorData(prev => ({
       ...prev,
       generating: false,
@@ -372,14 +380,14 @@ export default function AdminDashboard() {
     }));
 
     if (allGeneratedQuestions.length > 0) {
-      alert(`Generated ${allGeneratedQuestions.length} questions across ${losToProcess.length} learning objectives!`);
+      alert(`Generated ${allGeneratedQuestions.length} ${generateTable ? 'table ' : ''}questions across ${losToProcess.length} learning objectives!`);
     } else {
       alert('No questions were generated. Please check the console for errors.');
     }
   };
 
   // Handle batch generation for ALL readings in the selected topic
-  const handleBatchAllReadingsGeneration = async () => {
+  const handleBatchAllReadingsGeneration = async (generateTable: boolean = false) => {
     const readings = getReadingsForTopic(aiGeneratorData.topic_area);
 
     if (readings.length === 0) {
@@ -402,7 +410,13 @@ export default function AdminDashboard() {
       completedLOs: [],
       completedReadings: []
     });
-    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+
+    if (generateTable) {
+      setGeneratingTable(true);
+    } else {
+      setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+    }
+    setAiGeneratorData(prev => ({ ...prev, generatedQuestions: [] }));
     setSelectedQuestionIndex(0);
 
     const allGeneratedQuestions: GeneratedQuestion[] = [];
@@ -420,7 +434,7 @@ export default function AdminDashboard() {
         currentReadingName: reading.name
       }));
 
-      console.log(`[Batch All Readings] Processing reading ${readingIdx + 1}/${readings.length}: ${reading.name}`);
+      console.log(`[Batch All Readings${generateTable ? ' Table' : ''}] Processing reading ${readingIdx + 1}/${readings.length}: ${reading.name}`);
 
       // Iterate through each LO in the reading
       for (let loIdx = 0; loIdx < losInReading.length; loIdx++) {
@@ -434,7 +448,7 @@ export default function AdminDashboard() {
         }));
 
         try {
-          console.log(`[Batch All Readings] Generating for LO ${globalLOIndex + 1}/${totalLOsCount}: ${lo.id}`);
+          console.log(`[Batch All Readings${generateTable ? ' Table' : ''}] Generating for LO ${globalLOIndex + 1}/${totalLOsCount}: ${lo.id}`);
 
           const response = await fetch('/api/admin/generate-rag-question', {
             method: 'POST',
@@ -447,8 +461,9 @@ export default function AdminDashboard() {
               subtopic: reading.name,
               learning_objective_id: lo.id,
               learning_objective_text: lo.text,
-              count: aiGeneratorData.questionCount,
+              count: generateTable ? 1 : aiGeneratorData.questionCount,
               save_to_database: false,
+              generate_table: generateTable,
             }),
           });
 
@@ -478,8 +493,8 @@ export default function AdminDashboard() {
 
         globalLOIndex++;
 
-        // Small delay between LOs to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Small delay between LOs to avoid rate limiting (longer for table questions)
+        await new Promise(resolve => setTimeout(resolve, generateTable ? 2500 : 1500));
       }
 
       // Mark reading as completed
@@ -490,7 +505,7 @@ export default function AdminDashboard() {
 
       // Slightly longer delay between readings
       if (readingIdx < readings.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, generateTable ? 3000 : 2000));
       }
     }
 
@@ -506,6 +521,7 @@ export default function AdminDashboard() {
       completedLOs: [],
       completedReadings: []
     });
+    setGeneratingTable(false);
     setAiGeneratorData(prev => ({
       ...prev,
       generating: false,
@@ -513,7 +529,7 @@ export default function AdminDashboard() {
     }));
 
     if (allGeneratedQuestions.length > 0) {
-      alert(`Generated ${allGeneratedQuestions.length} questions across ${readings.length} readings and ${totalLOsCount} learning objectives!`);
+      alert(`Generated ${allGeneratedQuestions.length} ${generateTable ? 'table ' : ''}questions across ${readings.length} readings and ${totalLOsCount} learning objectives!`);
     } else {
       alert('No questions were generated. Please check the console for errors.');
     }
@@ -1234,25 +1250,63 @@ export default function AdminDashboard() {
 
                   <div className="space-y-3">
                     {generateAllReadings ? (
-                      <button
-                        onClick={() => handleBatchAllReadingsGeneration()}
-                        disabled={aiGeneratorData.generating || generatingTable}
-                        className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                      >
-                        {aiGeneratorData.generating
-                          ? `Generating for All Readings...`
-                          : `Generate for All ${availableReadings.length} Readings`}
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleBatchAllReadingsGeneration(false)}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                        >
+                          {aiGeneratorData.generating && !generatingTable
+                            ? `Generating...`
+                            : `Generate All ${availableReadings.length} Readings`}
+                        </button>
+                        <button
+                          onClick={() => handleBatchAllReadingsGeneration(true)}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          title="Generate table questions for all readings"
+                        >
+                          {generatingTable ? (
+                            <>Generating...</>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                              Table Q All
+                            </>
+                          )}
+                        </button>
+                      </div>
                     ) : generateAllLOs && selectedReading ? (
-                      <button
-                        onClick={() => handleBatchLOGeneration()}
-                        disabled={aiGeneratorData.generating || generatingTable}
-                        className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                      >
-                        {aiGeneratorData.generating
-                          ? `Generating for All ${availableLOs.length} LOs...`
-                          : `Generate for All ${availableLOs.length} Learning Objectives`}
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleBatchLOGeneration(false)}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                        >
+                          {aiGeneratorData.generating && !generatingTable
+                            ? `Generating...`
+                            : `Generate All ${availableLOs.length} LOs`}
+                        </button>
+                        <button
+                          onClick={() => handleBatchLOGeneration(true)}
+                          disabled={aiGeneratorData.generating || generatingTable}
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          title="Generate table questions for all LOs"
+                        >
+                          {generatingTable ? (
+                            <>Generating...</>
+                          ) : (
+                            <>
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                              </svg>
+                              Table Q All
+                            </>
+                          )}
+                        </button>
+                      </div>
                     ) : (
                       <div className="flex gap-2">
                         <button
