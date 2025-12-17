@@ -1,0 +1,368 @@
+
+> financeexamprep@0.1.0 setup-rag
+> tsx scripts/setup-rag.ts
+
+[dotenv@17.2.3] injecting env (7) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+🚀 Starting RAG Setup...
+
+This will:
+1. Create Supabase Storage bucket
+2. Upload PDFs from cfatrainingmaterial folder
+3. Extract and chunk text content
+4. Generate embeddings using OpenAI
+5. Store in Pinecone for fast retrieval
+
+
+📦 Creating Supabase Storage bucket...
+(node:17475) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅ Bucket already exists
+
+📄 Scanning for PDF files...
+✅ Found 61 PDF files
+
+☁️  Uploading PDFs to Supabase Storage...
+⏭️  Skipping (already exists): ethical-professional-standards/R56 Ethics and Trust in the Investment Profession IFT Notes.pdf
+⏭️  Skipping (already exists): ethical-professional-standards/R57 Code of Ethics and Standards of Professional Conduct IFT Notes.pdf
+⏭️  Skipping (already exists): ethical-professional-standards/R58 Guidance for Standards I-VII IFT Notes.pdf
+⏭️  Skipping (already exists): ethical-professional-standards/R59 Introduction to GIPS IFT Notes.pdf
+⏭️  Skipping (already exists): ethical-professional-standards/R60 Ethics Application IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/CFA-2024-Level-I-SchweserNotes-Book-1.pdf
+⏭️  Skipping (already exists): quantitative-methods/R01 Time Value of Money IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R02 Organizing, Visualizing, and Describing Data IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R03 Probability Concepts IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R04 Common Probability Distributions IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R05 Sampling and Estimation IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R06 Hypothesis Testing IFT Notes.pdf
+⏭️  Skipping (already exists): quantitative-methods/R07 Introduction to Linear Regression IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R08 Topics in Demand and Supply Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R09 The Firm and Market Structures IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R10 Aggregate Output, Prices and Economic Growth IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R11 Understanding Business Cycles IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R12 Monetary and Fiscal Policy IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R13 International Trade and Capital Flows IFT Notes.pdf
+⏭️  Skipping (already exists): economics/R14 Currency Exchange Rates IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R15 Introduction to Financial Statement Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R16 Financial Reporting Standards IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R17 Understanding Income Statements IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R18 Understanding Balance Sheets IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R19 Understanding Cash Flow Statements IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R20 Financial Analysis Techniques IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R21 Inventories IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R22 Long-Lived Assets IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R23 Income Taxes IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R24 Non-Current Liabilities IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R25 Financial Reporting Quality IFT Notes.pdf
+⏭️  Skipping (already exists): financial-statement-analysis/R26 Applications of Financial Statement Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R27 Introduction to Corporate Governance and Other ESG Considerations IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R28 Uses of Capital IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R29 Sources of Capital IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R30 Cost of Capital-Foundational Topics IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R31 Capital Structure IFT Notes.pdf
+⏭️  Skipping (already exists): corporate-issuers/R32 Measures of Leverage IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R33 Market Organization and Structure IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R34 Security Market Indexes IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R35 Market Efficiency IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R36 Overview of Equity Securities IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R37 Introduction to Industry and Company Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): equity-investments/R38 Equity Valuation Concepts and Basic Tools IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R39 Fixed-Income Securities Defining Elements IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R40 Fixed-Income Markets Issuance, Trading, and Funding IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R41 Introduction to Fixed Income Valuation IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R42 Introduction to Asset-Backed Securities IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R43 Understanding Fixed-Income Risk and Return IFT Notes.pdf
+⏭️  Skipping (already exists): fixed-income/R44 Fundamentals of Credit Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): derivatives/R45 Derivative Markets and Instruments IFT Notes.pdf
+⏭️  Skipping (already exists): derivatives/R46 Basics of Derivative Pricing and Valuation IFT Notes.pdf
+⏭️  Skipping (already exists): alternative-investments/Alternative .pdf
+⏭️  Skipping (already exists): portfolio-management/R48 Portfolio Management An Overview IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R49 Portfolio Risk and Return Part I IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R50 Portfolio Risk and Return Part II IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R51 Basics of Portfolio Planning and Construction IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R52 The Behavioral Biases of Individuals IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R53 Introduction to Risk Management IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R54 Technical Analysis IFT Notes.pdf
+⏭️  Skipping (already exists): portfolio-management/R55 Fintech in Investment Management IFT Notes.pdf
+
+📊 Upload complete: 0 uploaded, 61 skipped
+
+📝 Extracting text from PDFs...
+Warning: Cannot load "@napi-rs/canvas" package: "Error: Cannot find native binding. npm has a bug related to optional dependencies (https://github.com/npm/cli/issues/4828). Please try `npm i` again after removing both package-lock.json and node_modules directory.".
+Warning: Cannot polyfill `ImageData`, rendering may be broken.
+Processing: R56 Ethics and Trust in the Investment Profession IFT Notes.pdf
+Processing: R57 Code of Ethics and Standards of Professional Conduct IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R58 Guidance for Standards I-VII IFT Notes.pdf
+Processing: R59 Introduction to GIPS IFT Notes.pdf
+Processing: R60 Ethics Application IFT Notes.pdf
+Processing: CFA-2024-Level-I-SchweserNotes-Book-1.pdf
+Processing: R01 Time Value of Money IFT Notes.pdf
+Processing: R02 Organizing, Visualizing, and Describing Data IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: TT: undefined function: 32
+Warning: TT: undefined function: 32
+Processing: R03 Probability Concepts IFT Notes.pdf
+Processing: R04 Common Probability Distributions IFT Notes.pdf
+Processing: R05 Sampling and Estimation IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R06 Hypothesis Testing IFT Notes.pdf
+Processing: R07 Introduction to Linear Regression IFT Notes.pdf
+Processing: R08 Topics in Demand and Supply Analysis IFT Notes.pdf
+Processing: R09 The Firm and Market Structures IFT Notes.pdf
+Processing: R10 Aggregate Output, Prices and Economic Growth IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R11 Understanding Business Cycles IFT Notes.pdf
+Processing: R12 Monetary and Fiscal Policy IFT Notes.pdf
+Processing: R13 International Trade and Capital Flows IFT Notes.pdf
+Processing: R14 Currency Exchange Rates IFT Notes.pdf
+Processing: R15 Introduction to Financial Statement Analysis IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: TT: undefined function: 32
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R16 Financial Reporting Standards IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: TT: undefined function: 32
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R17 Understanding Income Statements IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: TT: undefined function: 32
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R18 Understanding Balance Sheets IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R19 Understanding Cash Flow Statements IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R20 Financial Analysis Techniques IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R21 Inventories IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R22 Long-Lived Assets IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R23 Income Taxes IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R24 Non-Current Liabilities IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R25 Financial Reporting Quality IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R26 Applications of Financial Statement Analysis IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R27 Introduction to Corporate Governance and Other ESG Considerations IFT Notes.pdf
+Processing: R28 Uses of Capital IFT Notes.pdf
+Processing: R29 Sources of Capital IFT Notes.pdf
+Processing: R30 Cost of Capital-Foundational Topics IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R31 Capital Structure IFT Notes.pdf
+Processing: R32 Measures of Leverage IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R33 Market Organization and Structure IFT Notes.pdf
+Processing: R34 Security Market Indexes IFT Notes.pdf
+Processing: R35 Market Efficiency IFT Notes.pdf
+Processing: R36 Overview of Equity Securities IFT Notes.pdf
+Processing: R37 Introduction to Industry and Company Analysis IFT Notes.pdf
+Processing: R38 Equity Valuation Concepts and Basic Tools IFT Notes.pdf
+Processing: R39 Fixed-Income Securities Defining Elements IFT Notes.pdf
+Processing: R40 Fixed-Income Markets Issuance, Trading, and Funding IFT Notes.pdf
+Processing: R41 Introduction to Fixed Income Valuation IFT Notes.pdf
+Processing: R42 Introduction to Asset-Backed Securities IFT Notes.pdf
+Processing: R43 Understanding Fixed-Income Risk and Return IFT Notes.pdf
+Processing: R44 Fundamentals of Credit Analysis IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R45 Derivative Markets and Instruments IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R46 Basics of Derivative Pricing and Valuation IFT Notes.pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: Alternative .pdf
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+Processing: R48 Portfolio Management An Overview IFT Notes.pdf
+Processing: R49 Portfolio Risk and Return Part I IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R50 Portfolio Risk and Return Part II IFT Notes.pdf
+Processing: R51 Basics of Portfolio Planning and Construction IFT Notes.pdf
+Processing: R52 The Behavioral Biases of Individuals IFT Notes.pdf
+Warning: TT: undefined function: 32
+Processing: R53 Introduction to Risk Management IFT Notes.pdf
+Processing: R54 Technical Analysis IFT Notes.pdf
+Processing: R55 Fintech in Investment Management IFT Notes.pdf
+✅ Created 4145 text chunks
+
+🧠 Generating embeddings and storing in Pinecone...
+Processing batch 1/83...
+✅ Processed 50/4145 chunks
+Processing batch 2/83...
+✅ Processed 100/4145 chunks
+Processing batch 3/83...
+✅ Processed 150/4145 chunks
+Processing batch 4/83...
+✅ Processed 200/4145 chunks
+Processing batch 5/83...
+✅ Processed 250/4145 chunks
+Processing batch 6/83...
+✅ Processed 300/4145 chunks
+Processing batch 7/83...
+✅ Processed 350/4145 chunks
+Processing batch 8/83...
+✅ Processed 400/4145 chunks
+Processing batch 9/83...
+✅ Processed 450/4145 chunks
+Processing batch 10/83...
+✅ Processed 500/4145 chunks
+Processing batch 11/83...
+✅ Processed 550/4145 chunks
+Processing batch 12/83...
+✅ Processed 600/4145 chunks
+Processing batch 13/83...
+✅ Processed 650/4145 chunks
+Processing batch 14/83...
+✅ Processed 700/4145 chunks
+Processing batch 15/83...
+✅ Processed 750/4145 chunks
+Processing batch 16/83...
+✅ Processed 800/4145 chunks
+Processing batch 17/83...
+✅ Processed 850/4145 chunks
+Processing batch 18/83...
+✅ Processed 900/4145 chunks
+Processing batch 19/83...
+✅ Processed 950/4145 chunks
+Processing batch 20/83...
+✅ Processed 1000/4145 chunks
+Processing batch 21/83...
+✅ Processed 1050/4145 chunks
+Processing batch 22/83...
+✅ Processed 1100/4145 chunks
+Processing batch 23/83...
+✅ Processed 1150/4145 chunks
+Processing batch 24/83...
+✅ Processed 1200/4145 chunks
+Processing batch 25/83...
+✅ Processed 1250/4145 chunks
+Processing batch 26/83...
+✅ Processed 1300/4145 chunks
+Processing batch 27/83...
+✅ Processed 1350/4145 chunks
+Processing batch 28/83...
+✅ Processed 1400/4145 chunks
+Processing batch 29/83...
+✅ Processed 1450/4145 chunks
+Processing batch 30/83...
+✅ Processed 1500/4145 chunks
+Processing batch 31/83...
+✅ Processed 1550/4145 chunks
+Processing batch 32/83...
+✅ Processed 1600/4145 chunks
+Processing batch 33/83...
+✅ Processed 1650/4145 chunks
+Processing batch 34/83...
+✅ Processed 1700/4145 chunks
+Processing batch 35/83...
+✅ Processed 1750/4145 chunks
+Processing batch 36/83...
+✅ Processed 1800/4145 chunks
+Processing batch 37/83...
+✅ Processed 1850/4145 chunks
+Processing batch 38/83...
+✅ Processed 1900/4145 chunks
+Processing batch 39/83...
+✅ Processed 1950/4145 chunks
+Processing batch 40/83...
+✅ Processed 2000/4145 chunks
+Processing batch 41/83...
+✅ Processed 2050/4145 chunks
+Processing batch 42/83...
+✅ Processed 2100/4145 chunks
+Processing batch 43/83...
+✅ Processed 2150/4145 chunks
+Processing batch 44/83...
+✅ Processed 2200/4145 chunks
+Processing batch 45/83...
+✅ Processed 2250/4145 chunks
+Processing batch 46/83...
+✅ Processed 2300/4145 chunks
+Processing batch 47/83...
+✅ Processed 2350/4145 chunks
+Processing batch 48/83...
+✅ Processed 2400/4145 chunks
+Processing batch 49/83...
+✅ Processed 2450/4145 chunks
+Processing batch 50/83...
+✅ Processed 2500/4145 chunks
+Processing batch 51/83...
+✅ Processed 2550/4145 chunks
+Processing batch 52/83...
+✅ Processed 2600/4145 chunks
+Processing batch 53/83...
+✅ Processed 2650/4145 chunks
+Processing batch 54/83...
+✅ Processed 2700/4145 chunks
+Processing batch 55/83...
+✅ Processed 2750/4145 chunks
+Processing batch 56/83...
+✅ Processed 2800/4145 chunks
+Processing batch 57/83...
+✅ Processed 2850/4145 chunks
+Processing batch 58/83...
+✅ Processed 2900/4145 chunks
+Processing batch 59/83...
+✅ Processed 2950/4145 chunks
+Processing batch 60/83...
+✅ Processed 3000/4145 chunks
+Processing batch 61/83...
+✅ Processed 3050/4145 chunks
+Processing batch 62/83...
+✅ Processed 3100/4145 chunks
+Processing batch 63/83...
+✅ Processed 3150/4145 chunks
+Processing batch 64/83...
+✅ Processed 3200/4145 chunks
+Processing batch 65/83...
+✅ Processed 3250/4145 chunks
+Processing batch 66/83...
+✅ Processed 3300/4145 chunks
+Processing batch 67/83...
+✅ Processed 3350/4145 chunks
+Processing batch 68/83...
+✅ Processed 3400/4145 chunks
+Processing batch 69/83...
+✅ Processed 3450/4145 chunks
+Processing batch 70/83...
+✅ Processed 3500/4145 chunks
+Processing batch 71/83...
+✅ Processed 3550/4145 chunks
+Processing batch 72/83...
+✅ Processed 3600/4145 chunks
+Processing batch 73/83...
+✅ Processed 3650/4145 chunks
+Processing batch 74/83...
+✅ Processed 3700/4145 chunks
+Processing batch 75/83...
+✅ Processed 3750/4145 chunks
+Processing batch 76/83...
+✅ Processed 3800/4145 chunks
+Processing batch 77/83...
+✅ Processed 3850/4145 chunks
+Processing batch 78/83...
+✅ Processed 3900/4145 chunks
+Processing batch 79/83...
+✅ Processed 3950/4145 chunks
+Processing batch 80/83...
+✅ Processed 4000/4145 chunks
+Processing batch 81/83...
+✅ Processed 4050/4145 chunks

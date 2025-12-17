@@ -99,18 +99,27 @@ export default function AdminDashboard() {
   const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState<number>(0);
   const [generateAllLOs, setGenerateAllLOs] = useState(false);
+  const [generateAllReadings, setGenerateAllReadings] = useState(false);
   const [batchProgress, setBatchProgress] = useState<{
     isRunning: boolean;
+    currentReadingIndex: number;
+    totalReadings: number;
+    currentReadingName: string;
     currentLOIndex: number;
     totalLOs: number;
     currentLOId: string;
     completedLOs: string[];
+    completedReadings: string[];
   }>({
     isRunning: false,
+    currentReadingIndex: 0,
+    totalReadings: 0,
+    currentReadingName: '',
     currentLOIndex: 0,
     totalLOs: 0,
     currentLOId: '',
-    completedLOs: []
+    completedLOs: [],
+    completedReadings: []
   });
   const [generatingTable, setGeneratingTable] = useState(false);
   const router = useRouter();
@@ -272,10 +281,14 @@ export default function AdminDashboard() {
     // Initialize batch progress
     setBatchProgress({
       isRunning: true,
+      currentReadingIndex: 0,
+      totalReadings: 0,
+      currentReadingName: selectedReading || '',
       currentLOIndex: 0,
       totalLOs: losToProcess.length,
       currentLOId: losToProcess[0].id,
-      completedLOs: []
+      completedLOs: [],
+      completedReadings: []
     });
     setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
     setSelectedQuestionIndex(0);
@@ -343,10 +356,14 @@ export default function AdminDashboard() {
     // Finalize
     setBatchProgress({
       isRunning: false,
+      currentReadingIndex: 0,
+      totalReadings: 0,
+      currentReadingName: '',
       currentLOIndex: 0,
       totalLOs: 0,
       currentLOId: '',
-      completedLOs: []
+      completedLOs: [],
+      completedReadings: []
     });
     setAiGeneratorData(prev => ({
       ...prev,
@@ -356,6 +373,147 @@ export default function AdminDashboard() {
 
     if (allGeneratedQuestions.length > 0) {
       alert(`Generated ${allGeneratedQuestions.length} questions across ${losToProcess.length} learning objectives!`);
+    } else {
+      alert('No questions were generated. Please check the console for errors.');
+    }
+  };
+
+  // Handle batch generation for ALL readings in the selected topic
+  const handleBatchAllReadingsGeneration = async () => {
+    const readings = getReadingsForTopic(aiGeneratorData.topic_area);
+
+    if (readings.length === 0) {
+      alert('No readings found for the selected topic');
+      return;
+    }
+
+    // Calculate total LOs across all readings
+    const totalLOsCount = readings.reduce((sum, r) => sum + r.learningObjectives.length, 0);
+
+    // Initialize batch progress
+    setBatchProgress({
+      isRunning: true,
+      currentReadingIndex: 0,
+      totalReadings: readings.length,
+      currentReadingName: readings[0].name,
+      currentLOIndex: 0,
+      totalLOs: totalLOsCount,
+      currentLOId: readings[0].learningObjectives[0]?.id || '',
+      completedLOs: [],
+      completedReadings: []
+    });
+    setAiGeneratorData({ ...aiGeneratorData, generating: true, generatedQuestions: [] });
+    setSelectedQuestionIndex(0);
+
+    const allGeneratedQuestions: GeneratedQuestion[] = [];
+    let globalLOIndex = 0;
+
+    // Iterate through each reading
+    for (let readingIdx = 0; readingIdx < readings.length; readingIdx++) {
+      const reading = readings[readingIdx];
+      const losInReading = reading.learningObjectives;
+
+      // Update reading progress
+      setBatchProgress(prev => ({
+        ...prev,
+        currentReadingIndex: readingIdx,
+        currentReadingName: reading.name
+      }));
+
+      console.log(`[Batch All Readings] Processing reading ${readingIdx + 1}/${readings.length}: ${reading.name}`);
+
+      // Iterate through each LO in the reading
+      for (let loIdx = 0; loIdx < losInReading.length; loIdx++) {
+        const lo = losInReading[loIdx];
+
+        // Update LO progress
+        setBatchProgress(prev => ({
+          ...prev,
+          currentLOIndex: globalLOIndex,
+          currentLOId: lo.id
+        }));
+
+        try {
+          console.log(`[Batch All Readings] Generating for LO ${globalLOIndex + 1}/${totalLOsCount}: ${lo.id}`);
+
+          const response = await fetch('/api/admin/generate-rag-question', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              topic_area: aiGeneratorData.topic_area,
+              difficulty: aiGeneratorData.difficulty,
+              subtopic: reading.name,
+              learning_objective_id: lo.id,
+              learning_objective_text: lo.text,
+              count: aiGeneratorData.questionCount,
+              save_to_database: false,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.questions?.length > 0) {
+            allGeneratedQuestions.push(...data.questions);
+
+            // Update progress with completed LO
+            setBatchProgress(prev => ({
+              ...prev,
+              completedLOs: [...prev.completedLOs, lo.id]
+            }));
+
+            // Update generated questions in real-time
+            setAiGeneratorData(prev => ({
+              ...prev,
+              generatedQuestions: [...allGeneratedQuestions]
+            }));
+          } else {
+            console.error(`Failed to generate for LO ${lo.id}:`, data.error);
+          }
+        } catch (error) {
+          console.error(`Error generating for LO ${lo.id}:`, error);
+          // Continue with next LO
+        }
+
+        globalLOIndex++;
+
+        // Small delay between LOs to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+
+      // Mark reading as completed
+      setBatchProgress(prev => ({
+        ...prev,
+        completedReadings: [...prev.completedReadings, reading.name]
+      }));
+
+      // Slightly longer delay between readings
+      if (readingIdx < readings.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
+    }
+
+    // Finalize
+    setBatchProgress({
+      isRunning: false,
+      currentReadingIndex: 0,
+      totalReadings: 0,
+      currentReadingName: '',
+      currentLOIndex: 0,
+      totalLOs: 0,
+      currentLOId: '',
+      completedLOs: [],
+      completedReadings: []
+    });
+    setAiGeneratorData(prev => ({
+      ...prev,
+      generating: false,
+      generatedQuestions: allGeneratedQuestions
+    }));
+
+    if (allGeneratedQuestions.length > 0) {
+      alert(`Generated ${allGeneratedQuestions.length} questions across ${readings.length} readings and ${totalLOsCount} learning objectives!`);
     } else {
       alert('No questions were generated. Please check the console for errors.');
     }
@@ -929,9 +1087,27 @@ export default function AdminDashboard() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Topic Area
-                    </label>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="block text-sm font-medium text-gray-300">
+                        Topic Area
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={generateAllReadings}
+                          onChange={(e) => {
+                            setGenerateAllReadings(e.target.checked);
+                            if (e.target.checked) {
+                              setSelectedReading('');
+                              setGenerateAllLOs(false);
+                              setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: '' });
+                            }
+                          }}
+                          className="mr-2 w-4 h-4 rounded bg-gray-700 border-gray-600 text-orange-600 focus:ring-orange-500"
+                        />
+                        <span className="text-xs text-orange-400 font-medium">Generate for ALL Readings</span>
+                      </label>
+                    </div>
                     <select
                       value={aiGeneratorData.topic_area}
                       onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, topic_area: e.target.value })}
@@ -941,25 +1117,36 @@ export default function AdminDashboard() {
                         <option key={topic} value={topic}>{topic}</option>
                       ))}
                     </select>
+                    {generateAllReadings && (
+                      <div className="mt-2 p-3 bg-orange-900/30 border border-orange-700 rounded text-sm text-orange-200">
+                        <strong>Full Topic Batch Mode:</strong> Will generate {aiGeneratorData.questionCount} question{aiGeneratorData.questionCount > 1 ? 's' : ''} for each LO across ALL {availableReadings.length} readings.
+                        <br />
+                        <span className="text-xs text-orange-400">
+                          Total: ~{availableReadings.reduce((sum, r) => sum + r.learningObjectives.length, 0) * aiGeneratorData.questionCount} questions across {availableReadings.reduce((sum, r) => sum + r.learningObjectives.length, 0)} LOs
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Reading / Section
-                    </label>
-                    <select
-                      value={selectedReading}
-                      onChange={(e) => setSelectedReading(e.target.value)}
-                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="">-- Select a Reading --</option>
-                      {availableReadings.map((reading) => (
-                        <option key={reading.name} value={reading.name}>{reading.name}</option>
-                      ))}
-                    </select>
-                  </div>
+                  {!generateAllReadings && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Reading / Section
+                      </label>
+                      <select
+                        value={selectedReading}
+                        onChange={(e) => setSelectedReading(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">-- Select a Reading --</option>
+                        {availableReadings.map((reading) => (
+                          <option key={reading.name} value={reading.name}>{reading.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
-                  {selectedReading && availableLOs.length > 0 && (
+                  {!generateAllReadings && selectedReading && availableLOs.length > 0 && (
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <label className="block text-sm font-medium text-gray-300">
@@ -1046,7 +1233,17 @@ export default function AdminDashboard() {
                   </div>
 
                   <div className="space-y-3">
-                    {generateAllLOs && selectedReading ? (
+                    {generateAllReadings ? (
+                      <button
+                        onClick={() => handleBatchAllReadingsGeneration()}
+                        disabled={aiGeneratorData.generating || generatingTable}
+                        className="w-full bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      >
+                        {aiGeneratorData.generating
+                          ? `Generating for All Readings...`
+                          : `Generate for All ${availableReadings.length} Readings`}
+                      </button>
+                    ) : generateAllLOs && selectedReading ? (
                       <button
                         onClick={() => handleBatchLOGeneration()}
                         disabled={aiGeneratorData.generating || generatingTable}
@@ -1098,20 +1295,43 @@ export default function AdminDashboard() {
 
                   {/* Batch Progress */}
                   {batchProgress.isRunning && (
-                    <div className="mt-4 p-4 bg-purple-900/30 border border-purple-700 rounded-lg">
+                    <div className={`mt-4 p-4 rounded-lg ${batchProgress.totalReadings > 0 ? 'bg-orange-900/30 border border-orange-700' : 'bg-purple-900/30 border border-purple-700'}`}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-purple-300">Batch Progress</span>
-                        <span className="text-xs text-purple-400">
+                        <span className={`text-sm font-medium ${batchProgress.totalReadings > 0 ? 'text-orange-300' : 'text-purple-300'}`}>
+                          {batchProgress.totalReadings > 0 ? 'Full Topic Batch Progress' : 'Batch Progress'}
+                        </span>
+                        <span className={`text-xs ${batchProgress.totalReadings > 0 ? 'text-orange-400' : 'text-purple-400'}`}>
                           {batchProgress.currentLOIndex + 1} / {batchProgress.totalLOs} LOs
                         </span>
                       </div>
+
+                      {/* Reading progress (only shown for all readings batch) */}
+                      {batchProgress.totalReadings > 0 && (
+                        <>
+                          <div className="flex items-center justify-between text-xs text-orange-300 mb-1">
+                            <span>Reading {batchProgress.currentReadingIndex + 1} / {batchProgress.totalReadings}</span>
+                            <span>{batchProgress.completedReadings.length} readings completed</span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
+                            <div
+                              className="bg-orange-500 h-1.5 rounded-full transition-all duration-500"
+                              style={{ width: `${((batchProgress.currentReadingIndex + 1) / batchProgress.totalReadings) * 100}%` }}
+                            ></div>
+                          </div>
+                          <div className="text-xs text-orange-200 mb-2">
+                            Current reading: <strong>{batchProgress.currentReadingName}</strong>
+                          </div>
+                        </>
+                      )}
+
+                      {/* LO progress bar */}
                       <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
                         <div
-                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                          className={`h-2 rounded-full transition-all duration-500 ${batchProgress.totalReadings > 0 ? 'bg-orange-600' : 'bg-purple-600'}`}
                           style={{ width: `${((batchProgress.currentLOIndex + 1) / batchProgress.totalLOs) * 100}%` }}
                         ></div>
                       </div>
-                      <div className="text-xs text-purple-200">
+                      <div className={`text-xs ${batchProgress.totalReadings > 0 ? 'text-orange-200' : 'text-purple-200'}`}>
                         Currently generating: <strong>{batchProgress.currentLOId}</strong>
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
@@ -1122,7 +1342,13 @@ export default function AdminDashboard() {
 
                   {/* Token Estimation */}
                   <div className="mt-4 p-3 bg-gray-700 rounded text-xs text-gray-400">
-                    {generateAllLOs && selectedReading ? (
+                    {generateAllReadings ? (
+                      <>
+                        <strong>Estimated tokens (full topic):</strong> ~{(availableReadings.reduce((sum, r) => sum + r.learningObjectives.length, 0) * aiGeneratorData.questionCount * 3400).toLocaleString()} tokens
+                        <br />
+                        <span className="text-gray-500">{availableReadings.reduce((sum, r) => sum + r.learningObjectives.length, 0)} LOs × {aiGeneratorData.questionCount} questions × ~3,400 tokens each</span>
+                      </>
+                    ) : generateAllLOs && selectedReading ? (
                       <>
                         <strong>Estimated tokens (batch):</strong> ~{(availableLOs.length * aiGeneratorData.questionCount * 3400).toLocaleString()} tokens
                         <br />
