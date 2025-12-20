@@ -61,9 +61,16 @@ export async function POST(request: NextRequest) {
     // Generate questions using RAG
     let questions;
     if (generate_table) {
-      // Generate table-based question
-      const question = await generateTableQuestion(topic_area, difficulty, learning_objective_id, learning_objective_text, existingQuestions);
-      questions = [question];
+      // Generate table-based questions (iterate for count > 1)
+      questions = [];
+      const allExistingQuestions = [...existingQuestions];
+      for (let i = 0; i < count; i++) {
+        console.log(`[RAG Table] Generating table question ${i + 1}/${count}`);
+        const question = await generateTableQuestion(topic_area, difficulty, learning_objective_id, learning_objective_text, allExistingQuestions);
+        questions.push(question);
+        // Add the generated question text to avoid duplicates in subsequent generations
+        allExistingQuestions.push(question.question_text);
+      }
     } else if (count > 1) {
       questions = await generateMultipleRAGQuestions(topic_area, count, difficulty, subtopic, learning_objective_id, learning_objective_text, existingQuestions);
     } else {
