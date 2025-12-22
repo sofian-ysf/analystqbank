@@ -5,15 +5,40 @@ export async function GET() {
   try {
     const supabase = createAdminClient();
 
-    // Fetch all questions with their topic, difficulty, and learning objective
-    const { data: questions, error } = await supabase
-      .from('questions')
-      .select('topic_area, difficulty_level, is_active, learning_objective_id');
+    // Fetch all questions with pagination to handle more than 1000 records
+    // Supabase has a default limit of 1000 rows per query
+    let allQuestions: Array<{
+      topic_area: string | null;
+      difficulty_level: string | null;
+      is_active: boolean | null;
+      learning_objective_id: string | null;
+    }> = [];
 
-    if (error) {
-      console.error('Error fetching questions:', error);
-      return NextResponse.json({ error: 'Failed to fetch questions' }, { status: 500 });
+    let from = 0;
+    const batchSize = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data: batch, error } = await supabase
+        .from('questions')
+        .select('topic_area, difficulty_level, is_active, learning_objective_id')
+        .range(from, from + batchSize - 1);
+
+      if (error) {
+        console.error('Error fetching questions:', error);
+        return NextResponse.json({ error: 'Failed to fetch questions' }, { status: 500 });
+      }
+
+      if (batch && batch.length > 0) {
+        allQuestions = [...allQuestions, ...batch];
+        from += batchSize;
+        hasMore = batch.length === batchSize;
+      } else {
+        hasMore = false;
+      }
     }
+
+    const questions = allQuestions;
 
     // Group questions by topic_area
     const topicStats: Record<string, {
