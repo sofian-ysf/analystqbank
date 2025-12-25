@@ -46,23 +46,45 @@ export async function POST(request: NextRequest) {
       source: q.source || (q.has_table ? 'RAG-Generated (Table)' : 'RAG-Generated')
     }));
 
-    const { data, error } = await supabase
-      .from('questions')
-      .insert(questionsToSave)
-      .select();
+    // Batch insert to avoid Supabase payload/timeout limits
+    // Insert in chunks of 50 questions at a time
+    const BATCH_SIZE = 50;
+    const allSavedQuestions: typeof questionsToSave = [];
+    const errors: string[] = [];
 
-    if (error) {
-      console.error('Error saving questions:', error);
+    for (let i = 0; i < questionsToSave.length; i += BATCH_SIZE) {
+      const batch = questionsToSave.slice(i, i + BATCH_SIZE);
+      const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
+      const totalBatches = Math.ceil(questionsToSave.length / BATCH_SIZE);
+
+      console.log(`[Save Questions] Inserting batch ${batchNumber}/${totalBatches} (${batch.length} questions)`);
+
+      const { data, error } = await supabase
+        .from('questions')
+        .insert(batch)
+        .select();
+
+      if (error) {
+        console.error(`Error saving batch ${batchNumber}:`, error);
+        errors.push(`Batch ${batchNumber}: ${error.message}`);
+      } else if (data) {
+        allSavedQuestions.push(...data);
+      }
+    }
+
+    if (errors.length > 0 && allSavedQuestions.length === 0) {
       return NextResponse.json({
         error: 'Failed to save questions',
-        details: error.message
+        details: errors.join('; ')
       }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      saved_count: data.length,
-      questions: data
+      saved_count: allSavedQuestions.length,
+      total_attempted: questionsToSave.length,
+      errors: errors.length > 0 ? errors : undefined,
+      questions: allSavedQuestions
     });
 
   } catch (error) {
