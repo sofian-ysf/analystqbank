@@ -783,19 +783,24 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="mb-4 font-medium text-[#13343B]">Resources</h4>
+                <h4 className="mb-4 font-medium text-[#13343B]">Product</h4>
                 <ul className="space-y-2 text-sm text-[#9aa0a6]">
                   <li><Link href="/question-bank" className="hover:text-[#13343B] transition-colors">Question Bank</Link></li>
                   <li><Link href="/mock-exams" className="hover:text-[#13343B] transition-colors">Mock Exams</Link></li>
-                  <li><Link href="/study-guides" className="hover:text-[#13343B] transition-colors">Study Guides</Link></li>
-                  <li><Link href="/formula-sheets" className="hover:text-[#13343B] transition-colors">Formula Sheets</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-medium text-[#13343B]">Resources</h4>
+                <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                  <li><Link href="/blog" className="hover:text-[#13343B] transition-colors">Blog</Link></li>
+                  <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Center</Link></li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="mb-4 font-medium text-[#13343B]">Support</h4>
                 <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Center</Link></li>
                   <li><Link href="/contact" className="hover:text-[#13343B] transition-colors">Contact Us</Link></li>
                   <li><a href="#proof" className="hover:text-[#13343B] transition-colors">Success Stories</a></li>
                 </ul>

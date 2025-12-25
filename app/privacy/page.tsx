@@ -226,8 +226,6 @@ export default function Privacy() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/study-guides" className="text-gray-600 hover:text-gray-900">Study Guides</Link></li>
-                <li><Link href="/formula-sheets" className="text-gray-600 hover:text-gray-900">Formula Sheets</Link></li>
                 <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
                 <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
               </ul>

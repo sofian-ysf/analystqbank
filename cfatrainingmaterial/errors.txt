@@ -1,0 +1,227 @@
+ANALYSTTRAINER.COM - COMPREHENSIVE LINK AUDIT REPORT
+==================================================
+
+Audit Date: December 25, 2025
+Website: https://www.analysttrainer.com
+Scope: Landing page, authentication pages (login/signup), and all linked pages
+
+
+EXECUTIVE SUMMARY
+================
+Total Links Tested: 25+
+Broken Links Found (404 Errors): 5
+Working Links: 18+
+Redirect Links (Authentication Required): 3
+
+
+CRITICAL ISSUES - BROKEN LINKS (404 ERRORS)
+============================================
+
+1. /forgot-password
+   Location: Login page (/login)
+   Link Text: "Forgot password?"
+   Status: 404 - Page Not Found
+   Severity: HIGH - Users unable to reset passwords
+   Affects: User authentication flow
+
+2. /terms
+   Locations: 
+     - Signup page (/signup) - "Terms of Service" link
+     - Privacy page footer - "Terms of Service" link
+   Status: 404 - Page Not Found
+   Severity: CRITICAL - Legal/compliance issue
+   Affects: User signup, legal compliance
+
+3. /refund
+   Location: Landing page footer - "Refund Policy" link
+   Status: 404 - Page Not Found
+   Severity: HIGH - Customer protection information unavailable
+   Affects: Customer trust, legal compliance
+
+4. /blog
+   Location: Privacy page footer - "Blog" link
+   Status: 404 - Page Not Found
+   Severity: MEDIUM - Content/marketing resource unavailable
+   Affects: User engagement, content marketing
+
+5. /disclaimer
+   Location: Privacy page footer - "Disclaimer" link
+   Status: 404 - Page Not Found
+   Severity: MEDIUM - Legal disclaimer unavailable
+   Affects: Legal compliance
+
+
+WORKING LINKS - VERIFIED FUNCTIONAL
+====================================
+
+Navigation & Core Pages:
+✓ / (Landing page - home)
+✓ /features - Features page (also accessible via /#product anchor)
+✓ /pricing - Pricing page (also accessible via /#pricing anchor)
+✓ /about - About page
+✓ /resources - CFA Study Resources page
+✓ /help - Help Center
+✓ /contact - Contact/Support page
+
+Authentication Pages:
+✓ /login - Login page
+✓ /signup - Signup/Create Account page
+✓ Sign in link on signup page → /login
+✓ "Sign up for free" link on login page → /signup
+
+Educational Resources:
+✓ /study-guides - CFA Study Guides page
+✓ /formula-sheets - CFA Formula Sheets page
+✓ /privacy - Privacy Policy page
+
+Landing Page Anchors:
+✓ /#product - Features section
+✓ /#pricing - Pricing section
+✓ /#proof - Testimonials/Success Stories section
+✓ /#faq - FAQ section
+
+
+AUTHENTICATION-REQUIRED PAGES (Expected Behavior)
+==================================================
+These pages correctly redirect to login when accessed without authentication:
+
+✓ /question-bank → Redirects to /login (Expected)
+✓ /mock-exams → Redirects to /login (Expected)
+✓ /practice → Redirects to /login (Expected)
+
+Note: This is expected behavior for authenticated/premium content.
+
+
+DETAILED FINDINGS BY PAGE
+=========================
+
+--- LANDING PAGE (https://www.analysttrainer.com/) ---
+Status: Working
+Links Tested:
+  ✓ AnalystTrainer logo → / (works)
+  ✓ Features → /#product (works)
+  ✓ Pricing → /#pricing (works)
+  ✓ Testimonials → /#proof (works)
+  ✓ FAQ → /#faq (works)
+  ✓ Login → /login (works)
+  ✓ Start Free Trial → /signup (works - appears multiple times)
+  ✓ View Question Bank → /practice (works, requires auth)
+  ✓ Footer: Question Bank → /question-bank (works, requires auth)
+  ✓ Footer: Mock Exams → /mock-exams (works, requires auth)
+  ✓ Footer: Study Guides → /study-guides (works)
+  ✓ Footer: Formula Sheets → /formula-sheets (works)
+  ✓ Footer: Help Center → /help (works)
+  ✓ Footer: Contact Us → /contact (works)
+  ✓ Footer: Success Stories → /#proof (works)
+  ✗ Footer: Privacy Policy → /privacy (works)
+  ✗ Footer: Terms of Service → /terms (404 ERROR)
+  ✗ Footer: Refund Policy → /refund (404 ERROR)
+
+--- LOGIN PAGE (https://www.analysttrainer.com/login) ---
+Status: Working (with issues)
+Links Tested:
+  ✓ Finance Exam Prep logo → / (works)
+  ✓ Sign in link (form submit button) - appears functional
+  ✓ Social login options (GitHub, Google, Apple, LinkedIn) - appear functional
+  ✗ Forgot password? → /forgot-password (404 ERROR)
+  ✓ Sign up for free → /signup (works)
+
+--- SIGNUP PAGE (https://www.analysttrainer.com/signup) ---
+Status: Working (with issues)
+Links Tested:
+  ✓ Finance Exam Prep logo → / (works)
+  ✓ Sign up button - appears functional
+  ✓ Social signup options (GitHub, Google, Apple, LinkedIn) - appear functional
+  ✓ Privacy Policy → /privacy (works)
+  ✗ Terms of Service → /terms (404 ERROR)
+  ✓ Sign in → /login (works)
+
+--- FEATURES PAGE (https://www.analysttrainer.com/features) ---
+Status: Working
+
+--- PRICING PAGE (https://www.analysttrainer.com/pricing) ---
+Status: Working
+
+--- STUDY GUIDES PAGE (https://www.analysttrainer.com/study-guides) ---
+Status: Working
+
+--- FORMULA SHEETS PAGE (https://www.analysttrainer.com/formula-sheets) ---
+Status: Working
+
+--- RESOURCES PAGE (https://www.analysttrainer.com/resources) ---
+Status: Working
+
+--- ABOUT PAGE (https://www.analysttrainer.com/about) ---
+Status: Working
+
+--- HELP CENTER PAGE (https://www.analysttrainer.com/help) ---
+Status: Working
+
+--- CONTACT PAGE (https://www.analysttrainer.com/contact) ---
+Status: Working
+
+--- PRIVACY POLICY PAGE (https://www.analysttrainer.com/privacy) ---
+Status: Working (with issues)
+Additional Navigation Links Found:
+  ✓ Features → /features (works)
+  ✓ Pricing → /pricing (works)
+  ✓ Resources → /resources (works)
+  ✓ About → /about (works)
+  ✓ Contact → /contact (works)
+  ✓ Help Center → /help (works)
+  ✗ Blog → /blog (404 ERROR)
+  ✗ Terms of Service → /terms (404 ERROR)
+  ✗ Disclaimer → /disclaimer (404 ERROR)
+  ✓ Privacy Policy → /privacy (works)
+
+
+RECOMMENDATIONS
+===============
+
+1. CRITICAL (Immediate Action Required):
+   - Implement /terms page for Terms of Service
+     * Required for legal compliance
+     * Needed for signup/account creation flow
+     * Currently blocks user signup experience
+   
+   - Implement /forgot-password page for password recovery
+     * Essential for user account recovery
+     * Impacts authentication flow
+
+2. HIGH PRIORITY:
+   - Implement /refund page for Refund Policy
+     * Important for customer trust and legal compliance
+     * Users cannot find refund information
+   
+3. MEDIUM PRIORITY:
+   - Implement /blog page or remove blog links
+     * Currently advertised but broken
+     * Could improve engagement if implemented
+   
+   - Implement /disclaimer page or remove link
+     * Legal compliance item
+     * Currently unavailable
+
+
+TESTING NOTES
+=============
+- All links tested via direct navigation
+- Authentication-required pages correctly redirect to login
+- No broken images or assets detected
+- Page load times appear normal
+- Navigation consistency issues noted between different page templates
+  (Landing page has different nav structure than inner pages)
+
+
+CONCLUSION
+==========
+The website has 5 critical broken links that need immediate attention. Most issues
+relate to missing legal/policy pages which are important for compliance. The user
+authentication flow is blocked by the missing /terms page and /forgot-password page.
+
+Priority Order for Fixes:
+1. /terms (Legal requirement + Blocks signup)
+2. /forgot-password (Affects user recovery)
+3. /refund (Customer trust + Legal)
+4. /blog (Marketing/Engagement)
+5. /disclaimer (Legal compliance)

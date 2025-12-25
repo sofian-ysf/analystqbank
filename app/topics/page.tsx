@@ -306,8 +306,6 @@ export default function TopicsPage() {
               <div>
                 <h3 className="text-white font-semibold mb-4">Resources</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/study-guides" className="hover:text-white transition">Study Guides</Link></li>
-                  <li><Link href="/formula-sheets" className="hover:text-white transition">Formula Sheets</Link></li>
                   <li><Link href="/mock-exams" className="hover:text-white transition">Mock Exams</Link></li>
                   <li><Link href="/question-bank" className="hover:text-white transition">Question Bank</Link></li>
                 </ul>

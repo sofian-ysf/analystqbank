@@ -1,0 +1,479 @@
+# AnalystTrainer Landing Page: Full SEO & AI‑Optimized Spec
+
+This spec is designed for direct use with Claude/code to refactor analysttrainer.com into:
+- A high‑converting funnel.[page:1]
+- SEO‑optimized for finance certification terms.[web:16]
+- AI‑friendly (clear structure, semantic HTML, JSON‑LD, FAQ, and analytics hooks).[web:16]
+- Visually closer to Perplexity (clean center column, minimal chrome, calm UI).[web:11][web:18]
+
+---
+
+## 1. Core Strategy & Information Architecture
+
+### 1.1 Primary goals
+
+- **Primary conversion**: Start Free Trial (email + password; no card, or clearly stated if required).[page:1]
+- Secondary conversions:
+  - Download sample questions (lead magnet).[page:1]
+  - Join email list (study tips sequence).[page:1]
+  - View demo (video or interactive walkthrough).[page:1][web:19]
+
+### 1.2 Primary positioning & keyword focus
+
+- Main positioning: “Finance certification exam prep platform” with a focus on CFA and FRM.[page:1]
+- Core SEO target (home): `finance certification exam prep` / `CFA Level 1 question bank` with long‑tail variants in sub‑sections.[web:16]
+
+### 1.3 Page‑level information architecture
+
+Use a single long‑form landing page with the following semantic structure:
+
+- `<header>`: Logo, primary navigation, main CTA.[page:1]
+- `<main>`:
+  - `<section id="hero">` – core value prop, main CTA, above the fold.[page:1]
+  - `<section id="pain">` – cost of failing.[page:1]
+  - `<section id="product">` – features and product UI.[page:1]
+  - `<section id="proof">` – metrics and testimonials.[page:1]
+  - `<section id="pricing">` – plans and guarantee.[page:1]
+  - `<section id="faq">` – FAQs with FAQPage schema.[web:16]
+  - `<section id="final-cta">` – final push.[web:19]
+- `<footer>`: Resource links, legal, company info.[page:1]
+
+Ensure headings follow a single H1, then H2/H3 hierarchy to keep both SEO and AI parsers clean.[web:16]
+
+---
+
+## 2. Detailed Layout & Component Spec
+
+### 2.1 Global shell (Perplexity‑style)
+
+- Layout:
+  - Body background: `#020617` (dark) or `#F9FAFB` (light); choose one mode consistently.[web:11]
+  - Center column: max‑width `960px`, `margin: 0 auto`, `padding: 24px` desktop, `16px` mobile.[web:11]
+  - Use a full‑width `<div class="page-shell">` with subtle pattern or solid neutral, then inner `<main>` card in center.[web:11]
+- Typography:
+  - Font: `system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif`.[web:11]
+  - Base size: `16px`, line height `1.6`.[web:11]
+  - H1 ~ `32–40px`, H2 `24–28px`, H3 `20–22px`.[web:11]
+- Color tokens:
+  - `--bg`: `#020617` or `#F9FAFB`.[web:11]
+  - `--surface`: `#0B1120` (dark) or `#FFFFFF` (light).[web:11]
+  - `--border-subtle`: `#1E293B` (dark) or `#E5E7EB` (light).[web:11]
+  - `--primary`: `#2563EB`.[web:11]
+  - `--accent-success`: `#16A34A`.[web:11]
+  - `--text-main`: `#E5E7EB` (dark) or `#0F172A` (light).[web:11]
+
+### 2.2 Header & navigation
+
+- Sticky `<header>` with:
+  - Left: Logo “AnalystTrainer” (simple wordmark; optionally bold).[page:1]
+  - Center nav (desktop): `Features`, `Pricing`, `Resources`, `Testimonials`.[page:1]
+  - Right: `Login` (text button) + `Start Free Trial` (primary pill).[page:1]
+- Styles:
+  - Height: ~64px.[web:11]
+  - Sticky at top with `backdrop-filter: blur(12px);` and a bottom border using `--border-subtle`.[web:11]
+  - On scroll: shrink slightly and reduce padding to emphasize content area.[web:19]
+- Behaviour:
+  - Nav links smooth‑scroll to internal sections (`href="#pricing"` etc.).[web:19]
+  - On mobile: hamburger menu revealing a sheet with same nav + trial button.[web:19]
+
+### 2.3 Hero section (H1 + CTA + proof)
+
+Semantic structure:
+
+<section id="hero"> <h1>Pass Your Finance Certification Exams on Your First Try</h1> <p>Master CFA, FRM, and more with an exam-style question bank, realistic mock exams, and analytics that pinpoint your weakest topics.</p> <div class="hero-ctas"> <button>Start Free Trial</button> <button>View Question Bank Demo</button> <p>No credit card required. Cancel anytime.</p> </div> <div class="hero-proof-row"> <span>92% pass rate</span> <span>3,000+ candidates passed</span> <span>2,500+ questions</span> </div> <aside class="hero-screenshot-card">…product UI mock…</aside> </section> ```
+Design:
+
+Two‑column layout on desktop:
+
+Left: copy, CTAs, proof row.[page:1]
+
+Right: product screenshot card (Perplexity‑style surface).[web:11]
+
+CTA priority:
+
+Primary button: filled, --primary, text “Start Free Trial”.[page:1]
+
+Secondary: outline button, label “View Question Bank Demo”.[page:1]
+
+Above‑the‑fold content must keep LCP small: keep screenshot optimized and lazy‑load anything below the fold.[web:16]
+
+2.4 Pain / Cost of failing
+Purpose: sharpen motivation for CFA/FRM candidates.[page:1]
+
+Structure (3 cards within <section id="pain">):
+
+Cards:
+
+Card 1 – “£50,000+ Lost Earnings”
+
+Text: one short paragraph on delayed promotions/bonuses.[page:1]
+
+Card 2 – “6–12 Months Career Delay”
+
+Text on waiting for next exam window and recruitment cycles.[page:1]
+
+Card 3 – “Confidence & Reputation Hit”
+
+Text on retaking exam and pressure with colleagues.[page:1]
+
+Design:
+
+Cards: display: grid, grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));.[web:19]
+
+Each card: small line icon, bold title, 2–3 line description, subtle border, slight hover lift.[web:19]
+
+2.5 Product section (features + Perplexity‑like UI)
+Section <section id="product"> with H2: “Everything You Need to Pass With Confidence”.[page:1]
+
+Two main blocks:
+
+Feature grid (4 cards):
+
+Card A: “Comprehensive Question Bank”
+
+Text: “2,500+ exam-style questions across CFA, FRM, and other finance certifications, each with detailed explanations and formulas.”[page:1]
+
+Card B: “Performance Analytics”
+
+Text: highlight topic breakdown, LOS analysis, and time‑per‑question metrics.[page:1]
+
+Card C: “Study Guides & Formula Sheets”
+
+Text: note PDF downloads and quick‑reference material.[page:1]
+
+Card D: “Realistic Mock Exams”
+
+Text: timed simulations that mirror actual exam format.[page:1]
+
+Design:
+
+2x2 grid on desktop, stacked on mobile.[web:19]
+
+Each card with a simple line icon; introspective, Perplexity‑like.[web:11]
+
+Product UI surface:
+
+A large central card resembling a Perplexity conversation panel:
+
+Top bar with “Question Bank” tabs (e.g., “CFA L1”, “FRM Part I”).[web:11]
+
+Left column list of questions with tags (topic, difficulty).[page:1]
+
+Right panel showing analytics chart.[page:1]
+
+This can be a static image initially, but layout should feel like a functional app.[web:11][web:18]
+
+2.6 Social proof & metrics strip
+Full‑width strip <section id="proof"> just below product section.[page:1]
+
+Light contrasting background; 4 metrics:
+
+92% – “Pass rate among engaged users”.[page:1]
+
+2,500+ – “Exam‑style practice questions”.[page:1]
+
+3.5x – “Average score improvement after 30 days” (adjust to actual).[web:19]
+
+3,000+ – “Candidates who passed with AnalystTrainer”.[page:1]
+
+Layout: flex row on desktop, 2x2 grid on mobile.[web:19]
+
+2.7 Testimonials (cards + logos)
+Section with H2: “Recent Success Stories From Candidates Like You”.[page:1]
+
+Use 3–4 cards, each with:
+
+Name, role, city (e.g., “Rachel Thompson – Investment Analyst, London”).[page:1]
+
+Exam (e.g., “CFA Level I – June 2024”).[page:1]
+
+Short quote (2–3 lines).[page:1]
+
+5‑star rating row (icons).[web:19]
+
+Optionally add a simple “logo row” for firms (if allowed / anonymized) like “AnalystTrainer students work at: [logo badges]”.[web:19]
+
+2.8 Pricing & guarantee
+Section <section id="pricing"> with H2: “Choose Your Study Plan”.[page:1]
+
+Subtext: “Start with a free trial. Upgrade only if it helps you pass.”[web:19]
+
+Plans (example; adjust to your exact offer):
+
+Trial (leftmost, emphasized for funnel entry)
+
+Price: “Free”.[page:1]
+
+Features: limited questions (e.g., 50), 1 mini mock, limited analytics, 7‑day access.[web:19]
+
+CTA: “Start Free Trial”.[page:1]
+
+Basic
+
+Price example: “£299 / month”.[page:1]
+
+Features: partial question bank, basic tracking, 2 mocks, email support.[page:1]
+
+Standard (highlight “Most Popular”)
+
+Price example: “£599 / 3 months”.[page:1]
+
+Features: full question bank, all mocks, advanced analytics, study guides, priority support.[page:1]
+
+Premium / Ultimate
+
+Lifetime or extended access, personalized study roadmap, 1:1 review sessions (if applicable).[page:1]
+
+Under pricing grid: 2–3 line explanation of pass guarantee:
+
+Conditions for full refund (completion % of question bank, number of mocks, exam result proof).[page:1]
+
+Add trust badges: secure payment, card logos, “30‑day money‑back guarantee” if offered.[web:16][web:19]
+
+2.9 FAQ section with accordions
+Section <section id="faq"> with H2: “Frequently Asked Questions”.[web:16]
+
+Implement accessible accordions (<button aria-expanded>, <div role="region"> pairs).[web:16]
+
+Example questions:
+
+“How similar are your questions to the real exam?”[page:1]
+
+“What if I fail after using AnalystTrainer?”[page:1]
+
+“Which finance certifications do you cover?”[page:1]
+
+“Can I use AnalystTrainer on my phone or tablet?”[page:1]
+
+“Do I need to install any software?”[web:16]
+
+Each answer 2–4 sentences, with certification names and key phrases naturally used.[web:16]
+
+2.10 Final CTA + micro‑conversion
+Final section <section id="final-cta"> with:
+
+H2: “Join 3,000+ Finance Professionals Who Passed”.[page:1]
+
+Short line: “Start your free trial in under a minute. No credit card required.”[web:19]
+
+Primary CTA: “Start Free Trial”.[page:1]
+
+Optional secondary: “Get 20 Free CFA Questions by Email” (newsletter/lead magnet).[web:19]
+
+3. SEO Implementation (On‑Page, Technical & Schema)
+3.1 Head tags & meta
+In the <head>:
+
+<title>:
+
+“Finance Certification Exam Prep | CFA & FRM Question Bank | AnalystTrainer” (or similar, <= 60 chars).[web:16]
+
+<meta name="description">:
+
+Include main value prop, certifications, and benefit in 140–160 chars.[web:16]
+
+Open Graph:
+
+og:title, og:description, og:type=website, og:url, og:image (optimized screenshot).[web:16]
+
+Twitter card: summary_large_image.[web:16]
+
+3.2 Semantic HTML & headings
+Single H1 in hero; H2 for each major section; H3 for cards if needed.[web:16]
+
+Use <nav>, <header>, <main>, <section>, <footer>, <button>, <form>, <input>, <label> properly for AI parsing and accessibility.[web:16]
+
+3.3 Internal linking & keyword placement
+Ensure nav items and in‑content links use meaningful anchor text like “CFA Level 1 question bank” and “FRM mock exams”.[web:16]
+
+Place main keyword (finance certification prep / CFA question bank) in:
+
+H1.
+
+First paragraph.
+
+At least one H2.
+
+Button alt text or aria‑labels where relevant.[web:16]
+
+Add at least 2–3 internal links to sub‑pages (e.g., dedicated CFA page, blog posts about exam strategy).[web:16]
+
+3.4 Image optimization
+Use next‑gen formats (WebP/AVIF) for hero screenshot and logos.[web:16]
+
+width and height defined; loading="lazy" for below‑the‑fold images.[web:16]
+
+alt text descriptive and keyword aware but natural (e.g., “CFA Level 1 question bank dashboard showing performance analytics”).[web:16]
+
+3.5 Structured data (JSON‑LD)
+Add JSON‑LD block in <head> (or template) combining Product, Offer, AggregateRating, and FAQPage. Adjust values to your actual numbers:
+
+text
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "AnalystTrainer Finance Certification Exam Prep",
+  "description": "Online platform with CFA and FRM exam-style question banks, mock exams, and performance analytics.",
+  "brand": {
+    "@type": "Brand",
+    "name": "AnalystTrainer"
+  },
+  "url": "https://www.analysttrainer.com/",
+  "image": "https://www.analysttrainer.com/og-image.jpg",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "250"
+  },
+  "offers": {
+    "@type": "AggregateOffer",
+    "priceCurrency": "GBP",
+    "lowPrice": "0",
+    "highPrice": "999",
+    "offerCount": "4",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free Trial",
+        "price": "0",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Basic Plan",
+        "price": "299",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "@type": "Offer",
+        "name": "Standard Plan",
+        "price": "599",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock"
+      }
+    ]
+  }
+}
+</script>
+Add FAQPage schema:
+
+text
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How similar are your questions to the real CFA and FRM exams?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our question bank is written to mirror real CFA and FRM exam blueprints, difficulty levels, and wording. Each item includes step-by-step explanations and formula references."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I fail my exam after using AnalystTrainer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy."
+      }
+    }
+  ]
+}
+</script>
+These help generate rich snippets for product, pricing, rating, and FAQs.[web:16]
+
+4. AI‑Ops & Analytics Instrumentation
+4.1 Event tracking model
+Define a small event spec for funnel analysis and AI‑ops:
+
+view_page – page load with referrer and UTM parameters.[web:19]
+
+view_section – when sections come into viewport (hero, product, pricing, faq).[web:19]
+
+click_cta – start_trial, view_demo, pricing_plan_select, faq_open.[web:19]
+
+start_signup – begin sign‑up form.[web:19]
+
+complete_signup – successful trial creation (with plan).[web:19]
+
+error_signup – validation or server error.[web:19]
+
+Use a single track(eventName, payload) wrapper so you can plug into GA4, Segment, or your own endpoint.[web:19]
+
+4.2 Conversion funnel labeling
+Attach data-event and data-section attributes to key elements:
+
+text
+<button
+  data-event="click_cta"
+  data-cta="start_trial"
+  data-section="hero"
+>
+  Start Free Trial
+</button>
+For A/B tests (headlines, CTAs), include data-variant="A"/"B" on variants; log with experiment_id so AI‑ops tooling can optimize copy over time.[web:19]
+
+4.3 AI‑readable copy structure
+Ensure each section has a concise intro paragraph and a bullet list; this makes it easier for AI agents to summarize and repurpose content (e.g., for chatbots or support).[web:19]
+
+Keep benefits phrased in outcomes (“pass on the first try”, “cut 50% of wasted study time”) so AI can use them in responses without re‑engineering your copy.[web:19]
+
+5. Perplexity‑Style UI Notes (Styling & Micro‑Interactions)
+5.1 Component styling guidelines
+Buttons:
+
+Primary: pill or rounded (border-radius: 9999px or equivalent).[web:11]
+
+Shadow: subtle (e.g., 0 10px 25px rgba(15, 23, 42, 0.25) for dark).[web:11]
+
+Hover: darken background, slightly increase shadow and scale to 1.02.[web:11]
+
+Cards:
+
+Uniform padding (20–24px).[web:11]
+
+Very light border and background contrast; minimal shadows, mostly on hover.[web:11]
+
+Avoid strong gradients; keep colors flat and calm.[web:11]
+
+Inputs/forms:
+
+Use minimalist input styling similar to Perplexity’s prompt bar: rounded, filled, subtle focus ring.[web:11]
+
+Single email field for early funnel to reduce friction; password later or in the same step with clear guidance.[web:19]
+
+5.2 Motion & transitions
+Use transition: all 150ms ease-out; on buttons and cards.[web:11]
+
+For section in‑view animations, keep them subtle (fade + small upward motion) and ensure they don’t hurt CLS or performance.[web:16]
+
+5.3 Accessibility
+Color contrast: ensure text vs background passes WCAG AA (4.5:1 for body text).[web:16]
+
+Focus states: custom outlines for keyboard navigation (visible, not removed).[web:16]
+
+ARIA:
+
+aria-expanded & aria-controls for FAQ accordions.[web:16]
+
+Proper aria-label for icon‑only buttons (e.g., mobile menu).[web:16]
+
+6. Implementation Checklist for Claude
+Use this checklist as direct instructions:
+
+Refactor layout into the sections described above, using semantic HTML tags and a centered column.[page:1]
+
+Implement a simple design system (tokens for colors, typography, spacing, and radii) matching the Perplexity‑like aesthetic.[web:11]
+
+Rebuild hero, product, proof, pricing, testimonials, FAQ, and final CTA sections with responsive CSS or Tailwind.[page:1][web:19]
+
+Add SEO meta tags, Open Graph, Twitter Card, and structured data (Product, Offer, AggregateRating, FAQPage).[web:16]
+
+Optimize images (WebP, dimensions, lazy loading) and ensure good Core Web Vitals by limiting heavy scripts.[web:16]
+
+Implement tracking attributes and a track(eventName, payload) helper for analytics and AI‑ops driven optimization.[web:19]
