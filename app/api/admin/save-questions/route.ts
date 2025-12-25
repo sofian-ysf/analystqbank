@@ -47,8 +47,8 @@ export async function POST(request: NextRequest) {
     }));
 
     // Batch insert to avoid Supabase payload/timeout limits
-    // Insert in chunks of 50 questions at a time
-    const BATCH_SIZE = 50;
+    // Insert in chunks of 25 questions at a time (conservative to avoid timeouts)
+    const BATCH_SIZE = 25;
     const allSavedQuestions: typeof questionsToSave = [];
     const errors: string[] = [];
 

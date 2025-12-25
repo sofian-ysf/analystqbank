@@ -627,8 +627,65 @@ export default function AdminDashboard() {
     }
   };
 
+  // Export questions as JSON backup before saving
+  const handleExportQuestions = () => {
+    if (aiGeneratorData.generatedQuestions.length === 0) return;
+
+    const dataStr = JSON.stringify(aiGeneratorData.generatedQuestions, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `questions-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Import questions from JSON backup
+  const handleImportQuestions = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedQuestions = JSON.parse(e.target?.result as string);
+        if (Array.isArray(importedQuestions) && importedQuestions.length > 0) {
+          const confirmed = window.confirm(
+            `Import ${importedQuestions.length} questions?\n\n` +
+            `This will ${aiGeneratorData.generatedQuestions.length > 0 ? 'ADD to your existing ' + aiGeneratorData.generatedQuestions.length + ' questions' : 'load the questions'}.`
+          );
+          if (confirmed) {
+            setAiGeneratorData({
+              ...aiGeneratorData,
+              generatedQuestions: [...aiGeneratorData.generatedQuestions, ...importedQuestions]
+            });
+            alert(`Successfully imported ${importedQuestions.length} questions!`);
+          }
+        } else {
+          alert('Invalid file format. Expected an array of questions.');
+        }
+      } catch {
+        alert('Failed to parse JSON file. Please check the file format.');
+      }
+    };
+    reader.readAsText(file);
+    // Reset input so same file can be imported again
+    event.target.value = '';
+  };
+
   const handleSaveAllQuestions = async () => {
     if (aiGeneratorData.generatedQuestions.length === 0) return;
+
+    // Confirmation dialog
+    const confirmed = window.confirm(
+      `You are about to save ${aiGeneratorData.generatedQuestions.length} questions to the database.\n\n` +
+      `Tip: Click "Export Backup" first to download a JSON backup of your questions.\n\n` +
+      `Continue with save?`
+    );
+    if (!confirmed) return;
 
     try {
       const questionsToSave = aiGeneratorData.generatedQuestions.map(q => ({
@@ -662,12 +719,36 @@ export default function AdminDashboard() {
         throw new Error(data.error || 'Failed to save questions');
       }
 
-      alert(`${data.saved_count} questions saved to database successfully!`);
-      setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: [] });
-      setSelectedQuestionIndex(0);
+      const totalAttempted = data.total_attempted || questionsToSave.length;
+      const savedCount = data.saved_count || 0;
+
+      if (savedCount === totalAttempted) {
+        // All questions saved successfully
+        alert(`All ${savedCount} questions saved to database successfully!`);
+        setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: [] });
+        setSelectedQuestionIndex(0);
+      } else if (savedCount > 0) {
+        // Partial save - remove saved questions, keep unsaved ones
+        const savedQuestionTexts = new Set(
+          (data.questions || []).map((q: { question_text: string }) => q.question_text)
+        );
+        const remainingQuestions = aiGeneratorData.generatedQuestions.filter(
+          q => !savedQuestionTexts.has(q.question_text)
+        );
+
+        const errorInfo = data.errors ? `\n\nErrors: ${data.errors.join(', ')}` : '';
+        alert(`Saved ${savedCount} of ${totalAttempted} questions.\n${remainingQuestions.length} questions remaining to retry.${errorInfo}`);
+
+        setAiGeneratorData({ ...aiGeneratorData, generatedQuestions: remainingQuestions });
+        setSelectedQuestionIndex(0);
+      } else {
+        // Nothing saved
+        const errorInfo = data.errors ? data.errors.join(', ') : 'Unknown error';
+        throw new Error(`Failed to save any questions: ${errorInfo}`);
+      }
     } catch (error) {
       console.error('Error saving questions:', error);
-      alert(`Failed to save questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`Failed to save questions: ${error instanceof Error ? error.message : 'Unknown error'}\n\nYour questions are still available to retry.`);
     }
   };
 
@@ -1338,12 +1419,52 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && !generatingTable && (
-                      <button
-                        onClick={() => handleSaveAllQuestions()}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-                      >
-                        Save All {aiGeneratorData.generatedQuestions.length} Question{aiGeneratorData.generatedQuestions.length > 1 ? 's' : ''}
-                      </button>
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleExportQuestions()}
+                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Export Backup
+                          </button>
+                          <label className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m4-8l-4-4m0 0l-4 4m4-4v12" />
+                            </svg>
+                            Import Backup
+                            <input
+                              type="file"
+                              accept=".json"
+                              onChange={handleImportQuestions}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                        <button
+                          onClick={() => handleSaveAllQuestions()}
+                          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                        >
+                          Save All {aiGeneratorData.generatedQuestions.length} Question{aiGeneratorData.generatedQuestions.length > 1 ? 's' : ''} to Database
+                        </button>
+                      </div>
+                    )}
+                    {/* Import button when no questions exist */}
+                    {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && !generatingTable && (
+                      <label className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m4-8l-4-4m0 0l-4 4m4-4v12" />
+                        </svg>
+                        Import Questions from Backup
+                        <input
+                          type="file"
+                          accept=".json"
+                          onChange={handleImportQuestions}
+                          className="hidden"
+                        />
+                      </label>
                     )}
                   </div>
 
