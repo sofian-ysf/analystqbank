@@ -4,35 +4,35 @@ import Link from "next/link";
 
 export default function Disclaimer() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 AnalystTrainer
               </Link>
               <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
-                <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
                   Pricing
                 </Link>
-                <Link href="/resources" className="text-gray-600 hover:text-gray-900">
+                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
                   Resources
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
                   About
                 </Link>
-                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+                <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">
                   Contact
                 </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
                 Sign in
               </Link>
               <Link href="/signup" className="text-sm font-medium text-white bg-[#1FB8CD] px-4 py-2 rounded-lg hover:bg-[#1A6872]">
@@ -45,23 +45,23 @@ export default function Disclaimer() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8">Disclaimer</h1>
+        <div className="bg-white rounded-xl p-8 border border-[#EAEEEF]">
+          <h1 className="text-4xl font-bold text-[#13343B] mb-8">Disclaimer</h1>
 
-          <div className="prose prose-lg max-w-none text-gray-700">
-            <p className="text-sm text-gray-500 mb-8">
+          <div className="prose prose-lg max-w-none text-[#5f6368]">
+            <p className="text-sm text-[#9aa0a6] mb-8">
               <strong>Last updated:</strong> January 1, 2024
             </p>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">General Disclaimer</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">General Disclaimer</h2>
               <p className="mb-4">
                 The information provided by AnalystTrainer (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) on our website and through our services is for general educational and informational purposes only. All information on the site and in our products is provided in good faith, however, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information.
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">CFA Institute Disclaimer</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">CFA Institute Disclaimer</h2>
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                 <p className="text-amber-800 font-medium mb-2">Important Notice:</p>
                 <p className="text-amber-700">
@@ -74,7 +74,7 @@ export default function Disclaimer() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">No Guarantee of Results</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">No Guarantee of Results</h2>
               <p className="mb-4">
                 While we strive to provide high-quality exam preparation materials, we cannot and do not guarantee:
               </p>
@@ -91,7 +91,7 @@ export default function Disclaimer() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Educational Purpose Only</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">Educational Purpose Only</h2>
               <p className="mb-4">
                 All content provided through AnalystTrainer is for educational purposes only. This includes:
               </p>
@@ -108,7 +108,7 @@ export default function Disclaimer() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Accuracy of Information</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">Accuracy of Information</h2>
               <p className="mb-4">
                 We make reasonable efforts to ensure that our content is accurate and up-to-date. However:
               </p>
@@ -124,14 +124,14 @@ export default function Disclaimer() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">External Links</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">External Links</h2>
               <p className="mb-4">
                 Our website and materials may contain links to external websites. We are not responsible for the content, accuracy, or availability of these external sites. The inclusion of any links does not imply endorsement or recommendation.
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Limitation of Liability</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">Limitation of Liability</h2>
               <p className="mb-4">
                 Under no circumstances shall AnalystTrainer be liable for any direct, indirect, special, incidental, consequential, or punitive damages arising from:
               </p>
@@ -145,14 +145,14 @@ export default function Disclaimer() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Changes to This Disclaimer</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">Changes to This Disclaimer</h2>
               <p className="mb-4">
                 We reserve the right to modify this disclaimer at any time. Changes will be effective immediately upon posting to our website. Your continued use of our services after any changes constitutes acceptance of the modified disclaimer.
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Contact Us</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">Contact Us</h2>
               <p className="mb-4">
                 If you have any questions about this disclaimer, please contact us:
               </p>
@@ -166,11 +166,11 @@ export default function Disclaimer() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-white border-t border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 AnalystTrainer
               </Link>
               <p className="mt-4 text-gray-600">
@@ -179,40 +179,40 @@ export default function Disclaimer() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link></li>
-                <li><Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-gray-600 hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-gray-600 hover:text-gray-900">Mock Exams</Link></li>
+                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
+                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
+                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
+                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
+                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
+                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link></li>
-                <li><Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
+                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
+                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600">© 2024 AnalystTrainer. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy</Link>
-              <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
-              <Link href="/disclaimer" className="text-gray-600 hover:text-gray-900">Disclaimer</Link>
+              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
+              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
+              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
             </div>
           </div>
         </div>

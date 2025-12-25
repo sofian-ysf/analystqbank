@@ -58,17 +58,17 @@ export default function TopicsPage() {
         <header className="bg-white border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <nav className="flex items-center justify-between">
-              <Link href="/" className="text-2xl font-bold text-gray-900">
+              <Link href="/" className="text-2xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <div className="flex items-center gap-6">
-                <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
                   Pricing
                 </Link>
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
-                <Link href="/login" className="text-gray-600 hover:text-gray-900">
+                <Link href="/login" className="text-[#5f6368] hover:text-[#13343B]">
                   Login
                 </Link>
                 <Link
@@ -85,9 +85,9 @@ export default function TopicsPage() {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Breadcrumb */}
           <nav className="mb-8" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm text-gray-500">
+            <ol className="flex items-center space-x-2 text-sm text-[#9aa0a6]">
               <li>
-                <Link href="/" className="hover:text-gray-700">
+                <Link href="/" className="hover:text-[#5f6368]">
                   Home
                 </Link>
               </li>
@@ -147,33 +147,33 @@ export default function TopicsPage() {
                     <span className="text-4xl">{topic.icon}</span>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-gray-500">
+                        <span className="text-xs font-medium text-[#9aa0a6]">
                           Topic {index + 1}
                         </span>
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${topic.color} text-white`}>
                           {topic.examWeight}
                         </span>
                       </div>
-                      <h2 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition mb-2">
+                      <h2 className="text-xl font-bold text-[#13343B] group-hover:text-blue-600 transition mb-2">
                         {topic.name}
                       </h2>
                       <p className="text-gray-600 text-sm mb-4">
                         {topic.description}
                       </p>
                       <div className="flex flex-wrap gap-3 text-sm">
-                        <span className="inline-flex items-center text-gray-500">
+                        <span className="inline-flex items-center text-[#9aa0a6]">
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                           </svg>
                           {topic.subtopics.length} subtopics
                         </span>
-                        <span className="inline-flex items-center text-gray-500">
+                        <span className="inline-flex items-center text-[#9aa0a6]">
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                           </svg>
                           {topicLearningOutcomes} learning outcomes
                         </span>
-                        <span className="inline-flex items-center text-gray-500">
+                        <span className="inline-flex items-center text-[#9aa0a6]">
                           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
@@ -197,7 +197,7 @@ export default function TopicsPage() {
 
           {/* Exam Weight Distribution */}
           <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className="text-2xl font-bold text-[#13343B] mb-6 text-center">
               CFA Level 1 Exam Weight Distribution
             </h2>
             <div className="overflow-x-auto">
@@ -212,7 +212,7 @@ export default function TopicsPage() {
                 </thead>
                 <tbody>
                   {cfaLevel1Curriculum.map((topic) => (
-                    <tr key={topic.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={topic.id} className="border-b border-gray-100 hover:bg-[#FBFAF4]">
                       <td className="py-3 px-4">
                         <Link
                           href={`/topics/${topic.id}`}
@@ -238,7 +238,7 @@ export default function TopicsPage() {
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr className="bg-gray-50 font-medium">
+                  <tr className="bg-[#FBFAF4] font-medium">
                     <td className="py-3 px-4 text-gray-900">Total</td>
                     <td className="text-center py-3 px-4 text-gray-900">100%</td>
                     <td className="text-center py-3 px-4 text-gray-900">180</td>

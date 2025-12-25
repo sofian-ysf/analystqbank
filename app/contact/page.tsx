@@ -96,26 +96,26 @@ export default function Contact() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
-                <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
                   Pricing
                 </Link>
-                <Link href="/resources" className="text-gray-600 hover:text-gray-900">
+                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
                   Resources
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
                   About
                 </Link>
                 <Link href="/contact" className="text-gray-900 font-medium">
@@ -124,7 +124,7 @@ export default function Contact() {
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
                 Sign in
               </Link>
               <Link href="/signup" className="text-sm font-medium text-white bg-gray-900 px-4 py-2 rounded-lg hover:bg-gray-800">
@@ -151,7 +151,7 @@ export default function Contact() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
               How Can We Help?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -161,12 +161,12 @@ export default function Contact() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {contactOptions.map((option, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-lg transition-shadow">
+              <div key={index} className="bg-white rounded-xl p-6 border border-[#EAEEEF] hover:shadow-lg transition-shadow">
                 <div className="text-3xl mb-4">{option.icon}</div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{option.title}</h3>
+                <h3 className="text-xl font-bold text-[#13343B] mb-2">{option.title}</h3>
                 <p className="text-gray-600 mb-4 text-sm">{option.description}</p>
                 <p className="text-sm text-gray-900 font-medium mb-2">{option.email}</p>
-                <p className="text-xs text-gray-500">Response time: {option.response}</p>
+                <p className="text-xs text-[#9aa0a6]">Response time: {option.response}</p>
               </div>
             ))}
           </div>
@@ -177,7 +177,7 @@ export default function Contact() {
       <section className="bg-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
               Send Us a Message
             </h2>
             <p className="text-xl text-gray-600">
@@ -185,7 +185,7 @@ export default function Contact() {
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-8">
+          <div className="bg-[#FBFAF4] rounded-xl p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {submitMessage && (
                 <div className={`p-4 rounded-lg ${
@@ -199,7 +199,7 @@ export default function Contact() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-[#5f6368] mb-2">
                     Full Name *
                   </label>
                   <input
@@ -215,7 +215,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-[#5f6368] mb-2">
                     Email Address *
                   </label>
                   <input
@@ -232,7 +232,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="type" className="block text-sm font-medium text-[#5f6368] mb-2">
                   Type of Inquiry
                 </label>
                 <select
@@ -251,7 +251,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="subject" className="block text-sm font-medium text-[#5f6368] mb-2">
                   Subject *
                 </label>
                 <input
@@ -267,7 +267,7 @@ export default function Contact() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-[#5f6368] mb-2">
                   Message *
                 </label>
                 <textarea
@@ -298,7 +298,7 @@ export default function Contact() {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
@@ -308,8 +308,8 @@ export default function Contact() {
 
           <div className="space-y-6">
             {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
+              <div key={index} className="bg-white rounded-xl p-6 border border-[#EAEEEF]">
+                <h3 className="text-lg font-semibold text-[#13343B] mb-3">{faq.question}</h3>
                 <p className="text-gray-600">{faq.answer}</p>
               </div>
             ))}
@@ -345,11 +345,11 @@ export default function Contact() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-white border-t border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <p className="mt-4 text-gray-600">
@@ -358,40 +358,40 @@ export default function Contact() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link></li>
-                <li><Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-gray-600 hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-gray-600 hover:text-gray-900">Mock Exams</Link></li>
+                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
+                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
+                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
+                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
+                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
+                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link></li>
-                <li><Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
+                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
+                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600">© 2024 Finance Exam Prep. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy</Link>
-              <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
-              <Link href="/disclaimer" className="text-gray-600 hover:text-gray-900">Disclaimer</Link>
+              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
+              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
+              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
             </div>
           </div>
         </div>

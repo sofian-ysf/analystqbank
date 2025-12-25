@@ -141,17 +141,17 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-gray-900">
+          <Link href="/" className="text-2xl font-bold text-[#13343B]">
             Finance Exam Prep
           </Link>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-[#13343B]">
             Create your account
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#5f6368]">
             Start your journey to exam success
           </p>
         </div>
@@ -180,7 +180,7 @@ export default function SignUp() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-900 focus:border-gray-900"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
                 placeholder="John Doe"
               />
             </div>
@@ -200,7 +200,7 @@ export default function SignUp() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-900 focus:border-gray-900"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
                 placeholder="john@example.com"
               />
             </div>
@@ -220,7 +220,7 @@ export default function SignUp() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-900 focus:border-gray-900"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
                 placeholder="••••••••"
               />
             </div>
@@ -240,7 +240,7 @@ export default function SignUp() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-gray-900 focus:border-gray-900"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
                 placeholder="••••••••"
               />
             </div>
@@ -251,7 +251,7 @@ export default function SignUp() {
                 name="terms"
                 type="checkbox"
                 required
-                className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                className="h-4 w-4 text-[#13343B] focus:ring-[#1FB8CD] border-gray-300 rounded"
               />
               <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
                 I agree to the{" "}
@@ -268,7 +268,7 @@ export default function SignUp() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#1FB8CD] hover:bg-[#1A6872] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1FB8CD] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? "Creating account..." : "Sign up"}
             </button>
@@ -280,7 +280,7 @@ export default function SignUp() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                <span className="px-2 bg-white text-[#9aa0a6]">Or continue with</span>
               </div>
             </div>
 
@@ -289,7 +289,7 @@ export default function SignUp() {
                 type="button"
                 onClick={handleGithubSignUp}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" />
@@ -301,7 +301,7 @@ export default function SignUp() {
                 type="button"
                 onClick={handleGoogleSignUp}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20">
                   <path d="M19.998 10.223c0-.696-.063-1.369-.178-2.017H10.2v3.818h5.51a4.708 4.708 0 01-2.044 3.093v2.57h3.31c1.936-1.782 3.052-4.408 3.052-7.464z" fill="#4285F4"/>
@@ -318,7 +318,7 @@ export default function SignUp() {
                 type="button"
                 onClick={handleAppleSignUp}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M15.71 10.21c-.02-2.19 1.79-3.24 1.87-3.3-.98-1.43-2.5-1.63-3.06-1.66-1.31-.13-2.54.77-3.2.77-.67 0-1.69-.75-2.78-.73-1.43.02-2.74.83-3.47 2.11-1.48 2.58-.38 6.39 1.06 8.48.71 1.02 1.54 2.17 2.64 2.13 1.07-.04 1.47-.69 2.76-.69 1.28 0 1.65.69 2.78.67 1.15-.02 1.86-1.03 2.55-2.06.8-1.19 1.13-2.35 1.15-2.41-.02-.01-2.21-.85-2.23-3.36l-.01.05z"/>
@@ -331,7 +331,7 @@ export default function SignUp() {
                 type="button"
                 onClick={handleLinkedInSignUp}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="#0A66C2">
                   <path d="M4.47 2.68c0 .73-.59 1.32-1.32 1.32S1.83 3.41 1.83 2.68C1.83 1.95 2.42 1.36 3.15 1.36s1.32.59 1.32 1.32zM1.95 18.26V6.38h2.4v11.88h-2.4zM14.86 6.11c-2.3 0-3.33 1.26-3.89 2.15V6.38H8.57v11.88h2.4v-5.91c0-1.01.19-1.98 1.44-1.98 1.23 0 1.25 1.15 1.25 2.04v5.85h2.4v-6.59c0-2.07-.45-3.66-2.87-3.66l.67 1.1z"/>
@@ -342,8 +342,8 @@ export default function SignUp() {
           </div>
 
           <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Already have an account?</span>{" "}
-            <Link href="/login" className="font-medium text-gray-900 hover:underline">
+            <span className="text-[#5f6368]">Already have an account?</span>{" "}
+            <Link href="/login" className="font-medium text-[#1FB8CD] hover:underline">
               Sign in
             </Link>
           </div>

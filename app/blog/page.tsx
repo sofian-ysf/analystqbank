@@ -63,35 +63,35 @@ export default function Blog() {
   const categories = ["All", "Study Tips", "Ethics", "Quantitative Methods", "Financial Reporting", "Portfolio Management", "Economics"];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 AnalystTrainer
               </Link>
               <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
-                <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
                   Pricing
                 </Link>
-                <Link href="/resources" className="text-gray-600 hover:text-gray-900">
+                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
                   Resources
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
                   About
                 </Link>
-                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+                <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">
                   Contact
                 </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
                 Sign in
               </Link>
               <Link href="/signup" className="text-sm font-medium text-white bg-[#1FB8CD] px-4 py-2 rounded-lg hover:bg-[#1A6872]">
@@ -105,7 +105,7 @@ export default function Blog() {
       {/* Hero Section */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">AnalystTrainer Blog</h1>
+          <h1 className="text-4xl font-bold text-[#13343B] mb-4">AnalystTrainer Blog</h1>
           <p className="text-xl text-gray-600 max-w-2xl">
             Expert insights, study tips, and in-depth guides to help you succeed in your CFA exam journey.
           </p>
@@ -136,7 +136,7 @@ export default function Blog() {
           {blogPosts.map((post) => (
             <article
               key={post.id}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+              className="bg-white rounded-xl border border-[#EAEEEF] overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="h-48 bg-gradient-to-br from-[#1FB8CD]/20 to-[#1A6872]/20 flex items-center justify-center">
                 <svg className="w-16 h-16 text-[#1FB8CD]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +169,7 @@ export default function Blog() {
 
         {/* Coming Soon Notice */}
         <div className="mt-12 bg-[#1FB8CD]/5 border border-[#1FB8CD]/20 rounded-xl p-8 text-center">
-          <h3 className="text-xl font-bold text-gray-900 mb-2">More Content Coming Soon!</h3>
+          <h3 className="text-xl font-bold text-[#13343B] mb-2">More Content Coming Soon!</h3>
           <p className="text-gray-600 mb-4">
             We&apos;re working on more in-depth articles and study guides. Subscribe to get notified when new content is published.
           </p>
@@ -187,11 +187,11 @@ export default function Blog() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-white border-t border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 AnalystTrainer
               </Link>
               <p className="mt-4 text-gray-600">
@@ -200,40 +200,40 @@ export default function Blog() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link></li>
-                <li><Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-gray-600 hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-gray-600 hover:text-gray-900">Mock Exams</Link></li>
+                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
+                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
+                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
+                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
+                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
+                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link></li>
-                <li><Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
+                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
+                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600">© 2024 AnalystTrainer. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy</Link>
-              <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
-              <Link href="/disclaimer" className="text-gray-600 hover:text-gray-900">Disclaimer</Link>
+              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
+              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
+              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
             </div>
           </div>
         </div>

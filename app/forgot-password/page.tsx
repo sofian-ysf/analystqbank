@@ -32,17 +32,17 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-gray-900">
+          <Link href="/" className="text-2xl font-bold text-[#13343B]">
             AnalystTrainer
           </Link>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-6 text-3xl font-bold text-[#13343B]">
             Reset your password
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-[#5f6368]">
             Enter your email address and we&apos;ll send you a link to reset your password
           </p>
         </div>
@@ -57,11 +57,11 @@ export default function ForgotPassword() {
                 </svg>
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">Check your email</h3>
-              <p className="text-sm text-gray-600 mb-6">
+              <p className="text-sm text-[#5f6368] mb-6">
                 We&apos;ve sent a password reset link to <strong>{email}</strong>.
                 Click the link in the email to reset your password.
               </p>
-              <p className="text-xs text-gray-500 mb-4">
+              <p className="text-xs text-[#9aa0a6] mb-4">
                 Didn&apos;t receive the email? Check your spam folder or try again.
               </p>
               <button
@@ -113,7 +113,7 @@ export default function ForgotPassword() {
           )}
 
           <div className="mt-6 text-center text-sm">
-            <Link href="/login" className="font-medium text-gray-600 hover:text-gray-900">
+            <Link href="/login" className="font-medium text-[#5f6368] hover:text-gray-900">
               ← Back to sign in
             </Link>
           </div>
@@ -121,7 +121,7 @@ export default function ForgotPassword() {
 
         {/* Help text */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-[#9aa0a6]">
             Having trouble? <Link href="/contact" className="text-[#1FB8CD] hover:underline">Contact support</Link>
           </p>
         </div>

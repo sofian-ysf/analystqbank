@@ -124,35 +124,35 @@ export default function FormulaSheets() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
-                <Link href="/pricing" className="text-gray-600 hover:text-gray-900">
+                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
                   Pricing
                 </Link>
-                <Link href="/resources" className="text-gray-600 hover:text-gray-900">
+                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
                   Resources
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
                   About
                 </Link>
-                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+                <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">
                   Contact
                 </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
                 Sign in
               </Link>
               <Link href="/signup" className="text-sm font-medium text-white bg-gray-900 px-4 py-2 rounded-lg hover:bg-gray-800">
@@ -184,7 +184,7 @@ export default function FormulaSheets() {
           <div className="flex flex-col md:flex-row gap-6">
             {/* Search */}
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Search Formulas</label>
+              <label className="block text-sm font-medium text-[#5f6368] mb-2">Search Formulas</label>
               <input
                 type="text"
                 placeholder="Search by title or description..."
@@ -196,7 +196,7 @@ export default function FormulaSheets() {
 
             {/* Level Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">CFA Level</label>
+              <label className="block text-sm font-medium text-[#5f6368] mb-2">CFA Level</label>
               <select
                 value={selectedLevel}
                 onChange={(e) => setSelectedLevel(e.target.value)}
@@ -210,7 +210,7 @@ export default function FormulaSheets() {
 
             {/* Topic Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Topic</label>
+              <label className="block text-sm font-medium text-[#5f6368] mb-2">Topic</label>
               <select
                 value={selectedTopic}
                 onChange={(e) => setSelectedTopic(e.target.value)}
@@ -237,7 +237,7 @@ export default function FormulaSheets() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredSheets.map((sheet) => (
-              <div key={sheet.id} className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition-shadow">
+              <div key={sheet.id} className="bg-white rounded-xl border border-[#EAEEEF] hover:shadow-lg transition-shadow">
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg font-bold text-gray-900">{sheet.title}</h3>
@@ -252,16 +252,16 @@ export default function FormulaSheets() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    <span className="px-2 py-1 bg-gray-100 text-[#5f6368] text-xs rounded">
                       {sheet.level}
                     </span>
-                    <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    <span className="px-2 py-1 bg-gray-100 text-[#5f6368] text-xs rounded">
                       {sheet.topic}
                     </span>
                   </div>
 
                   {/* Stats */}
-                  <div className="flex justify-between text-sm text-gray-500 mb-6">
+                  <div className="flex justify-between text-sm text-[#9aa0a6] mb-6">
                     <span className="flex items-center">
                       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -276,7 +276,7 @@ export default function FormulaSheets() {
                     <button className="flex-1 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
                       Download PDF
                     </button>
-                    <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                    <button className="px-4 py-2 border border-gray-300 text-[#5f6368] rounded-lg text-sm font-medium hover:bg-[#FBFAF4] transition-colors">
                       Preview
                     </button>
                   </div>
@@ -318,11 +318,11 @@ export default function FormulaSheets() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-white border-t border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <p className="mt-4 text-gray-600">
@@ -331,40 +331,40 @@ export default function FormulaSheets() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link></li>
-                <li><Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-gray-600 hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-gray-600 hover:text-gray-900">Mock Exams</Link></li>
+                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
+                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
+                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
+                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
+                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
+                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link></li>
-                <li><Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
+                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
+                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600">© 2024 Finance Exam Prep. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy</Link>
-              <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
-              <Link href="/disclaimer" className="text-gray-600 hover:text-gray-900">Disclaimer</Link>
+              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
+              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
+              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
             </div>
           </div>
         </div>

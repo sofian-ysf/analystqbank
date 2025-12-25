@@ -61,35 +61,35 @@ export default function Pricing() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-gray-600 hover:text-gray-900">
+                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
                   Features
                 </Link>
                 <Link href="/pricing" className="text-gray-900 font-medium">
                   Pricing
                 </Link>
-                <Link href="/resources" className="text-gray-600 hover:text-gray-900">
+                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
                   Resources
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
                   About
                 </Link>
-                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+                <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">
                   Contact
                 </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
                 Sign in
               </Link>
               <Link href="/signup" className="text-sm font-medium text-white bg-gray-900 px-4 py-2 rounded-lg hover:bg-gray-800">
@@ -153,7 +153,7 @@ export default function Pricing() {
                 )}
 
                 <div className="text-center">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-[#13343B] mb-2">{plan.name}</h3>
                   <p className="text-gray-600 mb-6">{plan.description}</p>
 
                   <div className="mb-6">
@@ -162,7 +162,7 @@ export default function Pricing() {
                     </span>
                     <span className="text-gray-600 ml-2">/month</span>
                     {isAnnual && (
-                      <div className="text-sm text-gray-500 mt-1">
+                      <div className="text-sm text-[#9aa0a6] mt-1">
                         Billed annually (${plan.annualPrice})
                       </div>
                     )}
@@ -181,7 +181,7 @@ export default function Pricing() {
                 </div>
 
                 <div className="mt-8">
-                  <h4 className="font-semibold text-gray-900 mb-4">What&apos;s included:</h4>
+                  <h4 className="font-semibold text-[#13343B] mb-4">What&apos;s included:</h4>
                   <ul className="space-y-3">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start">
@@ -203,7 +203,7 @@ export default function Pricing() {
       <section className="bg-white py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600">
@@ -213,7 +213,7 @@ export default function Pricing() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-[#13343B] mb-2">
                 Can I switch plans at any time?
               </h3>
               <p className="text-gray-600">
@@ -222,7 +222,7 @@ export default function Pricing() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-[#13343B] mb-2">
                 What happens during the free trial?
               </h3>
               <p className="text-gray-600">
@@ -231,7 +231,7 @@ export default function Pricing() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-[#13343B] mb-2">
                 Do you offer refunds?
               </h3>
               <p className="text-gray-600">
@@ -240,7 +240,7 @@ export default function Pricing() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-[#13343B] mb-2">
                 Is there a discount for students?
               </h3>
               <p className="text-gray-600">
@@ -249,7 +249,7 @@ export default function Pricing() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-[#13343B] mb-2">
                 What payment methods do you accept?
               </h3>
               <p className="text-gray-600">
@@ -276,11 +276,11 @@ export default function Pricing() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
+      <footer className="bg-white border-t border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-gray-900">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
                 Finance Exam Prep
               </Link>
               <p className="mt-4 text-gray-600">
@@ -289,40 +289,40 @@ export default function Pricing() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
               <ul className="space-y-2">
-                <li><Link href="/features" className="text-gray-600 hover:text-gray-900">Features</Link></li>
-                <li><Link href="/pricing" className="text-gray-600 hover:text-gray-900">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-gray-600 hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-gray-600 hover:text-gray-900">Mock Exams</Link></li>
+                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
+                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
+                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
+                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
               <ul className="space-y-2">
-                <li><Link href="/blog" className="text-gray-600 hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/help" className="text-gray-600 hover:text-gray-900">Help Center</Link></li>
+                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
+                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
               <ul className="space-y-2">
-                <li><Link href="/about" className="text-gray-600 hover:text-gray-900">About</Link></li>
-                <li><Link href="/contact" className="text-gray-600 hover:text-gray-900">Contact</Link></li>
-                <li><Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms of Service</Link></li>
+                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
+                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
+                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-600">© 2024 Finance Exam Prep. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-600 hover:text-gray-900">Privacy</Link>
-              <Link href="/terms" className="text-gray-600 hover:text-gray-900">Terms</Link>
-              <Link href="/disclaimer" className="text-gray-600 hover:text-gray-900">Disclaimer</Link>
+              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
+              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
+              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
             </div>
           </div>
         </div>
