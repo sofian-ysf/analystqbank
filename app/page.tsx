@@ -2,109 +2,97 @@ import Link from "next/link";
 import Script from "next/script";
 
 export default function Home() {
-  const jsonLd = {
+  const productJsonLd = {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://financeexamprep.co.uk/#organization",
-        "name": "Finance Exam Prep",
-        "url": "https://financeexamprep.co.uk",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://financeexamprep.co.uk/logo.png",
-          "width": 600,
-          "height": 60
+    "@type": "Product",
+    "name": "AnalystTrainer Finance Certification Exam Prep",
+    "description": "Online platform with CFA and FRM exam-style question banks, mock exams, and performance analytics.",
+    "brand": {
+      "@type": "Brand",
+      "name": "AnalystTrainer"
+    },
+    "url": "https://www.analysttrainer.com/",
+    "image": "https://www.analysttrainer.com/og-image.jpg",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "250"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "GBP",
+      "lowPrice": "0",
+      "highPrice": "999",
+      "offerCount": "4",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free Trial",
+          "price": "0",
+          "priceCurrency": "GBP",
+          "availability": "https://schema.org/InStock"
         },
-        "sameAs": [
-          "https://twitter.com/financeexamprep",
-          "https://facebook.com/financeexamprep",
-          "https://linkedin.com/company/financeexamprep"
-        ]
-      },
+        {
+          "@type": "Offer",
+          "name": "Basic Plan",
+          "price": "299",
+          "priceCurrency": "GBP",
+          "availability": "https://schema.org/InStock"
+        },
+        {
+          "@type": "Offer",
+          "name": "Standard Plan",
+          "price": "599",
+          "priceCurrency": "GBP",
+          "availability": "https://schema.org/InStock"
+        }
+      ]
+    }
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
       {
-        "@type": "WebSite",
-        "@id": "https://financeexamprep.co.uk/#website",
-        "url": "https://financeexamprep.co.uk",
-        "name": "Finance Exam Prep",
-        "description": "Comprehensive finance certification exam preparation platform",
-        "publisher": {
-          "@id": "https://financeexamprep.co.uk/#organization"
+        "@type": "Question",
+        "name": "How similar are your questions to the real CFA and FRM exams?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Our question bank is written to mirror real CFA and FRM exam blueprints, difficulty levels, and wording. Each item includes step-by-step explanations and formula references."
         }
       },
       {
-        "@type": "Course",
-        "name": "Finance Certification Exam Preparation",
-        "description": "Complete preparation course for finance certification exams with 2000+ practice questions, mock exams, and study materials",
-        "provider": {
-          "@id": "https://financeexamprep.co.uk/#organization"
-        },
-        "educationalCredentialAwarded": "Finance Certification Preparation Certificate",
-        "hasCourseInstance": {
-          "@type": "CourseInstance",
-          "courseMode": "online",
-          "duration": "P3M",
-          "inLanguage": "en-GB"
-        },
-        "offers": [
-          {
-            "@type": "Offer",
-            "category": "Basic",
-            "price": "299",
-            "priceCurrency": "GBP",
-            "availability": "https://schema.org/InStock"
-          },
-          {
-            "@type": "Offer",
-            "category": "Standard",
-            "price": "599",
-            "priceCurrency": "GBP",
-            "availability": "https://schema.org/InStock"
-          },
-          {
-            "@type": "Offer",
-            "category": "Premium",
-            "price": "999",
-            "priceCurrency": "GBP",
-            "availability": "https://schema.org/InStock"
-          }
-        ],
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "reviewCount": "8500",
-          "bestRating": "5",
-          "worstRating": "1"
+        "@type": "Question",
+        "name": "What happens if I fail my exam after using AnalystTrainer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy."
         }
       },
       {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How similar are your questions to the actual finance certification exams?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Our questions are written by certified finance professionals who have recently taken the exams. We regularly update our question bank based on feedback to ensure they match the current exam format and difficulty level."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What if I don't pass after using your platform?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "We offer a 100% money-back guarantee. If you complete at least 80% of our question bank and all mock exams but don't pass your finance exam, we'll refund your full purchase price."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How long should I study before my exam?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "We recommend starting your preparation at least 3 months before your exam date. Most successful candidates spend 2-3 hours daily on our platform."
-            }
-          }
-        ]
+        "@type": "Question",
+        "name": "Which finance certifications do you cover?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We currently focus on CFA Level 1, with FRM and other finance certifications coming soon. Our content is regularly reviewed and updated to match the latest exam formats."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use AnalystTrainer on my phone or tablet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! Our platform is fully responsive and works seamlessly on all devices. Your progress syncs automatically across desktop, tablet, and mobile."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need to install any software?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No installation required. AnalystTrainer is a web-based platform that works in any modern browser. Simply sign up and start practicing immediately."
+        }
       }
     ]
   };
@@ -112,676 +100,724 @@ export default function Home() {
   return (
     <>
       <Script
-        id="json-ld"
+        id="product-json-ld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
         strategy="beforeInteractive"
       />
-      <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
-                CFA Level 1 Prep
-              </Link>
-            </div>
+      <Script
+        id="faq-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        strategy="beforeInteractive"
+      />
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/features" className="text-gray-600 hover:text-gray-900 font-medium">
-                Features
+      <div className="min-h-screen bg-[#020617]">
+        {/* Header / Navigation */}
+        <header className="sticky top-0 z-50 border-b border-[#1E293B] bg-[#020617]/80 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              {/* Logo */}
+              <Link href="/" className="text-xl font-bold text-white">
+                AnalystTrainer
               </Link>
-              <Link href="/pricing" className="text-gray-600 hover:text-gray-900 font-medium">
-                Pricing
-              </Link>
-              <Link href="/resources" className="text-gray-600 hover:text-gray-900 font-medium">
-                Resources
-              </Link>
-              <Link href="/about" className="text-gray-600 hover:text-gray-900 font-medium">
-                About
-              </Link>
-              <Link href="/contact" className="text-gray-600 hover:text-gray-900 font-medium">
-                Contact
-              </Link>
-            </div>
 
-            {/* CTA Buttons */}
-            <div className="hidden md:flex items-center space-x-4">
-              <Link
-                href="/login"
-                className="text-gray-700 hover:text-gray-900 font-medium"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors font-medium"
-              >
-                Start Free Trial
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button className="md:hidden p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100">
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-gray-50 to-white px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-center">
-            <div className="mb-6 inline-flex items-center rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-700">
-              <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-              </svg>
-              Only 47% pass on their first attempt
-            </div>
-
-            <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-              Pass CFA Level 1
-              <span className="block text-gray-900">On Your First Try</span>
-            </h1>
-
-            <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600">
-              Master all 10 CFA Level 1 topic areas with 1800+ practice questions, realistic mock exams, and comprehensive study materials designed for the computer-based exam format.
-            </p>
-
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Link
-                href="/signup"
-                className="rounded-lg bg-gray-900 px-8 py-4 text-lg font-semibold text-white hover:bg-gray-800 transition-colors"
-              >
-                Start Free Trial
-              </Link>
-              <Link
-                href="#success-stories"
-                className="rounded-lg border-2 border-gray-300 bg-white px-8 py-4 text-lg font-semibold text-gray-700 hover:border-gray-400 transition-colors"
-              >
-                See Success Stories
-              </Link>
-            </div>
-
-            <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900">92%</div>
-                <div className="text-sm text-gray-600">Pass Rate</div>
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center space-x-8">
+                <a href="#product" className="text-[#94A3B8] hover:text-white transition-colors font-medium">
+                  Features
+                </a>
+                <a href="#pricing" className="text-[#94A3B8] hover:text-white transition-colors font-medium">
+                  Pricing
+                </a>
+                <a href="#proof" className="text-[#94A3B8] hover:text-white transition-colors font-medium">
+                  Testimonials
+                </a>
+                <a href="#faq" className="text-[#94A3B8] hover:text-white transition-colors font-medium">
+                  FAQ
+                </a>
               </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900">2,500+</div>
-                <div className="text-sm text-gray-600">Practice Questions</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900">3,000+</div>
-                <div className="text-sm text-gray-600">Passed</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Problem Section */}
-      <section className="bg-gray-50 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-            The Cost of Failing Your Finance Certification Exam
-          </h2>
+              {/* CTA Buttons */}
+              <div className="hidden md:flex items-center space-x-4">
+                <Link
+                  href="/login"
+                  className="text-[#94A3B8] hover:text-white transition-colors font-medium"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  data-event="click_cta"
+                  data-cta="start_trial"
+                  data-section="header"
+                  className="bg-[#2563EB] text-white px-5 py-2 rounded-full hover:bg-[#1D4ED8] transition-all hover:scale-[1.02] hover:shadow-lg font-medium"
+                >
+                  Start Free Trial
+                </Link>
+              </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              {/* Mobile Menu Button */}
+              <button className="md:hidden p-2 rounded-lg text-[#94A3B8] hover:text-white hover:bg-[#1E293B]" aria-label="Open menu">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">£50,000+ Lost Income</h3>
-              <p className="text-gray-600">Delay in certification means lost opportunities for higher-paying roles</p>
+              </button>
             </div>
+          </nav>
+        </header>
 
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+        <main>
+          {/* Hero Section */}
+          <section id="hero" className="px-4 py-16 sm:py-24 sm:px-6" data-section="hero">
+            <div className="mx-auto max-w-[960px]">
+              <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
+                {/* Left: Copy, CTAs, Proof */}
+                <div>
+                  <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6">
+                    Pass Your Finance Certification Exams on Your First Try
+                  </h1>
+
+                  <p className="text-xl text-[#94A3B8] mb-8 leading-relaxed">
+                    Master CFA, FRM, and more with an exam-style question bank, realistic mock exams, and analytics that pinpoint your weakest topics.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row gap-4 mb-8">
+                    <Link
+                      href="/signup"
+                      data-event="click_cta"
+                      data-cta="start_trial"
+                      data-section="hero"
+                      className="bg-[#2563EB] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#1D4ED8] transition-all hover:scale-[1.02] hover:shadow-xl text-center"
+                    >
+                      Start Free Trial
+                    </Link>
+                    <Link
+                      href="/practice"
+                      data-event="click_cta"
+                      data-cta="view_demo"
+                      data-section="hero"
+                      className="border border-[#334155] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#0F172A] transition-all text-center"
+                    >
+                      View Question Bank Demo
+                    </Link>
+                  </div>
+
+                  <p className="text-sm text-[#64748B] mb-8">No credit card required. Cancel anytime.</p>
+
+                  {/* Proof Row */}
+                  <div className="flex flex-wrap gap-6 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-white">92%</span>
+                      <span className="text-[#94A3B8]">pass rate</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-white">3,000+</span>
+                      <span className="text-[#94A3B8]">candidates passed</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-white">2,500+</span>
+                      <span className="text-[#94A3B8]">questions</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Product Screenshot Card */}
+                <aside className="bg-[#0F172A] border border-[#1E293B] rounded-2xl p-6 shadow-2xl">
+                  <div className="flex items-center gap-2 mb-4 pb-4 border-b border-[#1E293B]">
+                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span className="ml-4 text-sm text-[#64748B]">Question Bank</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="bg-[#1E293B] rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-[#2563EB] font-medium">Ethics & Professional Standards</span>
+                        <span className="text-xs text-[#16A34A]">85% complete</span>
+                      </div>
+                      <div className="w-full bg-[#334155] rounded-full h-2">
+                        <div className="bg-[#16A34A] h-2 rounded-full" style={{width: '85%'}}></div>
+                      </div>
+                    </div>
+                    <div className="bg-[#1E293B] rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-[#2563EB] font-medium">Quantitative Methods</span>
+                        <span className="text-xs text-[#EAB308]">62% complete</span>
+                      </div>
+                      <div className="w-full bg-[#334155] rounded-full h-2">
+                        <div className="bg-[#EAB308] h-2 rounded-full" style={{width: '62%'}}></div>
+                      </div>
+                    </div>
+                    <div className="bg-[#1E293B] rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs text-[#2563EB] font-medium">Financial Statement Analysis</span>
+                        <span className="text-xs text-[#EF4444]">28% complete</span>
+                      </div>
+                      <div className="w-full bg-[#334155] rounded-full h-2">
+                        <div className="bg-[#EF4444] h-2 rounded-full" style={{width: '28%'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-[#1E293B] text-center">
+                    <p className="text-sm text-[#64748B]">Your personalized analytics dashboard</p>
+                  </div>
+                </aside>
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">6-12 Months Career Delay</h3>
-              <p className="text-gray-600">Must wait for next exam sitting, delaying your career progression</p>
             </div>
+          </section>
 
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-red-100">
-                <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          {/* Pain Section */}
+          <section id="pain" className="px-4 py-16 sm:px-6 bg-[#0B1120]" data-section="pain">
+            <div className="mx-auto max-w-[960px]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+                The Cost of Failing Your Finance Certification Exam
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all hover:-translate-y-1">
+                  <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">£50,000+ Lost Earnings</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    Delayed promotions and bonuses from not having the certification your peers already hold.
+                  </p>
+                </div>
+
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all hover:-translate-y-1">
+                  <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">6-12 Months Career Delay</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    Waiting for the next exam window while recruitment cycles and opportunities pass you by.
+                  </p>
+                </div>
+
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all hover:-translate-y-1">
+                  <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Confidence & Reputation Hit</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    The pressure of retaking with colleagues watching and questions about your competence.
+                  </p>
+                </div>
               </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">Professional Reputation</h3>
-              <p className="text-gray-600">Impact on credibility and confidence in professional settings</p>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Solution Section */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-            Everything You Need to Pass with Confidence
-          </h2>
+          {/* Product Section */}
+          <section id="product" className="px-4 py-16 sm:px-6" data-section="product">
+            <div className="mx-auto max-w-[960px]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+                Everything You Need to Pass With Confidence
+              </h2>
+              <p className="text-[#94A3B8] text-center mb-12 max-w-2xl mx-auto">
+                Our comprehensive platform gives you the tools, practice, and insights to master your finance certification exam.
+              </p>
 
-          <div className="grid gap-8 lg:grid-cols-2">
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                  <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all">
+                  <div className="w-12 h-12 bg-[#2563EB]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Comprehensive Question Bank</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    2,500+ exam-style questions across CFA, FRM, and other finance certifications, each with detailed explanations and formulas.
+                  </p>
+                </div>
+
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all">
+                  <div className="w-12 h-12 bg-[#2563EB]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Performance Analytics</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    Topic breakdown, LOS analysis, and time-per-question metrics to identify weaknesses and track improvement.
+                  </p>
+                </div>
+
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all">
+                  <div className="w-12 h-12 bg-[#2563EB]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Study Guides & Formula Sheets</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    Downloadable PDF guides and quick-reference formula sheets for efficient revision.
+                  </p>
+                </div>
+
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6 hover:border-[#334155] transition-all">
+                  <div className="w-12 h-12 bg-[#2563EB]/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-6 h-6 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-2">Realistic Mock Exams</h3>
+                  <p className="text-[#94A3B8] text-sm leading-relaxed">
+                    Timed simulations that mirror the actual exam format, difficulty, and question distribution.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Proof Section - Stats Strip */}
+          <section id="proof" className="px-4 py-12 sm:px-6 bg-[#0F172A] border-y border-[#1E293B]" data-section="proof">
+            <div className="mx-auto max-w-[960px]">
+              <div className="grid grid-cols-2 gap-8 text-center lg:grid-cols-4">
+                <div>
+                  <div className="text-4xl font-bold text-white">92%</div>
+                  <div className="mt-2 text-[#64748B] text-sm">Pass rate among engaged users</div>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Comprehensive Question Bank</h3>
-                  <p className="text-gray-600">2,500+ exam-style questions covering CFA, FRM, and other finance certification topics with detailed explanations</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                  <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
+                  <div className="text-4xl font-bold text-white">2,500+</div>
+                  <div className="mt-2 text-[#64748B] text-sm">Exam-style practice questions</div>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Performance Analytics</h3>
-                  <p className="text-gray-600">Track your progress, identify weak areas, and focus your study time effectively</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
-                  <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+                  <div className="text-4xl font-bold text-white">3.5x</div>
+                  <div className="mt-2 text-[#64748B] text-sm">Average score improvement</div>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Study Guides & Resources</h3>
-                  <p className="text-gray-600">Comprehensive study materials, formula sheets, and financial modeling guides</p>
+                  <div className="text-4xl font-bold text-white">3,000+</div>
+                  <div className="mt-2 text-[#64748B] text-sm">Candidates passed with us</div>
                 </div>
               </div>
             </div>
+          </section>
 
-            <div className="rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-              <h3 className="mb-4 text-2xl font-bold text-gray-900">Recent Success Stories</h3>
+          {/* Testimonials Section */}
+          <section className="px-4 py-16 sm:px-6" data-section="testimonials">
+            <div className="mx-auto max-w-[960px]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+                Recent Success Stories From Candidates Like You
+              </h2>
+
+              <div className="grid gap-6 md:grid-cols-3">
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6">
+                  <div className="flex text-yellow-400 mb-4">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i} className="text-lg">{star}</span>
+                    ))}
+                  </div>
+                  <p className="text-[#94A3B8] text-sm mb-4 leading-relaxed">
+                    &ldquo;I failed CFA Level 1 on my first attempt. After using AnalystTrainer for 3 months, I passed with scores in the 90th percentile! The detailed explanations really helped.&rdquo;
+                  </p>
+                  <div className="border-t border-[#1E293B] pt-4">
+                    <p className="font-semibold text-white">Rachel Thompson</p>
+                    <p className="text-sm text-[#64748B]">Investment Analyst, London</p>
+                    <p className="text-xs text-[#2563EB] mt-1">CFA Level I - June 2024</p>
+                  </div>
+                </div>
+
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6">
+                  <div className="flex text-yellow-400 mb-4">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i} className="text-lg">{star}</span>
+                    ))}
+                  </div>
+                  <p className="text-[#94A3B8] text-sm mb-4 leading-relaxed">
+                    &ldquo;The mock exams were incredibly accurate. The quantitative questions were especially helpful - exactly like the real thing!&rdquo;
+                  </p>
+                  <div className="border-t border-[#1E293B] pt-4">
+                    <p className="font-semibold text-white">James Chen</p>
+                    <p className="text-sm text-[#64748B]">Risk Manager, Singapore</p>
+                    <p className="text-xs text-[#2563EB] mt-1">FRM Part 1 - May 2024</p>
+                  </div>
+                </div>
+
+                <div className="bg-[#0F172A] border border-[#1E293B] rounded-xl p-6">
+                  <div className="flex text-yellow-400 mb-4">
+                    {"★★★★★".split("").map((star, i) => (
+                      <span key={i} className="text-lg">{star}</span>
+                    ))}
+                  </div>
+                  <p className="text-[#94A3B8] text-sm mb-4 leading-relaxed">
+                    &ldquo;Worth every penny! The performance tracking helped me focus on Ethics and Fixed Income. Passed CFA Level 2 comfortably.&rdquo;
+                  </p>
+                  <div className="border-t border-[#1E293B] pt-4">
+                    <p className="font-semibold text-white">Sophie Martinez</p>
+                    <p className="text-sm text-[#64748B]">Portfolio Manager, New York</p>
+                    <p className="text-xs text-[#2563EB] mt-1">CFA Level II - August 2024</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Pricing Section */}
+          <section id="pricing" className="px-4 py-16 sm:px-6 bg-[#0B1120]" data-section="pricing">
+            <div className="mx-auto max-w-[960px]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+                Choose Your Study Plan
+              </h2>
+              <p className="text-[#94A3B8] text-center mb-12">
+                Start with a free trial. Upgrade only if it helps you pass.
+              </p>
+
+              <div className="grid gap-6 lg:grid-cols-4">
+                {/* Trial */}
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Trial</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">Free</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      50 practice questions
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      1 mini mock exam
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      7-day access
+                    </li>
+                  </ul>
+                  <Link
+                    href="/signup"
+                    data-event="click_cta"
+                    data-cta="pricing_plan_select"
+                    data-plan="trial"
+                    className="block w-full text-center bg-[#2563EB] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1D4ED8] transition-all"
+                  >
+                    Start Free Trial
+                  </Link>
+                </div>
+
+                {/* Basic */}
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Basic</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">£299</span>
+                    <span className="text-[#64748B]">/month</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      500 practice questions
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Basic tracking
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      2 mock exams
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Email support
+                    </li>
+                  </ul>
+                  <button className="w-full border border-[#334155] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#0F172A] transition-all">
+                    Get Started
+                  </button>
+                </div>
+
+                {/* Standard - Most Popular */}
+                <div className="relative bg-[#020617] border-2 border-[#2563EB] rounded-xl p-6">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2563EB] text-white text-xs font-semibold px-4 py-1 rounded-full">
+                    Most Popular
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Standard</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">£599</span>
+                    <span className="text-[#64748B]">/3 months</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Full question bank
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Advanced analytics
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      All mock exams
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Study guides included
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Priority support
+                    </li>
+                  </ul>
+                  <button className="w-full bg-[#2563EB] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1D4ED8] transition-all">
+                    Get Started
+                  </button>
+                </div>
+
+                {/* Premium */}
+                <div className="bg-[#020617] border border-[#1E293B] rounded-xl p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">Premium</h3>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-white">£999</span>
+                    <span className="text-[#64748B]">/lifetime</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 text-sm">
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Everything in Standard
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Personalized study plan
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Lifetime access
+                    </li>
+                    <li className="flex items-start gap-2 text-[#94A3B8]">
+                      <svg className="w-5 h-5 text-[#16A34A] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      1:1 review sessions
+                    </li>
+                  </ul>
+                  <button className="w-full border border-[#334155] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#0F172A] transition-all">
+                    Get Started
+                  </button>
+                </div>
+              </div>
+
+              {/* Pass Guarantee */}
+              <div className="mt-8 text-center">
+                <p className="text-[#94A3B8] text-sm">
+                  <span className="text-[#16A34A] font-semibold">Pass Guarantee:</span> Complete 80%+ of questions and all mocks. If you don&apos;t pass, get extended access or a full refund.
+                </p>
+                <div className="flex justify-center gap-6 mt-4">
+                  <span className="text-[#64748B] text-xs">🔒 Secure Payment</span>
+                  <span className="text-[#64748B] text-xs">💳 All Cards Accepted</span>
+                  <span className="text-[#64748B] text-xs">↩️ 30-Day Money Back</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section id="faq" className="px-4 py-16 sm:px-6" data-section="faq">
+            <div className="mx-auto max-w-[720px]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+                Frequently Asked Questions
+              </h2>
+
               <div className="space-y-4">
-                <div className="rounded-lg bg-white p-4">
-                  <div className="mb-2 flex items-center gap-2">
-                    <div className="flex text-yellow-400">
-                      {"★★★★★".split("").map((star, i) => (
-                        <span key={i}>{star}</span>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600">2 days ago</span>
+                <details className="group bg-[#0F172A] border border-[#1E293B] rounded-xl" data-event="faq_open">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white">
+                    How similar are your questions to the real CFA and FRM exams?
+                    <svg className="w-5 h-5 text-[#64748B] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-6 pb-6 text-[#94A3B8] text-sm leading-relaxed">
+                    Our question bank is written to mirror real CFA and FRM exam blueprints, difficulty levels, and wording. Each item includes step-by-step explanations and formula references. Many candidates report our questions are slightly harder than the real exam.
                   </div>
-                  <p className="mb-2 font-semibold text-gray-900">Michael C. - Passed CFA Level 1</p>
-                  <p className="text-sm text-gray-600">&ldquo;The question bank was exactly like the real exam. Scored in the 90th percentile thanks to this platform!&rdquo;</p>
-                </div>
+                </details>
 
-                <div className="rounded-lg bg-white p-4">
-                  <div className="mb-2 flex items-center gap-2">
-                    <div className="flex text-yellow-400">
-                      {"★★★★★".split("").map((star, i) => (
-                        <span key={i}>{star}</span>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600">1 week ago</span>
+                <details className="group bg-[#0F172A] border border-[#1E293B] rounded-xl" data-event="faq_open">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white">
+                    What if I fail after using AnalystTrainer?
+                    <svg className="w-5 h-5 text-[#64748B] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-6 pb-6 text-[#94A3B8] text-sm leading-relaxed">
+                    If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy.
                   </div>
-                  <p className="mb-2 font-semibold text-gray-900">Jennifer L. - FRM Part 1 Success</p>
-                  <p className="text-sm text-gray-600">&ldquo;Failed my first attempt. Used this for 3 months and passed with confidence!&rdquo;</p>
-                </div>
+                </details>
 
-                <div className="rounded-lg bg-white p-4">
-                  <div className="mb-2 flex items-center gap-2">
-                    <div className="flex text-yellow-400">
-                      {"★★★★★".split("").map((star, i) => (
-                        <span key={i}>{star}</span>
-                      ))}
-                    </div>
-                    <span className="text-sm text-gray-600">2 weeks ago</span>
+                <details className="group bg-[#0F172A] border border-[#1E293B] rounded-xl" data-event="faq_open">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white">
+                    Which finance certifications do you cover?
+                    <svg className="w-5 h-5 text-[#64748B] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-6 pb-6 text-[#94A3B8] text-sm leading-relaxed">
+                    We currently focus on CFA Level 1, with comprehensive coverage of all 10 topic areas. FRM and other finance certifications are coming soon. Our content is regularly reviewed and updated to match the latest exam formats.
                   </div>
-                  <p className="mb-2 font-semibold text-gray-900">David K. - CFA Level 2 Pass</p>
-                  <p className="text-sm text-gray-600">&ldquo;The mock exams were harder than the real thing - exactly what I needed!&rdquo;</p>
+                </details>
+
+                <details className="group bg-[#0F172A] border border-[#1E293B] rounded-xl" data-event="faq_open">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white">
+                    Can I use AnalystTrainer on my phone or tablet?
+                    <svg className="w-5 h-5 text-[#64748B] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-6 pb-6 text-[#94A3B8] text-sm leading-relaxed">
+                    Yes! Our platform is fully responsive and works seamlessly on all devices. Your progress syncs automatically across desktop, tablet, and mobile so you can study anywhere.
+                  </div>
+                </details>
+
+                <details className="group bg-[#0F172A] border border-[#1E293B] rounded-xl" data-event="faq_open">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 font-semibold text-white">
+                    Do I need to install any software?
+                    <svg className="w-5 h-5 text-[#64748B] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-6 pb-6 text-[#94A3B8] text-sm leading-relaxed">
+                    No installation required. AnalystTrainer is a web-based platform that works in any modern browser. Simply sign up and start practicing immediately.
+                  </div>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          {/* Final CTA Section */}
+          <section id="final-cta" className="px-4 py-20 sm:px-6 bg-gradient-to-b from-[#0F172A] to-[#020617]" data-section="final-cta">
+            <div className="mx-auto max-w-[720px] text-center">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                Join 3,000+ Finance Professionals Who Passed
+              </h2>
+              <p className="text-xl text-[#94A3B8] mb-8">
+                Start your free trial in under a minute. No credit card required.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                <Link
+                  href="/signup"
+                  data-event="click_cta"
+                  data-cta="start_trial"
+                  data-section="final-cta"
+                  className="bg-white text-[#020617] px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all hover:scale-[1.02]"
+                >
+                  Start Free Trial
+                </Link>
+                <Link
+                  href="#"
+                  data-event="click_cta"
+                  data-cta="lead_magnet"
+                  data-section="final-cta"
+                  className="border border-[#334155] text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#0F172A] transition-all"
+                >
+                  Get 20 Free CFA Questions
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-6 text-sm text-[#64748B]">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-[#16A34A]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  100% Money-Back Guarantee
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-[#16A34A]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Cancel Anytime
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-[#16A34A]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Instant Access
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </main>
 
-      {/* Stats Section */}
-      <section className="bg-gray-900 px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 gap-8 text-center text-white lg:grid-cols-4">
-            <div>
-              <div className="text-4xl font-bold">92%</div>
-              <div className="mt-2 text-gray-400">Pass Rate</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold">2,500+</div>
-              <div className="mt-2 text-gray-400">Questions</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold">3.5x</div>
-              <div className="mt-2 text-gray-400">Score Improvement</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold">24/7</div>
-              <div className="mt-2 text-gray-400">Access</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-4 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-            Choose Your Study Plan
-          </h2>
-          <p className="mb-12 text-center text-xl text-gray-600">
-            All plans include our pass guarantee - pass or get 100% refund
-          </p>
-
-          <div className="grid gap-8 lg:grid-cols-4">
-            {/* Basic Plan */}
-            <div className="rounded-xl border border-gray-200 bg-white p-8">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Basic</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">£299</span>
-                <span className="text-gray-600">/month</span>
+        {/* Footer */}
+        <footer className="border-t border-[#1E293B] px-4 py-12 sm:px-6">
+          <div className="mx-auto max-w-[960px]">
+            <div className="grid gap-8 md:grid-cols-4">
+              <div>
+                <h3 className="mb-4 font-bold text-white">AnalystTrainer</h3>
+                <p className="text-sm text-[#64748B]">
+                  The leading platform for finance certification exam preparation.
+                </p>
               </div>
-              <ul className="mb-8 space-y-3">
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">500 practice questions</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Basic performance tracking</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">2 mock exams</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Email support</span>
-                </li>
-              </ul>
-              <button className="w-full rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:border-gray-400 transition-colors">
-                Get Started
-              </button>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-white">Resources</h4>
+                <ul className="space-y-2 text-sm text-[#64748B]">
+                  <li><Link href="/question-bank" className="hover:text-white transition-colors">Question Bank</Link></li>
+                  <li><Link href="/mock-exams" className="hover:text-white transition-colors">Mock Exams</Link></li>
+                  <li><Link href="/study-guides" className="hover:text-white transition-colors">Study Guides</Link></li>
+                  <li><Link href="/formula-sheets" className="hover:text-white transition-colors">Formula Sheets</Link></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-white">Support</h4>
+                <ul className="space-y-2 text-sm text-[#64748B]">
+                  <li><Link href="/help" className="hover:text-white transition-colors">Help Center</Link></li>
+                  <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+                  <li><a href="#proof" className="hover:text-white transition-colors">Success Stories</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-white">Legal</h4>
+                <ul className="space-y-2 text-sm text-[#64748B]">
+                  <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/refund" className="hover:text-white transition-colors">Refund Policy</Link></li>
+                </ul>
+              </div>
             </div>
 
-            {/* Standard Plan */}
-            <div className="relative rounded-xl border-2 border-gray-900 bg-white p-8">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gray-900 px-4 py-1 text-sm font-medium text-white">
-                Most Popular
-              </div>
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Standard</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">£599</span>
-                <span className="text-gray-600">/3 months</span>
-              </div>
-              <ul className="mb-8 space-y-3">
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">1,500 practice questions</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Advanced analytics</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">5 mock exams</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Study guides included</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Priority email support</span>
-                </li>
-              </ul>
-              <button className="w-full rounded-lg bg-gray-900 px-6 py-3 font-semibold text-white hover:bg-gray-800 transition-colors">
-                Get Started
-              </button>
-            </div>
-
-            {/* Premium Plan */}
-            <div className="rounded-xl border border-gray-200 bg-white p-8">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Premium</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">£999</span>
-                <span className="text-gray-600">/6 months</span>
-              </div>
-              <ul className="mb-8 space-y-3">
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">2,500+ practice questions</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">AI-powered study plan</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Unlimited mock exams</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Priority email support</span>
-                </li>
-              </ul>
-              <button className="w-full rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:border-gray-400 transition-colors">
-                Get Started
-              </button>
-            </div>
-
-            {/* Ultimate Plan */}
-            <div className="rounded-xl border border-gray-200 bg-white p-8">
-              <h3 className="mb-4 text-xl font-bold text-gray-900">Ultimate</h3>
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-gray-900">£1,999</span>
-                <span className="text-gray-600">/lifetime</span>
-              </div>
-              <ul className="mb-8 space-y-3">
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Everything in Premium</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Personalized study roadmap</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Lifetime access</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Dedicated account manager</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="mr-2 h-5 w-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-gray-600">Free retake support</span>
-                </li>
-              </ul>
-              <button className="w-full rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 hover:border-gray-400 transition-colors">
-                Get Started
-              </button>
+            <div className="mt-12 border-t border-[#1E293B] pt-8 text-center text-sm text-[#64748B]">
+              <p>© 2024 AnalystTrainer. All rights reserved.</p>
+              <p className="mt-2">Not affiliated with or endorsed by CFA Institute, GARP, or other certification bodies.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="success-stories" className="bg-gray-50 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-            Success Stories from Real Candidates
-          </h2>
-
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex text-yellow-400">
-                {"★★★★★".split("").map((star, i) => (
-                  <span key={i} className="text-xl">{star}</span>
-                ))}
-              </div>
-              <p className="mb-4 text-gray-600">
-                &ldquo;I failed CFA Level 1 on my first attempt scoring below the MPS. After using this platform for 3 months, I passed with scores well above the 90th percentile! The detailed explanations really helped me understand the concepts.&rdquo;
-              </p>
-              <div className="border-t pt-4">
-                <p className="font-semibold text-gray-900">Rachel Thompson</p>
-                <p className="text-sm text-gray-600">Investment Analyst - London</p>
-              </div>
-            </div>
-
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex text-yellow-400">
-                {"★★★★★".split("").map((star, i) => (
-                  <span key={i} className="text-xl">{star}</span>
-                ))}
-              </div>
-              <p className="mb-4 text-gray-600">
-                &ldquo;The FRM mock exams were incredibly accurate. The quantitative questions were especially helpful - exactly like the real thing! Passed both parts on my first attempt.&rdquo;
-              </p>
-              <div className="border-t pt-4">
-                <p className="font-semibold text-gray-900">James Chen</p>
-                <p className="text-sm text-gray-600">Risk Manager - Singapore</p>
-              </div>
-            </div>
-
-            <div className="rounded-xl bg-white p-8 shadow-sm">
-              <div className="mb-4 flex text-yellow-400">
-                {"★★★★★".split("").map((star, i) => (
-                  <span key={i} className="text-xl">{star}</span>
-                ))}
-              </div>
-              <p className="mb-4 text-gray-600">
-                &ldquo;Worth every penny! The performance tracking helped me focus on Ethics and Fixed Income. Went from failing mocks to passing CFA Level 2 comfortably. The study plan kept me on track.&rdquo;
-              </p>
-              <div className="border-t pt-4">
-                <p className="font-semibold text-gray-900">Sophie Martinez</p>
-                <p className="text-sm text-gray-600">Portfolio Manager - New York</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900 sm:text-4xl">
-            Frequently Asked Questions
-          </h2>
-
-          <div className="space-y-4">
-            <details className="group rounded-lg border border-gray-200 bg-white p-6">
-              <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                How similar are your questions to the actual finance certification exams?
-                <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <p className="mt-4 text-gray-600">
-                Our questions are written by CFA charterholders, FRM certified professionals, and other finance experts who have recently taken these exams. We regularly update our question bank based on feedback to ensure they match the current exam format and difficulty level. Many candidates report our questions are actually slightly harder than the real exam, which helps them feel more prepared.
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-gray-200 bg-white p-6">
-              <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                What if I don&apos;t pass after using your platform?
-                <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <p className="mt-4 text-gray-600">
-                We offer a 100% money-back guarantee. If you complete at least 80% of our question bank and all mock exams but don&apos;t pass your finance certification exam, we&apos;ll refund your full purchase price. Additionally, you&apos;ll keep access to help you prepare for your retake at no extra cost.
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-gray-200 bg-white p-6">
-              <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                How long should I study before my exam?
-                <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <p className="mt-4 text-gray-600">
-                We recommend starting your preparation at least 3-6 months before your exam date, depending on the level and your background. Most successful candidates spend 300+ hours studying. Our AI-powered study planner will create a personalized schedule based on your exam date and available study time.
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-gray-200 bg-white p-6">
-              <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                Can I access the platform on mobile devices?
-                <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <p className="mt-4 text-gray-600">
-                Yes! Our platform is fully responsive and works on all devices. You can study on your computer at home, tablet during your commute, or phone during breaks. Your progress syncs across all devices, so you can pick up exactly where you left off.
-              </p>
-            </details>
-
-            <details className="group rounded-lg border border-gray-200 bg-white p-6">
-              <summary className="flex cursor-pointer items-center justify-between font-semibold text-gray-900">
-                Which finance certifications do you cover?
-                <svg className="h-5 w-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <p className="mt-4 text-gray-600">
-                We currently offer comprehensive preparation for CFA (all levels), FRM (Parts 1 & 2), CPA, ACCA, and other major finance certifications. Our content is regularly reviewed and updated to ensure it remains current with the latest exam formats, topics, and industry standards.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="bg-gradient-to-r from-gray-900 to-gray-800 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
-          <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
-            Join 3,000+ Finance Professionals Who Passed Their Exams
-          </h2>
-          <p className="mb-8 text-xl text-gray-300">
-            Start your free trial today. No credit card required.
-          </p>
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/signup"
-              className="rounded-lg bg-white px-8 py-4 text-lg font-semibold text-gray-900 hover:bg-gray-100 transition-colors"
-            >
-              Start Free Trial
-            </Link>
-            <div className="text-white">
-              <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>100% Money-Back Guarantee</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>Cancel Anytime</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>Instant Access</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid gap-8 md:grid-cols-4">
-            <div>
-              <h3 className="mb-4 font-bold text-gray-900">Finance Exam Prep</h3>
-              <p className="text-sm text-gray-600">
-                The leading platform for finance certification exam preparation.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold text-gray-900">Resources</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link href="/question-bank" className="hover:text-gray-900">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="hover:text-gray-900">Mock Exams</Link></li>
-                <li><Link href="/study-guides" className="hover:text-gray-900">Study Guides</Link></li>
-                <li><Link href="/formula-sheets" className="hover:text-gray-900">Formula Sheets</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold text-gray-900">Support</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link href="/help" className="hover:text-gray-900">Help Center</Link></li>
-                <li><Link href="/contact" className="hover:text-gray-900">Contact Us</Link></li>
-                <li><Link href="/blog" className="hover:text-gray-900">Blog</Link></li>
-                <li><Link href="/testimonials" className="hover:text-gray-900">Success Stories</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold text-gray-900">Legal</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><Link href="/privacy" className="hover:text-gray-900">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-gray-900">Terms of Service</Link></li>
-                <li><Link href="/refund" className="hover:text-gray-900">Refund Policy</Link></li>
-                <li><Link href="/disclaimer" className="hover:text-gray-900">Disclaimer</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-            <p>© 2024 Finance Exam Prep. All rights reserved.</p>
-            <p className="mt-2">Not affiliated with or endorsed by CFA Institute, GARP, or other certification bodies.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
     </>
   );
 }
