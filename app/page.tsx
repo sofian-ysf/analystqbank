@@ -114,7 +114,7 @@ export default function Home() {
 
       <div className="min-h-screen bg-[#FBFAF4]">
         {/* Header / Navigation */}
-        <header className="sticky top-0 z-50 border-b border-[#EAEEEF] bg-white/90 backdrop-blur-xl">
+        <header className="sticky top-0 z-50 border-b border-white/20 bg-gray-400/40 backdrop-blur-xl">
           <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
             <div className="flex h-16 items-center justify-between">
               {/* Logo */}
