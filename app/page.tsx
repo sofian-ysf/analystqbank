@@ -772,26 +772,28 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-[#EAEEEF] px-4 py-12 sm:px-6 bg-white">
-          <div className="mx-auto max-w-[960px]">
-            <div className="grid gap-8 md:grid-cols-4">
-              <div>
-                <h3 className="mb-4 font-medium text-[#13343B]">AnalystTrainer</h3>
-                <p className="text-sm text-[#9aa0a6]">
+        <footer className="bg-white border-t border-[#EAEEEF]">
+          <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="col-span-2 md:col-span-1">
+                <Link href="/" className="text-xl font-bold text-[#13343B]">
+                  AnalystTrainer
+                </Link>
+                <p className="mt-4 text-[#5f6368] text-sm">
                   The leading platform for finance certification exam preparation.
                 </p>
               </div>
 
               <div>
-                <h4 className="mb-4 font-medium text-[#13343B]">Product</h4>
+                <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
                 <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/question-bank" className="hover:text-[#13343B] transition-colors">Question Bank</Link></li>
-                  <li><Link href="/mock-exams" className="hover:text-[#13343B] transition-colors">Mock Exams</Link></li>
+                  <li><a href="#product" className="hover:text-[#13343B] transition-colors">Features</a></li>
+                  <li><a href="#pricing" className="hover:text-[#13343B] transition-colors">Pricing</a></li>
                 </ul>
               </div>
 
               <div>
-                <h4 className="mb-4 font-medium text-[#13343B]">Resources</h4>
+                <h4 className="font-medium text-[#13343B] mb-4">Resources</h4>
                 <ul className="space-y-2 text-sm text-[#9aa0a6]">
                   <li><Link href="/blog" className="hover:text-[#13343B] transition-colors">Blog</Link></li>
                   <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Center</Link></li>
@@ -799,26 +801,17 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="mb-4 font-medium text-[#13343B]">Support</h4>
+                <h4 className="font-medium text-[#13343B] mb-4">Legal</h4>
                 <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/contact" className="hover:text-[#13343B] transition-colors">Contact Us</Link></li>
-                  <li><a href="#proof" className="hover:text-[#13343B] transition-colors">Success Stories</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="mb-4 font-medium text-[#13343B]">Legal</h4>
-                <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/privacy" className="hover:text-[#13343B] transition-colors">Privacy Policy</Link></li>
-                  <li><Link href="/terms" className="hover:text-[#13343B] transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/privacy" className="hover:text-[#13343B] transition-colors">Privacy</Link></li>
+                  <li><Link href="/terms" className="hover:text-[#13343B] transition-colors">Terms</Link></li>
                   <li><Link href="/refund" className="hover:text-[#13343B] transition-colors">Refund Policy</Link></li>
                 </ul>
               </div>
             </div>
 
-            <div className="mt-12 border-t border-[#EAEEEF] pt-8 text-center text-sm text-[#9aa0a6]">
+            <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
               <p>© 2024 AnalystTrainer. All rights reserved.</p>
-              <p className="mt-2">Not affiliated with or endorsed by CFA Institute, GARP, or other certification bodies.</p>
             </div>
           </div>
         </footer>
