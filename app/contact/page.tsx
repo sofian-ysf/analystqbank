@@ -1,398 +1,274 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: "",
-    type: "general"
+    message: ""
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitMessage("");
-
-    // Simulate form submission
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setSubmitMessage("Thank you for your message! We&apos;ll get back to you within 24 hours.");
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-        type: "general"
-      });
-    } catch {
-      setSubmitMessage("Sorry, there was an error sending your message. Please try again.");
-    }
-
-    setIsSubmitting(false);
+    // Handle form submission
+    setSubmitted(true);
   };
 
-  const contactOptions = [
+  const contactMethods = [
     {
-      title: "General Support",
-      description: "Questions about our platform, features, or getting started",
+      icon: "📧",
+      title: "Email",
+      description: "Send us an email anytime",
+      contact: "support@analysttrainer.com",
+      link: "mailto:support@analysttrainer.com"
+    },
+    {
       icon: "💬",
-      email: "support@financeexamprep.com",
-      response: "Within 24 hours"
+      title: "Live Chat",
+      description: "Available Mon-Fri, 9am-6pm GMT",
+      contact: "Start a conversation",
+      link: "#"
     },
     {
-      title: "Technical Support",
-      description: "Issues with your account, login problems, or technical difficulties",
-      icon: "🔧",
-      email: "tech@financeexamprep.com",
-      response: "Within 12 hours"
-    },
-    {
-      title: "Content Questions",
-      description: "Questions about study materials, practice questions, or exam content",
-      icon: "📚",
-      email: "content@financeexamprep.com",
-      response: "Within 24 hours"
-    },
-    {
-      title: "Partnership Inquiries",
-      description: "Interested in partnerships, collaborations, or business opportunities",
-      icon: "🤝",
-      email: "partnerships@financeexamprep.com",
-      response: "Within 48 hours"
-    }
-  ];
-
-  const faqs = [
-    {
-      question: "How quickly can I get started?",
-      answer: "You can start immediately after signing up. Our 14-day free trial gives you full access to all features."
-    },
-    {
-      question: "Do you offer refunds?",
-      answer: "Yes, we offer a 30-day money-back guarantee if you're not satisfied with our platform."
-    },
-    {
-      question: "Can I switch between CFA levels?",
-      answer: "Absolutely! Our Professional and Premium plans include access to all CFA levels (I, II, and III)."
-    },
-    {
-      question: "Is there mobile app support?",
-      answer: "Yes, our platform is fully responsive and works great on mobile devices. A dedicated mobile app is coming soon."
+      icon: "❓",
+      title: "Help Center",
+      description: "Browse our FAQ and guides",
+      contact: "Visit Help Center",
+      link: "/help"
     }
   ];
 
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header */}
+      {/* Header / Navigation */}
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-[#13343B]">
-                Finance Exam Prep
+        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="text-xl font-bold text-[#13343B]">
+              AnalystTrainer
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="/features" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Features
               </Link>
-              <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
-                  Features
-                </Link>
-                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
-                  Pricing
-                </Link>
-                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
-                  Resources
-                </Link>
-                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
-                  About
-                </Link>
-                <Link href="/contact" className="text-gray-900 font-medium">
-                  Contact
-                </Link>
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
-                Sign in
+              <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Pricing
               </Link>
-              <Link href="/signup" className="text-sm font-medium text-white bg-gray-900 px-4 py-2 rounded-lg hover:bg-gray-800">
-                Get Started
+              <Link href="/about" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                About
+              </Link>
+              <Link href="/contact" className="text-[#13343B] font-medium transition-colors">
+                Contact
               </Link>
             </div>
+
+            {/* CTA Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link href="/login" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Login
+              </Link>
+              <Link href="/signup" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]" aria-label="Open menu">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold mb-6">
+      <section className="py-20 px-4 sm:px-6">
+        <div className="max-w-[960px] mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#13343B] mb-6">
             Get in Touch
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            Have questions about our platform? Need help with your studies? We&apos;re here to support your CFA journey.
+          <p className="text-xl text-[#5f6368] max-w-2xl mx-auto">
+            Have a question or need help? We&apos;re here for you. Reach out and we&apos;ll get back to you as soon as possible.
           </p>
         </div>
       </section>
 
-      {/* Contact Options */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
-              How Can We Help?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the best way to reach us based on your specific needs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {contactOptions.map((option, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 border border-[#EAEEEF] hover:shadow-lg transition-shadow">
-                <div className="text-3xl mb-4">{option.icon}</div>
-                <h3 className="text-xl font-bold text-[#13343B] mb-2">{option.title}</h3>
-                <p className="text-gray-600 mb-4 text-sm">{option.description}</p>
-                <p className="text-sm text-gray-900 font-medium mb-2">{option.email}</p>
-                <p className="text-xs text-[#9aa0a6]">Response time: {option.response}</p>
-              </div>
+      {/* Contact Methods */}
+      <section className="px-4 sm:px-6 pb-12">
+        <div className="max-w-[960px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {contactMethods.map((method, index) => (
+              <a
+                key={index}
+                href={method.link}
+                className="bg-white rounded-xl p-6 border border-[#EAEEEF] hover:shadow-md transition-all text-center"
+              >
+                <div className="text-4xl mb-4">{method.icon}</div>
+                <h3 className="text-lg font-bold text-[#13343B] mb-2">{method.title}</h3>
+                <p className="text-[#5f6368] text-sm mb-3">{method.description}</p>
+                <span className="text-[#1FB8CD] font-medium">{method.contact}</span>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
       {/* Contact Form */}
-      <section className="bg-white py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
-              Send Us a Message
-            </h2>
-            <p className="text-xl text-gray-600">
-              Fill out the form below and we&apos;ll get back to you as soon as possible.
-            </p>
-          </div>
+      <section className="px-4 sm:px-6 pb-20">
+        <div className="max-w-[600px] mx-auto">
+          <div className="bg-white rounded-xl p-8 sm:p-12 border border-[#EAEEEF]">
+            <h2 className="text-2xl font-bold text-[#13343B] mb-6 text-center">Send us a Message</h2>
 
-          <div className="bg-[#FBFAF4] rounded-xl p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {submitMessage && (
-                <div className={`p-4 rounded-lg ${
-                  submitMessage.includes("Thank you")
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200"
-                }`}>
-                  {submitMessage}
+            {submitted ? (
+              <div className="text-center py-8">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-[#5f6368] mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                    placeholder="Your full name"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#5f6368] mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                    placeholder="your@email.com"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="type" className="block text-sm font-medium text-[#5f6368] mb-2">
-                  Type of Inquiry
-                </label>
-                <select
-                  id="type"
-                  name="type"
-                  value={formData.type}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                <h3 className="text-xl font-bold text-[#13343B] mb-2">Message Sent!</h3>
+                <p className="text-[#5f6368] mb-6">
+                  Thank you for reaching out. We&apos;ll get back to you within 24 hours.
+                </p>
+                <button
+                  onClick={() => {
+                    setSubmitted(false);
+                    setFormData({ name: "", email: "", subject: "", message: "" });
+                  }}
+                  className="text-[#1FB8CD] font-medium hover:underline"
                 >
-                  <option value="general">General Support</option>
-                  <option value="technical">Technical Support</option>
-                  <option value="content">Content Questions</option>
-                  <option value="partnership">Partnership Inquiry</option>
-                  <option value="billing">Billing Question</option>
-                </select>
+                  Send another message
+                </button>
               </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#13343B] mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-3 border border-[#EAEEEF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-[#13343B] mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-3 border border-[#EAEEEF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-[#5f6368] mb-2">
-                  Subject *
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  required
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                  placeholder="Brief description of your inquiry"
-                />
-              </div>
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-[#13343B] mb-2">
+                    Subject
+                  </label>
+                  <select
+                    id="subject"
+                    required
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                    className="w-full px-4 py-3 border border-[#EAEEEF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent"
+                  >
+                    <option value="">Select a topic</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="support">Technical Support</option>
+                    <option value="billing">Billing Question</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="partnership">Partnership Inquiry</option>
+                  </select>
+                </div>
 
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-[#5f6368] mb-2">
-                  Message *
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                  placeholder="Please provide details about your inquiry..."
-                />
-              </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-[#13343B] mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    required
+                    rows={5}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full px-4 py-3 border border-[#EAEEEF] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent resize-none"
+                    placeholder="How can we help you?"
+                  />
+                </div>
 
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isSubmitting ? "Sending Message..." : "Send Message"}
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-[#13343B] mb-4">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-xl text-gray-600">
-              Quick answers to common questions.
-            </p>
-          </div>
-
-          <div className="space-y-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 border border-[#EAEEEF]">
-                <h3 className="text-lg font-semibold text-[#13343B] mb-3">{faq.question}</h3>
-                <p className="text-gray-600">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Info */}
-      <section className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <h3 className="text-xl font-bold mb-4">Email Support</h3>
-              <p className="text-gray-300 mb-2">support@financeexamprep.com</p>
-              <p className="text-gray-400 text-sm">Response within 24 hours</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold mb-4">Live Chat</h3>
-              <p className="text-gray-300 mb-2">Available for premium users</p>
-              <p className="text-gray-400 text-sm">Monday - Friday, 9 AM - 6 PM EST</p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold mb-4">Help Center</h3>
-              <p className="text-gray-300 mb-2">Comprehensive guides and tutorials</p>
-              <Link href="/help" className="text-gray-400 text-sm hover:text-white transition-colors">
-                Visit Help Center →
-              </Link>
-            </div>
+                <button
+                  type="submit"
+                  className="w-full bg-[#1FB8CD] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
+                >
+                  Send Message
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="bg-white border-t border-[#EAEEEF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="col-span-2 md:col-span-1">
               <Link href="/" className="text-xl font-bold text-[#13343B]">
-                Finance Exam Prep
+                AnalystTrainer
               </Link>
-              <p className="mt-4 text-gray-600">
-                Your comprehensive platform for CFA exam success.
+              <p className="mt-4 text-[#5f6368] text-sm">
+                The leading platform for finance certification exam preparation.
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
-              <ul className="space-y-2">
-                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
-                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/features" className="hover:text-[#13343B] transition-colors">Features</Link></li>
+                <li><Link href="/pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
-                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/blog" className="hover:text-[#13343B] transition-colors">Blog</Link></li>
+                <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
-                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
-                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/privacy" className="hover:text-[#13343B] transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#13343B] transition-colors">Terms</Link></li>
+                <li><Link href="/refund" className="hover:text-[#13343B] transition-colors">Refund Policy</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600">© 2024 Finance Exam Prep. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
-              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
-              <Link href="/disclaimer" className="text-[#5f6368] hover:text-[#13343B]">Disclaimer</Link>
-            </div>
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
+            <p>© 2024 AnalystTrainer. All rights reserved.</p>
           </div>
         </div>
       </footer>
