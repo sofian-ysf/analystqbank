@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header / Navigation */}
+      {/* Header / Navigation - Same as homepage */}
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
@@ -16,17 +16,17 @@ export default function Privacy() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/features" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+              <Link href="/#product" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Features
               </Link>
-              <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+              <Link href="/#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Pricing
               </Link>
-              <Link href="/about" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                About
+              <Link href="/#proof" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Testimonials
               </Link>
-              <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Contact
+              <Link href="/#faq" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                FAQ
               </Link>
             </div>
 
@@ -207,8 +207,8 @@ export default function Privacy() {
             <div>
               <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                <li><Link href="/features" className="hover:text-[#13343B] transition-colors">Features</Link></li>
-                <li><Link href="/pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
+                <li><Link href="/#product" className="hover:text-[#13343B] transition-colors">Features</Link></li>
+                <li><Link href="/#pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
               </ul>
             </div>
 

@@ -5,46 +5,53 @@ import Link from "next/link";
 export default function Terms() {
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header */}
+      {/* Header / Navigation - Same as homepage */}
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-[#13343B]">
-                AnalystTrainer
+        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
+            <Link href="/" className="text-xl font-bold text-[#13343B]">
+              AnalystTrainer
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="/#product" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Features
               </Link>
-              <nav className="ml-10 flex space-x-8">
-                <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
-                  Features
-                </Link>
-                <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
-                  Pricing
-                </Link>
-                <Link href="/resources" className="text-[#5f6368] hover:text-[#13343B]">
-                  Resources
-                </Link>
-                <Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">
-                  About
-                </Link>
-                <Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">
-                  Contact
-                </Link>
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/login" className="text-sm font-medium text-[#5f6368] hover:text-[#13343B]">
-                Sign in
+              <Link href="/#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Pricing
               </Link>
-              <Link href="/signup" className="text-sm font-medium text-white bg-[#1FB8CD] px-4 py-2 rounded-lg hover:bg-[#1A6872]">
-                Get Started
+              <Link href="/#proof" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Testimonials
+              </Link>
+              <Link href="/#faq" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                FAQ
               </Link>
             </div>
+
+            {/* CTA Buttons */}
+            <div className="hidden md:flex items-center space-x-4">
+              <Link href="/login" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Login
+              </Link>
+              <Link href="/signup" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]" aria-label="Open menu">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-[800px] mx-auto px-4 sm:px-6 py-16">
         <div className="bg-white rounded-xl p-8 border border-[#EAEEEF]">
           <h1 className="text-4xl font-bold text-[#13343B] mb-8">Terms of Service</h1>
 
@@ -202,53 +209,45 @@ export default function Terms() {
 
       {/* Footer */}
       <footer className="bg-white border-t border-[#EAEEEF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-1">
+        <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="col-span-2 md:col-span-1">
               <Link href="/" className="text-xl font-bold text-[#13343B]">
                 AnalystTrainer
               </Link>
-              <p className="mt-4 text-gray-600">
-                Your comprehensive platform for CFA exam success.
+              <p className="mt-4 text-[#5f6368] text-sm">
+                The leading platform for finance certification exam preparation.
               </p>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Product</h3>
-              <ul className="space-y-2">
-                <li><Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">Features</Link></li>
-                <li><Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">Pricing</Link></li>
-                <li><Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B]">Question Bank</Link></li>
-                <li><Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B]">Mock Exams</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/#product" className="hover:text-[#13343B] transition-colors">Features</Link></li>
+                <li><Link href="/#pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li><Link href="/blog" className="text-[#5f6368] hover:text-[#13343B]">Blog</Link></li>
-                <li><Link href="/help" className="text-[#5f6368] hover:text-[#13343B]">Help Center</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/blog" className="hover:text-[#13343B] transition-colors">Blog</Link></li>
+                <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Center</Link></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-semibold text-[#13343B] mb-4">Company</h3>
-              <ul className="space-y-2">
-                <li><Link href="/about" className="text-[#5f6368] hover:text-[#13343B]">About</Link></li>
-                <li><Link href="/contact" className="text-[#5f6368] hover:text-[#13343B]">Contact</Link></li>
-                <li><Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms of Service</Link></li>
+              <h4 className="font-medium text-[#13343B] mb-4">Legal</h4>
+              <ul className="space-y-2 text-sm text-[#9aa0a6]">
+                <li><Link href="/privacy" className="hover:text-[#13343B] transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-[#13343B] transition-colors">Terms</Link></li>
+                <li><Link href="/refund" className="hover:text-[#13343B] transition-colors">Refund Policy</Link></li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-[#EAEEEF] mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-600">© 2024 AnalystTrainer. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-[#5f6368] hover:text-[#13343B]">Privacy</Link>
-              <Link href="/terms" className="text-[#5f6368] hover:text-[#13343B]">Terms</Link>
-              <Link href="/refund" className="text-[#5f6368] hover:text-[#13343B]">Refund Policy</Link>
-            </div>
+          <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
+            <p>© 2024 AnalystTrainer. All rights reserved.</p>
           </div>
         </div>
       </footer>
