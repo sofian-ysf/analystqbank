@@ -63,40 +63,6 @@ function LoginForm() {
     }
   };
 
-  const handleGithubSignIn = async () => {
-    setError("");
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  const handleAppleSignIn = async () => {
-    setError("");
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "apple",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
   const handleLinkedInSignIn = async () => {
     setError("");
     setLoading(true);
@@ -120,7 +86,7 @@ function LoginForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold text-[#13343B]">
-            Finance Exam Prep
+            AnalystTrainer
           </Link>
           <h2 className="mt-6 text-3xl font-bold text-[#13343B]">
             Welcome back
@@ -227,21 +193,9 @@ function LoginForm() {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={handleGithubSignIn}
-                disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.341-3.369-1.341-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.138 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z" />
-                </svg>
-                <span className="ml-2">GitHub</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={handleGoogleSignIn}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#5f6368] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20">
                   <path d="M19.998 10.223c0-.696-.063-1.369-.178-2.017H10.2v3.818h5.51a4.708 4.708 0 01-2.044 3.093v2.57h3.31c1.936-1.782 3.052-4.408 3.052-7.464z" fill="#4285F4"/>
@@ -251,30 +205,15 @@ function LoginForm() {
                 </svg>
                 <span className="ml-2">Google</span>
               </button>
-            </div>
-
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <button
-                type="button"
-                onClick={handleAppleSignIn}
-                disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M15.71 10.21c-.02-2.19 1.79-3.24 1.87-3.3-.98-1.43-2.5-1.63-3.06-1.66-1.31-.13-2.54.77-3.2.77-.67 0-1.69-.75-2.78-.73-1.43.02-2.74.83-3.47 2.11-1.48 2.58-.38 6.39 1.06 8.48.71 1.02 1.54 2.17 2.64 2.13 1.07-.04 1.47-.69 2.76-.69 1.28 0 1.65.69 2.78.67 1.15-.02 1.86-1.03 2.55-2.06.8-1.19 1.13-2.35 1.15-2.41-.02-.01-2.21-.85-2.23-3.36l-.01.05z"/>
-                  <path d="M12.96 3.5c.58-.69.97-1.64.86-2.6-.83.03-1.84.55-2.44 1.25-.54.62-.1 1.61.07 1.76.78.06 1.58-.4 1.97-1.02l-.46.61z"/>
-                </svg>
-                <span className="ml-2">Apple</span>
-              </button>
 
               <button
                 type="button"
                 onClick={handleLinkedInSignIn}
                 disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#9aa0a6] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#5f6368] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 20 20" fill="#0A66C2">
-                  <path d="M4.47 2.68c0 .73-.59 1.32-1.32 1.32S1.83 3.41 1.83 2.68C1.83 1.95 2.42 1.36 3.15 1.36s1.32.59 1.32 1.32zM1.95 18.26V6.38h2.4v11.88h-2.4zM14.86 6.11c-2.3 0-3.33 1.26-3.89 2.15V6.38H8.57v11.88h2.4v-5.91c0-1.01.19-1.98 1.44-1.98 1.23 0 1.25 1.15 1.25 2.04v5.85h2.4v-6.59c0-2.07-.45-3.66-2.87-3.66l.67 1.1z"/>
+                  <path d="M18.52 0H1.477C.66 0 0 .645 0 1.44v17.12C0 19.355.66 20 1.477 20h17.042c.817 0 1.481-.645 1.481-1.44V1.44C20 .645 19.336 0 18.52 0zM5.934 17.04H2.965V7.5h2.969v9.54zM4.449 6.19a1.72 1.72 0 110-3.44 1.72 1.72 0 010 3.44zM17.04 17.04h-2.968v-4.64c0-1.107-.02-2.532-1.542-2.532-1.544 0-1.78 1.206-1.78 2.452v4.72H7.784V7.5h2.85v1.304h.04c.396-.75 1.364-1.542 2.808-1.542 3.004 0 3.558 1.978 3.558 4.55v5.228z"/>
                 </svg>
                 <span className="ml-2">LinkedIn</span>
               </button>
