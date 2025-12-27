@@ -89,23 +89,6 @@ export default function SignUp() {
     }
   };
 
-  const handleLinkedInSignUp = async () => {
-    setError("");
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "linkedin_oidc",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -250,7 +233,7 @@ export default function SignUp() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6">
               <button
                 type="button"
                 onClick={handleGoogleSignUp}
@@ -264,18 +247,6 @@ export default function SignUp() {
                   <path d="M10.2 3.977c1.502 0 2.85.516 3.91 1.53l2.934-2.934C15.277.981 12.963 0 10.2 0A9.995 9.995 0 001.052 5.243l3.423 2.653c.804-2.418 3.06-4.218 5.725-4.218z" fill="#EA4335"/>
                 </svg>
                 <span className="ml-2">Google</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleLinkedInSignUp}
-                disabled={loading}
-                className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-[#5f6368] hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5" viewBox="0 0 20 20" fill="#0A66C2">
-                  <path d="M18.52 0H1.477C.66 0 0 .645 0 1.44v17.12C0 19.355.66 20 1.477 20h17.042c.817 0 1.481-.645 1.481-1.44V1.44C20 .645 19.336 0 18.52 0zM5.934 17.04H2.965V7.5h2.969v9.54zM4.449 6.19a1.72 1.72 0 110-3.44 1.72 1.72 0 010 3.44zM17.04 17.04h-2.968v-4.64c0-1.107-.02-2.532-1.542-2.532-1.544 0-1.78 1.206-1.78 2.452v4.72H7.784V7.5h2.85v1.304h.04c.396-.75 1.364-1.542 2.808-1.542 3.004 0 3.558 1.978 3.558 4.55v5.228z"/>
-                </svg>
-                <span className="ml-2">LinkedIn</span>
               </button>
             </div>
           </div>
