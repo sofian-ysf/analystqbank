@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { getUserProfile, updateUserProfile, UserProfile } from "@/lib/database";
@@ -170,8 +171,8 @@ export default function Settings() {
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-[#13343B]">
-              AnalystTrainer
+            <Link href="/">
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
             <div className="hidden md:flex items-center space-x-8">
               <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">

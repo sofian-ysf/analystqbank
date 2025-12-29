@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Disclaimer() {
   return (
@@ -10,8 +11,8 @@ export default function Disclaimer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-[#13343B]">
-                AnalystTrainer
+              <Link href="/">
+                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
               </Link>
               <nav className="ml-10 flex space-x-8">
                 <Link href="/features" className="text-[#5f6368] hover:text-[#13343B]">
@@ -170,8 +171,8 @@ export default function Disclaimer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-[#13343B]">
-                AnalystTrainer
+              <Link href="/">
+                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
               </Link>
               <p className="mt-4 text-gray-600">
                 Your comprehensive platform for CFA exam success.

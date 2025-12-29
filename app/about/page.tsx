@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export default function About() {
   const stats = [
@@ -40,8 +41,8 @@ export default function About() {
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="text-xl font-bold text-[#13343B]">
-              AnalystTrainer
+            <Link href="/">
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
             {/* Desktop Navigation */}
@@ -216,8 +217,8 @@ export default function About() {
         <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="text-xl font-bold text-[#13343B]">
-                AnalystTrainer
+              <Link href="/">
+                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
               </Link>
               <p className="mt-4 text-[#5f6368] text-sm">
                 The leading platform for finance certification exam preparation.

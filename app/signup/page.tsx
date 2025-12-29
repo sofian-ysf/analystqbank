@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 
@@ -94,8 +95,8 @@ export default function SignUp() {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-bold text-[#13343B]">
-            AnalystTrainer
+          <Link href="/" className="inline-block">
+            <Image src="/logo.png" alt="AnalystTrainer" width={200} height={45} className="h-10 w-auto mx-auto" />
           </Link>
           <h2 className="mt-6 text-3xl font-bold text-[#13343B]">
             Create your account
