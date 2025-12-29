@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,13 +8,118 @@ import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
 
+// Mapping from curriculum topic ID to database topic_area name
+const topicIdToDbName: { [key: string]: string } = {
+  "ethical-professional-standards": "Ethical and Professional Standards",
+  "quantitative-methods": "Quantitative Methods",
+  "economics": "Economics",
+  "financial-statement-analysis": "Financial Statement Analysis",
+  "corporate-issuers": "Corporate Issuers",
+  "equity-investments": "Equity Investments",
+  "fixed-income": "Fixed Income",
+  "derivatives": "Derivatives",
+  "alternative-investments": "Alternative Investments",
+  "portfolio-management": "Portfolio Management",
+};
+
+interface QuestionStats {
+  [topicId: string]: {
+    totalQuestions: number;
+    attemptedQuestions: number;
+    correctAnswers: number;
+  };
+}
+
 export default function QuestionBank() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
+  const [questionStats, setQuestionStats] = useState<QuestionStats>({});
+  const [totalDbQuestions, setTotalDbQuestions] = useState(0);
+  const [totalAttempted, setTotalAttempted] = useState(0);
+  const [totalCorrect, setTotalCorrect] = useState(0);
   const supabase = createClient();
+
+  const fetchQuestionStats = useCallback(async (userId: string) => {
+    try {
+      // Fetch question counts by topic_area from the database
+      const { data: questions, error: questionsError } = await supabase
+        .from('questions')
+        .select('topic_area')
+        .eq('is_active', true);
+
+      if (questionsError) {
+        console.error('Error fetching questions:', questionsError);
+        return;
+      }
+
+      // Count questions per topic
+      const questionCountByTopic: { [key: string]: number } = {};
+      questions?.forEach((q) => {
+        const topicArea = q.topic_area;
+        questionCountByTopic[topicArea] = (questionCountByTopic[topicArea] || 0) + 1;
+      });
+
+      // Fetch user's attempted questions
+      const { data: attempts, error: attemptsError } = await supabase
+        .from('user_question_attempts')
+        .select('question_id, is_correct, questions(topic_area)')
+        .eq('user_id', userId);
+
+      if (attemptsError) {
+        console.error('Error fetching attempts:', attemptsError);
+      }
+
+      // Count attempts per topic (unique questions only)
+      const attemptedByTopic: { [key: string]: Set<string> } = {};
+      const correctByTopic: { [key: string]: number } = {};
+
+      attempts?.forEach((attempt) => {
+        const topicArea = (attempt.questions as { topic_area: string } | null)?.topic_area;
+        if (topicArea) {
+          if (!attemptedByTopic[topicArea]) {
+            attemptedByTopic[topicArea] = new Set();
+          }
+          attemptedByTopic[topicArea].add(attempt.question_id);
+
+          if (attempt.is_correct) {
+            correctByTopic[topicArea] = (correctByTopic[topicArea] || 0) + 1;
+          }
+        }
+      });
+
+      // Build stats object mapped to curriculum topic IDs
+      const stats: QuestionStats = {};
+      let totalQs = 0;
+      let totalAtt = 0;
+      let totalCorr = 0;
+
+      Object.entries(topicIdToDbName).forEach(([topicId, dbName]) => {
+        const total = questionCountByTopic[dbName] || 0;
+        const attempted = attemptedByTopic[dbName]?.size || 0;
+        const correct = correctByTopic[dbName] || 0;
+
+        stats[topicId] = {
+          totalQuestions: total,
+          attemptedQuestions: attempted,
+          correctAnswers: correct,
+        };
+
+        totalQs += total;
+        totalAtt += attempted;
+        totalCorr += correct;
+      });
+
+      setQuestionStats(stats);
+      setTotalDbQuestions(totalQs);
+      setTotalAttempted(totalAtt);
+      setTotalCorrect(totalCorr);
+    } catch (error) {
+      console.error('Error fetching question stats:', error);
+    }
+  }, [supabase]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -23,11 +128,12 @@ export default function QuestionBank() {
         router.push("/login");
       } else {
         setUser(user);
+        await fetchQuestionStats(user.id);
         setLoading(false);
       }
     };
     checkUser();
-  }, [router, supabase]);
+  }, [router, supabase, fetchQuestionStats]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -175,7 +281,9 @@ export default function QuestionBank() {
           {cfaLevel1Curriculum.map((topic) => {
             const isTopicSelected = selectedCategories.includes(topic.id);
             const isExpanded = expandedTopics.includes(topic.id);
-            const progressPercentage = getProgressPercentage(0, topic.questionCount); // TODO: Get actual progress from database
+            const stats = questionStats[topic.id] || { totalQuestions: 0, attemptedQuestions: 0, correctAnswers: 0 };
+            const questionCount = stats.totalQuestions > 0 ? stats.totalQuestions : topic.questionCount;
+            const progressPercentage = getProgressPercentage(stats.attemptedQuestions, questionCount);
 
             return (
               <div key={topic.id} className="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -193,7 +301,7 @@ export default function QuestionBank() {
                             {topic.examWeight}
                           </span>
                           <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
-                            {topic.questionCount} questions
+                            {stats.totalQuestions > 0 ? stats.totalQuestions : topic.questionCount} questions
                           </span>
                         </div>
                         <p className="text-sm text-gray-600 mt-1">{topic.description}</p>
@@ -225,8 +333,8 @@ export default function QuestionBank() {
                   {/* Progress Bar */}
                   <div className="mt-4">
                     <div className="flex justify-between text-xs text-gray-600 mb-1">
-                      <span>Overall Progress</span>
-                      <span>0/{topic.questionCount}</span>
+                      <span>Progress ({stats.attemptedQuestions > 0 ? `${stats.correctAnswers} correct` : 'Not started'})</span>
+                      <span>{stats.attemptedQuestions}/{questionCount} attempted</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -297,26 +405,28 @@ export default function QuestionBank() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             <div className="text-center">
               <p className="text-3xl font-bold text-gray-900">
-                {cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.questionCount, 0)}
+                {totalDbQuestions > 0 ? totalDbQuestions : cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.questionCount, 0)}
               </p>
               <p className="text-sm text-gray-600">Total Questions</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-green-600">0</p>
-              <p className="text-sm text-gray-600">Completed</p>
+              <p className="text-3xl font-bold text-green-600">{totalAttempted}</p>
+              <p className="text-sm text-gray-600">Attempted</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-blue-600">{cfaLevel1Curriculum.length}</p>
-              <p className="text-sm text-gray-600">Main Topics</p>
+              <p className="text-3xl font-bold text-blue-600">{totalCorrect}</p>
+              <p className="text-sm text-gray-600">Correct</p>
             </div>
             <div className="text-center">
               <p className="text-3xl font-bold text-orange-600">
-                {cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.subtopics.length, 0)}
+                {totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : 0}%
               </p>
-              <p className="text-sm text-gray-600">Subtopics</p>
+              <p className="text-sm text-gray-600">Accuracy</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-purple-600">0%</p>
+              <p className="text-3xl font-bold text-purple-600">
+                {totalDbQuestions > 0 ? Math.round((totalAttempted / totalDbQuestions) * 100) : 0}%
+              </p>
               <p className="text-sm text-gray-600">Overall Progress</p>
             </div>
           </div>
