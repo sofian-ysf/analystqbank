@@ -154,7 +154,6 @@ function MultiCategoryPractice() {
               <div className="hidden md:flex items-center space-x-8">
                 <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
                 <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="relative group">
@@ -202,7 +201,6 @@ function MultiCategoryPractice() {
               <div className="hidden md:flex items-center space-x-8">
                 <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
                 <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="relative group">
@@ -244,16 +242,10 @@ function MultiCategoryPractice() {
               </p>
               <div className="flex justify-center space-x-4">
                 <Link
-                  href="/question-bank"
+                  href="/dashboard"
                   className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
                 >
-                  Back to Question Bank
-                </Link>
-                <Link
-                  href="/mock-exams"
-                  className="border border-[#EAEEEF] text-[#5f6368] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors"
-                >
-                  Try Mock Exams
+                  Back to Dashboard
                 </Link>
               </div>
             </div>
@@ -277,7 +269,6 @@ function MultiCategoryPractice() {
               <div className="hidden md:flex items-center space-x-8">
                 <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
                 <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="relative group">

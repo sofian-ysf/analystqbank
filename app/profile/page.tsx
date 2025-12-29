@@ -167,9 +167,6 @@ export default function Profile() {
               <Link href="/practice" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Practice
               </Link>
-              <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Mock Exams
-              </Link>
             </div>
 
             {/* User Menu */}
@@ -380,10 +377,6 @@ export default function Profile() {
                 <div className="flex justify-between items-center">
                   <span className="text-[#5f6368]">Topics Completed</span>
                   <span className="font-bold text-[#13343B]">{stats.topicsCompleted}/8</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#5f6368]">Mock Exams Taken</span>
-                  <span className="font-bold text-[#13343B]">{stats.mockExamsTaken}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[#5f6368]">Correct Answers</span>

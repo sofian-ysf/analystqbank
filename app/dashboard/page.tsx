@@ -63,9 +63,6 @@ export default function Dashboard() {
               <Link href="/practice" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Practice
               </Link>
-              <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Mock Exams
-              </Link>
             </div>
 
             {/* User Menu */}
@@ -126,22 +123,10 @@ export default function Dashboard() {
           </div>
           <div className="flex gap-4">
             <Link
-              href="/question-bank"
+              href="/practice"
               className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
             >
-              Question Bank
-            </Link>
-            <Link
-              href="/research-hubs"
-              className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-gray-900 transition-colors"
-            >
-              Research Hubs
-            </Link>
-            <Link
-              href="/mock-exams"
-              className="border border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-gray-900 transition-colors"
-            >
-              Mock Exam
+              Start Practicing
             </Link>
           </div>
         </div>

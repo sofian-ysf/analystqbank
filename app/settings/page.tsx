@@ -180,9 +180,6 @@ export default function Settings() {
               <Link href="/practice" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Practice
               </Link>
-              <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Mock Exams
-              </Link>
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative group">
