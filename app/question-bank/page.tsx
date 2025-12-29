@@ -77,7 +77,11 @@ export default function QuestionBank() {
       const correctByTopic: { [key: string]: number } = {};
 
       attempts?.forEach((attempt) => {
-        const topicArea = (attempt.questions as { topic_area: string } | null)?.topic_area;
+        // Supabase returns joined data as an object (single) or array depending on relationship
+        const questionsData = attempt.questions;
+        const topicArea = Array.isArray(questionsData)
+          ? questionsData[0]?.topic_area
+          : (questionsData as { topic_area: string } | null)?.topic_area;
         if (topicArea) {
           if (!attemptedByTopic[topicArea]) {
             attemptedByTopic[topicArea] = new Set();
