@@ -126,12 +126,17 @@ function MultiCategoryPractice() {
     fetchQuestions();
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading practice session...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#13343B] mx-auto"></div>
+          <p className="mt-4 text-[#5f6368]">Loading practice session...</p>
         </div>
       </div>
     );
@@ -139,25 +144,43 @@ function MultiCategoryPractice() {
 
   if (selectedTopicAreas.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link href="/question-bank" className="text-xl font-bold text-gray-900">
-                CFA Level 1 Prep
+      <div className="min-h-screen bg-[#FBFAF4]">
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
+                AnalystTrainer
               </Link>
-              <span className="text-sm text-gray-600">{user?.email}</span>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
+                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
+                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
+                      {user?.email?.charAt(0).toUpperCase()}
+                    </div>
+                  </button>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
+                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </nav>
         </header>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">No Categories Selected</h1>
-            <p className="text-gray-600 mb-8">Please select categories from the Question Bank to start practicing.</p>
+            <h1 className="text-3xl font-bold text-[#13343B] mb-4">No Categories Selected</h1>
+            <p className="text-[#5f6368] mb-8">Please select categories from the Question Bank to start practicing.</p>
             <Link
               href="/question-bank"
-              className="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800"
+              className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
             >
               Go to Question Bank
             </Link>
@@ -169,48 +192,66 @@ function MultiCategoryPractice() {
 
   if (questions.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link href="/question-bank" className="text-xl font-bold text-gray-900">
-                CFA Level 1 Prep
+      <div className="min-h-screen bg-[#FBFAF4]">
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
+                AnalystTrainer
               </Link>
-              <span className="text-sm text-gray-600">{user?.email}</span>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
+                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
+                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
+                      {user?.email?.charAt(0).toUpperCase()}
+                    </div>
+                  </button>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
+                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </nav>
         </header>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Mixed Practice Session</h1>
-            <p className="text-gray-600 mb-8">No questions available for the selected categories yet.</p>
+            <h1 className="text-3xl font-bold text-[#13343B] mb-4">Mixed Practice Session</h1>
+            <p className="text-[#5f6368] mb-8">No questions available for the selected categories yet.</p>
 
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Selected Categories:</h2>
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-[#EAEEEF] mb-8">
+              <h2 className="text-xl font-semibold text-[#13343B] mb-4">Selected Categories:</h2>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {selectedTopicAreas.map((topic, index) => (
                   <span
                     key={index}
-                    className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                    className="bg-[#1FB8CD]/10 text-[#1A6872] text-sm px-3 py-1 rounded-full"
                   >
                     {topic}
                   </span>
                 ))}
               </div>
-              <p className="text-gray-600 mb-6">
+              <p className="text-[#5f6368] mb-6">
                 Our admin team is working on adding questions for these topic areas using our AI-powered question generation system.
               </p>
               <div className="flex justify-center space-x-4">
                 <Link
                   href="/question-bank"
-                  className="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800"
+                  className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
                 >
                   Back to Question Bank
                 </Link>
                 <Link
                   href="/mock-exams"
-                  className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50"
+                  className="border border-[#EAEEEF] text-[#5f6368] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors"
                 >
                   Try Mock Exams
                 </Link>
@@ -226,48 +267,66 @@ function MultiCategoryPractice() {
     const scorePercentage = Math.round((score.correct / score.total) * 100);
 
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <Link href="/question-bank" className="text-xl font-bold text-gray-900">
-                CFA Level 1 Prep
+      <div className="min-h-screen bg-[#FBFAF4]">
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/" className="text-xl font-bold text-[#13343B]">
+                AnalystTrainer
               </Link>
-              <span className="text-sm text-gray-600">{user?.email}</span>
+              <div className="hidden md:flex items-center space-x-8">
+                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
+                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
+                <Link href="/mock-exams" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Mock Exams</Link>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="relative group">
+                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
+                      {user?.email?.charAt(0).toUpperCase()}
+                    </div>
+                  </button>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
+                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
+                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </nav>
         </header>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Mixed Practice Session</h1>
-            <p className="text-gray-600 mb-8">Session Complete</p>
+            <h1 className="text-3xl font-bold text-[#13343B] mb-2">Mixed Practice Session</h1>
+            <p className="text-[#5f6368] mb-8">Session Complete</p>
 
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Results</h2>
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-[#EAEEEF] mb-8">
+              <h2 className="text-2xl font-bold text-[#13343B] mb-6">Your Results</h2>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div className="text-center">
                   <p className="text-4xl font-bold text-green-600">{score.correct}</p>
-                  <p className="text-sm text-gray-600">Correct</p>
+                  <p className="text-sm text-[#5f6368]">Correct</p>
                 </div>
                 <div className="text-center">
                   <p className="text-4xl font-bold text-red-600">{score.total - score.correct}</p>
-                  <p className="text-sm text-gray-600">Incorrect</p>
+                  <p className="text-sm text-[#5f6368]">Incorrect</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-4xl font-bold text-blue-600">{scorePercentage}%</p>
-                  <p className="text-sm text-gray-600">Score</p>
+                  <p className="text-4xl font-bold text-[#1FB8CD]">{scorePercentage}%</p>
+                  <p className="text-sm text-[#5f6368]">Score</p>
                 </div>
               </div>
 
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Categories Practiced:</h3>
+                <h3 className="text-lg font-semibold text-[#13343B] mb-3">Categories Practiced:</h3>
                 <div className="flex flex-wrap justify-center gap-2">
                   {selectedTopicAreas.map((topic, index) => (
                     <span
                       key={index}
-                      className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
+                      className="bg-[#1FB8CD]/10 text-[#1A6872] text-sm px-3 py-1 rounded-full"
                     >
                       {topic}
                     </span>
@@ -278,13 +337,13 @@ function MultiCategoryPractice() {
               <div className="flex justify-center space-x-4">
                 <button
                   onClick={resetSession}
-                  className="bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800"
+                  className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
                 >
                   Practice Again
                 </button>
                 <Link
                   href="/question-bank"
-                  className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50"
+                  className="border border-[#EAEEEF] text-[#5f6368] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors"
                 >
                   Question Bank
                 </Link>
@@ -300,24 +359,37 @@ function MultiCategoryPractice() {
   const isCorrectAnswer = showExplanation && selectedAnswer === currentQuestion.correct_answer;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/question-bank" className="text-xl font-bold text-gray-900">
-              CFA Level 1 Prep
+    <div className="min-h-screen bg-[#FBFAF4]">
+      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+          <div className="flex h-16 items-center justify-between">
+            <Link href="/" className="text-xl font-bold text-[#13343B]">
+              AnalystTrainer
             </Link>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">
+            <div className="hidden md:flex items-center space-x-6">
+              <span className="text-sm text-[#5f6368]">
                 Question {currentQuestionIndex + 1} of {questions.length}
               </span>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm font-medium text-[#1FB8CD]">
                 Score: {score.correct}/{score.total}
               </span>
-              <span className="text-sm text-gray-600">{user?.email}</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="relative group">
+                <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
+                    {user?.email?.charAt(0).toUpperCase()}
+                  </div>
+                </button>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
+                  <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
+                  <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
