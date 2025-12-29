@@ -44,39 +44,55 @@ export default function QuestionBank() {
 
   const fetchQuestionStats = useCallback(async (userId: string) => {
     try {
-      // Fetch question counts by topic_area from the database
-      const { data: questions, error: questionsError } = await supabase
-        .from('questions')
-        .select('topic_area')
-        .eq('is_active', true);
-
-      if (questionsError) {
-        console.error('Error fetching questions:', questionsError);
-        return;
-      }
-
-      // Count questions per topic
+      // Fetch question counts per topic using individual count queries (avoids 1000 row limit)
       const questionCountByTopic: { [key: string]: number } = {};
-      questions?.forEach((q) => {
-        const topicArea = q.topic_area;
-        questionCountByTopic[topicArea] = (questionCountByTopic[topicArea] || 0) + 1;
+
+      const countPromises = Object.values(topicIdToDbName).map(async (topicName) => {
+        const { count, error } = await supabase
+          .from('questions')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_active', true)
+          .eq('topic_area', topicName);
+
+        if (!error && count !== null) {
+          questionCountByTopic[topicName] = count;
+        }
       });
 
-      // Fetch user's attempted questions
-      const { data: attempts, error: attemptsError } = await supabase
-        .from('user_question_attempts')
-        .select('question_id, is_correct, questions(topic_area)')
-        .eq('user_id', userId);
+      await Promise.all(countPromises);
 
-      if (attemptsError) {
-        console.error('Error fetching attempts:', attemptsError);
-      }
-
-      // Count attempts per topic (unique questions only)
+      // Fetch user's attempted questions with pagination to handle large datasets
       const attemptedByTopic: { [key: string]: Set<string> } = {};
       const correctByTopic: { [key: string]: number } = {};
 
-      attempts?.forEach((attempt) => {
+      let allAttempts: { question_id: string; is_correct: boolean; questions: unknown }[] = [];
+      let page = 0;
+      const pageSize = 1000;
+      let hasMore = true;
+
+      while (hasMore) {
+        const { data: attempts, error: attemptsError } = await supabase
+          .from('user_question_attempts')
+          .select('question_id, is_correct, questions(topic_area)')
+          .eq('user_id', userId)
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (attemptsError) {
+          console.error('Error fetching attempts:', attemptsError);
+          break;
+        }
+
+        if (attempts && attempts.length > 0) {
+          allAttempts = [...allAttempts, ...attempts];
+          hasMore = attempts.length === pageSize;
+          page++;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      // Count attempts per topic (unique questions only)
+      allAttempts.forEach((attempt) => {
         // Supabase returns joined data as an object (single) or array depending on relationship
         const questionsData = attempt.questions;
         const topicArea = Array.isArray(questionsData)
