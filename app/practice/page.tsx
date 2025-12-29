@@ -1,55 +1,20 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { cfaLevel1Curriculum } from "@/lib/curriculum";
 
-interface Question {
-  id: number;
-  topic_area: string;
-  subtopic?: string;
-  difficulty_level: string;
-  question_text: string;
-  option_a: string;
-  option_b: string;
-  option_c: string;
-  correct_answer: string;
-  explanation: string;
-  keywords: string[];
-  created_at: string;
-}
-
-const topicAreaMap: { [key: string]: string } = {
-  "ethical-professional-standards": "Ethical and Professional Standards",
-  "financial-statement-analysis": "Financial Statement Analysis",
-  "equity-investments": "Equity Investments",
-  "fixed-income": "Fixed Income",
-  "portfolio-management": "Portfolio Management",
-  "alternative-investments": "Alternative Investments",
-  "quantitative-methods": "Quantitative Methods",
-  "economics": "Economics",
-  "corporate-issuers": "Corporate Issuers",
-  "derivatives": "Derivatives"
-};
-
-function MultiCategoryPractice() {
+export default function Practice() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("");
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [score, setScore] = useState({ correct: 0, total: 0 });
-  const [sessionComplete, setSessionComplete] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
   const supabase = createClient();
-
-  const categories = searchParams.get('categories')?.split(',') || [];
-  const selectedTopicAreas = categories.map(cat => topicAreaMap[cat]).filter(Boolean);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -58,78 +23,35 @@ function MultiCategoryPractice() {
         router.push("/login");
       } else {
         setUser(user);
-        await fetchQuestions();
         setLoading(false);
       }
     };
     checkUser();
-  }, [router, supabase, categories]);
-
-  const fetchQuestions = async () => {
-    try {
-      const allQuestions: Question[] = [];
-
-      // Fetch questions from each selected topic area
-      for (const topicArea of selectedTopicAreas) {
-        const response = await fetch(`/api/questions?topic_area=${encodeURIComponent(topicArea)}&limit=5`);
-        const data = await response.json();
-
-        if (data.questions && data.questions.length > 0) {
-          allQuestions.push(...data.questions);
-        }
-      }
-
-      // Shuffle questions for variety
-      const shuffledQuestions = allQuestions.sort(() => Math.random() - 0.5);
-      setQuestions(shuffledQuestions.slice(0, 20)); // Limit to 20 questions total
-
-    } catch (error) {
-      console.error('Error fetching questions:', error);
-      setQuestions([]);
-    }
-  };
-
-  const handleAnswerSelect = (answer: string) => {
-    if (showExplanation) return;
-    setSelectedAnswer(answer);
-  };
-
-  const handleSubmitAnswer = () => {
-    if (!selectedAnswer) return;
-
-    const currentQuestion = questions[currentQuestionIndex];
-    const isCorrect = selectedAnswer === currentQuestion.correct_answer;
-
-    setScore(prev => ({
-      correct: prev.correct + (isCorrect ? 1 : 0),
-      total: prev.total + 1
-    }));
-
-    setShowExplanation(true);
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer("");
-      setShowExplanation(false);
-    } else {
-      setSessionComplete(true);
-    }
-  };
-
-  const resetSession = () => {
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer("");
-    setShowExplanation(false);
-    setScore({ correct: 0, total: 0 });
-    setSessionComplete(false);
-    fetchQuestions();
-  };
+  }, [router, supabase]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    window.location.href = "/";
+    router.push("/");
+  };
+
+  const handleCategoryToggle = (categoryId: string) => {
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  const handleTopicToggle = (topicId: string) => {
+    setExpandedTopics(prev =>
+      prev.includes(topicId)
+        ? prev.filter(id => id !== topicId)
+        : [...prev, topicId]
+    );
+  };
+
+  const getProgressPercentage = (completed: number, total: number) => {
+    return total > 0 ? (completed / total) * 100 : 0;
   };
 
   if (loading) {
@@ -137,234 +59,28 @@ function MultiCategoryPractice() {
       <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#13343B] mx-auto"></div>
-          <p className="mt-4 text-[#5f6368]">Loading practice session...</p>
+          <p className="mt-4 text-[#5f6368]">Loading practice questions...</p>
         </div>
       </div>
     );
   }
-
-  if (selectedTopicAreas.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
-              <div className="hidden md:flex items-center space-x-8">
-                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
-                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
-                      {user?.email?.charAt(0).toUpperCase()}
-                    </div>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
-                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </header>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-[#13343B] mb-4">No Categories Selected</h1>
-            <p className="text-[#5f6368] mb-8">Please select categories from the Question Bank to start practicing.</p>
-            <Link
-              href="/question-bank"
-              className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
-            >
-              Go to Question Bank
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (questions.length === 0) {
-    return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
-              <div className="hidden md:flex items-center space-x-8">
-                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
-                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
-                      {user?.email?.charAt(0).toUpperCase()}
-                    </div>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
-                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </header>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-[#13343B] mb-4">Mixed Practice Session</h1>
-            <p className="text-[#5f6368] mb-8">No questions available for the selected categories yet.</p>
-
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-[#EAEEEF] mb-8">
-              <h2 className="text-xl font-semibold text-[#13343B] mb-4">Selected Categories:</h2>
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {selectedTopicAreas.map((topic, index) => (
-                  <span
-                    key={index}
-                    className="bg-[#1FB8CD]/10 text-[#1A6872] text-sm px-3 py-1 rounded-full"
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
-              <p className="text-[#5f6368] mb-6">
-                Our admin team is working on adding questions for these topic areas using our AI-powered question generation system.
-              </p>
-              <div className="flex justify-center space-x-4">
-                <Link
-                  href="/dashboard"
-                  className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
-                >
-                  Back to Dashboard
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (sessionComplete) {
-    const scorePercentage = Math.round((score.correct / score.total) * 100);
-
-    return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
-              <div className="hidden md:flex items-center space-x-8">
-                <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">Dashboard</Link>
-                <Link href="/practice" className="text-[#13343B] font-medium transition-colors">Practice</Link>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="relative group">
-                  <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
-                      {user?.email?.charAt(0).toUpperCase()}
-                    </div>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
-                    <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
-                    <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </nav>
-        </header>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-[#13343B] mb-2">Mixed Practice Session</h1>
-            <p className="text-[#5f6368] mb-8">Session Complete</p>
-
-            <div className="bg-white rounded-xl p-8 shadow-sm border border-[#EAEEEF] mb-8">
-              <h2 className="text-2xl font-bold text-[#13343B] mb-6">Your Results</h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-green-600">{score.correct}</p>
-                  <p className="text-sm text-[#5f6368]">Correct</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-red-600">{score.total - score.correct}</p>
-                  <p className="text-sm text-[#5f6368]">Incorrect</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-4xl font-bold text-[#1FB8CD]">{scorePercentage}%</p>
-                  <p className="text-sm text-[#5f6368]">Score</p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold text-[#13343B] mb-3">Categories Practiced:</h3>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {selectedTopicAreas.map((topic, index) => (
-                    <span
-                      key={index}
-                      className="bg-[#1FB8CD]/10 text-[#1A6872] text-sm px-3 py-1 rounded-full"
-                    >
-                      {topic}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={resetSession}
-                  className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
-                >
-                  Practice Again
-                </button>
-                <Link
-                  href="/question-bank"
-                  className="border border-[#EAEEEF] text-[#5f6368] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors"
-                >
-                  Question Bank
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const currentQuestion = questions[currentQuestionIndex];
-  const isCorrectAnswer = showExplanation && selectedAnswer === currentQuestion.correct_answer;
 
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
+      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="text-xl font-bold text-[#13343B]">
-              AnalystTrainer
+            <Link href="/dashboard">
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
-            <div className="hidden md:flex items-center space-x-6">
-              <span className="text-sm text-[#5f6368]">
-                Question {currentQuestionIndex + 1} of {questions.length}
-              </span>
-              <span className="text-sm font-medium text-[#1FB8CD]">
-                Score: {score.correct}/{score.total}
-              </span>
+            <div className="hidden md:flex items-center space-x-8">
+              <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Dashboard
+              </Link>
+              <Link href="/practice" className="text-[#13343B] font-medium transition-colors">
+                Practice
+              </Link>
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative group">
@@ -374,9 +90,18 @@ function MultiCategoryPractice() {
                   </div>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Profile</Link>
-                  <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Settings</Link>
-                  <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">Sign Out</button>
+                  <Link href="/profile" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
+                    Profile
+                  </Link>
+                  <Link href="/settings" className="block px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
+                    Settings
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]"
+                  >
+                    Sign Out
+                  </button>
                 </div>
               </div>
             </div>
@@ -384,147 +109,186 @@ function MultiCategoryPractice() {
         </nav>
       </header>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Progress Bar */}
+      {/* Main Content */}
+      <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-8">
+        {/* Page Header */}
         <div className="mb-8">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Mixed Practice Session</span>
-            <span>Progress: {Math.round((currentQuestionIndex / questions.length) * 100)}%</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-gray-900 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(currentQuestionIndex / questions.length) * 100}%` }}
-            ></div>
-          </div>
+          <h1 className="text-3xl font-bold text-[#13343B] mb-2">Practice Questions</h1>
+          <p className="text-[#5f6368]">
+            Select topics to practice. Question distribution follows official CFA Level 1 exam weightings.
+          </p>
         </div>
 
-        {/* Question Card */}
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 mb-6">
-          <div className="mb-6">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Question {currentQuestionIndex + 1}
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">{currentQuestion.topic_area}</p>
-              </div>
-              <span className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">
-                {currentQuestion.difficulty_level}
-              </span>
-            </div>
-            <p className="text-gray-800 leading-relaxed">{currentQuestion.question_text}</p>
-          </div>
-
-          {/* Answer Options */}
-          <div className="space-y-3 mb-6">
-            {['A', 'B', 'C'].map((option) => {
-              const optionText = currentQuestion[`option_${option.toLowerCase()}` as keyof Question] as string;
-              const isSelected = selectedAnswer === option;
-              const isCorrect = option === currentQuestion.correct_answer;
-
-              let buttonClass = "w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ";
-
-              if (showExplanation) {
-                if (isCorrect) {
-                  buttonClass += "border-green-500 bg-green-50 text-green-800";
-                } else if (isSelected && !isCorrect) {
-                  buttonClass += "border-red-500 bg-red-50 text-red-800";
+        {/* Filter Controls */}
+        <div className="mb-6 flex flex-wrap gap-4 items-center">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="select-all"
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setSelectedCategories(cfaLevel1Curriculum.map(topic => topic.id));
                 } else {
-                  buttonClass += "border-gray-200 bg-gray-50 text-gray-600";
+                  setSelectedCategories([]);
                 }
-              } else {
-                if (isSelected) {
-                  buttonClass += "border-gray-900 bg-gray-900 text-white";
-                } else {
-                  buttonClass += "border-gray-300 text-gray-700 hover:border-gray-400 hover:bg-gray-50";
-                }
-              }
-
-              return (
-                <button
-                  key={option}
-                  onClick={() => handleAnswerSelect(option)}
-                  className={buttonClass}
-                  disabled={showExplanation}
-                >
-                  <div className="flex items-center">
-                    <span className="font-semibold mr-3">{option}.</span>
-                    <span>{optionText}</span>
-                  </div>
-                </button>
-              );
-            })}
+              }}
+              checked={selectedCategories.length === cfaLevel1Curriculum.length}
+              className="h-4 w-4 text-[#1FB8CD] focus:ring-[#1FB8CD] border-gray-300 rounded"
+            />
+            <label htmlFor="select-all" className="text-sm font-medium text-[#5f6368]">
+              Select All Topics
+            </label>
           </div>
+          {selectedCategories.length > 0 && (
+            <Link
+              href={`/practice/session?categories=${selectedCategories.join(',')}`}
+              className="bg-[#1FB8CD] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#1A6872] transition-colors"
+            >
+              Start Practice ({selectedCategories.length} {selectedCategories.length === 1 ? 'topic' : 'topics'})
+            </Link>
+          )}
+        </div>
 
-          {/* Explanation */}
-          {showExplanation && (
-            <div className="border-t pt-6">
-              <div className="mb-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  isCorrectAnswer ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
-                  {isCorrectAnswer ? '✓ Correct' : '✗ Incorrect'}
-                </span>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold text-gray-900 mb-2">Explanation:</h4>
-                <p className="text-gray-700">{currentQuestion.explanation}</p>
-              </div>
-              {currentQuestion.keywords && currentQuestion.keywords.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">Keywords:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {currentQuestion.keywords.map((keyword, index) => (
-                      <span
-                        key={index}
-                        className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+        {/* Topics List */}
+        <div className="space-y-4">
+          {cfaLevel1Curriculum.map((topic) => {
+            const isTopicSelected = selectedCategories.includes(topic.id);
+            const isExpanded = expandedTopics.includes(topic.id);
+            const progressPercentage = getProgressPercentage(0, topic.questionCount);
+
+            return (
+              <div key={topic.id} className="bg-white rounded-xl shadow-sm border border-[#EAEEEF]">
+                {/* Main Topic Header */}
+                <div className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center flex-1">
+                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white text-xl`}>
+                        {topic.icon}
+                      </div>
+                      <div className="ml-4 flex-1">
+                        <div className="flex items-center space-x-3 flex-wrap gap-y-2">
+                          <h3 className="font-bold text-[#13343B] text-lg">{topic.name}</h3>
+                          <span className="text-xs px-2 py-1 bg-[#F3F3EE] text-[#5f6368] rounded-full font-medium">
+                            {topic.examWeight}
+                          </span>
+                          <span className="text-xs px-2 py-1 bg-[#1FB8CD]/10 text-[#1A6872] rounded-full font-medium">
+                            {topic.questionCount} questions
+                          </span>
+                        </div>
+                        <p className="text-sm text-[#5f6368] mt-1">{topic.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={isTopicSelected}
+                        onChange={() => handleCategoryToggle(topic.id)}
+                        className="h-5 w-5 text-[#1FB8CD] focus:ring-[#1FB8CD] border-gray-300 rounded"
+                      />
+                      <button
+                        onClick={() => handleTopicToggle(topic.id)}
+                        className="p-2 hover:bg-[#F3F3EE] rounded-lg transition-colors"
                       >
-                        {keyword}
-                      </span>
-                    ))}
+                        <svg
+                          className={`w-5 h-5 text-[#5f6368] transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="mt-4">
+                    <div className="flex justify-between text-xs text-[#5f6368] mb-1">
+                      <span>Progress</span>
+                      <span>0/{topic.questionCount}</span>
+                    </div>
+                    <div className="w-full bg-[#EAEEEF] rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${topic.color}`}
+                        style={{ width: `${progressPercentage}%` }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Topic Action Button */}
+                  <div className="mt-4">
+                    <Link
+                      href={`/practice/${topic.id}`}
+                      className="inline-block bg-[#13343B] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#1A6872] transition-colors"
+                    >
+                      Practice This Topic
+                    </Link>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
 
-          {/* Action Button */}
-          <div className="mt-6 flex justify-end">
-            {!showExplanation ? (
-              <button
-                onClick={handleSubmitAnswer}
-                disabled={!selectedAnswer}
-                className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                Submit Answer
-              </button>
-            ) : (
-              <button
-                onClick={handleNextQuestion}
-                className="bg-gray-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800"
-              >
-                {currentQuestionIndex < questions.length - 1 ? 'Next Question' : 'Finish Session'}
-              </button>
-            )}
+                {/* Subtopics (Expandable) */}
+                {isExpanded && (
+                  <div className="border-t border-[#EAEEEF] bg-[#F3F3EE] p-6">
+                    <h4 className="text-sm font-semibold text-[#13343B] mb-4">
+                      Subtopics ({topic.subtopics.length})
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {topic.subtopics.map((subtopic) => (
+                        <div
+                          key={subtopic.id}
+                          className="bg-white rounded-lg p-4 border border-[#EAEEEF] hover:border-[#1FB8CD] transition-all"
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <h5 className="text-sm font-medium text-[#13343B] flex-1">
+                              {subtopic.name}
+                            </h5>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-[#5f6368]">
+                              {subtopic.learningOutcomes} Learning Outcomes
+                            </span>
+                            <Link
+                              href={`/practice/${topic.id}/${subtopic.id}`}
+                              className="text-xs text-[#1FB8CD] font-medium hover:text-[#1A6872]"
+                            >
+                              Practice →
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Statistics Summary */}
+        <div className="mt-12 bg-white rounded-xl p-6 shadow-sm border border-[#EAEEEF]">
+          <h3 className="text-xl font-bold text-[#13343B] mb-4">Your Progress</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#13343B]">
+                {cfaLevel1Curriculum.reduce((sum, topic) => sum + topic.questionCount, 0)}
+              </p>
+              <p className="text-sm text-[#5f6368]">Total Questions</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-green-600">0</p>
+              <p className="text-sm text-[#5f6368]">Completed</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#1FB8CD]">{cfaLevel1Curriculum.length}</p>
+              <p className="text-sm text-[#5f6368]">Topics</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-[#1A6872]">0%</p>
+              <p className="text-sm text-[#5f6368]">Overall Progress</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function Page() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    }>
-      <MultiCategoryPractice />
-    </Suspense>
   );
 }

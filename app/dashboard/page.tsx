@@ -52,7 +52,7 @@ export default function Dashboard() {
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/">
+            <Link href="/dashboard">
               <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
