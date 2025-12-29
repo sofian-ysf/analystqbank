@@ -61,7 +61,7 @@ export default function Dashboard() {
               <Link href="/dashboard" className="text-[#13343B] font-medium transition-colors">
                 Dashboard
               </Link>
-              <Link href="/practice" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+              <Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Practice
               </Link>
             </div>
@@ -124,7 +124,7 @@ export default function Dashboard() {
           </div>
           <div className="flex gap-4">
             <Link
-              href="/practice"
+              href="/question-bank"
               className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
             >
               Start Practicing
@@ -244,7 +244,7 @@ export default function Dashboard() {
                     <p className="text-sm text-gray-600">Build consistency and knowledge</p>
                   </div>
                 </div>
-                <Link href="/practice" className="text-gray-900 hover:text-gray-700">
+                <Link href="/question-bank" className="text-gray-900 hover:text-gray-700">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
