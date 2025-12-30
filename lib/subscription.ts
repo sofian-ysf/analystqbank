@@ -33,7 +33,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
   const now = new Date();
 
   // Check if trial is expired
-  const isTrialExpired = plan === 'trial' && trialEndsAt && now > trialEndsAt;
+  const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
 
   // Get usage counts for the current period
   const { mockExamsUsed, questionsAnswered } = await getUsageCounts(userId, supabase);
