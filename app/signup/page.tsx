@@ -66,6 +66,21 @@ function SignUpForm() {
     }
 
     if (data?.user) {
+      // Calculate trial end time (24 hours from now)
+      const trialEndsAt = new Date();
+      trialEndsAt.setHours(trialEndsAt.getHours() + 24);
+
+      // Update user profile with trial info
+      await supabase
+        .from('user_profiles')
+        .update({
+          subscription_plan: 'free',
+          subscription_status: 'trialing',
+          trial_ends_at: trialEndsAt.toISOString(),
+          full_name: fullName || email.split('@')[0],
+        })
+        .eq('id', data.user.id);
+
       // Send Discord notification
       try {
         await fetch('/api/notify-discord', {
@@ -83,12 +98,15 @@ function SignUpForm() {
         console.error('Failed to send Discord notification:', notificationError);
       }
 
-      // Redirect to login with appropriate message
+      // Redirect immediately based on plan
       if (selectedPlan === 'basic' || selectedPlan === 'premium') {
-        router.push(`/login?message=Check your email to confirm your account. After confirmation, you'll be redirected to complete your ${planDetails.name} subscription.`);
+        // Redirect to Stripe checkout
+        router.push(`/api/stripe/create-checkout?plan=${selectedPlan}`);
       } else {
-        router.push("/login?message=Check your email to confirm your account");
+        // Free trial - go to dashboard
+        router.push("/dashboard");
       }
+      return; // Don't setLoading(false) since we're redirecting
     }
 
     setLoading(false);
@@ -151,7 +169,7 @@ function SignUpForm() {
             )}
             {selectedPlan !== 'trial' && (
               <p className="mt-2 text-xs text-[#5f6368]">
-                You&apos;ll be redirected to payment after email confirmation.
+                You&apos;ll be redirected to payment after signup.
               </p>
             )}
             <Link href="/#pricing" className="text-xs text-[#1FB8CD] hover:underline mt-1 inline-block">
