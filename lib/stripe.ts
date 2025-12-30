@@ -1,20 +1,9 @@
 import Stripe from 'stripe';
-import { loadStripe, Stripe as StripeJS } from '@stripe/stripe-js';
 
-// Server-side Stripe client
+// Server-side Stripe client - only use in API routes/server components
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   typescript: true,
 });
-
-// Client-side Stripe promise (singleton)
-let stripePromise: Promise<StripeJS | null>;
-
-export const getStripe = () => {
-  if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-  }
-  return stripePromise;
-};
 
 // Price IDs - to be set after creating products in Stripe Dashboard
 export const STRIPE_PRICES = {
@@ -22,48 +11,5 @@ export const STRIPE_PRICES = {
   premium: process.env.STRIPE_PREMIUM_PRICE_ID!,
 };
 
-// Subscription plan limits
-export const PLAN_LIMITS = {
-  trial: {
-    name: 'Free Trial',
-    mockExams: 1,
-    questions: 100,
-    durationHours: 24,
-    price: 0,
-    features: [
-      '1 mock exam',
-      '100 practice questions',
-      '24-hour access',
-      'Basic analytics',
-    ],
-  },
-  basic: {
-    name: 'Basic',
-    mockExams: 5,
-    questions: 2000,
-    durationHours: null, // Monthly recurring
-    price: 30,
-    features: [
-      '5 mock exams per month',
-      '2,000 practice questions',
-      'Performance analytics',
-      'Email support',
-    ],
-  },
-  premium: {
-    name: 'Premium',
-    mockExams: Infinity,
-    questions: Infinity,
-    durationHours: null, // Monthly recurring
-    price: 50,
-    features: [
-      'Unlimited mock exams',
-      'Full question bank access',
-      'Advanced analytics',
-      'Direct contact with CFA analysts',
-      'Priority email support',
-    ],
-  },
-};
-
-export type PlanType = keyof typeof PLAN_LIMITS;
+// Re-export plan limits for server-side use
+export { PLAN_LIMITS, type PlanType } from './plans';

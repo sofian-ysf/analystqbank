@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
-import { PLAN_LIMITS, PlanType } from "@/lib/stripe";
+import { PLAN_LIMITS, PlanType } from "@/lib/plans";
 
 function SignUpForm() {
   const router = useRouter();
@@ -42,11 +42,16 @@ function SignUpForm() {
 
     setLoading(true);
 
+    // Include plan in the redirect URL so auth callback can handle it
+    const redirectUrl = selectedPlan === 'basic' || selectedPlan === 'premium'
+      ? `${window.location.origin}/auth/callback?plan=${selectedPlan}`
+      : `${window.location.origin}/auth/callback`;
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName || email.split('@')[0],
           selected_plan: selectedPlan,
@@ -61,22 +66,6 @@ function SignUpForm() {
     }
 
     if (data?.user) {
-      // Set trial end time (24 hours from now)
-      const trialEndsAt = new Date();
-      trialEndsAt.setHours(trialEndsAt.getHours() + 24);
-
-      // Update user profile with trial info
-      await supabase
-        .from('user_profiles')
-        .upsert({
-          id: data.user.id,
-          email: email,
-          full_name: fullName || email.split('@')[0],
-          subscription_plan: 'trial',
-          subscription_status: 'trialing',
-          trial_ends_at: trialEndsAt.toISOString(),
-        });
-
       // Send Discord notification
       try {
         await fetch('/api/notify-discord', {
@@ -94,9 +83,9 @@ function SignUpForm() {
         console.error('Failed to send Discord notification:', notificationError);
       }
 
-      // If paid plan selected, redirect to checkout after email verification
+      // Redirect to login with appropriate message
       if (selectedPlan === 'basic' || selectedPlan === 'premium') {
-        router.push(`/login?message=Check your email to confirm your account. After confirmation, you'll be redirected to complete your ${planDetails.name} subscription.&plan=${selectedPlan}`);
+        router.push(`/login?message=Check your email to confirm your account. After confirmation, you'll be redirected to complete your ${planDetails.name} subscription.`);
       } else {
         router.push("/login?message=Check your email to confirm your account");
       }

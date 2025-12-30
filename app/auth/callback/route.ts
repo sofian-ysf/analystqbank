@@ -5,7 +5,10 @@ import { cookies } from 'next/headers'
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
+  const plan = requestUrl.searchParams.get('plan')
   const next = requestUrl.searchParams.get('next') ?? '/dashboard'
+
+  console.log('Auth callback hit:', { code: !!code, plan, next, url: request.url })
 
   if (code) {
     const cookieStore = await cookies()
@@ -32,9 +35,36 @@ export async function GET(request: Request) {
       }
     )
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
-    if (!error) {
+    console.log('Session exchange result:', { error: error?.message, userId: data?.user?.id })
+
+    if (!error && data.user) {
+      // Calculate trial end time (24 hours from now)
+      const trialEndsAt = new Date()
+      trialEndsAt.setHours(trialEndsAt.getHours() + 24)
+
+      // Update user profile with trial info
+      // The trigger creates the profile, we just update it with trial info
+      const { error: updateError } = await supabase
+        .from('user_profiles')
+        .update({
+          subscription_plan: 'free', // Use 'free' as trial (schema constraint)
+          subscription_status: 'trialing',
+          trial_ends_at: trialEndsAt.toISOString(),
+          full_name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
+        })
+        .eq('id', data.user.id)
+
+      console.log('Profile update result:', { updateError: updateError?.message, userId: data.user.id })
+
+      // If user selected a paid plan, redirect to checkout
+      if (plan === 'basic' || plan === 'premium') {
+        return NextResponse.redirect(
+          new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin)
+        )
+      }
+
       return NextResponse.redirect(new URL(next, requestUrl.origin))
     }
   }
