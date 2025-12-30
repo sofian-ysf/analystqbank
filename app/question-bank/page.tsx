@@ -279,20 +279,12 @@ export default function QuestionBank() {
             </label>
           </div>
           {selectedCategories.length > 0 && (
-            <div className="flex space-x-2">
-              <Link
-                href={`/practice?categories=${selectedCategories.join(',')}`}
-                className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
-              >
-                Practice Selected ({selectedCategories.length})
-              </Link>
-              <Link
-                href={`/research-hubs?categories=${selectedCategories.join(',')}`}
-                className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50"
-              >
-                Study Materials
-              </Link>
-            </div>
+            <Link
+              href={`/practice?categories=${selectedCategories.join(',')}`}
+              className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
+            >
+              Practice Selected ({selectedCategories.length})
+            </Link>
           )}
         </div>
 
@@ -364,19 +356,13 @@ export default function QuestionBank() {
                     </div>
                   </div>
 
-                  {/* Topic Action Buttons */}
-                  <div className="flex space-x-3 mt-4">
+                  {/* Topic Action Button */}
+                  <div className="mt-4">
                     <Link
                       href={`/practice/${topic.id}`}
                       className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
                     >
                       Practice Topic
-                    </Link>
-                    <Link
-                      href={`/research-hubs/${topic.id}`}
-                      className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50"
-                    >
-                      Study Materials
                     </Link>
                   </div>
                 </div>
