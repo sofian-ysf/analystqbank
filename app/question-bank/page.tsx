@@ -30,6 +30,14 @@ interface QuestionStats {
   };
 }
 
+interface SubtopicStats {
+  [subtopicKey: string]: {
+    totalQuestions: number;
+    attemptedQuestions: number;
+    correctAnswers: number;
+  };
+}
+
 export default function QuestionBank() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -37,6 +45,10 @@ export default function QuestionBank() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
   const [questionStats, setQuestionStats] = useState<QuestionStats>({});
+  const [subtopicStats, setSubtopicStats] = useState<SubtopicStats>({});
+  const [selectedSubtopics, setSelectedSubtopics] = useState<string[]>([]);
+  const [questionLimit, setQuestionLimit] = useState<number | "all">("all");
+  const [questionFilter, setQuestionFilter] = useState<"all" | "wrong" | "correct" | "unanswered">("all");
   const [totalDbQuestions, setTotalDbQuestions] = useState(0);
   const [totalAttempted, setTotalAttempted] = useState(0);
   const [totalCorrect, setTotalCorrect] = useState(0);
@@ -46,6 +58,7 @@ export default function QuestionBank() {
     try {
       // Fetch question counts per topic using individual count queries (avoids 1000 row limit)
       const questionCountByTopic: { [key: string]: number } = {};
+      const questionCountBySubtopic: { [key: string]: number } = {};
 
       const countPromises = Object.values(topicIdToDbName).map(async (topicName) => {
         const { count, error } = await supabase
@@ -61,57 +74,104 @@ export default function QuestionBank() {
 
       await Promise.all(countPromises);
 
+      // Fetch subtopic counts - get all questions with subtopics
+      try {
+        const { data: subtopicData } = await supabase
+          .from('questions')
+          .select('subtopic, topic_area')
+          .eq('is_active', true)
+          .not('subtopic', 'is', null);
+
+        if (subtopicData) {
+          subtopicData.forEach((q) => {
+            if (q.subtopic && q.topic_area) {
+              const key = `${q.topic_area}::${q.subtopic}`;
+              questionCountBySubtopic[key] = (questionCountBySubtopic[key] || 0) + 1;
+            }
+          });
+        }
+      } catch {
+        console.log('Note: Could not fetch subtopic counts');
+      }
+
       // Fetch user's attempted questions with pagination to handle large datasets
       const attemptedByTopic: { [key: string]: Set<string> } = {};
       const correctByTopic: { [key: string]: number } = {};
+      const attemptedBySubtopic: { [key: string]: Set<string> } = {};
+      const correctBySubtopic: { [key: string]: number } = {};
 
-      let allAttempts: { question_id: string; is_correct: boolean; questions: unknown }[] = [];
-      let page = 0;
-      const pageSize = 1000;
-      let hasMore = true;
+      // Try to fetch user attempts - table may not exist yet or user may have no attempts
+      try {
+        let allAttempts: { question_id: string; is_correct: boolean; questions: unknown }[] = [];
+        let page = 0;
+        const pageSize = 1000;
+        let hasMore = true;
 
-      while (hasMore) {
-        const { data: attempts, error: attemptsError } = await supabase
-          .from('user_question_attempts')
-          .select('question_id, is_correct, questions(topic_area)')
-          .eq('user_id', userId)
-          .range(page * pageSize, (page + 1) * pageSize - 1);
+        while (hasMore) {
+          const { data: attempts, error: attemptsError } = await supabase
+            .from('user_question_attempts')
+            .select('question_id, is_correct, questions(topic_area, subtopic)')
+            .eq('user_id', userId)
+            .range(page * pageSize, (page + 1) * pageSize - 1);
 
-        if (attemptsError) {
-          console.error('Error fetching attempts:', attemptsError);
-          break;
+          if (attemptsError) {
+            // Table might not exist or no access - this is okay, just skip
+            console.log('Note: Could not fetch user attempts (table may not exist yet)');
+            break;
+          }
+
+          if (attempts && attempts.length > 0) {
+            allAttempts = [...allAttempts, ...attempts];
+            hasMore = attempts.length === pageSize;
+            page++;
+          } else {
+            hasMore = false;
+          }
         }
 
-        if (attempts && attempts.length > 0) {
-          allAttempts = [...allAttempts, ...attempts];
-          hasMore = attempts.length === pageSize;
-          page++;
-        } else {
-          hasMore = false;
-        }
+        // Count attempts per topic and subtopic (unique questions only)
+        allAttempts.forEach((attempt) => {
+          // Supabase returns joined data as an object (single) or array depending on relationship
+          const questionsData = attempt.questions;
+          const topicArea = Array.isArray(questionsData)
+            ? questionsData[0]?.topic_area
+            : (questionsData as { topic_area: string; subtopic?: string } | null)?.topic_area;
+          const subtopic = Array.isArray(questionsData)
+            ? questionsData[0]?.subtopic
+            : (questionsData as { topic_area: string; subtopic?: string } | null)?.subtopic;
+
+          if (topicArea) {
+            if (!attemptedByTopic[topicArea]) {
+              attemptedByTopic[topicArea] = new Set();
+            }
+            attemptedByTopic[topicArea].add(attempt.question_id);
+
+            if (attempt.is_correct) {
+              correctByTopic[topicArea] = (correctByTopic[topicArea] || 0) + 1;
+            }
+
+            // Track subtopic stats
+            if (subtopic) {
+              const subtopicKey = `${topicArea}::${subtopic}`;
+              if (!attemptedBySubtopic[subtopicKey]) {
+                attemptedBySubtopic[subtopicKey] = new Set();
+              }
+              attemptedBySubtopic[subtopicKey].add(attempt.question_id);
+
+              if (attempt.is_correct) {
+                correctBySubtopic[subtopicKey] = (correctBySubtopic[subtopicKey] || 0) + 1;
+              }
+            }
+          }
+        });
+      } catch {
+        // Silently handle if attempts table doesn't exist
+        console.log('Note: User attempts data not available');
       }
-
-      // Count attempts per topic (unique questions only)
-      allAttempts.forEach((attempt) => {
-        // Supabase returns joined data as an object (single) or array depending on relationship
-        const questionsData = attempt.questions;
-        const topicArea = Array.isArray(questionsData)
-          ? questionsData[0]?.topic_area
-          : (questionsData as { topic_area: string } | null)?.topic_area;
-        if (topicArea) {
-          if (!attemptedByTopic[topicArea]) {
-            attemptedByTopic[topicArea] = new Set();
-          }
-          attemptedByTopic[topicArea].add(attempt.question_id);
-
-          if (attempt.is_correct) {
-            correctByTopic[topicArea] = (correctByTopic[topicArea] || 0) + 1;
-          }
-        }
-      });
 
       // Build stats object mapped to curriculum topic IDs
       const stats: QuestionStats = {};
+      const subStats: SubtopicStats = {};
       let totalQs = 0;
       let totalAtt = 0;
       let totalCorr = 0;
@@ -132,7 +192,17 @@ export default function QuestionBank() {
         totalCorr += correct;
       });
 
+      // Build subtopic stats
+      Object.keys(questionCountBySubtopic).forEach((key) => {
+        subStats[key] = {
+          totalQuestions: questionCountBySubtopic[key] || 0,
+          attemptedQuestions: attemptedBySubtopic[key]?.size || 0,
+          correctAnswers: correctBySubtopic[key] || 0,
+        };
+      });
+
       setQuestionStats(stats);
+      setSubtopicStats(subStats);
       setTotalDbQuestions(totalQs);
       setTotalAttempted(totalAtt);
       setTotalCorrect(totalCorr);
@@ -165,6 +235,14 @@ export default function QuestionBank() {
       prev.includes(categoryId)
         ? prev.filter(id => id !== categoryId)
         : [...prev, categoryId]
+    );
+  };
+
+  const handleSubtopicToggle = (subtopicKey: string) => {
+    setSelectedSubtopics(prev =>
+      prev.includes(subtopicKey)
+        ? prev.filter(id => id !== subtopicKey)
+        : [...prev, subtopicKey]
     );
   };
 
@@ -222,9 +300,6 @@ export default function QuestionBank() {
                   </svg>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link href="/profile" className="block px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
-                    Profile
-                  </Link>
                   <Link href="/settings" className="block px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
                     Settings
                   </Link>
@@ -252,10 +327,7 @@ export default function QuestionBank() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">CFA Level 1 Question Bank</h1>
-          <p className="text-gray-600">
-            Practice questions across all 10 CFA Level 1 topic areas. Question distribution follows official exam weightings: 180 total questions with 90 per session.
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900">CFA Level 1 Question Bank</h1>
         </div>
 
         {/* Filter Controls */}
@@ -278,13 +350,45 @@ export default function QuestionBank() {
               Select All Topics
             </label>
           </div>
+          <Link
+            href="/practice/mock-exam"
+            className="bg-[#1FB8CD] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#1aa3b5] flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Generate Mock Exam
+          </Link>
           {selectedCategories.length > 0 && (
-            <Link
-              href={`/practice?categories=${selectedCategories.join(',')}`}
-              className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
-            >
-              Practice Selected ({selectedCategories.length})
-            </Link>
+            <div className="flex items-center gap-3">
+              <select
+                value={questionFilter}
+                onChange={(e) => setQuestionFilter(e.target.value as "all" | "wrong" | "correct" | "unanswered")}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:ring-gray-900 focus:border-gray-900"
+              >
+                <option value="all">All Questions</option>
+                <option value="wrong">Wrong Only</option>
+                <option value="correct">Correct Only</option>
+                <option value="unanswered">Unanswered Only</option>
+              </select>
+              <select
+                value={questionLimit}
+                onChange={(e) => setQuestionLimit(e.target.value === "all" ? "all" : Number(e.target.value))}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 focus:ring-gray-900 focus:border-gray-900"
+              >
+                <option value="10">10 Questions</option>
+                <option value="20">20 Questions</option>
+                <option value="50">50 Questions</option>
+                <option value="100">100 Questions</option>
+                <option value="all">All Questions</option>
+              </select>
+              <Link
+                href={`/practice/session?categories=${selectedCategories.join(',')}&limit=${questionLimit}&filter=${questionFilter}`}
+                className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
+              >
+                Practice Selected ({selectedCategories.length} {selectedCategories.length === 1 ? 'topic' : 'topics'})
+              </Link>
+            </div>
           )}
         </div>
 
@@ -356,47 +460,117 @@ export default function QuestionBank() {
                     </div>
                   </div>
 
-                  {/* Topic Action Button */}
-                  <div className="mt-4">
+                  {/* Topic Action Buttons */}
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
                     <Link
-                      href={`/practice/${topic.id}`}
+                      href={`/practice/session?categories=${topic.id}&limit=all&filter=all`}
                       className="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800"
                     >
-                      Practice Topic
+                      Practice All
                     </Link>
+                    {stats.attemptedQuestions > 0 && stats.attemptedQuestions - stats.correctAnswers > 0 && (
+                      <Link
+                        href={`/practice/session?categories=${topic.id}&limit=all&filter=wrong`}
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-700"
+                      >
+                        Wrong ({stats.attemptedQuestions - stats.correctAnswers})
+                      </Link>
+                    )}
+                    {questionCount - stats.attemptedQuestions > 0 && (
+                      <Link
+                        href={`/practice/session?categories=${topic.id}&limit=all&filter=unanswered`}
+                        className="bg-gray-500 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-600"
+                      >
+                        Unanswered ({questionCount - stats.attemptedQuestions})
+                      </Link>
+                    )}
                   </div>
                 </div>
 
                 {/* Subtopics (Expandable) */}
                 {isExpanded && (
                   <div className="border-t border-gray-200 bg-gray-50 p-6">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-4">
-                      Subtopics ({topic.subtopics.length})
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {topic.subtopics.map((subtopic) => (
-                        <div
-                          key={subtopic.id}
-                          className="bg-white rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-all"
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-sm font-semibold text-gray-900">
+                        Subtopics ({topic.subtopics.length})
+                      </h4>
+                      {selectedSubtopics.filter(s => s.startsWith(topicIdToDbName[topic.id] + '::')).length > 0 && (
+                        <Link
+                          href={`/practice/session?categories=${topic.id}&subtopics=${selectedSubtopics.filter(s => s.startsWith(topicIdToDbName[topic.id] + '::')).map(s => encodeURIComponent(s.split('::')[1])).join(',')}&limit=all&filter=${questionFilter}`}
+                          className="bg-gray-900 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-gray-800"
                         >
-                          <div className="flex items-start justify-between mb-2">
-                            <h5 className="text-sm font-medium text-gray-900 flex-1">
-                              {subtopic.name}
-                            </h5>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-600">
-                              {subtopic.learningOutcomes} LOs
-                            </span>
-                            <Link
-                              href={`/practice/${topic.id}/${subtopic.id}`}
-                              className="text-xs text-gray-900 font-medium hover:underline"
-                            >
-                              Practice →
-                            </Link>
-                          </div>
-                        </div>
-                      ))}
+                          Practice Selected ({selectedSubtopics.filter(s => s.startsWith(topicIdToDbName[topic.id] + '::')).length})
+                        </Link>
+                      )}
+                    </div>
+
+                    {/* Subtopics Table */}
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                      <table className="w-full text-sm">
+                        <thead className="bg-gray-100">
+                          <tr>
+                            <th className="px-4 py-2 text-left font-medium text-gray-700 w-8"></th>
+                            <th className="px-4 py-2 text-left font-medium text-gray-700">Subtopic</th>
+                            <th className="px-3 py-2 text-center font-medium text-gray-700 w-20">Total</th>
+                            <th className="px-3 py-2 text-center font-medium text-gray-700 w-24">Attempted</th>
+                            <th className="px-3 py-2 text-center font-medium text-green-700 w-20">Correct</th>
+                            <th className="px-3 py-2 text-center font-medium text-red-700 w-20">Wrong</th>
+                            <th className="px-3 py-2 text-center font-medium text-gray-500 w-24">Unanswered</th>
+                            <th className="px-4 py-2 text-right font-medium text-gray-700 w-24">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {topic.subtopics.map((subtopic) => {
+                            const subtopicKey = `${topicIdToDbName[topic.id]}::${subtopic.name}`;
+                            const subStats = subtopicStats[subtopicKey] || { totalQuestions: 0, attemptedQuestions: 0, correctAnswers: 0 };
+                            const wrongCount = subStats.attemptedQuestions - subStats.correctAnswers;
+                            const unansweredCount = subStats.totalQuestions - subStats.attemptedQuestions;
+                            const isSelected = selectedSubtopics.includes(subtopicKey);
+
+                            return (
+                              <tr key={subtopic.id} className={`hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}`}>
+                                <td className="px-4 py-3">
+                                  <input
+                                    type="checkbox"
+                                    checked={isSelected}
+                                    onChange={() => handleSubtopicToggle(subtopicKey)}
+                                    className="h-4 w-4 text-gray-900 focus:ring-gray-900 border-gray-300 rounded"
+                                  />
+                                </td>
+                                <td className="px-4 py-3">
+                                  <span className="font-medium text-gray-900">{subtopic.name}</span>
+                                  <span className="ml-2 text-xs text-gray-500">({subtopic.learningOutcomes} LOs)</span>
+                                </td>
+                                <td className="px-3 py-3 text-center text-gray-900">{subStats.totalQuestions}</td>
+                                <td className="px-3 py-3 text-center text-gray-600">{subStats.attemptedQuestions}</td>
+                                <td className="px-3 py-3 text-center text-green-600 font-medium">{subStats.correctAnswers}</td>
+                                <td className="px-3 py-3 text-center text-red-600 font-medium">{wrongCount}</td>
+                                <td className="px-3 py-3 text-center text-gray-500">{unansweredCount}</td>
+                                <td className="px-4 py-3 text-right">
+                                  <div className="flex items-center justify-end gap-1">
+                                    {subStats.totalQuestions > 0 && (
+                                      <Link
+                                        href={`/practice/session?categories=${topic.id}&subtopics=${encodeURIComponent(subtopic.name)}&limit=all&filter=all`}
+                                        className="text-xs text-gray-600 hover:text-gray-900 px-2 py-1 rounded hover:bg-gray-100"
+                                      >
+                                        All
+                                      </Link>
+                                    )}
+                                    {wrongCount > 0 && (
+                                      <Link
+                                        href={`/practice/session?categories=${topic.id}&subtopics=${encodeURIComponent(subtopic.name)}&limit=all&filter=wrong`}
+                                        className="text-xs text-red-600 hover:text-red-700 px-2 py-1 rounded hover:bg-red-50"
+                                      >
+                                        Wrong
+                                      </Link>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 )}

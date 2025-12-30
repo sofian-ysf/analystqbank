@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,11 +8,237 @@ import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
 
+// Mapping from curriculum topic ID to database topic_area name
+const topicIdToDbName: { [key: string]: string } = {
+  "ethical-professional-standards": "Ethical and Professional Standards",
+  "quantitative-methods": "Quantitative Methods",
+  "economics": "Economics",
+  "financial-statement-analysis": "Financial Statement Analysis",
+  "corporate-issuers": "Corporate Issuers",
+  "equity-investments": "Equity Investments",
+  "fixed-income": "Fixed Income",
+  "derivatives": "Derivatives",
+  "alternative-investments": "Alternative Investments",
+  "portfolio-management": "Portfolio Management",
+};
+
+interface TopicStats {
+  [topicId: string]: {
+    totalQuestions: number;
+    attemptedQuestions: number;
+    correctAnswers: number;
+  };
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [totalAttempted, setTotalAttempted] = useState(0);
+  const [totalCorrect, setTotalCorrect] = useState(0);
+  const [studyHours, setStudyHours] = useState(0);
+  const [dayStreak, setDayStreak] = useState(0);
+  const [topicStats, setTopicStats] = useState<TopicStats>({});
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [examDate, setExamDate] = useState<string | null>(null);
   const supabase = createClient();
+
+  const fetchUserStats = useCallback(async (userId: string) => {
+    try {
+      // Fetch total question counts per topic
+      const questionCountByTopic: { [key: string]: number } = {};
+      let totalQs = 0;
+
+      const countPromises = Object.values(topicIdToDbName).map(async (topicName) => {
+        const { count, error } = await supabase
+          .from('questions')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_active', true)
+          .eq('topic_area', topicName);
+
+        if (!error && count !== null) {
+          questionCountByTopic[topicName] = count;
+          totalQs += count;
+        }
+      });
+
+      await Promise.all(countPromises);
+      setTotalQuestions(totalQs);
+
+      // Fetch user's attempted questions
+      const attemptedByTopic: { [key: string]: Set<string> } = {};
+      const correctByTopic: { [key: string]: number } = {};
+      let allAttemptedCount = 0;
+      let allCorrectCount = 0;
+
+      try {
+        let allAttempts: { question_id: string; is_correct: boolean; topic_area: string }[] = [];
+        let page = 0;
+        const pageSize = 1000;
+        let hasMore = true;
+
+        while (hasMore) {
+          const { data: attempts, error: attemptsError } = await supabase
+            .from('user_question_attempts')
+            .select('question_id, is_correct, topic_area')
+            .eq('user_id', userId)
+            .range(page * pageSize, (page + 1) * pageSize - 1);
+
+          if (attemptsError) {
+            console.log('Note: Could not fetch user attempts');
+            break;
+          }
+
+          if (attempts && attempts.length > 0) {
+            allAttempts = [...allAttempts, ...attempts];
+            hasMore = attempts.length === pageSize;
+            page++;
+          } else {
+            hasMore = false;
+          }
+        }
+
+        // Count unique questions attempted per topic
+        const uniqueQuestions = new Set<string>();
+        allAttempts.forEach((attempt) => {
+          const topicArea = attempt.topic_area;
+          if (topicArea) {
+            if (!attemptedByTopic[topicArea]) {
+              attemptedByTopic[topicArea] = new Set();
+            }
+            attemptedByTopic[topicArea].add(attempt.question_id);
+            uniqueQuestions.add(attempt.question_id);
+
+            if (attempt.is_correct) {
+              correctByTopic[topicArea] = (correctByTopic[topicArea] || 0) + 1;
+              allCorrectCount++;
+            }
+          }
+        });
+
+        allAttemptedCount = uniqueQuestions.size;
+      } catch {
+        console.log('Note: User attempts data not available');
+      }
+
+      setTotalAttempted(allAttemptedCount);
+      setTotalCorrect(allCorrectCount);
+
+      // Build topic stats
+      const stats: TopicStats = {};
+      Object.entries(topicIdToDbName).forEach(([topicId, dbName]) => {
+        stats[topicId] = {
+          totalQuestions: questionCountByTopic[dbName] || 0,
+          attemptedQuestions: attemptedByTopic[dbName]?.size || 0,
+          correctAnswers: correctByTopic[dbName] || 0,
+        };
+      });
+      setTopicStats(stats);
+
+      // Fetch study hours from practice sessions
+      try {
+        const { data: sessions } = await supabase
+          .from('practice_sessions')
+          .select('created_at, completed_at')
+          .eq('user_id', userId);
+
+        // Also fetch mock exam times
+        const { data: mockExams } = await supabase
+          .from('mock_exams')
+          .select('time_taken_seconds')
+          .eq('user_id', userId);
+
+        let totalSeconds = 0;
+
+        // Estimate time from sessions (roughly 1 minute per question attempted)
+        if (sessions) {
+          sessions.forEach(session => {
+            // Rough estimate: count each session
+            totalSeconds += 30 * 60; // Assume 30 mins per session as fallback
+          });
+        }
+
+        // Add mock exam times
+        if (mockExams) {
+          mockExams.forEach(exam => {
+            if (exam.time_taken_seconds) {
+              totalSeconds += exam.time_taken_seconds;
+            }
+          });
+        }
+
+        setStudyHours(Math.round(totalSeconds / 3600));
+      } catch {
+        console.log('Note: Could not fetch study time data');
+      }
+
+      // Calculate day streak
+      try {
+        const { data: recentAttempts } = await supabase
+          .from('user_question_attempts')
+          .select('attempted_at')
+          .eq('user_id', userId)
+          .order('attempted_at', { ascending: false })
+          .limit(1000);
+
+        if (recentAttempts && recentAttempts.length > 0) {
+          // Get unique dates
+          const uniqueDates = new Set<string>();
+          recentAttempts.forEach(attempt => {
+            if (attempt.attempted_at) {
+              const date = new Date(attempt.attempted_at).toISOString().split('T')[0];
+              uniqueDates.add(date);
+            }
+          });
+
+          // Sort dates descending
+          const sortedDates = Array.from(uniqueDates).sort().reverse();
+
+          // Count consecutive days from today
+          let streak = 0;
+          const today = new Date().toISOString().split('T')[0];
+          const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+          // Check if the most recent activity is today or yesterday
+          if (sortedDates[0] === today || sortedDates[0] === yesterday) {
+            let checkDate = sortedDates[0] === today ? new Date() : new Date(Date.now() - 86400000);
+
+            for (const dateStr of sortedDates) {
+              const expectedDate = checkDate.toISOString().split('T')[0];
+              if (dateStr === expectedDate) {
+                streak++;
+                checkDate = new Date(checkDate.getTime() - 86400000);
+              } else if (dateStr < expectedDate) {
+                break;
+              }
+            }
+          }
+
+          setDayStreak(streak);
+        }
+      } catch {
+        console.log('Note: Could not calculate day streak');
+      }
+
+      // Fetch exam date from user profile
+      try {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('exam_date')
+          .eq('id', userId)
+          .single();
+
+        if (profile?.exam_date) {
+          setExamDate(profile.exam_date);
+        }
+      } catch {
+        console.log('Note: Could not fetch exam date');
+      }
+
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
+    }
+  }, [supabase]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -22,16 +248,44 @@ export default function Dashboard() {
         router.push("/login");
       } else {
         setUser(user);
+        await fetchUserStats(user.id);
         setLoading(false);
       }
     };
 
     checkUser();
-  }, [router, supabase]);
+  }, [router, supabase, fetchUserStats]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/");
+  };
+
+  const getAccuracyRate = () => {
+    if (totalAttempted === 0) return 0;
+    return Math.round((totalCorrect / totalAttempted) * 100);
+  };
+
+  const getDaysUntilExam = () => {
+    if (!examDate) return null;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const exam = new Date(examDate);
+    const diffTime = exam.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const getTopicProgress = (topicId: string) => {
+    const stats = topicStats[topicId];
+    if (!stats || stats.totalQuestions === 0) return 0;
+    return Math.round((stats.attemptedQuestions / stats.totalQuestions) * 100);
+  };
+
+  const getTopicAccuracy = (topicId: string) => {
+    const stats = topicStats[topicId];
+    if (!stats || stats.attemptedQuestions === 0) return null;
+    return Math.round((stats.correctAnswers / stats.attemptedQuestions) * 100);
   };
 
   if (loading) {
@@ -76,9 +330,6 @@ export default function Dashboard() {
                   </svg>
                 </button>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link href="/profile" className="block px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
-                    Profile
-                  </Link>
                   <Link href="/settings" className="block px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
                     Settings
                   </Link>
@@ -111,15 +362,37 @@ export default function Dashboard() {
                 Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
               </h1>
               <p className="text-gray-200">
-                Continue your journey to exam success. You&apos;re making great progress!
+                {totalAttempted > 0
+                  ? `You've practiced ${totalAttempted} questions with ${getAccuracyRate()}% accuracy. Keep it up!`
+                  : "Start your journey to exam success. Let's begin practicing!"}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-gray-200 text-sm">Next Exam Date</p>
-              <p className="text-white font-bold text-lg">Not Set</p>
-              <Link href="/settings" className="text-gray-300 hover:text-white text-sm underline">
-                Set exam date
-              </Link>
+            <div className="text-right hidden sm:block">
+              {(() => {
+                const daysUntilExam = getDaysUntilExam();
+                if (daysUntilExam !== null) {
+                  return (
+                    <>
+                      <p className="text-gray-200 text-sm">Days Until Exam</p>
+                      <p className={`font-bold text-3xl ${daysUntilExam <= 30 ? 'text-yellow-300' : 'text-white'}`}>
+                        {daysUntilExam > 0 ? daysUntilExam : daysUntilExam === 0 ? 'Today!' : 'Passed'}
+                      </p>
+                      <Link href="/settings" className="text-gray-300 text-xs hover:text-white underline">
+                        {daysUntilExam > 0 ? 'CFA Level 1' : 'Update exam date'}
+                      </Link>
+                    </>
+                  );
+                }
+                return (
+                  <>
+                    <p className="text-gray-200 text-sm">Exam Date</p>
+                    <p className="text-white font-bold text-lg">Not Set</p>
+                    <Link href="/settings" className="text-gray-300 text-xs hover:text-white underline">
+                      Set exam date
+                    </Link>
+                  </>
+                );
+              })()}
             </div>
           </div>
           <div className="flex gap-4">
@@ -128,6 +401,12 @@ export default function Dashboard() {
               className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
             >
               Start Practicing
+            </Link>
+            <Link
+              href="/practice/mock-exam"
+              className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
+            >
+              Take Mock Exam
             </Link>
           </div>
         </div>
@@ -145,7 +424,7 @@ export default function Dashboard() {
                 </svg>
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">0</p>
+            <p className="text-3xl font-bold text-gray-900">{totalAttempted.toLocaleString()}</p>
             <p className="text-sm text-gray-600 mt-1">Questions Practiced</p>
           </div>
 
@@ -157,8 +436,11 @@ export default function Dashboard() {
                 </svg>
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">0%</p>
+            <p className="text-3xl font-bold text-gray-900">{getAccuracyRate()}%</p>
             <p className="text-sm text-gray-600 mt-1">Accuracy Rate</p>
+            {totalAttempted > 0 && (
+              <p className="text-xs text-gray-500 mt-1">{totalCorrect} correct answers</p>
+            )}
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
@@ -169,7 +451,7 @@ export default function Dashboard() {
                 </svg>
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">0</p>
+            <p className="text-3xl font-bold text-gray-900">{studyHours}</p>
             <p className="text-sm text-gray-600 mt-1">Study Hours</p>
           </div>
 
@@ -181,161 +463,68 @@ export default function Dashboard() {
                 </svg>
               </div>
             </div>
-            <p className="text-3xl font-bold text-gray-900">0</p>
+            <p className="text-3xl font-bold text-gray-900">{dayStreak}</p>
             <p className="text-sm text-gray-600 mt-1">Day Streak</p>
+            {dayStreak > 0 && (
+              <p className="text-xs text-gray-500 mt-1">Keep it going!</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Recent Activity */}
+      {/* Performance by Topic */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Study Plan */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Recommended Study Plan</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center">
-                  <div className="bg-blue-100 p-2 rounded">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="font-medium text-gray-900">Complete Initial Assessment</p>
-                    <p className="text-sm text-gray-600">Test your current knowledge level</p>
-                  </div>
-                </div>
-                <Link href="/assessment" className="text-gray-900 hover:text-gray-700">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center">
-                  <div className="bg-green-100 p-2 rounded">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="font-medium text-gray-900">Review Study Materials</p>
-                    <p className="text-sm text-gray-600">Access comprehensive guides</p>
-                  </div>
-                </div>
-                <Link href="/study-materials" className="text-gray-900 hover:text-gray-700">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center">
-                  <div className="bg-purple-100 p-2 rounded">
-                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="font-medium text-gray-900">Practice Daily Questions</p>
-                    <p className="text-sm text-gray-600">Build consistency and knowledge</p>
-                  </div>
-                </div>
-                <Link href="/question-bank" className="text-gray-900 hover:text-gray-700">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-            </div>
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-gray-900">Performance by Topic</h3>
+            <Link href="/question-bank" className="text-sm text-[#1FB8CD] hover:text-[#1A6872] font-medium">
+              Practice Now →
+            </Link>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {cfaLevel1Curriculum.map((topic) => {
+              const progress = getTopicProgress(topic.id);
+              const accuracy = getTopicAccuracy(topic.id);
+              const stats = topicStats[topic.id];
 
-          {/* Performance Overview */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Performance by Topic</h3>
-              <Link href="/question-bank" className="text-sm text-gray-600 hover:text-gray-900">
-                View All →
-              </Link>
-            </div>
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {cfaLevel1Curriculum.map((topic) => (
-                <div key={topic.id}>
-                  <div className="flex justify-between text-sm mb-1">
+              return (
+                <div key={topic.id} className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
-                      <span className="mr-2">{topic.icon}</span>
-                      <span className="text-gray-900 font-medium">{topic.name}</span>
+                      <div className={`w-8 h-8 ${topic.color} rounded flex items-center justify-center text-white text-sm mr-3`}>
+                        {topic.icon}
+                      </div>
+                      <div>
+                        <span className="text-gray-900 font-medium text-sm">{topic.name}</span>
+                        <p className="text-xs text-gray-500">{topic.examWeight}</p>
+                      </div>
                     </div>
-                    <span className="text-gray-600 text-xs">Not Started</span>
+                    <div className="text-right">
+                      {accuracy !== null ? (
+                        <span className={`text-sm font-bold ${accuracy >= 70 ? 'text-green-600' : accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                          {accuracy}%
+                        </span>
+                      ) : (
+                        <span className="text-xs text-gray-400">Not started</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
                     <div
                       className={`h-2 rounded-full ${topic.color}`}
-                      style={{ width: '0%' }}
+                      style={{ width: `${progress}%` }}
                     ></div>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>{topic.subtopics.length} subtopics</span>
-                    <span>{topic.examWeight}</span>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{stats?.attemptedQuestions || 0} / {stats?.totalQuestions || 0} questions</span>
+                    {stats?.attemptedQuestions > 0 && (
+                      <span>{stats.correctAnswers} correct</span>
+                    )}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
-            href="/practice/timed"
-            className="bg-white p-6 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-gray-900 group-hover:text-gray-700">Timed Practice</h4>
-                <p className="text-sm text-gray-600 mt-1">Practice with exam-like time pressure</p>
-              </div>
-              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-
-          <Link
-            href="/review/incorrect"
-            className="bg-white p-6 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-gray-900 group-hover:text-gray-700">Review Mistakes</h4>
-                <p className="text-sm text-gray-600 mt-1">Learn from your incorrect answers</p>
-              </div>
-              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-
-          <Link
-            href="/formula-sheet"
-            className="bg-white p-6 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-semibold text-gray-900 group-hover:text-gray-700">Formula Sheet</h4>
-                <p className="text-sm text-gray-600 mt-1">Quick reference for key formulas</p>
-              </div>
-              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
         </div>
       </div>
     </div>
