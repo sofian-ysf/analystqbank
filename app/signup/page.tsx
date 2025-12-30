@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import { PLAN_LIMITS, PlanType } from "@/lib/stripe";
 
-export default function SignUp() {
+function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get('plan') as PlanType | null;
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +19,12 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
+
+  // Get plan details
+  const selectedPlan = planParam && ['trial', 'basic', 'premium'].includes(planParam)
+    ? planParam
+    : 'trial';
+  const planDetails = PLAN_LIMITS[selectedPlan];
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +48,8 @@ export default function SignUp() {
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
-          full_name: fullName || email.split('@')[0]
+          full_name: fullName || email.split('@')[0],
+          selected_plan: selectedPlan,
         }
       },
     });
@@ -50,6 +61,22 @@ export default function SignUp() {
     }
 
     if (data?.user) {
+      // Set trial end time (24 hours from now)
+      const trialEndsAt = new Date();
+      trialEndsAt.setHours(trialEndsAt.getHours() + 24);
+
+      // Update user profile with trial info
+      await supabase
+        .from('user_profiles')
+        .upsert({
+          id: data.user.id,
+          email: email,
+          full_name: fullName || email.split('@')[0],
+          subscription_plan: 'trial',
+          subscription_status: 'trialing',
+          trial_ends_at: trialEndsAt.toISOString(),
+        });
+
       // Send Discord notification
       try {
         await fetch('/api/notify-discord', {
@@ -60,14 +87,19 @@ export default function SignUp() {
           body: JSON.stringify({
             email: email,
             type: 'new_user',
+            plan: selectedPlan,
           }),
         });
       } catch (notificationError) {
         console.error('Failed to send Discord notification:', notificationError);
-        // Don't block the signup process if notification fails
       }
 
-      router.push("/login?message=Check your email to confirm your account");
+      // If paid plan selected, redirect to checkout after email verification
+      if (selectedPlan === 'basic' || selectedPlan === 'premium') {
+        router.push(`/login?message=Check your email to confirm your account. After confirmation, you'll be redirected to complete your ${planDetails.name} subscription.&plan=${selectedPlan}`);
+      } else {
+        router.push("/login?message=Check your email to confirm your account");
+      }
     }
 
     setLoading(false);
@@ -80,7 +112,7 @@ export default function SignUp() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?plan=${selectedPlan}`,
       },
     });
 
@@ -105,6 +137,39 @@ export default function SignUp() {
             Start your journey to exam success
           </p>
         </div>
+
+        {/* Selected Plan Banner */}
+        {selectedPlan && (
+          <div className="mb-6 bg-[#1FB8CD]/10 border border-[#1FB8CD]/20 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-[#13343B]">Selected Plan</p>
+                <p className="text-lg font-bold text-[#1FB8CD]">{planDetails.name}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-[#13343B]">
+                  {planDetails.price === 0 ? 'Free' : `£${planDetails.price}`}
+                </p>
+                {planDetails.price > 0 && (
+                  <p className="text-sm text-[#5f6368]">/month</p>
+                )}
+              </div>
+            </div>
+            {selectedPlan === 'trial' && (
+              <p className="mt-2 text-xs text-[#5f6368]">
+                24-hour free trial. No credit card required.
+              </p>
+            )}
+            {selectedPlan !== 'trial' && (
+              <p className="mt-2 text-xs text-[#5f6368]">
+                You&apos;ll be redirected to payment after email confirmation.
+              </p>
+            )}
+            <Link href="/#pricing" className="text-xs text-[#1FB8CD] hover:underline mt-1 inline-block">
+              Change plan
+            </Link>
+          </div>
+        )}
 
         {/* Sign Up Form */}
         <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10">
@@ -220,7 +285,7 @@ export default function SignUp() {
               disabled={loading}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#1FB8CD] hover:bg-[#1A6872] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1FB8CD] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? "Creating account..." : "Sign up"}
+              {loading ? "Creating account..." : selectedPlan === 'trial' ? "Start Free Trial" : "Sign up & Continue to Payment"}
             </button>
           </form>
 
@@ -261,5 +326,17 @@ export default function SignUp() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignUp() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1FB8CD]"></div>
+      </div>
+    }>
+      <SignUpForm />
+    </Suspense>
   );
 }

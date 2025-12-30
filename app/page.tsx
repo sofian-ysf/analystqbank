@@ -409,52 +409,62 @@ export default function Home() {
                 Choose Your Study Plan
               </h2>
               <p className="text-[#5f6368] text-center mb-12">
-                Start with a free trial. Upgrade only if it helps you pass.
+                Start with a free trial. No credit card required.
               </p>
 
-              <div className="grid gap-6 lg:grid-cols-4">
-                {/* Trial */}
+              <div className="grid gap-6 lg:grid-cols-3 max-w-4xl mx-auto">
+                {/* Free Trial */}
                 <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Trial</h3>
+                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Free Trial</h3>
                   <div className="mb-6">
                     <span className="text-3xl font-semibold text-[#13343B]">Free</span>
+                    <span className="text-[#9aa0a6] text-sm ml-2">24 hours</span>
                   </div>
                   <ul className="space-y-3 mb-8 text-sm">
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      50 practice questions
+                      100 practice questions
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      1 mini mock exam
+                      1 mock exam
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      7-day access
+                      Basic analytics
+                    </li>
+                    <li className="flex items-start gap-2 text-[#5f6368]">
+                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      24-hour access
                     </li>
                   </ul>
                   <Link
-                    href="/signup"
+                    href="/signup?plan=trial"
                     data-event="click_cta"
                     data-cta="pricing_plan_select"
                     data-plan="trial"
-                    className="block w-full text-center bg-[#1FB8CD] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#1A6872] transition-all"
+                    className="block w-full text-center border border-[#EAEEEF] text-[#13343B] px-6 py-2.5 rounded-lg font-medium hover:bg-[#F3F3EE] transition-all"
                   >
                     Start Free Trial
                   </Link>
                 </div>
 
-                {/* Basic */}
-                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
+                {/* Basic - Most Popular */}
+                <div className="relative bg-white border-2 border-[#1FB8CD] rounded-lg p-6">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1FB8CD] text-white text-xs font-medium px-3 py-1 rounded">
+                    Most Popular
+                  </div>
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Basic</h3>
                   <div className="mb-6">
-                    <span className="text-3xl font-semibold text-[#13343B]">£299</span>
+                    <span className="text-3xl font-semibold text-[#13343B]">£30</span>
                     <span className="text-[#9aa0a6]">/month</span>
                   </div>
                   <ul className="space-y-3 mb-8 text-sm">
@@ -462,19 +472,19 @@ export default function Home() {
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      500 practice questions
+                      2,000 practice questions
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Basic tracking
+                      5 mock exams per month
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      2 mock exams
+                      Performance analytics
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -483,27 +493,36 @@ export default function Home() {
                       Email support
                     </li>
                   </ul>
-                  <button className="w-full border border-[#EAEEEF] text-[#13343B] px-6 py-2.5 rounded-lg font-medium hover:bg-[#F3F3EE] transition-all">
+                  <Link
+                    href="/signup?plan=basic"
+                    data-event="click_cta"
+                    data-cta="pricing_plan_select"
+                    data-plan="basic"
+                    className="block w-full text-center bg-[#1FB8CD] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#1A6872] transition-all"
+                  >
                     Get Started
-                  </button>
+                  </Link>
                 </div>
 
-                {/* Standard - Most Popular */}
-                <div className="relative bg-white border-2 border-[#1FB8CD] rounded-lg p-6">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1FB8CD] text-white text-xs font-medium px-3 py-1 rounded">
-                    Most Popular
-                  </div>
-                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Standard</h3>
+                {/* Premium */}
+                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
+                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Premium</h3>
                   <div className="mb-6">
-                    <span className="text-3xl font-semibold text-[#13343B]">£599</span>
-                    <span className="text-[#9aa0a6]">/3 months</span>
+                    <span className="text-3xl font-semibold text-[#13343B]">£50</span>
+                    <span className="text-[#9aa0a6]">/month</span>
                   </div>
                   <ul className="space-y-3 mb-8 text-sm">
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Full question bank
+                      Full question bank access
+                    </li>
+                    <li className="flex items-start gap-2 text-[#5f6368]">
+                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Unlimited mock exams
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -515,62 +534,24 @@ export default function Home() {
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      All mock exams
+                      Direct CFA analyst support
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Study guides included
-                    </li>
-                    <li className="flex items-start gap-2 text-[#5f6368]">
-                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Priority support
+                      Priority email support
                     </li>
                   </ul>
-                  <button className="w-full bg-[#1FB8CD] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#1A6872] transition-all">
+                  <Link
+                    href="/signup?plan=premium"
+                    data-event="click_cta"
+                    data-cta="pricing_plan_select"
+                    data-plan="premium"
+                    className="block w-full text-center border border-[#EAEEEF] text-[#13343B] px-6 py-2.5 rounded-lg font-medium hover:bg-[#F3F3EE] transition-all"
+                  >
                     Get Started
-                  </button>
-                </div>
-
-                {/* Premium */}
-                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
-                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Premium</h3>
-                  <div className="mb-6">
-                    <span className="text-3xl font-semibold text-[#13343B]">£999</span>
-                    <span className="text-[#9aa0a6]">/lifetime</span>
-                  </div>
-                  <ul className="space-y-3 mb-8 text-sm">
-                    <li className="flex items-start gap-2 text-[#5f6368]">
-                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Everything in Standard
-                    </li>
-                    <li className="flex items-start gap-2 text-[#5f6368]">
-                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Personalized study plan
-                    </li>
-                    <li className="flex items-start gap-2 text-[#5f6368]">
-                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      Lifetime access
-                    </li>
-                    <li className="flex items-start gap-2 text-[#5f6368]">
-                      <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      1:1 review sessions
-                    </li>
-                  </ul>
-                  <button className="w-full border border-[#EAEEEF] text-[#13343B] px-6 py-2.5 rounded-lg font-medium hover:bg-[#F3F3EE] transition-all">
-                    Get Started
-                  </button>
+                  </Link>
                 </div>
               </div>
 
@@ -580,9 +561,9 @@ export default function Home() {
                   <span className="text-[#1FB8CD] font-medium">Pass Guarantee:</span> Complete 80%+ of questions and all mocks. If you don&apos;t pass, get extended access or a full refund.
                 </p>
                 <div className="flex justify-center gap-6 mt-4">
-                  <span className="text-[#9aa0a6] text-xs">Secure Payment</span>
+                  <span className="text-[#9aa0a6] text-xs">Secure Payment via Stripe</span>
                   <span className="text-[#9aa0a6] text-xs">All Cards Accepted</span>
-                  <span className="text-[#9aa0a6] text-xs">30-Day Money Back</span>
+                  <span className="text-[#9aa0a6] text-xs">Cancel Anytime</span>
                 </div>
               </div>
             </div>
