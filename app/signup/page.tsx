@@ -100,8 +100,38 @@ function SignUpForm() {
 
       // Redirect immediately based on plan
       if (selectedPlan === 'basic' || selectedPlan === 'premium') {
-        // Redirect to Stripe checkout
-        router.push(`/api/stripe/create-checkout?plan=${selectedPlan}`);
+        // Create Stripe checkout session directly
+        try {
+          const checkoutResponse = await fetch('/api/stripe/create-checkout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              plan: selectedPlan,
+              userId: data.user.id,
+              email: email,
+            }),
+          });
+
+          const checkoutData = await checkoutResponse.json();
+
+          if (checkoutData.url) {
+            // Redirect to Stripe checkout
+            window.location.href = checkoutData.url;
+            return;
+          } else {
+            console.error('No checkout URL returned:', checkoutData);
+            setError('Failed to create checkout. Please try again.');
+            setLoading(false);
+            return;
+          }
+        } catch (checkoutError) {
+          console.error('Checkout error:', checkoutError);
+          setError('Failed to create checkout. Please try again.');
+          setLoading(false);
+          return;
+        }
       } else {
         // Free trial - go to dashboard
         router.push("/dashboard");
