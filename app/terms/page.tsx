@@ -23,8 +23,8 @@ export default function Terms() {
               <Link href="/#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Pricing
               </Link>
-              <Link href="/#proof" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Testimonials
+              <Link href="/blog" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Blog
               </Link>
               <Link href="/#faq" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 FAQ

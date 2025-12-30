@@ -56,17 +56,17 @@ export default function Contact() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/features" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+              <Link href="/#product" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Features
               </Link>
-              <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+              <Link href="/#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Pricing
               </Link>
-              <Link href="/about" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                About
+              <Link href="/blog" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                Blog
               </Link>
-              <Link href="/contact" className="text-[#13343B] font-medium transition-colors">
-                Contact
+              <Link href="/#faq" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                FAQ
               </Link>
             </div>
 
@@ -245,8 +245,8 @@ export default function Contact() {
             <div>
               <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                <li><Link href="/features" className="hover:text-[#13343B] transition-colors">Features</Link></li>
-                <li><Link href="/pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
+                <li><Link href="/#product" className="hover:text-[#13343B] transition-colors">Features</Link></li>
+                <li><Link href="/#pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
               </ul>
             </div>
 

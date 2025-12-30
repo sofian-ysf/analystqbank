@@ -6,19 +6,14 @@ export default function Home() {
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "AnalystTrainer Finance Certification Exam Prep",
-    "description": "Online platform with CFA and FRM exam-style question banks, mock exams, and performance analytics.",
+    "name": "AnalystTrainer CFA Level 1 Exam Prep",
+    "description": "Online platform with CFA Level 1 exam-style question banks, mock exams, and performance analytics.",
     "brand": {
       "@type": "Brand",
       "name": "AnalystTrainer"
     },
     "url": "https://www.analysttrainer.com/",
     "image": "https://www.analysttrainer.com/og-image.jpg",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "250"
-    },
     "offers": {
       "@type": "AggregateOffer",
       "priceCurrency": "GBP",
@@ -57,10 +52,10 @@ export default function Home() {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "How similar are your questions to the real CFA and FRM exams?",
+        "name": "How similar are your questions to the real CFA Level 1 exam?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Our question bank is written to mirror real CFA and FRM exam blueprints, difficulty levels, and wording. Each item includes step-by-step explanations and formula references."
+          "text": "Our question bank is written to mirror the real CFA Level 1 exam blueprint, difficulty levels, and wording. Each item includes step-by-step explanations and formula references."
         }
       },
       {
@@ -73,10 +68,10 @@ export default function Home() {
       },
       {
         "@type": "Question",
-        "name": "Which finance certifications do you cover?",
+        "name": "What does AnalystTrainer cover?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "We currently focus on CFA Level 1, with FRM and other finance certifications coming soon. Our content is regularly reviewed and updated to match the latest exam formats."
+          "text": "We focus exclusively on CFA Level 1, with comprehensive coverage of all 10 topic areas. Our content is regularly reviewed and updated to match the latest exam format."
         }
       },
       {
@@ -131,9 +126,9 @@ export default function Home() {
                 <a href="#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                   Pricing
                 </a>
-                <a href="#proof" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  Testimonials
-                </a>
+                <Link href="/blog" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
+                  Blog
+                </Link>
                 <a href="#faq" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                   FAQ
                 </a>
@@ -176,11 +171,11 @@ export default function Home() {
                 {/* Left: Copy, CTAs, Proof */}
                 <div>
                   <h1 className="text-4xl sm:text-5xl font-bold text-[#13343B] leading-tight mb-6">
-                    Pass Your Finance Certification Exams on Your First Try
+                    Pass Your CFA Level 1 Exam on Your First Try
                   </h1>
 
                   <p className="text-lg text-[#5f6368] mb-8 leading-relaxed">
-                    Master CFA, FRM, and more with an exam-style question bank, realistic mock exams, and analytics that pinpoint your weakest topics.
+                    Master CFA Level 1 with an exam-style question bank, realistic mock exams, and analytics that pinpoint your weakest topics.
                   </p>
 
                   <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -194,7 +189,7 @@ export default function Home() {
                       Start Free Trial
                     </Link>
                     <Link
-                      href="/practice"
+                      href="/question-bank"
                       data-event="click_cta"
                       data-cta="view_demo"
                       data-section="hero"
@@ -206,19 +201,25 @@ export default function Home() {
 
                   <p className="text-sm text-[#9aa0a6] mb-8">No credit card required. Cancel anytime.</p>
 
-                  {/* Proof Row */}
-                  <div className="flex flex-wrap gap-8 text-sm">
+                  {/* Features Row */}
+                  <div className="flex flex-wrap gap-6 text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-semibold text-[#13343B]">92%</span>
-                      <span className="text-[#5f6368]">pass rate</span>
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-[#5f6368]">2,500+ questions</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-semibold text-[#13343B]">3,000+</span>
-                      <span className="text-[#5f6368]">candidates passed</span>
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-[#5f6368]">Full mock exams</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-semibold text-[#13343B]">2,500+</span>
-                      <span className="text-[#5f6368]">questions</span>
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-[#5f6368]">All 10 topic areas</span>
                     </div>
                   </div>
                 </div>
@@ -272,7 +273,7 @@ export default function Home() {
           <section id="pain" className="px-4 py-16 sm:px-6 border-t border-[#EAEEEF]" data-section="pain">
             <div className="mx-auto max-w-[960px]">
               <h2 className="text-2xl sm:text-3xl font-semibold text-[#13343B] text-center mb-12">
-                The Cost of Failing Your Finance Certification Exam
+                The Cost of Failing the CFA Level 1 Exam
               </h2>
 
               <div className="grid gap-6 md:grid-cols-3">
@@ -282,7 +283,7 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-[#13343B] mb-2">£50,000+ Lost Earnings</h3>
+                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Lost Earnings Potential</h3>
                   <p className="text-[#5f6368] text-sm leading-relaxed">
                     Delayed promotions and bonuses from not having the certification your peers already hold.
                   </p>
@@ -319,10 +320,10 @@ export default function Home() {
           <section id="product" className="px-4 py-16 sm:px-6 border-t border-[#EAEEEF]" data-section="product">
             <div className="mx-auto max-w-[960px]">
               <h2 className="text-2xl sm:text-3xl font-semibold text-[#13343B] text-center mb-4">
-                Everything You Need to Pass With Confidence
+                Everything You Need to Pass CFA Level 1
               </h2>
               <p className="text-[#5f6368] text-center mb-12 max-w-2xl mx-auto">
-                Our comprehensive platform gives you the tools, practice, and insights to master your finance certification exam.
+                Our comprehensive platform gives you the tools, practice, and insights to master your CFA Level 1 exam.
               </p>
 
               <div className="grid gap-6 md:grid-cols-2">
@@ -334,7 +335,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Comprehensive Question Bank</h3>
                   <p className="text-[#5f6368] text-sm leading-relaxed">
-                    2,500+ exam-style questions across CFA, FRM, and other finance certifications, each with detailed explanations and formulas.
+                    2,500+ exam-style questions covering all 10 CFA Level 1 topic areas, each with detailed explanations and formulas.
                   </p>
                 </div>
 
@@ -346,7 +347,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Performance Analytics</h3>
                   <p className="text-[#5f6368] text-sm leading-relaxed">
-                    Topic breakdown, LOS analysis, and time-per-question metrics to identify weaknesses and track improvement.
+                    Topic breakdown, subtopic analysis, and progress tracking to identify weaknesses and track improvement.
                   </p>
                 </div>
 
@@ -356,9 +357,9 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Study Guides & Formula Sheets</h3>
+                  <h3 className="text-lg font-medium text-[#13343B] mb-2">Detailed Explanations</h3>
                   <p className="text-[#5f6368] text-sm leading-relaxed">
-                    Downloadable PDF guides and quick-reference formula sheets for efficient revision.
+                    Every question includes comprehensive explanations with formulas and step-by-step solutions.
                   </p>
                 </div>
 
@@ -370,91 +371,32 @@ export default function Home() {
                   </div>
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Realistic Mock Exams</h3>
                   <p className="text-[#5f6368] text-sm leading-relaxed">
-                    Timed simulations that mirror the actual exam format, difficulty, and question distribution.
+                    180-question mock exams that mirror the actual CFA Level 1 format, difficulty, and topic weighting.
                   </p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Proof Section - Stats Strip */}
-          <section id="proof" className="px-4 py-12 sm:px-6 bg-[#1FB8CD]" data-section="proof">
+          {/* Features Strip */}
+          <section className="px-4 py-12 sm:px-6 bg-[#1FB8CD]" data-section="features">
             <div className="mx-auto max-w-[960px]">
               <div className="grid grid-cols-2 gap-8 text-center lg:grid-cols-4">
-                <div>
-                  <div className="text-3xl font-semibold text-white">92%</div>
-                  <div className="mt-2 text-white/80 text-sm">Pass rate among engaged users</div>
-                </div>
                 <div>
                   <div className="text-3xl font-semibold text-white">2,500+</div>
                   <div className="mt-2 text-white/80 text-sm">Exam-style practice questions</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-semibold text-white">3.5x</div>
-                  <div className="mt-2 text-white/80 text-sm">Average score improvement</div>
+                  <div className="text-3xl font-semibold text-white">10</div>
+                  <div className="mt-2 text-white/80 text-sm">CFA Level 1 topic areas covered</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-semibold text-white">3,000+</div>
-                  <div className="mt-2 text-white/80 text-sm">Candidates passed with us</div>
+                  <div className="text-3xl font-semibold text-white">180</div>
+                  <div className="mt-2 text-white/80 text-sm">Questions per mock exam</div>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Testimonials Section */}
-          <section className="px-4 py-16 sm:px-6" data-section="testimonials">
-            <div className="mx-auto max-w-[960px]">
-              <h2 className="text-2xl sm:text-3xl font-semibold text-[#13343B] text-center mb-12">
-                Success Stories From Candidates Like You
-              </h2>
-
-              <div className="grid gap-6 md:grid-cols-3">
-                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
-                  <div className="flex text-[#febc2e] mb-4">
-                    {"★★★★★".split("").map((star, i) => (
-                      <span key={i} className="text-sm">{star}</span>
-                    ))}
-                  </div>
-                  <p className="text-[#5f6368] text-sm mb-4 leading-relaxed">
-                    &ldquo;I failed CFA Level 1 on my first attempt. After using AnalystTrainer for 3 months, I passed with scores in the 90th percentile! The detailed explanations really helped.&rdquo;
-                  </p>
-                  <div className="border-t border-[#EAEEEF] pt-4">
-                    <p className="font-medium text-[#13343B]">Rachel Thompson</p>
-                    <p className="text-sm text-[#9aa0a6]">Investment Analyst, London</p>
-                    <p className="text-xs text-[#1FB8CD] mt-1">CFA Level I - June 2024</p>
-                  </div>
-                </div>
-
-                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
-                  <div className="flex text-[#febc2e] mb-4">
-                    {"★★★★★".split("").map((star, i) => (
-                      <span key={i} className="text-sm">{star}</span>
-                    ))}
-                  </div>
-                  <p className="text-[#5f6368] text-sm mb-4 leading-relaxed">
-                    &ldquo;The mock exams were incredibly accurate. The quantitative questions were especially helpful - exactly like the real thing!&rdquo;
-                  </p>
-                  <div className="border-t border-[#EAEEEF] pt-4">
-                    <p className="font-medium text-[#13343B]">James Chen</p>
-                    <p className="text-sm text-[#9aa0a6]">Risk Manager, Singapore</p>
-                    <p className="text-xs text-[#1FB8CD] mt-1">FRM Part 1 - May 2024</p>
-                  </div>
-                </div>
-
-                <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
-                  <div className="flex text-[#febc2e] mb-4">
-                    {"★★★★★".split("").map((star, i) => (
-                      <span key={i} className="text-sm">{star}</span>
-                    ))}
-                  </div>
-                  <p className="text-[#5f6368] text-sm mb-4 leading-relaxed">
-                    &ldquo;Worth every penny! The performance tracking helped me focus on Ethics and Fixed Income. Passed CFA Level 2 comfortably.&rdquo;
-                  </p>
-                  <div className="border-t border-[#EAEEEF] pt-4">
-                    <p className="font-medium text-[#13343B]">Sophie Martinez</p>
-                    <p className="text-sm text-[#9aa0a6]">Portfolio Manager, New York</p>
-                    <p className="text-xs text-[#1FB8CD] mt-1">CFA Level II - August 2024</p>
-                  </div>
+                <div>
+                  <div className="text-3xl font-semibold text-white">24/7</div>
+                  <div className="mt-2 text-white/80 text-sm">Access on any device</div>
                 </div>
               </div>
             </div>
@@ -656,13 +598,13 @@ export default function Home() {
               <div className="space-y-3">
                 <details className="group bg-white border border-[#EAEEEF] rounded-lg" data-event="faq_open">
                   <summary className="flex cursor-pointer items-center justify-between p-5 font-medium text-[#13343B]">
-                    How similar are your questions to the real CFA and FRM exams?
+                    How similar are your questions to the real CFA Level 1 exam?
                     <svg className="w-4 h-4 text-[#9aa0a6] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div className="px-5 pb-5 text-[#5f6368] text-sm leading-relaxed">
-                    Our question bank is written to mirror real CFA and FRM exam blueprints, difficulty levels, and wording. Each item includes step-by-step explanations and formula references. Many candidates report our questions are slightly harder than the real exam.
+                    Our question bank is written to mirror the real CFA Level 1 exam blueprint, difficulty levels, and wording. Each item includes step-by-step explanations and formula references. Many candidates report our questions are slightly harder than the real exam.
                   </div>
                 </details>
 
@@ -680,13 +622,13 @@ export default function Home() {
 
                 <details className="group bg-white border border-[#EAEEEF] rounded-lg" data-event="faq_open">
                   <summary className="flex cursor-pointer items-center justify-between p-5 font-medium text-[#13343B]">
-                    Which finance certifications do you cover?
+                    What does AnalystTrainer cover?
                     <svg className="w-4 h-4 text-[#9aa0a6] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div className="px-5 pb-5 text-[#5f6368] text-sm leading-relaxed">
-                    We currently focus on CFA Level 1, with comprehensive coverage of all 10 topic areas. FRM and other finance certifications are coming soon. Our content is regularly reviewed and updated to match the latest exam formats.
+                    We focus exclusively on CFA Level 1, with comprehensive coverage of all 10 topic areas. Our content is regularly reviewed and updated to match the latest exam format.
                   </div>
                 </details>
 
@@ -721,10 +663,10 @@ export default function Home() {
           <section id="final-cta" className="px-4 py-20 sm:px-6 bg-[#13343B]" data-section="final-cta">
             <div className="mx-auto max-w-[720px] text-center">
               <h2 className="text-2xl sm:text-3xl font-semibold text-white mb-6">
-                Join 3,000+ Finance Professionals Who Passed
+                Start Preparing for CFA Level 1 Today
               </h2>
               <p className="text-lg text-white/80 mb-8">
-                Start your free trial in under a minute. No credit card required.
+                Begin your free trial in under a minute. No credit card required.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -738,13 +680,13 @@ export default function Home() {
                   Start Free Trial
                 </Link>
                 <Link
-                  href="#"
+                  href="/question-bank"
                   data-event="click_cta"
-                  data-cta="lead_magnet"
+                  data-cta="view_questions"
                   data-section="final-cta"
                   className="border border-white/30 text-white px-8 py-3.5 rounded-lg text-base font-medium hover:bg-white/10 transition-all"
                 >
-                  Get 20 Free CFA Questions
+                  Browse Question Bank
                 </Link>
               </div>
 
@@ -781,7 +723,7 @@ export default function Home() {
                   <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
                 </Link>
                 <p className="mt-4 text-[#5f6368] text-sm">
-                  The leading platform for finance certification exam preparation.
+                  The leading platform for CFA Level 1 exam preparation.
                 </p>
               </div>
 
