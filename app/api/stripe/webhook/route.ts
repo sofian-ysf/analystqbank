@@ -146,10 +146,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-// Disable body parsing for webhook
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
