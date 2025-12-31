@@ -6,6 +6,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { PLAN_LIMITS } from "@/lib/plans";
+
+interface SubscriptionData {
+  subscription_plan: string;
+  subscription_status: string;
+  trial_ends_at: string | null;
+  stripe_customer_id: string | null;
+}
 
 export default function Settings() {
   const router = useRouter();
@@ -13,6 +21,8 @@ export default function Settings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
+  const [managingBilling, setManagingBilling] = useState(false);
 
   // Form states
   const [fullName, setFullName] = useState("");
@@ -44,6 +54,12 @@ export default function Settings() {
             setFullName(profile.full_name || "");
             setExamDate(profile.exam_date || "");
             setStudyGoal(profile.study_goal || 2);
+            setSubscription({
+              subscription_plan: profile.subscription_plan || 'free',
+              subscription_status: profile.subscription_status || 'trialing',
+              trial_ends_at: profile.trial_ends_at,
+              stripe_customer_id: profile.stripe_customer_id,
+            });
           }
         } catch {
           console.log('Note: Could not fetch user profile');
@@ -114,6 +130,70 @@ export default function Settings() {
     const diffTime = exam.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
+  };
+
+  const getTrialTimeRemaining = () => {
+    if (!subscription?.trial_ends_at) return null;
+    const now = new Date();
+    const trialEnd = new Date(subscription.trial_ends_at);
+    const diff = trialEnd.getTime() - now.getTime();
+
+    if (diff <= 0) return { expired: true, text: "Expired" };
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return { expired: false, text: `${days} day${days > 1 ? 's' : ''} remaining` };
+    }
+    if (hours > 0) {
+      return { expired: false, text: `${hours}h ${minutes}m remaining` };
+    }
+    return { expired: false, text: `${minutes}m remaining` };
+  };
+
+  const getPlanDisplayName = () => {
+    if (!subscription) return "Free";
+    const plan = subscription.subscription_plan;
+    if (plan === 'free' && subscription.subscription_status === 'trialing') {
+      return "Free Trial";
+    }
+    if (plan === 'basic') return "Basic";
+    if (plan === 'premium') return "Premium";
+    return "Free";
+  };
+
+  const handleManageBilling = async () => {
+    if (!subscription?.stripe_customer_id) {
+      setMessage("No billing information found. Please contact support.");
+      return;
+    }
+
+    setManagingBilling(true);
+    try {
+      const response = await fetch('/api/stripe/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customerId: subscription.stripe_customer_id }),
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setMessage("Failed to open billing portal. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error opening billing portal:', error);
+      setMessage("Failed to open billing portal. Please try again.");
+    }
+    setManagingBilling(false);
+  };
+
+  const handleUpgrade = (plan: string) => {
+    if (!user) return;
+    window.location.href = `/api/stripe/create-checkout?plan=${plan}&userId=${user.id}&email=${user.email}`;
   };
 
   const handleSignOut = async () => {
@@ -226,6 +306,141 @@ export default function Settings() {
                 <p className="text-xs text-gray-500 mt-1">Email cannot be changed from settings</p>
               </div>
             </div>
+          </div>
+
+          {/* Subscription & Billing */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Subscription & Billing</h3>
+
+            {/* Current Plan */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#1FB8CD]/10 to-[#1FB8CD]/5 rounded-lg border border-[#1FB8CD]/20">
+                <div>
+                  <p className="text-sm text-gray-600">Current Plan</p>
+                  <p className="text-2xl font-bold text-[#13343B]">{getPlanDisplayName()}</p>
+                  {subscription?.subscription_status === 'trialing' && (
+                    <div className="mt-1">
+                      {(() => {
+                        const trialInfo = getTrialTimeRemaining();
+                        if (trialInfo?.expired) {
+                          return <span className="text-sm text-red-600 font-medium">Trial expired</span>;
+                        }
+                        return <span className="text-sm text-[#1FB8CD] font-medium">{trialInfo?.text}</span>;
+                      })()}
+                    </div>
+                  )}
+                  {subscription?.subscription_status === 'active' && (
+                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
+                  )}
+                  {subscription?.subscription_status === 'past_due' && (
+                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      Payment Past Due
+                    </span>
+                  )}
+                  {subscription?.subscription_status === 'canceled' && (
+                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      Cancelled
+                    </span>
+                  )}
+                </div>
+                <div className="text-right">
+                  {subscription?.subscription_plan === 'basic' && (
+                    <p className="text-xl font-bold text-gray-900">£30<span className="text-sm font-normal text-gray-500">/month</span></p>
+                  )}
+                  {subscription?.subscription_plan === 'premium' && (
+                    <p className="text-xl font-bold text-gray-900">£50<span className="text-sm font-normal text-gray-500">/month</span></p>
+                  )}
+                  {(subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
+                    <p className="text-xl font-bold text-gray-900">Free</p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Plan Features */}
+            {subscription && (
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
+                <ul className="space-y-1">
+                  {(() => {
+                    const planKey = subscription.subscription_plan === 'free' ? 'trial' : subscription.subscription_plan;
+                    const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.trial;
+                    return limits.features.map((feature: string, index: number) => (
+                      <li key={index} className="flex items-center text-sm text-gray-600">
+                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        {feature}
+                      </li>
+                    ));
+                  })()}
+                </ul>
+              </div>
+            )}
+
+            {/* Upgrade Options */}
+            {(subscription?.subscription_plan === 'free' || subscription?.subscription_status === 'trialing') && (
+              <div className="space-y-3 mb-6">
+                <p className="text-sm font-medium text-gray-700">Upgrade your plan:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => handleUpgrade('basic')}
+                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors"
+                  >
+                    <div className="text-left">
+                      <p className="font-medium text-gray-900">Basic</p>
+                      <p className="text-sm text-gray-500">5 mocks, 2,000 questions</p>
+                    </div>
+                    <p className="font-bold text-gray-900">£30/mo</p>
+                  </button>
+                  <button
+                    onClick={() => handleUpgrade('premium')}
+                    className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors"
+                  >
+                    <div className="text-left">
+                      <p className="font-medium text-gray-900">Premium</p>
+                      <p className="text-sm text-gray-500">Unlimited access</p>
+                    </div>
+                    <p className="font-bold text-[#1FB8CD]">£50/mo</p>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Upgrade from Basic to Premium */}
+            {subscription?.subscription_plan === 'basic' && subscription?.subscription_status === 'active' && (
+              <div className="mb-6">
+                <button
+                  onClick={() => handleUpgrade('premium')}
+                  className="w-full flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors"
+                >
+                  <div className="text-left">
+                    <p className="font-medium text-gray-900">Upgrade to Premium</p>
+                    <p className="text-sm text-gray-500">Unlimited mocks & full question bank access</p>
+                  </div>
+                  <p className="font-bold text-[#1FB8CD]">£50/mo</p>
+                </button>
+              </div>
+            )}
+
+            {/* Manage Billing */}
+            {subscription?.stripe_customer_id && (
+              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                <div>
+                  <h4 className="font-medium text-gray-900">Manage Billing</h4>
+                  <p className="text-sm text-gray-600">Update payment method, view invoices, or cancel subscription</p>
+                </div>
+                <button
+                  onClick={handleManageBilling}
+                  disabled={managingBilling}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  {managingBilling ? "Opening..." : "Manage"}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Exam Information */}
