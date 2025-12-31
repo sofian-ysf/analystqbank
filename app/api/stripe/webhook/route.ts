@@ -38,12 +38,27 @@ export async function POST(request: NextRequest) {
         const plan = session.metadata?.plan;
 
         if (userId && plan) {
+          // Get subscription details to get the current period end
+          let currentPeriodEnd = null;
+          if (session.subscription) {
+            const subscription = await stripe.subscriptions.retrieve(session.subscription as string, {
+              expand: ['items.data'],
+            });
+            // In Stripe SDK v20, current_period_end is on subscription items
+            const firstItem = subscription.items?.data?.[0];
+            if (firstItem?.current_period_end) {
+              currentPeriodEnd = new Date(firstItem.current_period_end * 1000).toISOString();
+            }
+          }
+
           await supabase
             .from('user_profiles')
             .update({
               subscription_plan: plan,
               subscription_status: 'active',
               stripe_customer_id: session.customer as string,
+              current_period_end: currentPeriodEnd,
+              cancel_at: null,
             })
             .eq('id', userId);
 
@@ -75,9 +90,23 @@ export async function POST(request: NextRequest) {
             subscriptionStatus = 'trialing';
           }
 
+          // Get period end and cancel_at dates
+          // In Stripe SDK v20, current_period_end is on subscription items
+          const firstItem = subscription.items?.data?.[0];
+          const currentPeriodEnd = firstItem?.current_period_end
+            ? new Date(firstItem.current_period_end * 1000).toISOString()
+            : null;
+          const cancelAt = subscription.cancel_at
+            ? new Date(subscription.cancel_at * 1000).toISOString()
+            : null;
+
           await supabase
             .from('user_profiles')
-            .update({ subscription_status: subscriptionStatus })
+            .update({
+              subscription_status: subscriptionStatus,
+              current_period_end: currentPeriodEnd,
+              cancel_at: cancelAt,
+            })
             .eq('id', profile.id);
 
           console.log(`Subscription updated for user ${profile.id}: ${subscriptionStatus}`);
