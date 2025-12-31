@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { createClient } from '@/lib/supabase';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const cookieStore = await cookies();
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll();
+          },
+        },
+      }
+    );
+
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
@@ -28,10 +42,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const origin = request.headers.get('origin') || 'https://www.analysttrainer.com';
+
     // Create Stripe Customer Portal session
     const session = await stripe.billingPortal.sessions.create({
       customer: profile.stripe_customer_id,
-      return_url: `${request.headers.get('origin')}/settings`,
+      return_url: `${origin}/settings`,
     });
 
     return NextResponse.json({ url: session.url });
