@@ -191,9 +191,31 @@ export default function Settings() {
     setManagingBilling(false);
   };
 
-  const handleUpgrade = (plan: string) => {
+  const handleUpgrade = async (plan: string) => {
     if (!user) return;
-    window.location.href = `/api/stripe/create-checkout?plan=${plan}&userId=${user.id}&email=${user.email}`;
+    setManagingBilling(true);
+    try {
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan,
+          userId: user.id,
+          email: user.email,
+        }),
+      });
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        setMessage('Failed to start checkout. Please try again.');
+        setManagingBilling(false);
+      }
+    } catch (error) {
+      console.error('Upgrade error:', error);
+      setMessage('Failed to start checkout. Please try again.');
+      setManagingBilling(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -387,23 +409,25 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <button
                     onClick={() => handleUpgrade('basic')}
-                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors"
+                    disabled={managingBilling}
+                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-left">
                       <p className="font-medium text-gray-900">Basic</p>
                       <p className="text-sm text-gray-500">5 mocks, 2,000 questions</p>
                     </div>
-                    <p className="font-bold text-gray-900">£30/mo</p>
+                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£30/mo'}</p>
                   </button>
                   <button
                     onClick={() => handleUpgrade('premium')}
-                    className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors"
+                    disabled={managingBilling}
+                    className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-left">
                       <p className="font-medium text-gray-900">Premium</p>
                       <p className="text-sm text-gray-500">Unlimited access</p>
                     </div>
-                    <p className="font-bold text-[#1FB8CD]">£50/mo</p>
+                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£50/mo'}</p>
                   </button>
                 </div>
               </div>
@@ -414,20 +438,21 @@ export default function Settings() {
               <div className="mb-6">
                 <button
                   onClick={() => handleUpgrade('premium')}
-                  className="w-full flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors"
+                  disabled={managingBilling}
+                  className="w-full flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="text-left">
                     <p className="font-medium text-gray-900">Upgrade to Premium</p>
                     <p className="text-sm text-gray-500">Unlimited mocks & full question bank access</p>
                   </div>
-                  <p className="font-bold text-[#1FB8CD]">£50/mo</p>
+                  <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£50/mo'}</p>
                 </button>
               </div>
             )}
 
-            {/* Manage Billing */}
+            {/* Manage Billing - for paying customers */}
             {subscription?.stripe_customer_id && (
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-4">
                 <div>
                   <h4 className="font-medium text-gray-900">Manage Billing</h4>
                   <p className="text-sm text-gray-600">Update payment method, view invoices, or cancel subscription</p>
@@ -439,6 +464,16 @@ export default function Settings() {
                 >
                   {managingBilling ? "Opening..." : "Manage"}
                 </button>
+              </div>
+            )}
+
+            {/* Trial info - no payment method yet */}
+            {(!subscription?.stripe_customer_id && (subscription?.subscription_status === 'trialing' || subscription?.subscription_plan === 'free')) && (
+              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-600">
+                  You&apos;re currently on a free trial. No payment method on file.
+                  Your trial will expire automatically - no action needed to cancel.
+                </p>
               </div>
             )}
           </div>
