@@ -360,28 +360,28 @@ export default function Settings() {
             </div>
 
             {/* Plan Features */}
-            {subscription && (
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
-                <ul className="space-y-1">
-                  {(() => {
-                    const planKey = subscription.subscription_plan === 'free' ? 'trial' : subscription.subscription_plan;
-                    const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.trial;
-                    return limits.features.map((feature: string, index: number) => (
-                      <li key={index} className="flex items-center text-sm text-gray-600">
-                        <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ));
-                  })()}
-                </ul>
-              </div>
-            )}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
+              <ul className="space-y-1">
+                {(() => {
+                  const planKey = subscription?.subscription_plan === 'basic' ? 'basic'
+                    : subscription?.subscription_plan === 'premium' ? 'premium'
+                    : 'trial';
+                  const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.trial;
+                  return limits.features.map((feature: string, index: number) => (
+                    <li key={index} className="flex items-center text-sm text-gray-600">
+                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ));
+                })()}
+              </ul>
+            </div>
 
             {/* Upgrade Options */}
-            {(subscription?.subscription_plan === 'free' || subscription?.subscription_status === 'trialing') && (
+            {(!subscription || subscription?.subscription_plan === 'free' || subscription?.subscription_status === 'trialing') && (
               <div className="space-y-3 mb-6">
                 <p className="text-sm font-medium text-gray-700">Upgrade your plan:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
