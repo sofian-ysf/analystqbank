@@ -9,14 +9,41 @@ export default function Contact() {
     name: "",
     email: "",
     subject: "",
-    message: ""
+    message: "",
+    website: "" // Honeypot field - bots will fill this, humans won't see it
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    setSubmitted(true);
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch('/api/notify-discord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'contact_form',
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          website: formData.website, // Honeypot
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        setError("Failed to send message. Please try again.");
+      }
+    } catch {
+      setError("Failed to send message. Please try again.");
+    }
+    setSubmitting(false);
   };
 
   const contactMethods = [
@@ -28,17 +55,10 @@ export default function Contact() {
       link: "mailto:support@analysttrainer.com"
     },
     {
-      icon: "💬",
-      title: "Live Chat",
-      description: "Available Mon-Fri, 9am-6pm GMT",
-      contact: "Start a conversation",
-      link: "#"
-    },
-    {
       icon: "❓",
-      title: "Help Center",
+      title: "Help Centre",
       description: "Browse our FAQ and guides",
-      contact: "Visit Help Center",
+      contact: "Visit Help Centre",
       link: "/help"
     }
   ];
@@ -142,7 +162,7 @@ export default function Contact() {
                 <button
                   onClick={() => {
                     setSubmitted(false);
-                    setFormData({ name: "", email: "", subject: "", message: "" });
+                    setFormData({ name: "", email: "", subject: "", message: "", website: "" });
                   }}
                   className="text-[#1FB8CD] font-medium hover:underline"
                 >
@@ -151,6 +171,26 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Honeypot field - hidden from humans, bots will fill it */}
+                <div className="hidden" aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    value={formData.website}
+                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
+                {error && (
+                  <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {error}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-[#13343B] mb-2">
@@ -219,9 +259,10 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#1FB8CD] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
+                  disabled={submitting}
+                  className="w-full bg-[#1FB8CD] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#1A6872] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
             )}

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendDiscordNotification, createNewUserNotification } from '@/lib/discord';
+import { sendDiscordNotification, createNewUserNotification, createContactFormNotification } from '@/lib/discord';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, type } = await request.json();
+    const body = await request.json();
+    const { type } = body;
 
-    if (!email || !type) {
+    if (!type) {
       return NextResponse.json(
-        { error: 'Email and type are required' },
+        { error: 'Type is required' },
         { status: 400 }
       );
     }
@@ -24,7 +25,21 @@ export async function POST(request: NextRequest) {
     let payload;
     switch (type) {
       case 'new_user':
-        payload = createNewUserNotification(email);
+        if (!body.email) {
+          return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+        }
+        payload = createNewUserNotification(body.email);
+        break;
+      case 'contact_form':
+        // Honeypot check - if this field has a value, it's a bot
+        if (body.website) {
+          // Silently reject but return success to not tip off bots
+          return NextResponse.json({ message: 'Message sent successfully' });
+        }
+        if (!body.name || !body.email || !body.subject || !body.message) {
+          return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+        }
+        payload = createContactFormNotification(body.name, body.email, body.subject, body.message);
         break;
       default:
         return NextResponse.json(
