@@ -153,7 +153,7 @@ export default function Privacy() {
                 <li><strong>Opt-out:</strong> You can opt out of marketing communications</li>
               </ul>
               <p className="text-[#5f6368]">
-                To exercise these rights, please contact us at <a href="mailto:privacy@analysttrainer.com" className="text-[#1FB8CD] hover:underline">privacy@analysttrainer.com</a>.
+                To exercise these rights, please contact us at <a href="mailto:support@analysttrainer.com" className="text-[#1FB8CD] hover:underline">support@analysttrainer.com</a>.
               </p>
             </section>
 
@@ -184,7 +184,7 @@ export default function Privacy() {
                 If you have any questions about this Privacy Policy or our data practices, please contact us:
               </p>
               <ul className="list-none text-[#5f6368]">
-                <li><strong>Email:</strong> <a href="mailto:privacy@analysttrainer.com" className="text-[#1FB8CD] hover:underline">privacy@analysttrainer.com</a></li>
+                <li><strong>Email:</strong> <a href="mailto:support@analysttrainer.com" className="text-[#1FB8CD] hover:underline">support@analysttrainer.com</a></li>
                 <li><strong>Website:</strong> <Link href="/contact" className="text-[#1FB8CD] hover:underline">Contact Us</Link></li>
               </ul>
             </section>

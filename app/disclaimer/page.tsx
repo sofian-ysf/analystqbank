@@ -158,7 +158,7 @@ export default function Disclaimer() {
                 If you have any questions about this disclaimer, please contact us:
               </p>
               <ul className="list-none mb-4">
-                <li><strong>Email:</strong> <a href="mailto:legal@analysttrainer.com" className="text-[#1FB8CD] hover:underline">legal@analysttrainer.com</a></li>
+                <li><strong>Email:</strong> <a href="mailto:support@analysttrainer.com" className="text-[#1FB8CD] hover:underline">support@analysttrainer.com</a></li>
                 <li><strong>Website:</strong> <Link href="/contact" className="text-[#1FB8CD] hover:underline">Contact Us</Link></li>
               </ul>
             </section>

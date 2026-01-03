@@ -200,7 +200,7 @@ export default function Terms() {
                 If you have any questions about these Terms, please contact us:
               </p>
               <ul className="list-none mb-4">
-                <li><strong>Email:</strong> legal@analysttrainer.com</li>
+                <li><strong>Email:</strong> support@analysttrainer.com</li>
                 <li><strong>Website:</strong> <Link href="/contact" className="text-[#1FB8CD] hover:underline">Contact Us</Link></li>
               </ul>
             </section>
