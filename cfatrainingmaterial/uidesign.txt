@@ -33,7 +33,7 @@ Use a single long‑form landing page with the following semantic structure:
   - `<section id="pain">` – cost of failing.[page:1]
   - `<section id="product">` – features and product UI.[page:1]
   - `<section id="proof">` – metrics and testimonials.[page:1]
-  - `<section id="pricing">` – plans and guarantee.[page:1]
+  - `<section id="pricing">` – plans.[page:1]
   - `<section id="faq">` – FAQs with FAQPage schema.[web:16]
   - `<section id="final-cta">` – final push.[web:19]
 - `<footer>`: Resource links, legal, company info.[page:1]
@@ -193,10 +193,10 @@ Short quote (2–3 lines).[page:1]
 
 Optionally add a simple “logo row” for firms (if allowed / anonymized) like “AnalystTrainer students work at: [logo badges]”.[web:19]
 
-2.8 Pricing & guarantee
-Section <section id="pricing"> with H2: “Choose Your Study Plan”.[page:1]
+2.8 Pricing
+Section <section id="pricing"> with H2: "Choose Your Study Plan".[page:1]
 
-Subtext: “Start with a free trial. Upgrade only if it helps you pass.”[web:19]
+Subtext: "Start with a free trial. No credit card required."[web:19]
 
 Plans (example; adjust to your exact offer):
 
@@ -224,11 +224,7 @@ Premium / Ultimate
 
 Lifetime or extended access, personalized study roadmap, 1:1 review sessions (if applicable).[page:1]
 
-Under pricing grid: 2–3 line explanation of pass guarantee:
-
-Conditions for full refund (completion % of question bank, number of mocks, exam result proof).[page:1]
-
-Add trust badges: secure payment, card logos, “30‑day money‑back guarantee” if offered.[web:16][web:19]
+Add trust badges: secure payment, card logos, lifetime access.[web:16][web:19]
 
 2.9 FAQ section with accordions
 Section <section id="faq"> with H2: “Frequently Asked Questions”.[web:16]
@@ -376,10 +372,10 @@ text
     },
     {
       "@type": "Question",
-      "name": "What happens if I fail my exam after using AnalystTrainer?",
+      "name": "How can I get the most out of AnalystTrainer?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy."
+        "text": "Complete as many practice questions as possible, take all available mock exams, and use our analytics to focus on your weakest areas. Consistent daily practice is key to success."
       }
     }
   ]

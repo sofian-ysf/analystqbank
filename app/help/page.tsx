@@ -30,7 +30,7 @@ export default function Help() {
     },
     {
       question: "Do you offer refunds?",
-      answer: "Yes, we offer a 7-day money-back guarantee. Contact us within 7 days of purchase for a full refund."
+      answer: "Yes, we offer refunds within 7 days of purchase. Please see our refund policy page for full details."
     }
   ];
 

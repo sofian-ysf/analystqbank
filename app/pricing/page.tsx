@@ -52,7 +52,6 @@ export default function Pricing() {
         "1-on-1 tutoring sessions (2 hours/month)",
         "Live webinars & Q&A sessions",
         "Exam strategy consultation",
-        "Performance guarantee",
         "24/7 priority support"
       ],
       buttonText: "Start Free Trial",
@@ -235,7 +234,7 @@ export default function Pricing() {
                 Do you offer refunds?
               </h3>
               <p className="text-gray-600">
-                Yes, we offer a 30-day money-back guarantee. If you&apos;re not satisfied, we&apos;ll provide a full refund.
+                Yes, we offer refunds within 7 days of purchase. Please see our refund policy for details.
               </p>
             </div>
 

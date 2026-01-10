@@ -58,7 +58,7 @@ export default function Refund() {
 
           <div className="prose prose-lg max-w-none text-[#5f6368]">
             <p className="text-sm text-[#9aa0a6] mb-8">
-              <strong>Last updated:</strong> January 1, 2024
+              <strong>Last updated:</strong> January 1, 2026
             </p>
 
             <section className="mb-8">
@@ -69,13 +69,13 @@ export default function Refund() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-[#13343B] mb-4">14-Day Money-Back Guarantee</h2>
+              <h2 className="text-2xl font-bold text-[#13343B] mb-4">7-Day Refund Policy</h2>
               <p className="mb-4">
-                We offer a <strong>14-day money-back guarantee</strong> on all new subscriptions. If you are not satisfied with our service within the first 14 days of your subscription, you may request a full refund.
+                We offer a <strong>7-day refund policy</strong> on all new subscriptions. If you are not satisfied with our service within the first 7 days of your subscription, you may request a full refund.
               </p>
               <div className="bg-[#1FB8CD]/10 border border-[#1FB8CD]/20 rounded-lg p-4 mb-4">
                 <p className="text-[#1A6872] font-medium">
-                  To be eligible for a refund under our 14-day guarantee, you must request the refund within 14 days of your initial purchase date.
+                  To be eligible for a refund, you must request it within 7 days of your initial purchase date.
                 </p>
               </div>
             </section>
@@ -86,7 +86,7 @@ export default function Refund() {
                 Refunds are available under the following conditions:
               </p>
               <ul className="list-disc pl-6 mb-4">
-                <li><strong>New subscriptions:</strong> Within 14 days of initial purchase</li>
+                <li><strong>New subscriptions:</strong> Within 7 days of initial purchase</li>
                 <li><strong>Technical issues:</strong> If persistent technical problems prevent you from using the service and we cannot resolve them</li>
                 <li><strong>Duplicate charges:</strong> If you were accidentally charged multiple times</li>
                 <li><strong>Billing errors:</strong> If there was an error in the amount charged</li>
@@ -99,9 +99,9 @@ export default function Refund() {
                 The following are not eligible for refunds:
               </p>
               <ul className="list-disc pl-6 mb-4">
-                <li>Subscriptions beyond the 14-day refund window</li>
-                <li>Partial month refunds after the 14-day period</li>
-                <li>Free trial conversions after 14 days</li>
+                <li>Subscriptions beyond the 7-day refund window</li>
+                <li>Partial month refunds after the 7-day period</li>
+                <li>Free trial conversions after 7 days</li>
                 <li>Accounts terminated for Terms of Service violations</li>
               </ul>
             </section>

@@ -60,10 +60,10 @@ export default function Home() {
       },
       {
         "@type": "Question",
-        "name": "What happens if I fail my exam after using AnalystTrainer?",
+        "name": "How can I get the most out of AnalystTrainer?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy."
+          "text": "Complete as many practice questions as possible, take all available mock exams, and use our analytics to focus on your weakest areas. Consistent daily practice is key to success."
         }
       },
       {
@@ -555,12 +555,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Pass Guarantee */}
               <div className="mt-8 text-center">
-                <p className="text-[#5f6368] text-sm">
-                  <span className="text-[#1FB8CD] font-medium">Pass Guarantee:</span> Complete 80%+ of questions and all mocks. If you don&apos;t pass, get extended access or a full refund.
-                </p>
-                <div className="flex justify-center gap-6 mt-4">
+                <div className="flex justify-center gap-6">
                   <span className="text-[#9aa0a6] text-xs">Secure Payment via Stripe</span>
                   <span className="text-[#9aa0a6] text-xs">All Cards Accepted</span>
                   <span className="text-[#9aa0a6] text-xs">Lifetime Access</span>
@@ -591,13 +587,13 @@ export default function Home() {
 
                 <details className="group bg-white border border-[#EAEEEF] rounded-lg" data-event="faq_open">
                   <summary className="flex cursor-pointer items-center justify-between p-5 font-medium text-[#13343B]">
-                    What if I fail after using AnalystTrainer?
+                    How can I get the most out of AnalystTrainer?
                     <svg className="w-4 h-4 text-[#9aa0a6] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
                   <div className="px-5 pb-5 text-[#5f6368] text-sm leading-relaxed">
-                    If you complete the required percentage of questions and mock exams and still do not pass, you may qualify for an extended access period or a refund under our pass guarantee policy.
+                    Complete as many practice questions as possible, take all available mock exams, and use our analytics to focus on your weakest areas. Consistent daily practice is key to success.
                   </div>
                 </details>
 
@@ -676,12 +672,6 @@ export default function Home() {
                   <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  100% Money-Back Guarantee
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
                   Lifetime Access
                 </div>
                 <div className="flex items-center gap-2">
@@ -689,6 +679,12 @@ export default function Home() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   Instant Access
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  All 10 Topic Areas
                 </div>
               </div>
             </div>
