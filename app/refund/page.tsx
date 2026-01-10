@@ -205,7 +205,7 @@ export default function Refund() {
           </div>
 
           <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
-            <p>© 2024 AnalystTrainer. All rights reserved.</p>
+            <p>© 2026 AnalystTrainer. All rights reserved.</p>
           </div>
         </div>
       </footer>
