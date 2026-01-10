@@ -5,38 +5,32 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { Suspense } from "react";
 
-function AuthCallbackContent() {
+function AuthConfirmContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [status, setStatus] = useState("Authenticating...");
+  const [status, setStatus] = useState("Confirming your account...");
   const supabase = createClient();
 
   useEffect(() => {
     const handleAuth = async () => {
       try {
         const plan = searchParams.get("plan");
-        const code = searchParams.get("code");
         const error = searchParams.get("error");
         const errorDescription = searchParams.get("error_description");
 
-        console.log("Auth callback params:", { plan, hasCode: !!code, error });
-
-        // Check for errors from Supabase
+        // Check for errors
         if (error) {
           console.error("Auth error:", error, errorDescription);
           router.push(`/login?message=${encodeURIComponent(errorDescription || error)}`);
           return;
         }
 
-        // Check for hash fragment (tokens from implicit flow)
+        // Check for hash fragment (tokens from email confirmation links)
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
 
-        console.log("Hash params:", { hasAccessToken: !!accessToken, hasRefreshToken: !!refreshToken });
-
         if (accessToken) {
-          // Set session from hash tokens
           setStatus("Setting up your session...");
           const { data, error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
@@ -55,36 +49,18 @@ function AuthCallbackContent() {
           }
         }
 
-        // Handle code flow (PKCE)
-        if (code) {
-          setStatus("Exchanging code for session...");
-          const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-
-          if (exchangeError) {
-            console.error("Code exchange error:", exchangeError);
-            router.push(`/login?message=${encodeURIComponent(exchangeError.message)}`);
-            return;
-          }
-
-          if (data.user) {
-            await setupUserProfile(data.user.id, data.user.email, data.user.user_metadata?.full_name, plan);
-            return;
-          }
-        }
-
-        // No auth params found, check if already authenticated
+        // Check if already authenticated
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-          const plan = searchParams.get("plan");
           await setupUserProfile(user.id, user.email, user.user_metadata?.full_name, plan);
           return;
         }
 
         // No authentication found
-        router.push("/login?message=Could not authenticate. Please try again.");
+        router.push("/login?message=Could not confirm your account. Please try logging in.");
       } catch (err) {
-        console.error("Auth callback error:", err);
-        router.push("/login?message=Authentication failed. Please try again.");
+        console.error("Auth confirm error:", err);
+        router.push("/login?message=Confirmation failed. Please try again.");
       }
     };
 
@@ -113,7 +89,6 @@ function AuthCallbackContent() {
 
       if (updateError) {
         console.error("Profile update error:", updateError);
-        // Continue anyway - profile might not exist yet or have different schema
       }
 
       // Redirect based on plan selection
@@ -139,7 +114,7 @@ function AuthCallbackContent() {
   );
 }
 
-export default function AuthCallback() {
+export default function AuthConfirm() {
   return (
     <Suspense
       fallback={
@@ -148,7 +123,7 @@ export default function AuthCallback() {
         </div>
       }
     >
-      <AuthCallbackContent />
+      <AuthConfirmContent />
     </Suspense>
   );
 }
