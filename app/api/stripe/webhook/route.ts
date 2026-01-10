@@ -38,126 +38,49 @@ export async function POST(request: NextRequest) {
         const plan = session.metadata?.plan;
 
         if (userId && plan) {
-          // Get subscription details to get the current period end
-          let currentPeriodEnd = null;
-          if (session.subscription) {
-            const subscription = await stripe.subscriptions.retrieve(session.subscription as string, {
-              expand: ['items.data'],
-            });
-            // In Stripe SDK v20, current_period_end is on subscription items
-            const firstItem = subscription.items?.data?.[0];
-            if (firstItem?.current_period_end) {
-              currentPeriodEnd = new Date(firstItem.current_period_end * 1000).toISOString();
-            }
-          }
-
+          // For one-time payments, activate lifetime access immediately
           await supabase
             .from('user_profiles')
             .update({
               subscription_plan: plan,
-              subscription_status: 'active',
+              subscription_status: 'lifetime',
               stripe_customer_id: session.customer as string,
-              current_period_end: currentPeriodEnd,
+              // Clear any subscription-related fields
+              current_period_end: null,
               cancel_at: null,
             })
             .eq('id', userId);
 
-          console.log(`Subscription activated for user ${userId}: ${plan}`);
+          console.log(`Lifetime access activated for user ${userId}: ${plan}`);
         }
         break;
       }
 
-      case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
+      // Keep these handlers in case of refunds or disputes
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge;
+        const customerId = charge.customer as string;
 
-        // Get user by Stripe customer ID
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
-          .single();
+        if (customerId) {
+          // Get user by Stripe customer ID
+          const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('id')
+            .eq('stripe_customer_id', customerId)
+            .single();
 
-        if (profile) {
-          const status = subscription.status;
-          let subscriptionStatus = 'active';
+          if (profile) {
+            // Downgrade to free on refund
+            await supabase
+              .from('user_profiles')
+              .update({
+                subscription_plan: 'free',
+                subscription_status: 'refunded',
+              })
+              .eq('id', profile.id);
 
-          if (status === 'past_due' || status === 'unpaid') {
-            subscriptionStatus = 'past_due';
-          } else if (status === 'canceled' || status === 'incomplete_expired') {
-            subscriptionStatus = 'canceled';
-          } else if (status === 'trialing') {
-            subscriptionStatus = 'trialing';
+            console.log(`Access revoked for user ${profile.id} due to refund`);
           }
-
-          // Get period end and cancel_at dates
-          // In Stripe SDK v20, current_period_end is on subscription items
-          const firstItem = subscription.items?.data?.[0];
-          const currentPeriodEnd = firstItem?.current_period_end
-            ? new Date(firstItem.current_period_end * 1000).toISOString()
-            : null;
-          const cancelAt = subscription.cancel_at
-            ? new Date(subscription.cancel_at * 1000).toISOString()
-            : null;
-
-          await supabase
-            .from('user_profiles')
-            .update({
-              subscription_status: subscriptionStatus,
-              current_period_end: currentPeriodEnd,
-              cancel_at: cancelAt,
-            })
-            .eq('id', profile.id);
-
-          console.log(`Subscription updated for user ${profile.id}: ${subscriptionStatus}`);
-        }
-        break;
-      }
-
-      case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
-
-        // Get user by Stripe customer ID
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
-          .single();
-
-        if (profile) {
-          // Downgrade to trial/expired
-          await supabase
-            .from('user_profiles')
-            .update({
-              subscription_plan: 'trial',
-              subscription_status: 'expired',
-            })
-            .eq('id', profile.id);
-
-          console.log(`Subscription canceled for user ${profile.id}`);
-        }
-        break;
-      }
-
-      case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice;
-        const customerId = invoice.customer as string;
-
-        // Get user by Stripe customer ID
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
-          .single();
-
-        if (profile) {
-          await supabase
-            .from('user_profiles')
-            .update({ subscription_status: 'past_due' })
-            .eq('id', profile.id);
-
-          console.log(`Payment failed for user ${profile.id}`);
         }
         break;
       }

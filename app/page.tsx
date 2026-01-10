@@ -18,8 +18,8 @@ export default function Home() {
       "@type": "AggregateOffer",
       "priceCurrency": "GBP",
       "lowPrice": "0",
-      "highPrice": "999",
-      "offerCount": "4",
+      "highPrice": "300",
+      "offerCount": "3",
       "offers": [
         {
           "@type": "Offer",
@@ -31,14 +31,14 @@ export default function Home() {
         {
           "@type": "Offer",
           "name": "Basic Plan",
-          "price": "299",
+          "price": "250",
           "priceCurrency": "GBP",
           "availability": "https://schema.org/InStock"
         },
         {
           "@type": "Offer",
-          "name": "Standard Plan",
-          "price": "599",
+          "name": "Premium Plan",
+          "price": "300",
           "priceCurrency": "GBP",
           "availability": "https://schema.org/InStock"
         }
@@ -464,8 +464,8 @@ export default function Home() {
                   </div>
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Basic</h3>
                   <div className="mb-6">
-                    <span className="text-3xl font-semibold text-[#13343B]">£30</span>
-                    <span className="text-[#9aa0a6]">/month</span>
+                    <span className="text-3xl font-semibold text-[#13343B]">£250</span>
+                    <span className="text-[#9aa0a6] text-sm ml-2">one-time</span>
                   </div>
                   <ul className="space-y-3 mb-8 text-sm">
                     <li className="flex items-start gap-2 text-[#5f6368]">
@@ -478,7 +478,7 @@ export default function Home() {
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      5 mock exams per month
+                      5 mock exams
                     </li>
                     <li className="flex items-start gap-2 text-[#5f6368]">
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -490,7 +490,7 @@ export default function Home() {
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Email support
+                      Lifetime access
                     </li>
                   </ul>
                   <Link
@@ -508,8 +508,8 @@ export default function Home() {
                 <div className="bg-white border border-[#EAEEEF] rounded-lg p-6">
                   <h3 className="text-lg font-medium text-[#13343B] mb-2">Premium</h3>
                   <div className="mb-6">
-                    <span className="text-3xl font-semibold text-[#13343B]">£50</span>
-                    <span className="text-[#9aa0a6]">/month</span>
+                    <span className="text-3xl font-semibold text-[#13343B]">£300</span>
+                    <span className="text-[#9aa0a6] text-sm ml-2">one-time</span>
                   </div>
                   <ul className="space-y-3 mb-8 text-sm">
                     <li className="flex items-start gap-2 text-[#5f6368]">
@@ -540,7 +540,7 @@ export default function Home() {
                       <svg className="w-4 h-4 text-[#1FB8CD] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      Priority email support
+                      Lifetime access
                     </li>
                   </ul>
                   <Link
@@ -563,7 +563,7 @@ export default function Home() {
                 <div className="flex justify-center gap-6 mt-4">
                   <span className="text-[#9aa0a6] text-xs">Secure Payment via Stripe</span>
                   <span className="text-[#9aa0a6] text-xs">All Cards Accepted</span>
-                  <span className="text-[#9aa0a6] text-xs">Cancel Anytime</span>
+                  <span className="text-[#9aa0a6] text-xs">Lifetime Access</span>
                 </div>
               </div>
             </div>
@@ -682,7 +682,7 @@ export default function Home() {
                   <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  Cancel Anytime
+                  Lifetime Access
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">

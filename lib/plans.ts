@@ -6,6 +6,7 @@ export const PLAN_LIMITS = {
     questions: 100,
     durationHours: 24,
     price: 0,
+    isLifetime: false,
     features: [
       '1 mock exam',
       '100 practice questions',
@@ -17,27 +18,30 @@ export const PLAN_LIMITS = {
     name: 'Basic',
     mockExams: 5,
     questions: 2000,
-    durationHours: null, // Monthly recurring
-    price: 30,
+    durationHours: null,
+    price: 250,
+    isLifetime: true,
     features: [
-      '5 mock exams per month',
+      '5 mock exams',
       '2,000 practice questions',
       'Performance analytics',
-      'Email support',
+      'Lifetime access',
     ],
   },
   premium: {
     name: 'Premium',
     mockExams: Infinity,
     questions: Infinity,
-    durationHours: null, // Monthly recurring
-    price: 50,
+    durationHours: null,
+    price: 300,
+    isLifetime: true,
     features: [
       'Unlimited mock exams',
       'Full question bank access',
       'Advanced analytics',
       'Direct contact with CFA analysts',
       'Priority email support',
+      'Lifetime access',
     ],
   },
 };

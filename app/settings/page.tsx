@@ -355,33 +355,28 @@ export default function Settings() {
                       })()}
                     </div>
                   )}
-                  {subscription?.subscription_status === 'active' && !subscription?.cancel_at && (
+                  {subscription?.subscription_status === 'lifetime' && (
+                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Lifetime Access
+                    </span>
+                  )}
+                  {subscription?.subscription_status === 'active' && (
                     <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Active
                     </span>
                   )}
-                  {subscription?.subscription_status === 'active' && subscription?.cancel_at && (
-                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                      Cancelling
-                    </span>
-                  )}
-                  {subscription?.subscription_status === 'past_due' && (
-                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                      Payment Past Due
-                    </span>
-                  )}
-                  {subscription?.subscription_status === 'canceled' && (
+                  {subscription?.subscription_status === 'refunded' && (
                     <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      Cancelled
+                      Refunded
                     </span>
                   )}
                 </div>
                 <div className="text-right">
                   {subscription?.subscription_plan === 'basic' && (
-                    <p className="text-xl font-bold text-gray-900">£30<span className="text-sm font-normal text-gray-500">/month</span></p>
+                    <p className="text-xl font-bold text-gray-900">£250<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
                   )}
                   {subscription?.subscription_plan === 'premium' && (
-                    <p className="text-xl font-bold text-gray-900">£50<span className="text-sm font-normal text-gray-500">/month</span></p>
+                    <p className="text-xl font-bold text-gray-900">£300<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
                   )}
                   {(subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
                     <p className="text-xl font-bold text-gray-900">Free</p>
@@ -389,48 +384,6 @@ export default function Settings() {
                 </div>
               </div>
             </div>
-
-            {/* Renewal / Expiry Dates */}
-            {subscription?.current_period_end && subscription?.subscription_status === 'active' && (
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                {subscription.cancel_at ? (
-                  // Subscription is set to cancel
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">Subscription Ending</p>
-                        <p className="text-sm text-gray-600">
-                          Your access continues until {new Date(subscription.cancel_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={handleManageBilling}
-                      disabled={managingBilling}
-                      className="text-sm text-[#1FB8CD] hover:underline disabled:opacity-50"
-                    >
-                      Reactivate
-                    </button>
-                  </div>
-                ) : (
-                  // Active subscription - show renewal date
-                  <div className="flex items-center">
-                    <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Next Renewal</p>
-                      <p className="text-sm text-gray-600">
-                        {new Date(subscription.current_period_end).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Plan Features */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
@@ -456,7 +409,7 @@ export default function Settings() {
             {/* Upgrade Options */}
             {(!subscription || subscription?.subscription_plan === 'free' || subscription?.subscription_status === 'trialing') && (
               <div className="space-y-3 mb-6">
-                <p className="text-sm font-medium text-gray-700">Upgrade your plan:</p>
+                <p className="text-sm font-medium text-gray-700">Get lifetime access:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <button
                     onClick={() => handleUpgrade('basic')}
@@ -467,7 +420,7 @@ export default function Settings() {
                       <p className="font-medium text-gray-900">Basic</p>
                       <p className="text-sm text-gray-500">5 mocks, 2,000 questions</p>
                     </div>
-                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£30/mo'}</p>
+                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£250'}</p>
                   </button>
                   <button
                     onClick={() => handleUpgrade('premium')}
@@ -476,16 +429,16 @@ export default function Settings() {
                   >
                     <div className="text-left">
                       <p className="font-medium text-gray-900">Premium</p>
-                      <p className="text-sm text-gray-500">Unlimited access</p>
+                      <p className="text-sm text-gray-500">Unlimited lifetime access</p>
                     </div>
-                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£50/mo'}</p>
+                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£300'}</p>
                   </button>
                 </div>
               </div>
             )}
 
             {/* Upgrade from Basic to Premium */}
-            {subscription?.subscription_plan === 'basic' && subscription?.subscription_status === 'active' && (
+            {subscription?.subscription_plan === 'basic' && subscription?.subscription_status === 'lifetime' && (
               <div className="mb-6">
                 <button
                   onClick={() => handleUpgrade('premium')}
@@ -496,24 +449,24 @@ export default function Settings() {
                     <p className="font-medium text-gray-900">Upgrade to Premium</p>
                     <p className="text-sm text-gray-500">Unlimited mocks & full question bank access</p>
                   </div>
-                  <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£50/mo'}</p>
+                  <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£100'}</p>
                 </button>
               </div>
             )}
 
-            {/* Manage Billing - for paying customers */}
-            {subscription?.stripe_customer_id && (
+            {/* View Invoices - for paying customers */}
+            {subscription?.stripe_customer_id && subscription?.subscription_status === 'lifetime' && (
               <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-4">
                 <div>
-                  <h4 className="font-medium text-gray-900">Manage Billing</h4>
-                  <p className="text-sm text-gray-600">Update payment method, view invoices, or cancel subscription</p>
+                  <h4 className="font-medium text-gray-900">View Invoices</h4>
+                  <p className="text-sm text-gray-600">Access your payment history and invoices</p>
                 </div>
                 <button
                   onClick={handleManageBilling}
                   disabled={managingBilling}
                   className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >
-                  {managingBilling ? "Opening..." : "Manage"}
+                  {managingBilling ? "Opening..." : "View"}
                 </button>
               </div>
             )}

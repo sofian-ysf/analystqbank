@@ -52,10 +52,10 @@ export async function GET(request: NextRequest) {
 
     const origin = request.headers.get('origin') || request.nextUrl.origin;
 
-    // Create Stripe Checkout Session
+    // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: 'subscription',
+      mode: 'payment',
       payment_method_types: ['card'],
       line_items: [
         {
@@ -68,12 +68,6 @@ export async function GET(request: NextRequest) {
       metadata: {
         supabase_user_id: user.id,
         plan: plan,
-      },
-      subscription_data: {
-        metadata: {
-          supabase_user_id: user.id,
-          plan: plan,
-        },
       },
     });
 
@@ -147,10 +141,10 @@ export async function POST(request: NextRequest) {
 
     const origin = request.headers.get('origin') || request.nextUrl.origin;
 
-    // Create Stripe Checkout Session
+    // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: 'subscription',
+      mode: 'payment',
       payment_method_types: ['card'],
       line_items: [
         {
@@ -163,12 +157,6 @@ export async function POST(request: NextRequest) {
       metadata: {
         supabase_user_id: userId,
         plan: plan,
-      },
-      subscription_data: {
-        metadata: {
-          supabase_user_id: userId,
-          plan: plan,
-        },
       },
     });
 
