@@ -2,6 +2,8 @@ import { createClient } from '@/app/lib/supabase/server'
 import BlogClient from './BlogClient'
 import { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'CFA Blog | Study Tips & Career Advice | AnalystTrainer',
   description: 'Expert CFA exam insights, study tips, and career guidance for CFA Level 1 exam preparation. Stay updated with the latest exam strategies and finance updates.',
