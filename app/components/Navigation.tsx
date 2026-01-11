@@ -59,8 +59,7 @@ export default function Navigation() {
           {/* Left Pill - Logo + Nav Items */}
           <div className={`pill-nav-left ${isScrolled ? 'frosted' : ''}`}>
             <Link href="/" className="pill-nav-logo">
-              <Image src="/logo.png" alt="AnalystTrainer" width={28} height={28} className="rounded" />
-              <span>AnalystTrainer</span>
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
             <a href="#product" className="pill-nav-item">
@@ -109,8 +108,7 @@ export default function Navigation() {
       <div className={`pill-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
         <div className="pill-mobile-header">
           <Link href="/" className="pill-mobile-logo" onClick={closeMobileMenu}>
-            <Image src="/logo.png" alt="AnalystTrainer" width={28} height={28} className="rounded" />
-            <span>AnalystTrainer</span>
+            <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
           </Link>
           <button className="pill-mobile-close" onClick={toggleMobileMenu}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

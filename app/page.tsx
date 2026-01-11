@@ -137,7 +137,7 @@ export default function Home() {
         <Navigation />
 
         {/* Hero Section */}
-        <section className="relative min-h-[calc(100vh-80px)] flex items-center bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8 pt-20">
+        <section className="relative h-screen flex items-center bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl w-full">
             <div className="text-center">
               <div className="pill-badge mb-6">

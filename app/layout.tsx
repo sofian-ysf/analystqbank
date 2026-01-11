@@ -17,6 +17,10 @@ export const metadata: Metadata = {
     default: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
     template: "%s | Finance Exam Prep",
   },
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   description: "Prepare for your finance certification exams with 2500+ practice questions, mock exams, and detailed explanations. 92% pass rate. Start your free trial today!",
   keywords: "CFA exam, CFA Level 1, FRM exam, finance certification, CFA practice questions, CFA study guide, CFA mock exam, FRM practice test, CPA exam prep, ACCA preparation, finance exam questions, CFA formula sheet, investment analysis, portfolio management, financial statement analysis",
   authors: [{ name: "Finance Exam Prep" }],
