@@ -9,21 +9,6 @@ export async function GET(
   try {
     const { id } = await params
     const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', user.id)
-      .single()
-
-    if (!adminUser) {
-      return NextResponse.json({ error: 'Not an admin' }, { status: 403 })
-    }
 
     const { data: post, error } = await supabase
       .from('blog_posts')
@@ -55,21 +40,6 @@ export async function PATCH(
   try {
     const { id } = await params
     const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', user.id)
-      .single()
-
-    if (!adminUser) {
-      return NextResponse.json({ error: 'Not an admin' }, { status: 403 })
-    }
 
     const updates = await request.json()
 
@@ -124,21 +94,6 @@ export async function DELETE(
   try {
     const { id } = await params
     const supabase = await createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { data: adminUser } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', user.id)
-      .single()
-
-    if (!adminUser) {
-      return NextResponse.json({ error: 'Not an admin' }, { status: 403 })
-    }
 
     const { error } = await supabase
       .from('blog_posts')
