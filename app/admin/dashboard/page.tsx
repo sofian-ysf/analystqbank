@@ -75,7 +75,7 @@ export default function AdminDashboard() {
   const [questionStats, setQuestionStats] = useState<QuestionStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [questionStatsLoading, setQuestionStatsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions' | 'ai-generator'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'questions' | 'ai-generator' | 'blog'>('overview');
   const [questionData, setQuestionData] = useState({
     topic: '',
     difficulty: 'intermediate',
@@ -784,10 +784,16 @@ export default function AdminDashboard() {
       <nav className="bg-gray-800 border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
-            {['overview', 'users', 'questions', 'ai-generator'].map((tab) => (
+            {['overview', 'users', 'questions', 'ai-generator', 'blog'].map((tab) => (
               <button
                 key={tab}
-                onClick={() => setActiveTab(tab as typeof activeTab)}
+                onClick={() => {
+                  if (tab === 'blog') {
+                    router.push('/admin/blog');
+                  } else {
+                    setActiveTab(tab as typeof activeTab);
+                  }
+                }}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab
                     ? 'border-blue-500 text-blue-400'
@@ -795,6 +801,7 @@ export default function AdminDashboard() {
                 }`}
               >
                 {tab === 'ai-generator' ? 'AI Generator' :
+                 tab === 'blog' ? 'Blog' :
                  tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}

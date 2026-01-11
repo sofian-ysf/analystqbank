@@ -240,3 +240,324 @@ IMPORTANT: Return ONLY a valid JSON object with no additional text. Use this exa
 }
 
 export { getOpenAIClient };
+
+// =============================================
+// BLOG POST GENERATION
+// =============================================
+
+export interface GeneratedBlogPost {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string[];
+  tags: string[];
+  read_time_minutes: number;
+  faq_items: { question: string; answer: string }[];
+  internal_linking_suggestions: string[];
+  schema_json: object;
+}
+
+// Generate SEO-optimized blog post for CFA Level 1
+export async function generateBlogPost(
+  context: string,
+  categoryName: string,
+  topic: string,
+  targetKeywords: string[],
+  wordCountTarget: number = 1500,
+  includeFaq: boolean = true
+): Promise<GeneratedBlogPost> {
+  const keywordsStr = targetKeywords.length > 0
+    ? targetKeywords.join(', ')
+    : `${topic}, CFA Level 1, CFA exam prep, finance certification`;
+
+  const openai = getOpenAIClient();
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4-turbo-preview',
+    messages: [
+      {
+        role: 'system',
+        content: `You are an expert SEO content writer specializing in finance education and CFA Level 1 exam preparation.
+
+Your task is to create high-quality, SEO-optimized blog posts that:
+- Are informative, engaging, and provide genuine value to CFA candidates
+- Use proper heading structure (H2, H3) for SEO and readability
+- Naturally incorporate target keywords without keyword stuffing
+- Have compelling, click-worthy titles and meta descriptions
+- Include FAQ sections optimized for Google's featured snippets
+- Are written in a professional but approachable tone
+- Follow UK English spelling and conventions
+- Reference relevant CFA curriculum topics and exam strategies
+- Include actionable tips and practical advice
+
+Format the main content in Markdown with proper headings (## for H2, ### for H3).`
+      },
+      {
+        role: 'user',
+        content: `Using the following reference material, create an SEO-optimized blog post for the "${categoryName}" category.
+
+Topic: ${topic}
+Target Keywords: ${keywordsStr}
+Target Word Count: approximately ${wordCountTarget} words
+Include FAQ Section: ${includeFaq ? 'Yes (generate 4-5 relevant questions and detailed answers)' : 'No'}
+
+Reference Material:
+${context}
+
+Return a JSON object in this EXACT format (no additional text outside the JSON):
+{
+  "title": "Compelling, keyword-rich title (max 60 characters for SEO)",
+  "slug": "url-friendly-slug-with-hyphens",
+  "excerpt": "Engaging excerpt that hooks the reader and includes primary keyword (150-160 characters)",
+  "content": "Full markdown content with ## H2 and ### H3 headings. Include introduction, multiple sections with practical advice, and a strong conclusion with CTA.",
+  "meta_title": "SEO-optimized title tag with primary keyword (max 60 chars)",
+  "meta_description": "Compelling meta description with keyword and CTA (max 155 chars)",
+  "meta_keywords": ["primary keyword", "secondary keyword", "related term 1", "related term 2", "related term 3"],
+  "tags": ["relevant tag 1", "relevant tag 2", "relevant tag 3"],
+  "read_time_minutes": 6,
+  "faq_items": [
+    {"question": "Common question CFA candidates ask?", "answer": "Detailed, helpful answer that provides real value..."},
+    {"question": "Another relevant question?", "answer": "Another comprehensive answer..."}
+  ],
+  "internal_linking_suggestions": ["Related topic for internal link 1", "Related topic 2", "Related topic 3"],
+  "schema_json": {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Same as title",
+    "description": "Same as meta_description",
+    "author": {
+      "@type": "Organization",
+      "name": "AnalystTrainer"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "AnalystTrainer",
+      "url": "https://www.analysttrainer.com"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage"
+    },
+    "keywords": "comma, separated, keywords"
+  }
+}
+
+IMPORTANT: Return ONLY the JSON object, no markdown code blocks or additional text.`
+      }
+    ],
+    temperature: 0.7,
+    max_tokens: 4096,
+  });
+
+  const content = response.choices[0]?.message?.content || '{}';
+
+  try {
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No JSON object found in response');
+    }
+    return JSON.parse(jsonMatch[0]);
+  } catch (error) {
+    console.error('Failed to parse blog generation response:', content);
+    throw new Error('Failed to parse blog generation response');
+  }
+}
+
+// Enhance blog content section by section using GPT-4o-mini (cost-effective)
+export async function enhanceBlogSection(
+  sectionContent: string,
+  sectionTitle: string,
+  topic: string,
+  targetKeywords: string[]
+): Promise<string> {
+  const openai = getOpenAIClient();
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: `You are an expert content enhancer for CFA exam preparation articles. Your task is to expand and enrich content sections while maintaining accuracy and SEO optimization.
+
+Guidelines:
+- Add more detailed explanations, examples, and practical tips
+- Include relevant CFA exam statistics, facts, or study strategies where appropriate
+- Maintain a professional but approachable tone
+- Use UK English spelling and conventions
+- Keep the markdown formatting (headings, lists, bold text)
+- Naturally incorporate keywords without stuffing
+- Add bullet points or numbered lists where they improve readability
+- Include actionable advice CFA candidates can use`
+      },
+      {
+        role: 'user',
+        content: `Enhance and expand this section from a blog post about "${topic}".
+
+Section Title: ${sectionTitle}
+Target Keywords: ${targetKeywords.join(', ')}
+
+Original Content:
+${sectionContent}
+
+Please expand this section to be 2-3x more detailed with:
+- More specific examples and explanations
+- Practical tips or actionable advice
+- Relevant facts or statistics if applicable
+- Better structured information (lists, subpoints if needed)
+
+Return ONLY the enhanced markdown content for this section (including the heading).`
+      }
+    ],
+    temperature: 0.7,
+    max_tokens: 2000,
+  });
+
+  return response.choices[0]?.message?.content || sectionContent;
+}
+
+// Enhance entire blog content by processing each major section
+export async function enhanceBlogContent(
+  content: string,
+  topic: string,
+  targetKeywords: string[]
+): Promise<string> {
+  const sections = content.split(/(?=^## )/m).filter(s => s.trim());
+  const enhancedSections: string[] = [];
+
+  for (let i = 0; i < sections.length; i++) {
+    const section = sections[i];
+    const titleMatch = section.match(/^## (.+)$/m);
+    const sectionTitle = titleMatch ? titleMatch[1] : `Section ${i + 1}`;
+
+    if (section.length < 200 || sectionTitle.toLowerCase().includes('conclusion')) {
+      enhancedSections.push(section);
+      continue;
+    }
+
+    try {
+      const enhanced = await enhanceBlogSection(section, sectionTitle, topic, targetKeywords);
+      enhancedSections.push(enhanced);
+
+      if (i < sections.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    } catch (error) {
+      console.error(`Failed to enhance section "${sectionTitle}":`, error);
+      enhancedSections.push(section);
+    }
+  }
+
+  return enhancedSections.join('\n\n');
+}
+
+// Generate SEO-optimized blog post with optional content enhancement
+export async function generateEnhancedBlogPost(
+  context: string,
+  categoryName: string,
+  topic: string,
+  targetKeywords: string[],
+  wordCountTarget: number = 1500,
+  includeFaq: boolean = true,
+  enhanceContentFlag: boolean = true
+): Promise<GeneratedBlogPost> {
+  const initialPost = await generateBlogPost(
+    context,
+    categoryName,
+    topic,
+    targetKeywords,
+    wordCountTarget,
+    includeFaq
+  );
+
+  if (enhanceContentFlag && initialPost.content) {
+    try {
+      initialPost.content = await enhanceBlogContent(
+        initialPost.content,
+        topic,
+        targetKeywords
+      );
+
+      const wordCount = initialPost.content.split(/\s+/).length;
+      initialPost.read_time_minutes = Math.ceil(wordCount / 200);
+    } catch (error) {
+      console.error('Content enhancement failed, using original:', error);
+    }
+  }
+
+  return initialPost;
+}
+
+// Suggest blog topics using GPT-4o-mini
+export async function suggestBlogTopics(
+  categoryName: string,
+  context: string,
+  existingTopics: string[] = []
+): Promise<{ topics: { title: string; description: string; keywords: string[] }[] }> {
+  const existingStr = existingTopics.length > 0
+    ? `\n\nExisting topics to avoid (don't suggest similar ones):\n${existingTopics.join('\n')}`
+    : '';
+
+  const openai = getOpenAIClient();
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: `You are an SEO content strategist specializing in finance education and CFA Level 1 exam preparation.
+
+Your task is to suggest compelling, SEO-friendly blog topics that:
+- Target long-tail keywords CFA candidates search for
+- Address real pain points and questions candidates have
+- Have good search volume potential
+- Are unique and not commonly covered by competitors
+- Are relevant to CFA Level 1 exam preparation`
+      },
+      {
+        role: 'user',
+        content: `Based on the following reference material for the "${categoryName}" category, suggest 5 unique blog post topics.
+${existingStr}
+
+Reference Material:
+${context.slice(0, 3000)}
+
+Return a JSON object in this exact format:
+{
+  "topics": [
+    {
+      "title": "Suggested blog post title",
+      "description": "Brief description of what the post would cover",
+      "keywords": ["primary keyword", "secondary keyword", "related term"]
+    }
+  ]
+}
+
+Return ONLY the JSON object.`
+      }
+    ],
+    temperature: 0.8,
+    max_tokens: 1500,
+  });
+
+  const content = response.choices[0]?.message?.content || '{}';
+
+  try {
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No JSON object found in response');
+    }
+    return JSON.parse(jsonMatch[0]);
+  } catch (error) {
+    console.error('Failed to parse topic suggestions:', content);
+    throw new Error('Failed to parse topic suggestions');
+  }
+}
+
+// Generate embedding for text
+export async function generateEmbedding(text: string): Promise<number[]> {
+  const openai = getOpenAIClient();
+  const response = await openai.embeddings.create({
+    model: 'text-embedding-3-small',
+    input: text,
+  });
+  return response.data[0].embedding;
+}
