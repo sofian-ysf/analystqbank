@@ -187,7 +187,8 @@ Focus on providing actionable advice and clear explanations of complex topics.`
         meta_description: generatedPost.meta_description,
         meta_keywords: generatedPost.meta_keywords,
         faq_items: generatedPost.faq_items,
-        status: 'draft', // Auto-generated posts are drafts by default
+        status: 'published',
+        published_at: new Date().toISOString(),
       })
       .select()
       .single()

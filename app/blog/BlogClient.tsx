@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import ArticleSVG from './ArticleSVG'
+import Navigation from '../components/Navigation'
 import './blog-styles.css'
 
 interface Category {
@@ -47,8 +48,10 @@ export default function BlogClient({ posts }: BlogClientProps) {
   const remainingPosts = posts.slice(1)
 
   return (
-    <main className="blog-page">
-      <div className="blog-container">
+    <>
+      <Navigation />
+      <main className="blog-page">
+        <div className="blog-container">
         {posts.length === 0 ? (
           <div className="empty-state">
             <h3>No Articles Found</h3>
@@ -113,7 +116,8 @@ export default function BlogClient({ posts }: BlogClientProps) {
             )}
           </>
         )}
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }

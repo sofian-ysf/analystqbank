@@ -5,6 +5,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import ArticleSVG from '../ArticleSVG'
 import { generateSVGIndex } from '../utils'
+import Navigation from '../../components/Navigation'
 import './article.css'
 
 interface Props {
@@ -205,8 +206,10 @@ export default async function BlogPostPage({ params }: Props) {
   const svgIndex = generateSVGIndex(slug)
 
   return (
-    <main className="blog-detail-page">
-      {/* JSON-LD Schema */}
+    <>
+      <Navigation />
+      <main className="blog-detail-page">
+        {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
@@ -322,32 +325,33 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </article>
 
-      {/* Related Posts */}
-      {relatedPosts && relatedPosts.length > 0 && (
-        <section className="related-posts-section">
-          <div className="related-posts-container">
-            <h2>Related Articles</h2>
-            <div className="related-posts-grid">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost.id}
-                  href={`/blog/${relatedPost.slug}`}
-                  className="related-post-card"
-                >
-                  <div className="related-post-image">
-                    {relatedPost.featured_image ? (
-                      <img src={relatedPost.featured_image} alt={relatedPost.title} />
-                    ) : (
-                      <ArticleSVG index={generateSVGIndex(relatedPost.slug)} />
-                    )}
-                  </div>
-                  <h3 className="related-post-title">{relatedPost.title}</h3>
-                </Link>
-              ))}
+        {/* Related Posts */}
+        {relatedPosts && relatedPosts.length > 0 && (
+          <section className="related-posts-section">
+            <div className="related-posts-container">
+              <h2>Related Articles</h2>
+              <div className="related-posts-grid">
+                {relatedPosts.map((relatedPost) => (
+                  <Link
+                    key={relatedPost.id}
+                    href={`/blog/${relatedPost.slug}`}
+                    className="related-post-card"
+                  >
+                    <div className="related-post-image">
+                      {relatedPost.featured_image ? (
+                        <img src={relatedPost.featured_image} alt={relatedPost.title} />
+                      ) : (
+                        <ArticleSVG index={generateSVGIndex(relatedPost.slug)} />
+                      )}
+                    </div>
+                    <h3 className="related-post-title">{relatedPost.title}</h3>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
-    </main>
+          </section>
+        )}
+      </main>
+    </>
   )
 }
