@@ -1,4 +1,4 @@
-import { createClient } from '@/app/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase'
 import { createClient as createBrowserClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -15,7 +15,7 @@ interface Props {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data: post } = await supabase
     .from('blog_posts')
@@ -108,7 +108,7 @@ function markdownToHtml(markdown: string): string {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   const { data: post, error } = await supabase
     .from('blog_posts')

@@ -1,4 +1,4 @@
-import { createClient } from '@/app/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase'
 import BlogClient from './BlogClient'
 import { Metadata } from 'next'
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   // Fetch published posts
   const { data: postsData, error: postsError } = await supabase
