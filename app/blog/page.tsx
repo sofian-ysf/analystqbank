@@ -22,30 +22,21 @@ export default async function BlogPage() {
   const supabase = await createClient()
 
   // Fetch published posts
-  const { data: postsData } = await supabase
+  const { data: postsData, error: postsError } = await supabase
     .from('blog_posts')
-    .select(`
-      id,
-      slug,
-      title,
-      excerpt,
-      featured_image,
-      author_name,
-      read_time_minutes,
-      tags,
-      featured,
-      published_at,
-      blog_categories (id, slug, name)
-    `)
+    .select('*')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
 
-  // Transform posts to flatten blog_categories (Supabase returns it as array)
+  if (postsError) {
+    console.error('Blog posts fetch error:', postsError)
+  }
+  console.log('Posts fetched:', postsData?.length || 0, 'posts')
+
+  // Transform posts
   const posts = (postsData || []).map(post => ({
     ...post,
-    blog_categories: Array.isArray(post.blog_categories)
-      ? post.blog_categories[0] || null
-      : post.blog_categories
+    blog_categories: null
   }))
 
   // Fetch categories

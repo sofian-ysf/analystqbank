@@ -141,3 +141,19 @@ INSERT INTO blog_categories (name, slug, description, sort_order) VALUES
   ('Portfolio Management', 'portfolio-management', 'Asset allocation, risk management, and portfolio theory', 10),
   ('CFA Exam Tips', 'exam-tips', 'Study strategies, exam day tips, and preparation advice', 11)
 ON CONFLICT (slug) DO NOTHING;
+
+-- Enable RLS on blog tables
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blog_categories ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access to published blog posts
+CREATE POLICY "Allow public read access to published posts"
+  ON blog_posts
+  FOR SELECT
+  USING (status = 'published');
+
+-- Allow public read access to all blog categories
+CREATE POLICY "Allow public read access to categories"
+  ON blog_categories
+  FOR SELECT
+  USING (true);
