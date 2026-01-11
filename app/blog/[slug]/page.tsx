@@ -1,269 +1,353 @@
-import Link from "next/link";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { getPostBySlug, getAllSlugs, formatDate } from "@/lib/blog";
-import type { Metadata } from "next";
+import { createClient } from '@/app/lib/supabase/server'
+import { createClient as createBrowserClient } from '@supabase/supabase-js'
+import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import ArticleSVG from '../ArticleSVG'
+import { generateSVGIndex } from '../utils'
+import './article.css'
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }
 
-export async function generateStaticParams() {
-  const slugs = getAllSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
-
+// Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const { slug } = await params
+  const supabase = await createClient()
+
+  const { data: post } = await supabase
+    .from('blog_posts')
+    .select('title, meta_title, meta_description, meta_keywords, og_image, excerpt')
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
 
   if (!post) {
-    return {
-      title: "Post Not Found | AnalystTrainer",
-    };
+    return { title: 'Post Not Found' }
   }
 
   return {
-    title: `${post.title} | AnalystTrainer Blog`,
-    description: post.excerpt,
-    authors: [{ name: post.author }],
+    title: post.meta_title || post.title,
+    description: post.meta_description || post.excerpt,
+    keywords: post.meta_keywords?.join(', '),
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
-      images: post.ogImage ? [post.ogImage] : [],
+      title: post.meta_title || post.title,
+      description: post.meta_description || post.excerpt,
+      images: post.og_image ? [post.og_image] : undefined,
+      type: 'article',
     },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${slug}`,
     },
-  };
+  }
 }
 
-// Custom MDX components for styling
-const mdxComponents = {
-  h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="text-3xl font-bold text-[#13343B] mt-8 mb-4" {...props} />
-  ),
-  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="text-2xl font-bold text-[#13343B] mt-8 mb-4" {...props} />
-  ),
-  h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="text-xl font-bold text-[#13343B] mt-6 mb-3" {...props} />
-  ),
-  p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="text-[#5f6368] leading-relaxed mb-4" {...props} />
-  ),
-  ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="list-disc list-inside text-[#5f6368] mb-4 space-y-2" {...props} />
-  ),
-  ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="list-decimal list-inside text-[#5f6368] mb-4 space-y-2" {...props} />
-  ),
-  li: (props: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="text-[#5f6368]" {...props} />
-  ),
-  a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a className="text-[#1FB8CD] hover:underline" {...props} />
-  ),
-  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote className="border-l-4 border-[#1FB8CD] pl-4 italic text-[#5f6368] my-4" {...props} />
-  ),
-  code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code className="bg-[#F3F3EE] px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
-  ),
-  pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre className="bg-[#13343B] text-white p-4 rounded-lg overflow-x-auto mb-4" {...props} />
-  ),
-  strong: (props: React.HTMLAttributes<HTMLElement>) => (
-    <strong className="font-bold text-[#13343B]" {...props} />
-  ),
-  hr: () => <hr className="my-8 border-[#EAEEEF]" />,
-};
+// Generate static params for all published posts
+export async function generateStaticParams() {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
-export default async function BlogPost({ params }: Props) {
-  const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const { data: posts } = await supabase
+    .from('blog_posts')
+    .select('slug')
+    .eq('status', 'published')
 
-  if (!post) {
-    notFound();
+  return posts?.map(post => ({ slug: post.slug })) || []
+}
+
+// Format date helper
+function formatDate(dateString: string) {
+  try {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  } catch {
+    return ''
+  }
+}
+
+// Simple markdown to HTML converter
+function markdownToHtml(markdown: string): string {
+  if (!markdown) return ''
+
+  // Normalize line endings and remove excessive indentation
+  let html = markdown
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map(line => line.replace(/^[\t ]+/, '')) // Remove leading whitespace from each line
+    .join('\n')
+
+  html = html
+    .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+    .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>')
+    .replace(/^\d+\.\s+(.*$)/gim, '<li>$1</li>') // Handle numbered lists
+    .replace(/^\- (.*$)/gim, '<li>$1</li>')
+    .replace(/\n\n/g, '</p><p>')
+
+  html = '<p>' + html + '</p>'
+  html = html.replace(/<p><\/p>/g, '')
+  html = html.replace(/<p>(<h[123]>)/g, '$1')
+  html = html.replace(/(<\/h[123]>)<\/p>/g, '$1')
+  html = html.replace(/<p>(<li>)/g, '<ul>$1')
+  html = html.replace(/(<\/li>)<\/p>/g, '$1</ul>')
+  // Clean up any remaining empty paragraphs
+  html = html.replace(/<p>\s*<\/p>/g, '')
+
+  return html
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  const supabase = await createClient()
+
+  const { data: post, error } = await supabase
+    .from('blog_posts')
+    .select(`
+      *,
+      blog_categories (id, slug, name)
+    `)
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
+
+  if (error || !post) {
+    notFound()
   }
 
-  // Schema.org structured data for SEO
-  const jsonLd = {
+  // Fetch related posts
+  const { data: relatedPosts } = await supabase
+    .from('blog_posts')
+    .select('id, slug, title, featured_image, read_time_minutes')
+    .eq('category_id', post.category_id)
+    .neq('id', post.id)
+    .eq('status', 'published')
+    .limit(3)
+
+  // Build article schema
+  const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
-    author: {
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.meta_description || post.excerpt,
+    "author": {
       "@type": "Person",
-      name: post.author,
+      "name": post.author_name
     },
-    datePublished: post.date,
-    publisher: {
+    "publisher": {
       "@type": "Organization",
-      name: "AnalystTrainer",
-      logo: {
-        "@type": "ImageObject",
-        url: "https://www.analysttrainer.com/logo.png",
-      },
+      "name": "AnalystTrainer",
+      "url": "https://www.analysttrainer.com"
     },
-  };
+    "datePublished": post.published_at,
+    "dateModified": post.updated_at,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://www.analysttrainer.com/blog/${post.slug}`
+    },
+    ...(post.featured_image && { "image": post.featured_image }),
+  }
+
+  // Parse FAQ items (may be stored as string or array)
+  const faqItems: { question: string; answer: string }[] = (() => {
+    if (!post.faq_items) return []
+    if (Array.isArray(post.faq_items)) return post.faq_items
+    if (typeof post.faq_items === 'string') {
+      try {
+        const parsed = JSON.parse(post.faq_items)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return []
+      }
+    }
+    return []
+  })()
+
+  // FAQ schema
+  const faqSchema = faqItems.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  } : null
+
+  // Parse tags (may be stored as string or array)
+  const tags: string[] = (() => {
+    if (!post.tags) return []
+    if (Array.isArray(post.tags)) return post.tags
+    if (typeof post.tags === 'string') {
+      try {
+        const parsed = JSON.parse(post.tags)
+        return Array.isArray(parsed) ? parsed : []
+      } catch {
+        return []
+      }
+    }
+    return []
+  })()
+
+  // Share URL
+  const shareUrl = `https://www.analysttrainer.com/blog/${slug}`
+  const svgIndex = generateSVGIndex(slug)
 
   return (
-    <>
+    <main className="blog-detail-page">
+      {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <div className="min-h-screen bg-[#FBFAF4]">
-        {/* Header */}
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
-              <div className="hidden md:flex items-center space-x-8">
-                <Link href="/#product" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  Features
-                </Link>
-                <Link href="/#pricing" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  Pricing
-                </Link>
-                <Link href="/blog" className="text-[#13343B] font-medium transition-colors">
-                  Blog
-                </Link>
+      {/* Navigation */}
+      <nav className="blog-detail-nav">
+        <Link href="/blog" className="nav-back-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back
+        </Link>
+      </nav>
+
+      <article>
+        {/* Header Image/SVG */}
+        <div className="blog-detail-header-image">
+          {post.featured_image ? (
+            <img src={post.featured_image} alt={post.title} />
+          ) : (
+            <ArticleSVG index={svgIndex} />
+          )}
+        </div>
+
+        <div className="blog-detail-content">
+          <header className="blog-detail-header">
+            {/* Meta Section */}
+            <div className="blog-detail-meta">
+              <div className="blog-detail-meta-info">
+                <div className="blog-detail-meta-item">
+                  <span className="blog-detail-meta-label">Written by</span>
+                  <span className="blog-detail-meta-value">{post.author_name || 'AnalystTrainer'}</span>
+                </div>
+                <div className="blog-detail-meta-item">
+                  <span className="blog-detail-meta-label">Published on</span>
+                  <time className="blog-detail-meta-value" dateTime={post.published_at || post.created_at}>
+                    {formatDate(post.published_at || post.created_at)}
+                  </time>
+                </div>
               </div>
-
-              <div className="hidden md:flex items-center space-x-4">
-                <Link href="/login" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  Login
-                </Link>
-                <Link href="/signup" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
-                  Start Free Trial
-                </Link>
+              <div className="blog-detail-social-buttons">
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(post.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="blog-detail-social-button"
+                  aria-label="Share on X (Twitter)"
+                >
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+                <a
+                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(post.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="blog-detail-social-button"
+                  aria-label="Share on LinkedIn"
+                >
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </a>
               </div>
-
-              <button className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]" aria-label="Open menu">
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
             </div>
-          </nav>
-        </header>
+            <h1 className="blog-detail-title">{post.title}</h1>
+          </header>
 
-        {/* Article */}
-        <article className="py-12 px-4 sm:px-6">
-          <div className="max-w-[720px] mx-auto">
-            {/* Back link */}
-            <Link href="/blog" className="inline-flex items-center text-[#5f6368] hover:text-[#13343B] mb-8">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Blog
-            </Link>
+          {/* Article Body */}
+          <div className="blog-detail-body">
+            <div
+              className="blog-content"
+              dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content || '') }}
+            />
+          </div>
 
-            {/* Article Header */}
-            <header className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-3 py-1 bg-[#1FB8CD]/10 text-[#1A6872] text-sm font-medium rounded-full">
-                  {post.category}
-                </span>
-                <span className="text-[#9aa0a6] text-sm">{post.readTime}</span>
+          {/* Tags */}
+          {tags.length > 0 && (
+            <div className="blog-tags-section">
+              <h3>Tags</h3>
+              <div className="blog-tags">
+                {tags.map((tag) => (
+                  <span key={tag} className="blog-tag">{tag}</span>
+                ))}
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#13343B] mb-4">
-                {post.title}
-              </h1>
-              <p className="text-xl text-[#5f6368] mb-6">
-                {post.excerpt}
-              </p>
-              <div className="flex items-center gap-4 text-sm text-[#9aa0a6]">
-                <span>By {post.author}</span>
-                <span>•</span>
-                <time dateTime={post.date}>{formatDate(post.date)}</time>
-              </div>
-            </header>
-
-            {/* Article Content */}
-            <div className="prose prose-lg max-w-none">
-              <MDXRemote source={post.content} components={mdxComponents} />
             </div>
+          )}
 
-            {/* CTA Section */}
-            <div className="mt-12 bg-[#13343B] rounded-xl p-8 text-center">
-              <h3 className="text-xl font-bold text-white mb-2">Ready to Practice?</h3>
-              <p className="text-white/80 mb-6">
-                Put your knowledge to the test with our CFA practice questions.
-              </p>
-              <Link
-                href="/signup"
-                className="inline-block px-6 py-3 bg-[#1FB8CD] text-white rounded-lg hover:bg-[#1A6872] transition-colors font-medium"
-              >
-                Start Free Trial
-              </Link>
+          {/* FAQ Section */}
+          {faqItems.length > 0 && (
+            <div className="faq-section">
+              <h2>Frequently Asked Questions</h2>
+              {faqItems.map((faq, index) => (
+                <div key={index} className="faq-item">
+                  <h3>{faq.question}</h3>
+                  <p>{faq.answer}</p>
+                </div>
+              ))}
             </div>
+          )}
 
-            {/* More Posts */}
-            <div className="mt-12 pt-8 border-t border-[#EAEEEF]">
-              <Link href="/blog" className="inline-flex items-center text-[#1FB8CD] font-medium hover:underline">
-                ← View all posts
-              </Link>
+          {/* Footer */}
+          <footer className="blog-detail-footer">
+            <Link href="/blog" className="back-link">&larr; Back to Articles</Link>
+          </footer>
+        </div>
+      </article>
+
+      {/* Related Posts */}
+      {relatedPosts && relatedPosts.length > 0 && (
+        <section className="related-posts-section">
+          <div className="related-posts-container">
+            <h2>Related Articles</h2>
+            <div className="related-posts-grid">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/blog/${relatedPost.slug}`}
+                  className="related-post-card"
+                >
+                  <div className="related-post-image">
+                    {relatedPost.featured_image ? (
+                      <img src={relatedPost.featured_image} alt={relatedPost.title} />
+                    ) : (
+                      <ArticleSVG index={generateSVGIndex(relatedPost.slug)} />
+                    )}
+                  </div>
+                  <h3 className="related-post-title">{relatedPost.title}</h3>
+                </Link>
+              ))}
             </div>
           </div>
-        </article>
-
-        {/* Footer */}
-        <footer className="bg-white border-t border-[#EAEEEF]">
-          <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="col-span-2 md:col-span-1">
-                <Link href="/">
-                  <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-                </Link>
-                <p className="mt-4 text-[#5f6368] text-sm">
-                  The leading platform for finance certification exam preparation.
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-medium text-[#13343B] mb-4">Product</h4>
-                <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/#product" className="hover:text-[#13343B] transition-colors">Features</Link></li>
-                  <li><Link href="/#pricing" className="hover:text-[#13343B] transition-colors">Pricing</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-medium text-[#13343B] mb-4">Resources</h4>
-                <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/blog" className="hover:text-[#13343B] transition-colors">Blog</Link></li>
-                  <li><Link href="/help" className="hover:text-[#13343B] transition-colors">Help Centre</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-medium text-[#13343B] mb-4">Legal</h4>
-                <ul className="space-y-2 text-sm text-[#9aa0a6]">
-                  <li><Link href="/privacy" className="hover:text-[#13343B] transition-colors">Privacy</Link></li>
-                  <li><Link href="/terms" className="hover:text-[#13343B] transition-colors">Terms</Link></li>
-                  <li><Link href="/refund" className="hover:text-[#13343B] transition-colors">Refund Policy</Link></li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
-              <p>© 2025 AnalystTrainer. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
-  );
+        </section>
+      )}
+    </main>
+  )
 }
