@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -16,7 +16,7 @@ interface TopicSuggestion {
   keywords: string[]
 }
 
-export default function BlogGeneratePage() {
+function BlogGenerateContent() {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [topic, setTopic] = useState('')
@@ -334,5 +334,17 @@ export default function BlogGeneratePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BlogGeneratePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-900 p-8 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <BlogGenerateContent />
+    </Suspense>
   )
 }
