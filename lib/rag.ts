@@ -130,7 +130,7 @@ export async function retrieveContext(
 }
 
 // Map UI topic names to Pinecone metadata names (handles mismatches from folder names)
-const TOPIC_NAME_MAP: Record<string, string> = {
+export const TOPIC_NAME_MAP: Record<string, string> = {
   'Ethical and Professional Standards': 'Ethical and professional Standards',
   'Fixed Income': 'Fixed Income ',  // Trailing space in folder name
   'Portfolio Management': 'Portfolio Management '  // Trailing space in folder name
