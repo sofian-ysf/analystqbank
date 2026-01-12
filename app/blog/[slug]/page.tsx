@@ -44,6 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+// Revalidate pages every 60 seconds
+export const revalidate = 60
+
 // Generate static params for all published posts
 export async function generateStaticParams() {
   const supabase = createBrowserClient(
