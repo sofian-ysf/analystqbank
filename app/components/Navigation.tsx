@@ -62,18 +62,18 @@ export default function Navigation() {
               <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
-            <a href="#product" className="pill-nav-item">
+            <Link href="/#product" className="pill-nav-item">
               Features
-            </a>
-            <a href="#pricing" className="pill-nav-item">
+            </Link>
+            <Link href="/#pricing" className="pill-nav-item">
               Pricing
-            </a>
+            </Link>
             <Link href="/blog" className="pill-nav-item">
               Blog
             </Link>
-            <a href="#faq" className="pill-nav-item">
+            <Link href="/#faq" className="pill-nav-item">
               FAQ
-            </a>
+            </Link>
           </div>
 
           {/* Right Pill - CTA */}
@@ -120,18 +120,18 @@ export default function Navigation() {
 
         <div className="pill-mobile-content">
           <div className="pill-mobile-nav-links">
-            <a href="#product" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
+            <Link href="/#product" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Features
-            </a>
-            <a href="#pricing" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
+            </Link>
+            <Link href="/#pricing" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Pricing
-            </a>
+            </Link>
             <Link href="/blog" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Blog
             </Link>
-            <a href="#faq" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
+            <Link href="/#faq" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               FAQ
-            </a>
+            </Link>
           </div>
 
           {/* Bottom CTA */}
