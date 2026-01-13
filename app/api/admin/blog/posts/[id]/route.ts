@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/app/lib/supabase/server'
+import { submitToSearchEngines } from '@/lib/search-indexing'
 
 // GET - Get a single blog post
 export async function GET(
@@ -70,6 +71,9 @@ export async function PATCH(
       }
     }
 
+    // Check if this is a new publish (going from draft to published)
+    const isNewPublish = updates.status === 'published'
+
     const { data: post, error } = await supabase
       .from('blog_posts')
       .update(updates)
@@ -78,6 +82,21 @@ export async function PATCH(
       .single()
 
     if (error) throw error
+
+    // Submit to search engines when published
+    if (isNewPublish && post) {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.analysttrainer.com'
+      const blogUrl = `${siteUrl}/blog/${post.slug}`
+
+      // Run indexing in the background (don't await)
+      submitToSearchEngines(blogUrl)
+        .then(results => {
+          console.log(`[Indexing] Results for ${blogUrl}:`, results)
+        })
+        .catch(err => {
+          console.error(`[Indexing] Error for ${blogUrl}:`, err)
+        })
+    }
 
     return NextResponse.json({ post })
   } catch (error) {

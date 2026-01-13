@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/app/lib/supabase/server'
 import { buildBlogContext } from '@/lib/blog-rag'
 import { generateEnhancedBlogPost, InternalLinksData } from '@/lib/openai'
+import { submitToSearchEngines } from '@/lib/search-indexing'
 
 // Helper to fetch and extract text content from a URL
 async function fetchUrlContent(url: string): Promise<string> {
