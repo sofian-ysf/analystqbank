@@ -3,6 +3,53 @@ import { createClient } from '@/app/lib/supabase/server'
 import { buildBlogContext } from '@/lib/blog-rag'
 import { generateEnhancedBlogPost } from '@/lib/openai'
 
+// Helper to fetch and extract text content from a URL
+async function fetchUrlContent(url: string): Promise<string> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; AnalystTrainer/1.0)',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch URL: ${response.status}`)
+    }
+
+    const html = await response.text()
+
+    // Strip HTML tags and extract text content
+    let text = html
+      // Remove script and style tags with content
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+      // Remove HTML comments
+      .replace(/<!--[\s\S]*?-->/g, '')
+      // Remove HTML tags
+      .replace(/<[^>]+>/g, ' ')
+      // Decode HTML entities
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      // Clean up whitespace
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    // Limit to ~10000 chars to avoid token limits
+    if (text.length > 10000) {
+      text = text.slice(0, 10000) + '...'
+    }
+
+    return text
+  } catch (error) {
+    console.error('Error fetching URL content:', error)
+    throw new Error(`Failed to fetch content from URL: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
+}
+
 // GET - List recent generation jobs
 export async function GET() {
   try {
@@ -37,7 +84,8 @@ export async function POST(request: NextRequest) {
       keywords = [],
       word_count = 1500,
       include_faq = true,
-      enhance_content = true
+      enhance_content = true,
+      reference_url
     } = await request.json()
 
     if (!category_id || !topic) {
@@ -72,8 +120,25 @@ export async function POST(request: NextRequest) {
     if (jobError) throw jobError
 
     try {
-      // Build context from uploaded resources
-      const context = await buildBlogContext(supabase, category_id, topic)
+      // Build context from Pinecone RAG
+      let context = await buildBlogContext(supabase, category_id, topic)
+
+      // If a reference URL is provided, fetch and add its content
+      let referenceContent = ''
+      if (reference_url) {
+        console.log(`[Blog Gen] Fetching reference URL: ${reference_url}`)
+        referenceContent = await fetchUrlContent(reference_url)
+        console.log(`[Blog Gen] Fetched ${referenceContent.length} chars from reference URL`)
+      }
+
+      // Combine contexts
+      if (referenceContent) {
+        const referenceSection = `
+[REFERENCE ARTICLE - Use as inspiration for structure and topics, but create ORIGINAL content]
+${referenceContent}
+[END REFERENCE]`
+        context = referenceSection + '\n\n' + (context || '')
+      }
 
       if (!context || context.length < 100) {
         // If no resources, use a default context with CFA info

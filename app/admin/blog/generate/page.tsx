@@ -21,6 +21,7 @@ function BlogGenerateContent() {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [topic, setTopic] = useState('')
   const [keywords, setKeywords] = useState('')
+  const [referenceUrl, setReferenceUrl] = useState('')
   const [wordCount, setWordCount] = useState(1500)
   const [includeFaq, setIncludeFaq] = useState(true)
   const [enhanceContent, setEnhanceContent] = useState(true)
@@ -117,6 +118,7 @@ function BlogGenerateContent() {
           word_count: wordCount,
           include_faq: includeFaq,
           enhance_content: enhanceContent,
+          reference_url: referenceUrl || undefined,
         }),
       })
 
@@ -129,6 +131,7 @@ function BlogGenerateContent() {
       setSuccess(`Blog post "${data.post.title}" generated successfully!`)
       setTopic('')
       setKeywords('')
+      setReferenceUrl('')
       setSuggestions([])
 
       // Redirect to the post edit page after a short delay
@@ -258,6 +261,23 @@ function BlogGenerateContent() {
               placeholder="e.g., time value of money, present value, future value, CFA exam"
               className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+
+          {/* Reference URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Reference URL (optional)
+            </label>
+            <input
+              type="url"
+              value={referenceUrl}
+              onChange={(e) => setReferenceUrl(e.target.value)}
+              placeholder="e.g., https://example.com/article-to-use-as-inspiration"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Provide a URL to use as inspiration. The AI will create original content based on the structure and topics covered.
+            </p>
           </div>
 
           {/* Options */}
