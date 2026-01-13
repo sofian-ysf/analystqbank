@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/app/lib/supabase/server'
 import { buildBlogContext } from '@/lib/blog-rag'
-import { generateEnhancedBlogPost } from '@/lib/openai'
+import { generateEnhancedBlogPost, InternalLinksData } from '@/lib/openai'
 
 // Helper to fetch and extract text content from a URL
 async function fetchUrlContent(url: string): Promise<string> {
@@ -105,6 +105,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
     }
 
+    // Fetch existing published blog posts for internal linking
+    const { data: existingPosts } = await supabase
+      .from('blog_posts')
+      .select('title, slug')
+      .eq('status', 'published')
+      .limit(20)
+
+    const internalLinks: InternalLinksData = {
+      blogPosts: (existingPosts || []).map(post => ({
+        title: post.title,
+        url: `/blog/${post.slug}`
+      })),
+      ctaLinks: [] // Using default CTA links from openai.ts
+    }
+
+    console.log(`[Blog Gen] Found ${internalLinks.blogPosts.length} existing posts for internal linking`)
+
     // Create a generation job to track progress
     const { data: job, error: jobError } = await supabase
       .from('blog_generation_jobs')
@@ -153,7 +170,8 @@ Focus on providing valuable, accurate information for CFA candidates studying fo
           keywords,
           word_count,
           include_faq,
-          enhance_content
+          enhance_content,
+          internalLinks
         )
 
         // Create the blog post
@@ -200,7 +218,8 @@ Focus on providing valuable, accurate information for CFA candidates studying fo
         keywords,
         word_count,
         include_faq,
-        enhance_content
+        enhance_content,
+        internalLinks
       )
 
       // Create the blog post

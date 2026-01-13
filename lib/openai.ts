@@ -260,6 +260,30 @@ export interface GeneratedBlogPost {
   schema_json: object;
 }
 
+// Internal links data structure
+export interface InternalLinksData {
+  blogPosts: { title: string; url: string }[];
+  ctaLinks: { phrase: string; url: string }[];
+}
+
+// Default CTA links to include in blog posts
+const DEFAULT_CTA_LINKS = [
+  { phrase: 'start your free trial', url: '/signup' },
+  { phrase: 'free trial', url: '/signup' },
+  { phrase: 'start practising', url: '/signup' },
+  { phrase: 'start practicing', url: '/signup' },
+  { phrase: 'begin your preparation', url: '/signup' },
+  { phrase: 'practice questions', url: '/question-bank' },
+  { phrase: 'question bank', url: '/question-bank' },
+  { phrase: 'mock exams', url: '/mock-exams' },
+  { phrase: 'mock exam', url: '/mock-exams' },
+  { phrase: 'full-length practice exam', url: '/mock-exams' },
+  { phrase: 'study materials', url: '/resources' },
+  { phrase: 'pricing', url: '/pricing' },
+  { phrase: 'get started', url: '/signup' },
+  { phrase: 'sign up', url: '/signup' },
+];
+
 // Generate SEO-optimized blog post for CFA Level 1
 export async function generateBlogPost(
   context: string,
@@ -267,11 +291,32 @@ export async function generateBlogPost(
   topic: string,
   targetKeywords: string[],
   wordCountTarget: number = 1500,
-  includeFaq: boolean = true
+  includeFaq: boolean = true,
+  internalLinks?: InternalLinksData
 ): Promise<GeneratedBlogPost> {
   const keywordsStr = targetKeywords.length > 0
     ? targetKeywords.join(', ')
     : `${topic}, CFA Level 1, CFA exam prep, finance certification`;
+
+  // Build internal links instruction
+  const ctaLinks = [...DEFAULT_CTA_LINKS, ...(internalLinks?.ctaLinks || [])];
+  const blogLinks = internalLinks?.blogPosts || [];
+
+  let internalLinksInstruction = '';
+  if (blogLinks.length > 0 || ctaLinks.length > 0) {
+    internalLinksInstruction = `
+
+IMPORTANT - INTERNAL LINKING REQUIREMENTS:
+You MUST include internal links naturally within the content using markdown link format [text](url).
+
+CTA Links - Include 2-3 of these where contextually appropriate:
+${ctaLinks.map(l => `- When mentioning "${l.phrase}" or similar, link to: ${l.url}`).join('\n')}
+
+${blogLinks.length > 0 ? `Related Blog Posts - Link to 1-2 of these where relevant:
+${blogLinks.map(l => `- "${l.title}": ${l.url}`).join('\n')}` : ''}
+
+Make the links feel natural - don't force them. Use variations of the phrases and integrate them smoothly into sentences.`;
+  }
 
   const openai = getOpenAIClient();
   const response = await openai.chat.completions.create({
@@ -291,8 +336,10 @@ Your task is to create high-quality, SEO-optimized blog posts that:
 - Follow UK English spelling and conventions
 - Reference relevant CFA curriculum topics and exam strategies
 - Include actionable tips and practical advice
+- INCLUDE INTERNAL LINKS to related content and call-to-action pages
 
-Format the main content in Markdown with proper headings (## for H2, ### for H3).`
+Format the main content in Markdown with proper headings (## for H2, ### for H3).
+Use markdown links like [anchor text](url) for internal links.`
       },
       {
         role: 'user',
@@ -302,6 +349,7 @@ Topic: ${topic}
 Target Keywords: ${keywordsStr}
 Target Word Count: approximately ${wordCountTarget} words
 Include FAQ Section: ${includeFaq ? 'Yes (generate 4-5 relevant questions and detailed answers)' : 'No'}
+${internalLinksInstruction}
 
 Reference Material:
 ${context}
@@ -458,7 +506,8 @@ export async function generateEnhancedBlogPost(
   targetKeywords: string[],
   wordCountTarget: number = 1500,
   includeFaq: boolean = true,
-  enhanceContentFlag: boolean = true
+  enhanceContentFlag: boolean = true,
+  internalLinks?: InternalLinksData
 ): Promise<GeneratedBlogPost> {
   const initialPost = await generateBlogPost(
     context,
@@ -466,7 +515,8 @@ export async function generateEnhancedBlogPost(
     topic,
     targetKeywords,
     wordCountTarget,
-    includeFaq
+    includeFaq,
+    internalLinks
   );
 
   if (enhanceContentFlag && initialPost.content) {
