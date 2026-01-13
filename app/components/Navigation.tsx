@@ -62,7 +62,7 @@ export default function Navigation() {
               <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
-            <Link href="/#product" className="pill-nav-item">
+            <Link href="/#features" className="pill-nav-item">
               Features
             </Link>
             <Link href="/#pricing" className="pill-nav-item">
@@ -120,7 +120,7 @@ export default function Navigation() {
 
         <div className="pill-mobile-content">
           <div className="pill-mobile-nav-links">
-            <Link href="/#product" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
+            <Link href="/#features" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Features
             </Link>
             <Link href="/#pricing" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
