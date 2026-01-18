@@ -1,0 +1,32 @@
+name: Generate Blog Posts
+
+on:
+  schedule:
+    # 5 times per day (UTC)
+    - cron: '0 6 * * *'   # 6:00 AM
+    - cron: '0 10 * * *'  # 10:00 AM
+    - cron: '0 14 * * *'  # 2:00 PM
+    - cron: '0 18 * * *'  # 6:00 PM
+    - cron: '0 22 * * *'  # 10:00 PM
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger blog generation
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X GET \
+            "https://www.analysttrainer.com/api/cron/generate-blog" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "Response: $body"
+          echo "HTTP Status: $http_code"
+
+          if [ "$http_code" -ne 200 ]; then
+            echo "Failed to generate blog post"
+            exit 1
+          fi
