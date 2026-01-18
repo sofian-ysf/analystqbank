@@ -18,7 +18,7 @@ jobs:
         run: |
           response=$(curl -s -w "\n%{http_code}" -X GET \
             "https://www.analysttrainer.com/api/cron/generate-blog" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}")
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET1 }}")
 
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | sed '$d')
