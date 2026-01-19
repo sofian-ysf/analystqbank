@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { useSubscription } from "@/hooks/useSubscription";
+import { UpgradePrompt, UpgradeBanner } from "@/components/UpgradePrompt";
 
 export default function MockExams() {
   const router = useRouter();
@@ -13,6 +15,15 @@ export default function MockExams() {
   const [loading, setLoading] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState("Level I");
   const supabase = createClient();
+
+  // Subscription access control
+  const {
+    subscription,
+    loading: subscriptionLoading,
+    canAccessMockExams,
+    isTrialExpired,
+    plan,
+  } = useSubscription();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -118,13 +129,36 @@ export default function MockExams() {
     router.push("/");
   };
 
-  if (loading) {
+  if (loading || subscriptionLoading) {
     return (
       <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#13343B] mx-auto"></div>
           <p className="mt-4 text-[#5f6368]">Loading mock exams...</p>
         </div>
+      </div>
+    );
+  }
+
+  // Check subscription access
+  if (!canAccessMockExams) {
+    return (
+      <div className="min-h-screen bg-[#FBFAF4]">
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/dashboard">
+                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
+              </Link>
+            </div>
+          </nav>
+        </header>
+        <UpgradePrompt
+          plan={plan}
+          isTrialExpired={isTrialExpired}
+          mockExamsRemaining={subscription?.mockExamsRemaining}
+          feature="mockExams"
+        />
       </div>
     );
   }
@@ -175,6 +209,12 @@ export default function MockExams() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Upgrade Banner if running low */}
+        <UpgradeBanner
+          mockExamsRemaining={subscription?.mockExamsRemaining}
+          plan={plan}
+        />
+
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Mock Exams</h1>

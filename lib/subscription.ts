@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase';
-import { PLAN_LIMITS, PlanType } from '@/lib/stripe';
+import { PLAN_LIMITS, PlanType } from '@/lib/plans';
 
 export interface SubscriptionInfo {
   plan: PlanType;
@@ -49,13 +49,15 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
     ? null
     : Math.max(0, limits.questions - questionsAnswered);
 
-  // Check access
+  // Check access - 'lifetime' status is for paid users
+  const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
+
   const canAccessMockExams = !isTrialExpired &&
-    (status === 'active' || status === 'trialing') &&
+    hasValidStatus &&
     (mockExamsRemaining === null || mockExamsRemaining > 0);
 
   const canAccessQuestions = !isTrialExpired &&
-    (status === 'active' || status === 'trialing') &&
+    hasValidStatus &&
     (questionsRemaining === null || questionsRemaining > 0);
 
   return {
