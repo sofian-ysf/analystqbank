@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase'
 import { buildBlogContext } from '@/lib/blog-rag'
 import { generateEnhancedBlogPost, suggestBlogTopics } from '@/lib/openai'
+import { submitToSearchEngines } from '@/lib/search-indexing'
 
 // CFA Level 1 topic areas for automatic blog generation
 const CFA_TOPICS = [
@@ -195,6 +196,13 @@ Focus on providing actionable advice and clear explanations of complex topics.`
 
     if (postError) throw postError
 
+    // Submit to search engines for indexing
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.analysttrainer.com'
+    const blogUrl = `${siteUrl}/blog/${post.slug}`
+
+    const indexingResults = await submitToSearchEngines(blogUrl)
+    console.log(`[Cron] Indexing results for ${blogUrl}:`, indexingResults)
+
     // Update job as completed
     await supabase
       .from('blog_generation_jobs')
@@ -210,7 +218,8 @@ Focus on providing actionable advice and clear explanations of complex topics.`
       category: category.name,
       topic: topicToGenerate.title,
       post_id: post.id,
-      slug: post.slug
+      slug: post.slug,
+      indexing: indexingResults
     })
 
   } catch (error) {
