@@ -122,18 +122,20 @@ function pemToArrayBuffer(pem: string): ArrayBuffer {
 export async function submitToBing(url: string): Promise<{ success: boolean; message: string }> {
   try {
     const apiKey = process.env.BING_WEBMASTER_API_KEY
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.analysttrainer.com'
+    const siteUrl = 'https://www.analysttrainer.com'
 
     if (!apiKey) {
       console.log('[Indexing] Bing API key not configured, skipping')
       return { success: false, message: 'Bing API key not configured' }
     }
 
+    console.log(`[Indexing] Submitting to Bing: ${url}`)
+
     const response = await fetch(
-      `https://ssl.bing.com/webmaster/api.svc/json/SubmitUrl?apikey=${apiKey}`,
+      `https://www.bing.com/webmaster/api.svc/json/SubmitUrl?apikey=${apiKey}`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
         body: JSON.stringify({
           siteUrl: siteUrl,
           url: url
@@ -141,13 +143,30 @@ export async function submitToBing(url: string): Promise<{ success: boolean; mes
       }
     )
 
+    const responseText = await response.text()
+    console.log(`[Indexing] Bing response status: ${response.status}, body: ${responseText}`)
+
     if (!response.ok) {
-      const error = await response.text()
-      console.error('[Indexing] Bing error:', error)
-      return { success: false, message: `Bing submission failed: ${error}` }
+      console.error('[Indexing] Bing error:', responseText)
+      return { success: false, message: `Bing submission failed (${response.status}): ${responseText}` }
     }
 
-    console.log(`[Indexing] Successfully submitted to Bing: ${url}`)
+    // Bing returns empty response or { "d": null } on success
+    if (responseText === '' || responseText === '{"d":null}' || response.status === 200) {
+      console.log(`[Indexing] Successfully submitted to Bing: ${url}`)
+      return { success: true, message: 'Submitted to Bing' }
+    }
+
+    // Check for error in response body
+    try {
+      const data = JSON.parse(responseText)
+      if (data.ErrorCode || data.Message) {
+        return { success: false, message: `Bing error: ${data.Message || data.ErrorCode}` }
+      }
+    } catch {
+      // Not JSON, treat as success if status was 200
+    }
+
     return { success: true, message: 'Submitted to Bing' }
 
   } catch (error) {
