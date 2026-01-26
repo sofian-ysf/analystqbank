@@ -5,6 +5,7 @@ import Script from "next/script";
 import Image from "next/image";
 import { useState, useRef } from "react";
 import Navigation from "./components/Navigation";
+import ScrollReveal from "./components/ScrollReveal";
 
 const testimonials = [
   { initials: "JC", name: "James C.", role: "Investment Analyst, London", quote: "The question bank mirrors the actual CFA exam remarkably well. I felt genuinely prepared walking into the testing centre." },
@@ -182,6 +183,96 @@ export default function Home() {
                   <div className="text-sm text-gray-600">Questions Per Mock</div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* App Screenshots Section */}
+        <section className="px-4 py-24 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-[#fbfaf4]">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal>
+              <div className="text-center mb-16">
+                <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">See It In Action</p>
+                <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+                  A Platform Built for Success
+                </h2>
+                <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                  Experience an intuitive, distraction-free environment designed to maximise your study efficiency.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <div className="relative mx-auto max-w-5xl">
+                {/* Browser mockup frame */}
+                <div className="rounded-2xl bg-gray-900 p-2 shadow-2xl">
+                  <div className="flex items-center gap-2 px-4 py-2">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div className="flex-1 mx-4">
+                      <div className="bg-gray-800 rounded-md px-4 py-1.5 text-sm text-gray-400 text-center">
+                        analysttrainer.com
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-lg overflow-hidden">
+                    <Image
+                      src="/images/questionpage.png"
+                      alt="AnalystTrainer Question Bank Interface"
+                      width={1200}
+                      height={800}
+                      className="w-full h-auto"
+                      priority
+                    />
+                  </div>
+                </div>
+
+                {/* Decorative elements */}
+                <div className="absolute -z-10 -top-4 -left-4 w-72 h-72 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
+                <div className="absolute -z-10 -bottom-4 -right-4 w-72 h-72 bg-purple-100 rounded-full opacity-20 blur-3xl"></div>
+              </div>
+            </ScrollReveal>
+
+            {/* Feature highlights below screenshot */}
+            <div className="mt-16 grid gap-8 md:grid-cols-3">
+              <ScrollReveal delay={400} direction="up">
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Clear Explanations</h3>
+                  <p className="text-gray-600 text-sm">Every question includes detailed rationales to deepen your understanding.</p>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={500} direction="up">
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Instant Feedback</h3>
+                  <p className="text-gray-600 text-sm">Know immediately whether you're on the right track with real-time results.</p>
+                </div>
+              </ScrollReveal>
+
+              <ScrollReveal delay={600} direction="up">
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Customisable Practice</h3>
+                  <p className="text-gray-600 text-sm">Filter by topic, difficulty, or focus on your weakest areas.</p>
+                </div>
+              </ScrollReveal>
             </div>
           </div>
         </section>
