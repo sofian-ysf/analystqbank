@@ -143,8 +143,8 @@ export function UpgradeBanner({
   mockExamsRemaining?: number | null;
   plan: PlanType;
 }) {
-  const showQuestionWarning = questionsRemaining !== null && questionsRemaining <= 10 && questionsRemaining > 0;
-  const showExamWarning = mockExamsRemaining !== null && mockExamsRemaining <= 1 && mockExamsRemaining > 0;
+  const showQuestionWarning = questionsRemaining != null && questionsRemaining <= 10 && questionsRemaining > 0;
+  const showExamWarning = mockExamsRemaining != null && mockExamsRemaining <= 1 && mockExamsRemaining > 0;
 
   if (!showQuestionWarning && !showExamWarning) return null;
 
