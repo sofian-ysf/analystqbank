@@ -44,7 +44,7 @@ export default function Home() {
       "@type": "AggregateOffer",
       "priceCurrency": "GBP",
       "lowPrice": "0",
-      "highPrice": "300",
+      "highPrice": "75",
       "offerCount": "3",
       "offers": [
         {
@@ -57,14 +57,14 @@ export default function Home() {
         {
           "@type": "Offer",
           "name": "Basic Plan",
-          "price": "250",
+          "price": "50",
           "priceCurrency": "GBP",
           "availability": "https://schema.org/InStock"
         },
         {
           "@type": "Offer",
           "name": "Premium Plan",
-          "price": "300",
+          "price": "75",
           "priceCurrency": "GBP",
           "availability": "https://schema.org/InStock"
         }
@@ -497,7 +497,7 @@ export default function Home() {
                 <div className="text-center pb-6 border-b border-gray-100">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Basic</h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">£250</span>
+                    <span className="text-4xl font-light text-gray-900">£50</span>
                   </div>
                   <p className="mt-2 text-sm text-gray-500">Lifetime access</p>
                 </div>
@@ -550,7 +550,7 @@ export default function Home() {
                 <div className="text-center pb-6 border-b border-gray-100">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Premium</h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">£300</span>
+                    <span className="text-4xl font-light text-gray-900">£75</span>
                   </div>
                   <p className="mt-2 text-sm text-gray-500">Lifetime access</p>
                 </div>
