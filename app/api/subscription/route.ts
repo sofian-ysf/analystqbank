@@ -37,7 +37,9 @@ export async function GET() {
       });
     }
 
-    const plan = (profile.subscription_plan || 'trial') as PlanType;
+    // Map 'free' to 'trial' (database uses 'free', code uses 'trial')
+    const dbPlan = profile.subscription_plan || 'free';
+    const plan = (dbPlan === 'free' ? 'trial' : dbPlan) as PlanType;
     const status = profile.subscription_status || 'trialing';
     const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
     const now = new Date();
@@ -45,16 +47,11 @@ export async function GET() {
     // Check if trial is expired
     const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
 
-    // Get usage counts
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
+    // Get usage counts (all-time for lifetime plans)
     const { count: mockExamsUsed } = await supabase
       .from('user_mock_exam_attempts')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id)
-      .gte('created_at', startOfMonth.toISOString());
+      .eq('user_id', user.id);
 
     const { count: questionsAnswered } = await supabase
       .from('user_question_attempts')

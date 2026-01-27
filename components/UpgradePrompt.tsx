@@ -86,7 +86,7 @@ export function UpgradePrompt({
         <div className="grid grid-cols-2 gap-4 mb-8">
           <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-2">Basic</h3>
-            <p className="text-2xl font-bold text-gray-900 mb-2">${PLAN_LIMITS.basic.price}</p>
+            <p className="text-2xl font-bold text-gray-900 mb-2">£{PLAN_LIMITS.basic.price}</p>
             <p className="text-xs text-gray-500 mb-3">One-time payment</p>
             <ul className="text-sm text-gray-600 space-y-1 text-left">
               <li>• {PLAN_LIMITS.basic.questions.toLocaleString()} questions</li>
@@ -96,7 +96,7 @@ export function UpgradePrompt({
           </div>
           <div className="bg-[#1FB8CD]/5 rounded-xl p-4 border-2 border-[#1FB8CD]">
             <h3 className="font-semibold text-gray-900 mb-2">Premium</h3>
-            <p className="text-2xl font-bold text-[#1FB8CD] mb-2">${PLAN_LIMITS.premium.price}</p>
+            <p className="text-2xl font-bold text-[#1FB8CD] mb-2">£{PLAN_LIMITS.premium.price}</p>
             <p className="text-xs text-gray-500 mb-3">One-time payment</p>
             <ul className="text-sm text-gray-600 space-y-1 text-left">
               <li>• Unlimited questions</li>
