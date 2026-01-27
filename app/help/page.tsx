@@ -144,7 +144,7 @@ export default function Help() {
                 <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
               </Link>
               <p className="mt-4 text-[#5f6368] text-sm">
-                The leading platform for finance certification exam preparation.
+                The leading platform for CFA Level 1 exam preparation.
               </p>
             </div>
 
@@ -175,7 +175,7 @@ export default function Help() {
           </div>
 
           <div className="border-t border-[#EAEEEF] mt-8 pt-8 text-center text-sm text-[#9aa0a6]">
-            <p>© 2025 AnalystTrainer. All rights reserved.</p>
+            <p>© 2026 AnalystTrainer. All rights reserved.</p>
           </div>
         </div>
       </footer>

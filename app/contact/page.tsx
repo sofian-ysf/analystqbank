@@ -279,7 +279,7 @@ export default function Contact() {
                 <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
               </Link>
               <p className="mt-4 text-[#5f6368] text-sm">
-                The leading platform for finance certification exam preparation.
+                The leading platform for CFA Level 1 exam preparation.
               </p>
             </div>
 

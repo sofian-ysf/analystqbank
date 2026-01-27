@@ -163,37 +163,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Comparison pages
-  const comparisonPages: MetadataRoute.Sitemap = [
+  // SEO landing pages
+  const landingPages: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}/compare/cfa-vs-cpa`,
+      url: `${baseUrl}/cfa-level-1-practice-questions`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/compare/cfa-vs-frm`,
+      url: `${baseUrl}/cfa-level-1-mock-exam`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/compare/cfa-vs-mba`,
+      url: `${baseUrl}/free-cfa-questions`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/compare/cfa-vs-caia`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/compare/cfa-level-1-vs-level-2`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
   ]
 
@@ -268,7 +256,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...subtopicPages,
     ...freeQuestionsPages,
     ...toolsPages,
-    ...comparisonPages,
+    ...landingPages,
     ...faqPages,
     ...glossaryIndex,
     ...blogPages,

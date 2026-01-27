@@ -296,7 +296,7 @@ export async function generateBlogPost(
 ): Promise<GeneratedBlogPost> {
   const keywordsStr = targetKeywords.length > 0
     ? targetKeywords.join(', ')
-    : `${topic}, CFA Level 1, CFA exam prep, finance certification`;
+    : `${topic}, CFA Level 1, CFA exam prep, CFA Level 1 questions`;
 
   // Build internal links instruction
   const ctaLinks = [...DEFAULT_CTA_LINKS, ...(internalLinks?.ctaLinks || [])];
