@@ -4,18 +4,18 @@ import { buildBlogContext } from '@/lib/blog-rag'
 import { generateEnhancedBlogPost, suggestBlogTopics } from '@/lib/openai'
 import { submitToSearchEngines } from '@/lib/search-indexing'
 
-// CFA Level 1 topic areas for automatic blog generation
+// CFA Level 1 topic areas for automatic blog generation - with HIGH-INTENT keywords
 const CFA_TOPICS = [
-  { name: 'Ethical and Professional Standards', keywords: ['CFA ethics', 'standards of practice', 'code of conduct'] },
-  { name: 'Quantitative Methods', keywords: ['time value of money', 'statistics', 'probability'] },
-  { name: 'Economics', keywords: ['microeconomics', 'macroeconomics', 'monetary policy'] },
-  { name: 'Financial Statement Analysis', keywords: ['financial ratios', 'balance sheet', 'income statement'] },
-  { name: 'Corporate Issuers', keywords: ['corporate governance', 'capital structure', 'dividends'] },
-  { name: 'Equity Investments', keywords: ['stock valuation', 'equity markets', 'industry analysis'] },
-  { name: 'Fixed Income', keywords: ['bond valuation', 'interest rates', 'yield curve'] },
-  { name: 'Derivatives', keywords: ['options', 'futures', 'forwards', 'swaps'] },
-  { name: 'Alternative Investments', keywords: ['private equity', 'real estate', 'hedge funds'] },
-  { name: 'Portfolio Management', keywords: ['asset allocation', 'risk management', 'portfolio theory'] },
+  { name: 'Ethical and Professional Standards', keywords: ['CFA Level 1 ethics questions', 'CFA ethics practice test', 'pass CFA ethics section', 'CFA code of conduct examples'] },
+  { name: 'Quantitative Methods', keywords: ['CFA Level 1 quantitative methods practice questions', 'CFA quant formulas', 'time value of money CFA questions', 'CFA statistics practice'] },
+  { name: 'Economics', keywords: ['CFA Level 1 economics questions', 'CFA economics practice test', 'macroeconomics CFA Level 1', 'CFA economics study guide'] },
+  { name: 'Financial Statement Analysis', keywords: ['CFA Level 1 financial statement analysis questions', 'CFA FSA practice questions', 'financial ratios CFA exam', 'CFA balance sheet analysis'] },
+  { name: 'Corporate Issuers', keywords: ['CFA Level 1 corporate issuers questions', 'CFA corporate finance practice', 'capital structure CFA questions', 'CFA corporate governance'] },
+  { name: 'Equity Investments', keywords: ['CFA Level 1 equity questions', 'stock valuation CFA practice', 'CFA equity analysis questions', 'CFA Level 1 equity study guide'] },
+  { name: 'Fixed Income', keywords: ['CFA Level 1 fixed income questions', 'bond valuation CFA practice', 'CFA fixed income practice test', 'yield curve CFA questions'] },
+  { name: 'Derivatives', keywords: ['CFA Level 1 derivatives questions', 'options CFA practice questions', 'futures CFA Level 1', 'CFA derivatives study guide'] },
+  { name: 'Alternative Investments', keywords: ['CFA Level 1 alternative investments questions', 'CFA alternatives practice', 'private equity CFA questions', 'hedge funds CFA Level 1'] },
+  { name: 'Portfolio Management', keywords: ['CFA Level 1 portfolio management questions', 'CFA portfolio practice test', 'asset allocation CFA questions', 'CFA risk management practice'] },
 ]
 
 // Verify the cron secret

@@ -14,35 +14,35 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
-    template: "%s | Finance Exam Prep",
+    default: "CFA Level 1 Practice Questions & Mock Exams 2026 | AnalystTrainer",
+    template: "%s | AnalystTrainer",
   },
   icons: {
     icon: "/icon.png",
     apple: "/apple-icon.png",
   },
-  description: "Prepare for your finance certification exams with 2500+ practice questions, mock exams, and detailed explanations. 92% pass rate. Start your free trial today!",
-  keywords: "CFA exam, CFA Level 1, FRM exam, finance certification, CFA practice questions, CFA study guide, CFA mock exam, FRM practice test, CPA exam prep, ACCA preparation, finance exam questions, CFA formula sheet, investment analysis, portfolio management, financial statement analysis",
-  authors: [{ name: "Finance Exam Prep" }],
-  creator: "Finance Exam Prep",
-  publisher: "Finance Exam Prep",
+  description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations. Start your free trial today - no card required.",
+  keywords: "CFA Level 1 practice questions, CFA Level 1 mock exam, CFA exam prep, CFA question bank, CFA Level 1 study guide, CFA practice test, pass CFA Level 1, CFA Level 1 questions, CFA preparation, CFA Level 1 2026",
+  authors: [{ name: "AnalystTrainer" }],
+  creator: "AnalystTrainer",
+  publisher: "AnalystTrainer",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://financeexamprep.co.uk"),
+  metadataBase: new URL("https://www.analysttrainer.com"),
   openGraph: {
-    title: "Finance Certification Exam Prep | CFA, FRM & More | Pass First Time",
-    description: "Prepare for your finance certification exams with 2500+ practice questions, mock exams, and detailed explanations. 92% pass rate. Start your free trial today!",
-    url: "https://financeexamprep.co.uk",
-    siteName: "Finance Exam Prep",
+    title: "CFA Level 1 Practice Questions & Mock Exams 2026 | AnalystTrainer",
+    description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations. Start your free trial today.",
+    url: "https://www.analysttrainer.com",
+    siteName: "AnalystTrainer",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Finance Exam Prep - Pass Your Certification Exam First Time",
+        alt: "AnalystTrainer - CFA Level 1 Practice Questions & Mock Exams",
       },
     ],
     locale: "en_GB",
@@ -50,10 +50,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Finance Certification Exam Prep | CFA, FRM & More",
-    description: "Prepare for your finance exams with 2500+ practice questions. 92% pass rate. Start free!",
+    title: "CFA Level 1 Practice Questions & Mock Exams 2026",
+    description: "Pass CFA Level 1 with 2,500+ practice questions & mock exams. Start free trial today!",
     images: ["/twitter-image.png"],
-    creator: "@financeexamprep",
+    creator: "@analysttrainer",
   },
   robots: {
     index: true,
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     },
   },
   other: {
-    "llms-txt": "https://financeexamprep.co.uk/llms.txt",
+    "llms-txt": "https://www.analysttrainer.com/llms.txt",
   },
 };
 

@@ -326,20 +326,32 @@ Make the links feel natural - don't force them. Use variations of the phrases an
         role: 'system',
         content: `You are an expert SEO content writer specializing in finance education and CFA Level 1 exam preparation.
 
-Your task is to create high-quality, SEO-optimized blog posts that:
-- Are informative, engaging, and provide genuine value to CFA candidates
-- Use proper heading structure (H2, H3) for SEO and readability
-- Naturally incorporate target keywords without keyword stuffing
-- Have compelling, click-worthy titles and meta descriptions
-- Include FAQ sections optimized for Google's featured snippets
-- Are written in a professional but approachable tone
-- Follow UK English spelling and conventions
-- Reference relevant CFA curriculum topics and exam strategies
-- Include actionable tips and practical advice
-- INCLUDE INTERNAL LINKS to related content and call-to-action pages
+Your task is to create high-quality, SEO-optimized blog posts that CONVERT readers into customers.
 
-Format the main content in Markdown with proper headings (## for H2, ### for H3).
-Use markdown links like [anchor text](url) for internal links.`
+CRITICAL SEO REQUIREMENTS:
+- Title MUST include the primary keyword near the beginning
+- Title MUST include a number, year (2026), or power word (Ultimate, Complete, Essential)
+- Meta description MUST include primary keyword and a clear call-to-action
+- First paragraph MUST contain the primary keyword naturally
+- Use the primary keyword in at least one H2 heading
+- Include the year 2026 where relevant for search freshness
+
+CONVERSION REQUIREMENTS:
+- Include a clear CTA in the introduction mentioning practice questions or free trial
+- Add a CTA after every 2-3 sections encouraging readers to practice
+- Conclude with a strong CTA to start free trial or access question bank
+- Mention specific benefits: "2,500+ practice questions", "mock exams", "detailed explanations"
+- Create urgency: "start preparing today", "don't wait until exam day"
+
+CONTENT REQUIREMENTS:
+- Provide genuine value with actionable tips
+- Use proper heading structure (H2, H3) for SEO
+- Include FAQ sections optimized for featured snippets
+- Follow UK English spelling
+- Reference CFA curriculum topics and exam strategies
+- INCLUDE INTERNAL LINKS using markdown [text](url) format
+
+Format in Markdown with ## for H2 and ### for H3 headings.`
       },
       {
         role: 'user',
@@ -537,6 +549,25 @@ export async function generateEnhancedBlogPost(
   return initialPost;
 }
 
+// High-intent keywords to incorporate into blog topics
+const HIGH_INTENT_KEYWORDS = [
+  'CFA Level 1 practice questions',
+  'CFA Level 1 mock exam',
+  'CFA Level 1 question bank',
+  'CFA exam prep',
+  'CFA study guide',
+  'pass CFA Level 1',
+  'CFA Level 1 tips',
+  'CFA Level 1 study plan',
+  'CFA Level 1 practice test',
+  'free CFA practice questions',
+  'CFA Level 1 exam questions',
+  'CFA Level 1 sample questions',
+  'CFA Level 1 preparation',
+  'best CFA prep',
+  'CFA Level 1 revision',
+];
+
 // Suggest blog topics using GPT-4o-mini
 export async function suggestBlogTopics(
   categoryName: string,
@@ -555,16 +586,31 @@ export async function suggestBlogTopics(
         role: 'system',
         content: `You are an SEO content strategist specializing in finance education and CFA Level 1 exam preparation.
 
-Your task is to suggest compelling, SEO-friendly blog topics that:
-- Target long-tail keywords CFA candidates search for
-- Address real pain points and questions candidates have
-- Have good search volume potential
-- Are unique and not commonly covered by competitors
-- Are relevant to CFA Level 1 exam preparation`
+Your task is to suggest compelling, HIGH-INTENT blog topics that will attract people ready to buy exam prep materials.
+
+IMPORTANT - Target these types of keywords:
+- "CFA Level 1 practice questions" (people looking for question banks)
+- "CFA Level 1 mock exam" (people ready to practice)
+- "pass CFA Level 1 first time" (people seeking solutions)
+- "best CFA prep course" (comparison shoppers)
+- "CFA Level 1 study plan" (people starting their journey)
+- "free CFA practice questions" (lead magnets)
+
+Topics should:
+- Target BUYER-INTENT keywords (people looking to purchase or sign up)
+- Include numbers, years, or specific promises in titles (e.g., "2026", "5 Tips", "Complete Guide")
+- Address specific pain points (failing, time management, difficult topics)
+- Be actionable and promise clear outcomes
+- Include the year 2026 where relevant for freshness`
       },
       {
         role: 'user',
         content: `Based on the following reference material for the "${categoryName}" category, suggest 5 unique blog post topics.
+
+IMPORTANT: Focus on HIGH-INTENT keywords that convert. Think about what someone searching to BUY a CFA prep course would search for.
+
+High-intent keyword examples to incorporate:
+${HIGH_INTENT_KEYWORDS.slice(0, 8).join(', ')}
 ${existingStr}
 
 Reference Material:
@@ -574,9 +620,9 @@ Return a JSON object in this exact format:
 {
   "topics": [
     {
-      "title": "Suggested blog post title",
+      "title": "Compelling title with numbers/year and primary keyword (e.g., 'CFA Level 1 Practice Questions: 50 Must-Know ${categoryName} Questions for 2026')",
       "description": "Brief description of what the post would cover",
-      "keywords": ["primary keyword", "secondary keyword", "related term"]
+      "keywords": ["CFA Level 1 practice questions", "CFA ${categoryName.toLowerCase()}", "related buyer-intent term"]
     }
   ]
 }

@@ -31,16 +31,16 @@ export async function generateMetadata({
   )
 
   return {
-    title: `${topic.name} | CFA Level 1 Study Guide`,
-    description: `Master ${topic.name} for CFA Level 1 with ${topic.subtopics.length} subtopics and ${totalLearningOutcomes}+ learning outcomes. Practice questions, study notes, and exam preparation materials.`,
-    keywords: `${topic.name}, CFA Level 1 ${topic.name}, ${topic.subtopics.map(s => s.name).join(', ')}, CFA exam preparation`,
+    title: `CFA Level 1 ${topic.name} Practice Questions 2026 | Free Study Guide`,
+    description: `Master CFA Level 1 ${topic.name} with ${totalLearningOutcomes}+ practice questions & detailed explanations. Free study guide covering all ${topic.subtopics.length} subtopics. Start practising today!`,
+    keywords: `CFA Level 1 ${topic.name} questions, CFA ${topic.name} practice test, CFA Level 1 ${topic.name} study guide, ${topic.subtopics.map(s => `CFA ${s.name}`).join(', ')}`,
     alternates: {
-      canonical: `https://financeexamprep.co.uk/topics/${slug}`,
+      canonical: `https://www.analysttrainer.com/topics/${slug}`,
     },
     openGraph: {
-      title: `${topic.name} | CFA Level 1 Study Guide`,
-      description: `Master ${topic.name} for CFA Level 1 with ${topic.subtopics.length} subtopics and ${totalLearningOutcomes}+ learning outcomes.`,
-      url: `https://financeexamprep.co.uk/topics/${slug}`,
+      title: `CFA Level 1 ${topic.name} Practice Questions 2026`,
+      description: `Master CFA Level 1 ${topic.name} with ${totalLearningOutcomes}+ practice questions. Free study guide covering all ${topic.subtopics.length} subtopics.`,
+      url: `https://www.analysttrainer.com/topics/${slug}`,
       type: 'article',
     },
   }
@@ -76,8 +76,8 @@ export default async function TopicPage({
     description: `Comprehensive study guide for ${topic.name} - CFA Level 1 curriculum topic covering ${topic.subtopics.length} subtopics and ${totalLearningOutcomes} learning outcomes.`,
     provider: {
       '@type': 'Organization',
-      name: 'Finance Exam Prep',
-      url: 'https://financeexamprep.co.uk',
+      name: 'AnalystTrainer',
+      url: 'https://www.analysttrainer.com',
     },
     hasCourseInstance: {
       '@type': 'CourseInstance',
@@ -89,7 +89,7 @@ export default async function TopicPage({
     isPartOf: {
       '@type': 'Course',
       name: 'CFA Level 1 Complete Curriculum',
-      url: 'https://financeexamprep.co.uk/topics',
+      url: 'https://www.analysttrainer.com/topics',
     },
   }
 
