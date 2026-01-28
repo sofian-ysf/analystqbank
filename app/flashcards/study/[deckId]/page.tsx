@@ -134,13 +134,10 @@ export default function StudyPage() {
     <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#EAEEEF]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14">
-            <Link href="/flashcards" className="flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              <span className="text-sm font-medium">Back to Decks</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link href="/" className="flex items-center">
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
             {deck && (
@@ -156,7 +153,15 @@ export default function StudyPage() {
               </div>
             )}
 
-            <div className="w-20"></div> {/* Spacer for centering */}
+            <Link
+              href="/flashcards"
+              className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              All Decks
+            </Link>
           </div>
         </div>
       </header>

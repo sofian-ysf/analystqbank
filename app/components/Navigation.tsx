@@ -62,6 +62,12 @@ export default function Navigation() {
               <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
+            <Link href="/flashcards" className="pill-nav-item relative">
+              Flashcards
+              <span className="absolute -top-1 -right-3 px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded-full leading-none">
+                FREE
+              </span>
+            </Link>
             <Link href="/#features" className="pill-nav-item">
               Features
             </Link>
@@ -70,9 +76,6 @@ export default function Navigation() {
             </Link>
             <Link href="/blog" className="pill-nav-item">
               Blog
-            </Link>
-            <Link href="/#faq" className="pill-nav-item">
-              FAQ
             </Link>
           </div>
 
@@ -120,6 +123,12 @@ export default function Navigation() {
 
         <div className="pill-mobile-content">
           <div className="pill-mobile-nav-links">
+            <Link href="/flashcards" className="pill-mobile-nav-link flex items-center gap-2" onClick={closeMobileMenu}>
+              Flashcards
+              <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
+                FREE
+              </span>
+            </Link>
             <Link href="/#features" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Features
             </Link>
@@ -128,9 +137,6 @@ export default function Navigation() {
             </Link>
             <Link href="/blog" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Blog
-            </Link>
-            <Link href="/#faq" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
-              FAQ
             </Link>
           </div>
 

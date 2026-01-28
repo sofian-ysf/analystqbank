@@ -277,6 +277,100 @@ export default function Home() {
           </div>
         </section>
 
+        {/* FREE Flashcards Section */}
+        <section className="px-4 py-24 sm:px-6 lg:px-8 bg-gradient-to-br from-green-50 via-white to-[#fbfaf4] border-y border-green-100">
+          <div className="mx-auto max-w-7xl">
+            <ScrollReveal>
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  100% FREE — No Credit Card Required
+                </div>
+                <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl mb-4">
+                  Master CFA Concepts with Free Flashcards
+                </h2>
+                <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                  Over 1,600 flashcards covering all 10 CFA Level 1 topics. Use our spaced repetition system to retain key concepts and formulas — completely free.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={200}>
+              <div className="grid gap-6 md:grid-cols-3 mb-12">
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                    <span className="text-2xl">📚</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">1,600+ Flashcards</h3>
+                  <p className="text-gray-600 text-sm">Comprehensive coverage of all CFA Level 1 topics, from Ethics to Portfolio Management.</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
+                    <span className="text-2xl">🧠</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Spaced Repetition</h3>
+                  <p className="text-gray-600 text-sm">Our SM-2 algorithm schedules reviews at optimal intervals to maximise long-term retention.</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center">
+                    <span className="text-2xl">📊</span>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Track Progress</h3>
+                  <p className="text-gray-600 text-sm">See your mastery percentage for each topic and maintain your study streak.</p>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={400}>
+              <div className="text-center">
+                <Link
+                  href="/flashcards"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-colors text-lg shadow-lg shadow-green-200"
+                >
+                  Start Studying Free
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+                <p className="mt-4 text-sm text-gray-500">
+                  Create a free account to track your progress and unlock spaced repetition
+                </p>
+              </div>
+            </ScrollReveal>
+
+            {/* Upsell hint */}
+            <ScrollReveal delay={500}>
+              <div className="mt-16 pt-12 border-t border-gray-100">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-left">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-[#13343B] flex items-center justify-center">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-1">Ready to test yourself?</h3>
+                    <p className="text-gray-600 text-sm max-w-md">
+                      Once you've mastered the concepts, put your knowledge to the test with our exam-style question bank featuring 2,500+ practice questions.
+                    </p>
+                  </div>
+                  <Link
+                    href="/question-bank"
+                    className="flex-shrink-0 px-6 py-3 bg-[#13343B] text-white rounded-full font-medium hover:bg-[#13343B]/90 transition-colors"
+                  >
+                    Explore Question Bank
+                  </Link>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
         {/* Why Preparation Matters */}
         <section className="bg-[#fbfaf4] px-4 py-24 sm:px-6 lg:px-8 border-y border-gray-100">
           <div className="mx-auto max-w-7xl">
@@ -747,6 +841,7 @@ export default function Home() {
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li><a href="#features" className="hover:text-gray-900">Features</a></li>
                   <li><a href="#pricing" className="hover:text-gray-900">Pricing</a></li>
+                  <li><Link href="/flashcards" className="hover:text-gray-900">Free Flashcards</Link></li>
                   <li><Link href="/question-bank" className="hover:text-gray-900">Question Bank</Link></li>
                 </ul>
               </div>

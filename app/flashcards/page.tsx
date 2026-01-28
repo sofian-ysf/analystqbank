@@ -75,17 +75,16 @@ export default function FlashcardsPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-[#EAEEEF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Image src="/images/logo.svg" alt="AnalystQBank" width={32} height={32} />
-              <span className="font-semibold text-[#13343B]">AnalystQBank</span>
+            <Link href="/" className="flex items-center">
+              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
             </Link>
 
-            <nav className="flex items-center gap-4">
+            <nav className="flex items-center gap-6">
               <Link
-                href="/dashboard"
-                className="text-sm text-gray-600 hover:text-gray-900"
+                href="/flashcards"
+                className="text-sm font-medium text-[#13343B]"
               >
-                Dashboard
+                Flashcards
               </Link>
               <Link
                 href="/question-bank"
@@ -95,17 +94,17 @@ export default function FlashcardsPage() {
               </Link>
               {user ? (
                 <Link
-                  href="/settings"
-                  className="text-sm font-medium text-[#1FB8CD]"
+                  href="/dashboard"
+                  className="px-4 py-2 bg-[#13343B] text-white rounded-full text-sm font-medium hover:bg-[#13343B]/90"
                 >
-                  Account
+                  Dashboard
                 </Link>
               ) : (
                 <Link
-                  href="/login"
+                  href="/signup"
                   className="px-4 py-2 bg-[#13343B] text-white rounded-full text-sm font-medium hover:bg-[#13343B]/90"
                 >
-                  Sign In
+                  Start Free
                 </Link>
               )}
             </nav>
