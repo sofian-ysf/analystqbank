@@ -18,7 +18,7 @@ dotenv.config({ path: '.env.local' })
 // CONFIGURATION
 // =============================================================================
 
-const APKG_PATH = path.join(__dirname, '../ankifolders/CFA_L1.apkg')
+const APKG_PATH = path.join(__dirname, '../ankifolders/CFA_Level_1_2024.apkg')
 
 // CFA Level 1 Topics with keywords for matching
 const CFA_TOPICS = [
@@ -411,6 +411,14 @@ async function importToDatabase(parsedDeck: { name: string; cards: ParsedCard[] 
   const supabase = createClient(supabaseUrl, supabaseServiceKey, {
     auth: { autoRefreshToken: false, persistSession: false }
   })
+
+  // Clear existing flashcards and decks
+  console.log('\nClearing existing flashcards...')
+  await supabase.from('flashcard_review_history').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+  await supabase.from('user_flashcard_progress').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+  await supabase.from('flashcards').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+  await supabase.from('flashcard_decks').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+  console.log('Cleared existing data.')
 
   console.log(`\nParsed ${parsedDeck.cards.length} cards from "${parsedDeck.name}"`)
 
