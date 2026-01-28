@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "setup-rag": "tsx scripts/setup-rag.ts",
-    "import-anki": "tsx scripts/import-anki.ts"
+    "import-anki": "tsx scripts/import-anki.ts",
+    "fix-flashcard-grammar": "tsx scripts/fix-flashcard-grammar.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
