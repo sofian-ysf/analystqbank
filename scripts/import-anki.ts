@@ -10,8 +10,9 @@ import { createClient } from '@supabase/supabase-js'
 import JSZip from 'jszip'
 import initSqlJs from 'sql.js'
 
-// Load environment variables
-import 'dotenv/config'
+// Load environment variables from .env.local
+import dotenv from 'dotenv'
+dotenv.config({ path: '.env.local' })
 
 // =============================================================================
 // CONFIGURATION
