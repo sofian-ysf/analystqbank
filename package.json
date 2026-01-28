@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "setup-rag": "tsx scripts/setup-rag.ts"
+    "setup-rag": "tsx scripts/setup-rag.ts",
+    "import-anki": "tsx scripts/import-anki.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -19,6 +20,7 @@
     "canvas": "^3.2.0",
     "dotenv": "^17.2.3",
     "gray-matter": "^4.0.3",
+    "jszip": "^3.10.1",
     "katex": "^0.16.27",
     "next": "^16.0.7",
     "next-mdx-remote": "^5.0.0",
@@ -28,6 +30,7 @@
     "react-dom": "19.1.0",
     "react-katex": "^3.1.0",
     "reading-time": "^1.5.0",
+    "sql.js": "^1.13.0",
     "stripe": "^20.1.0"
   },
   "devDependencies": {
