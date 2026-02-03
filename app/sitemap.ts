@@ -111,57 +111,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }))
 
-  // Subtopic pages (77+ pages)
-  const subtopicPages: MetadataRoute.Sitemap = cfaLevel1Curriculum.flatMap((topic) =>
-    topic.subtopics.map((subtopic) => ({
-      url: `${baseUrl}/topics/${topic.id}/${subtopic.id}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.75,
-    }))
-  )
-
-  // Free questions pages
-  const freeQuestionsPages: MetadataRoute.Sitemap = cfaLevel1Curriculum.map((topic) => ({
-    url: `${baseUrl}/free-questions/${topic.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }))
-
-  // Tools pages
-  const toolsPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/tools/tvm-calculator`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/financial-ratios`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/bond-calculator`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/portfolio-variance`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/tools/study-estimator`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ]
+  // Note: Subtopic pages (/topics/:topic/:subtopic) removed - routes redirect to parent topic
+  // Note: Free questions pages (/free-questions/:topic) removed - routes redirect to /free-cfa-questions
+  // Note: Tools pages removed - routes don't exist yet
 
   // SEO landing pages
   const landingPages: MetadataRoute.Sitemap = [
@@ -271,9 +223,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...topicsHub,
     ...topicPages,
-    ...subtopicPages,
-    ...freeQuestionsPages,
-    ...toolsPages,
     ...landingPages,
     ...faqPages,
     ...glossaryIndex,
