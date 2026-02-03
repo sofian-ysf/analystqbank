@@ -9,7 +9,8 @@
     "lint": "eslint",
     "setup-rag": "tsx scripts/setup-rag.ts",
     "import-anki": "tsx scripts/import-anki.ts",
-    "fix-flashcard-grammar": "tsx scripts/fix-flashcard-grammar.ts"
+    "fix-flashcard-grammar": "tsx scripts/fix-flashcard-grammar.ts",
+    "generate-flashcards": "tsx scripts/generate-flashcards-rag.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

@@ -3,15 +3,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Questions | AnalystTrainer',
-  description: 'Practice with 2,500+ CFA Level 1 exam questions. Detailed explanations, topic-wise practice & performance tracking. Pass your CFA exam first time. Start free trial today!',
+  title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Exam-Style Questions',
+  description: '2,500+ CFA Level 1 practice questions written by charterholders. Every question has step-by-step explanations. 100 free questions included — no credit card needed.',
   keywords: 'CFA Level 1 practice questions, CFA practice questions, CFA Level 1 questions, CFA question bank, CFA exam questions, CFA Level 1 practice test, CFA Level 1 sample questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
   openGraph: {
-    title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Questions',
-    description: 'Practice with 2,500+ CFA Level 1 exam questions with detailed explanations. Start your free trial today!',
+    title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Exam-Style Questions',
+    description: '2,500+ CFA Level 1 practice questions written by charterholders. Every question has step-by-step explanations. Try 100 free questions today.',
     url: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
     type: 'website',
   },

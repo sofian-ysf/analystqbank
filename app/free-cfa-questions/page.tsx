@@ -2,15 +2,15 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Level 1 Practice Questions 2026 | 100 Free Questions | AnalystTrainer',
-  description: 'Get 100 free CFA Level 1 practice questions with detailed explanations. No credit card required. Start preparing for your CFA exam today with our free trial!',
+  title: 'Free CFA Level 1 Practice Questions 2026 | 100 Questions + Mock Exam',
+  description: 'Get 100 free CFA Level 1 questions + 1 full mock exam. No credit card, no catch. Written by CFA charterholders with full explanations. Start in 30 seconds.',
   keywords: 'free CFA questions, free CFA Level 1 practice questions, free CFA practice test, CFA questions free, free CFA mock exam, CFA Level 1 free questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/free-cfa-questions',
   },
   openGraph: {
-    title: 'Free CFA Level 1 Practice Questions 2026 | 100 Free Questions',
-    description: 'Get 100 free CFA Level 1 practice questions with detailed explanations. No credit card required!',
+    title: 'Free CFA Level 1 Practice Questions 2026 | 100 Questions + Mock Exam',
+    description: 'Get 100 free CFA Level 1 questions + 1 full mock exam. No credit card required. Start practising in 30 seconds.',
     url: 'https://www.analysttrainer.com/free-cfa-questions',
     type: 'website',
   },

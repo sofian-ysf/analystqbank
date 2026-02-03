@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     icon: "/icon.png",
     apple: "/apple-icon.png",
   },
-  description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations. Start your free trial today - no card required.",
+  description: "Pass CFA Level 1 on your first attempt. 2,500+ practice questions written by charterholders, realistic mock exams, and 1,600+ free flashcards. Try 100 questions free.",
   keywords: "CFA Level 1 practice questions, CFA Level 1 mock exam, CFA exam prep, CFA question bank, CFA Level 1 study guide, CFA practice test, pass CFA Level 1, CFA Level 1 questions, CFA preparation, CFA Level 1 2026",
   authors: [{ name: "AnalystTrainer" }],
   creator: "AnalystTrainer",
