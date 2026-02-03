@@ -1,10 +1,14 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Sign Up | AnalystTrainer - CFA Level 1 Practice Questions',
-  description: 'Create your free AnalystTrainer account and start preparing for CFA Level 1 with 2,500+ practice questions and mock exams. No credit card required for free trial.',
+  title: 'Start Free CFA Level 1 Trial | 100 Questions Free',
+  description: 'Create your free account and get instant access to 100 CFA Level 1 practice questions + 1 mock exam. No credit card required. Start in 30 seconds.',
   alternates: {
     canonical: 'https://www.analysttrainer.com/signup',
+  },
+  openGraph: {
+    title: 'Start Free CFA Level 1 Trial | AnalystTrainer',
+    description: 'Get 100 free CFA Level 1 questions + 1 mock exam. No credit card required.',
   },
 }
 

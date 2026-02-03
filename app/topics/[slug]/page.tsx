@@ -31,14 +31,14 @@ export async function generateMetadata({
   )
 
   return {
-    title: `CFA Level 1 ${topic.name} Questions 2026 | ${topic.questionCount}+ Practice Questions`,
-    description: `${topic.questionCount}+ ${topic.name} practice questions for CFA Level 1 (${topic.examWeight} of exam). Step-by-step explanations for every question. Try free today.`,
-    keywords: `CFA Level 1 ${topic.name} questions, CFA ${topic.name} practice test, CFA Level 1 ${topic.name} study guide, ${topic.subtopics.map(s => `CFA ${s.name}`).join(', ')}`,
+    title: `${topic.name} CFA Level 1 Questions | ${topic.questionCount}+ Free Practice`,
+    description: `Master ${topic.name} for CFA Level 1 (${topic.examWeight} of exam) with ${topic.questionCount}+ practice questions. Detailed explanations for every answer. Try free.`,
+    keywords: `CFA Level 1 ${topic.name}, ${topic.name} CFA questions, CFA ${topic.name} practice test, CFA Level 1 ${topic.name} study guide, ${topic.subtopics.map(s => `CFA ${s.name}`).join(', ')}`,
     alternates: {
       canonical: `https://www.analysttrainer.com/topics/${slug}`,
     },
     openGraph: {
-      title: `CFA Level 1 ${topic.name} Practice Questions 2026`,
+      title: `${topic.name} CFA Level 1 | ${topic.questionCount}+ Practice Questions`,
       description: `${topic.questionCount}+ ${topic.name} questions for CFA Level 1. Covers ${topic.examWeight} of the exam. Free questions included.`,
       url: `https://www.analysttrainer.com/topics/${slug}`,
       type: 'article',

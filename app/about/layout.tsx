@@ -1,10 +1,14 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Us | AnalystTrainer - CFA Level 1 Practice Questions',
-  description: 'Learn about AnalystTrainer, the leading platform for CFA Level 1 exam preparation. Our mission is to help candidates pass the CFA exam with quality practice questions and mock exams.',
+  title: 'About AnalystTrainer | CFA Charterholders Helping You Pass',
+  description: 'AnalystTrainer was built by CFA charterholders to help you pass CFA Level 1. Learn about our mission to make CFA prep accessible and effective.',
   alternates: {
     canonical: 'https://www.analysttrainer.com/about',
+  },
+  openGraph: {
+    title: 'About AnalystTrainer | Built by CFA Charterholders',
+    description: 'We built AnalystTrainer to help you pass CFA Level 1 on your first attempt.',
   },
 }
 

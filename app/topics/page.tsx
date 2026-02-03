@@ -3,16 +3,16 @@ import Link from 'next/link'
 import { cfaLevel1Curriculum, getTotalSubtopics, getTotalLearningOutcomes } from '@/lib/curriculum'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Topics | Complete Study Guide 2025',
-  description: `Master all 10 CFA Level 1 topic areas with ${getTotalSubtopics()} subtopics and ${getTotalLearningOutcomes()}+ learning outcomes. Comprehensive preparation for your CFA exam with practice questions and study materials.`,
-  keywords: 'CFA Level 1 topics, CFA curriculum, CFA study guide, CFA exam topics, CFA Level 1 syllabus, ethics CFA, quantitative methods CFA, financial statement analysis CFA',
+  title: 'CFA Level 1 Topics 2026 | All 10 Exam Areas Explained',
+  description: `Study all 10 CFA Level 1 topics with ${getTotalSubtopics()} subtopics and ${getTotalLearningOutcomes()}+ learning outcomes. Free practice questions for each topic. Start studying today.`,
+  keywords: 'CFA Level 1 topics, CFA curriculum 2026, CFA study guide, CFA exam topics, CFA Level 1 syllabus, ethics CFA, quantitative methods CFA, financial statement analysis CFA',
   alternates: {
-    canonical: 'https://financeexamprep.co.uk/topics',
+    canonical: 'https://www.analysttrainer.com/topics',
   },
   openGraph: {
-    title: 'CFA Level 1 Topics | Complete Study Guide 2025',
-    description: 'Master all 10 CFA Level 1 topic areas. Comprehensive study materials covering ethics, quantitative methods, economics, financial analysis, and more.',
-    url: 'https://financeexamprep.co.uk/topics',
+    title: 'CFA Level 1 Topics 2026 | All 10 Exam Areas Explained',
+    description: 'Master all 10 CFA Level 1 topic areas with practice questions and study guides. Ethics, Quant, Economics, FSA, and more.',
+    url: 'https://www.analysttrainer.com/topics',
     type: 'website',
   },
 }
@@ -33,10 +33,10 @@ const jsonLd = {
       description: topic.description,
       provider: {
         '@type': 'Organization',
-        name: 'Finance Exam Prep',
-        url: 'https://financeexamprep.co.uk',
+        name: 'AnalystTrainer',
+        url: 'https://www.analysttrainer.com',
       },
-      url: `https://financeexamprep.co.uk/topics/${topic.id}`,
+      url: `https://www.analysttrainer.com/topics/${topic.id}`,
     },
   })),
 }
@@ -59,7 +59,7 @@ export default function TopicsPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <nav className="flex items-center justify-between">
               <Link href="/" className="text-2xl font-bold text-[#13343B]">
-                Finance Exam Prep
+                AnalystTrainer
               </Link>
               <div className="flex items-center gap-6">
                 <Link href="/pricing" className="text-[#5f6368] hover:text-[#13343B]">
@@ -255,7 +255,7 @@ export default function TopicsPage() {
               Ready to Start Your CFA Journey?
             </h2>
             <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              Join 50,000+ candidates who have used Finance Exam Prep to pass their CFA exams.
+              Join 50,000+ candidates who have used AnalystTrainer to pass their CFA exams.
               Get access to {totalQuestions.toLocaleString()}+ practice questions with detailed explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -321,7 +321,7 @@ export default function TopicsPage() {
               </div>
             </div>
             <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-              <p>&copy; {new Date().getFullYear()} Finance Exam Prep. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} AnalystTrainer. All rights reserved.</p>
             </div>
           </div>
         </footer>

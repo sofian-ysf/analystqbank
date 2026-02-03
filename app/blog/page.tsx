@@ -5,12 +5,12 @@ import { Metadata } from 'next'
 export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'CFA Blog | Study Tips & Career Advice | AnalystTrainer',
-  description: 'Expert CFA exam insights, study tips, and career guidance for CFA Level 1 exam preparation. Stay updated with the latest exam strategies and finance updates.',
-  keywords: 'CFA exam blog, CFA study tips, CFA Level 1 advice, finance career guidance, exam strategies',
+  title: 'CFA Level 1 Blog | Study Tips & Exam Strategies 2026',
+  description: 'Free CFA Level 1 study tips, exam strategies, and topic guides written by charterholders. Learn how to pass CFA Level 1 on your first attempt.',
+  keywords: 'CFA exam blog, CFA study tips, CFA Level 1 advice, how to pass CFA Level 1, CFA exam strategies, CFA preparation tips',
   openGraph: {
-    title: 'CFA Blog | Study Tips & Career Advice | AnalystTrainer',
-    description: 'Expert CFA exam insights, study tips, and career guidance for CFA Level 1 exam preparation.',
+    title: 'CFA Level 1 Blog | Free Study Tips & Exam Strategies',
+    description: 'Free CFA Level 1 study tips and exam strategies written by charterholders. Updated for 2026.',
     type: 'website',
   },
   alternates: {
