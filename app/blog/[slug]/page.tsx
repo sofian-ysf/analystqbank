@@ -16,32 +16,55 @@ interface Props {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = createAdminClient()
 
-  const { data: post } = await supabase
-    .from('blog_posts')
-    .select('title, meta_title, meta_description, meta_keywords, og_image, excerpt')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .single()
+  try {
+    const supabase = createAdminClient()
 
-  if (!post) {
-    return { title: 'Post Not Found' }
-  }
+    const { data: post, error } = await supabase
+      .from('blog_posts')
+      .select('title, meta_title, meta_description, meta_keywords, og_image, excerpt')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .single()
 
-  return {
-    title: post.meta_title || post.title,
-    description: post.meta_description || post.excerpt,
-    keywords: post.meta_keywords?.join(', '),
-    openGraph: {
+    if (error || !post) {
+      // Generate a fallback title from the slug
+      const fallbackTitle = slug
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+
+      return {
+        title: fallbackTitle,
+        description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+      }
+    }
+
+    return {
       title: post.meta_title || post.title,
       description: post.meta_description || post.excerpt,
-      images: post.og_image ? [post.og_image] : undefined,
-      type: 'article',
-    },
-    alternates: {
-      canonical: `/blog/${slug}`,
-    },
+      keywords: post.meta_keywords?.join(', '),
+      openGraph: {
+        title: post.meta_title || post.title,
+        description: post.meta_description || post.excerpt,
+        images: post.og_image ? [post.og_image] : undefined,
+        type: 'article',
+      },
+      alternates: {
+        canonical: `/blog/${slug}`,
+      },
+    }
+  } catch (error) {
+    // Generate a fallback title from the slug on any error
+    const fallbackTitle = slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+
+    return {
+      title: fallbackTitle,
+      description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+    }
   }
 }
 
