@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import Navigation from '../components/Navigation'
+import { PassGuaranteeCompact } from '@/components/PassGuarantee'
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Exam-Style Questions',
@@ -74,7 +75,7 @@ export default function CFALevel1PracticeQuestions() {
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
               Master the CFA Level 1 exam with <strong className="text-white">2,500+ practice questions</strong> covering all 10 topic areas. Detailed explanations for every question.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link
                 href="/signup"
                 className="px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
@@ -87,6 +88,9 @@ export default function CFALevel1PracticeQuestions() {
               >
                 View Pricing
               </Link>
+            </div>
+            <div className="flex justify-center mb-12">
+              <PassGuaranteeCompact />
             </div>
             <div className="flex flex-wrap justify-center gap-8 text-sm">
               <div className="flex items-center gap-2">

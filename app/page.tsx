@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import Navigation from "./components/Navigation";
 import ScrollReveal from "./components/ScrollReveal";
+import { PassGuaranteeFull } from "@/components/PassGuarantee";
 
 const testimonials = [
   { initials: "JC", name: "James C.", role: "Investment Analyst, London", quote: "The question bank mirrors the actual CFA exam remarkably well. I felt genuinely prepared walking into the testing centre." },
@@ -184,6 +185,39 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Results Stats Section */}
+        <section className="px-4 py-16 sm:px-6 lg:px-8 bg-[#13343B]">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-10">
+              <p className="text-[#1FB8CD] text-sm uppercase tracking-widest mb-2">Proven Results</p>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white">
+                Candidates See Real Improvement
+              </h2>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">89%</div>
+                <div className="text-gray-300 text-sm">of users report feeling more prepared</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">+27%</div>
+                <div className="text-gray-300 text-sm">average mock exam score improvement</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">15K+</div>
+                <div className="text-gray-300 text-sm">candidates have used our platform</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">4.8</div>
+                <div className="text-gray-300 text-sm">average user rating out of 5</div>
+              </div>
+            </div>
+            <p className="text-center text-gray-500 text-xs mt-8">
+              Based on self-reported user data and feedback surveys. Individual results may vary.
+            </p>
           </div>
         </section>
 
@@ -696,6 +730,11 @@ export default function Home() {
             <p className="mt-8 text-center text-xs text-gray-400">
               Secure payment via Stripe. All cards accepted.
             </p>
+
+            {/* Pass Guarantee */}
+            <div className="mt-12">
+              <PassGuaranteeFull />
+            </div>
           </div>
         </section>
 
