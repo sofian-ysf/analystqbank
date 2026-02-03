@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Navigation from '../components/Navigation'
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Mock Exam 2026 | 180 Questions, Real Exam Format',
@@ -40,8 +41,10 @@ export default function CFALevel1MockExam() {
       />
 
       <div className="min-h-screen bg-white">
+        <Navigation />
+
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white py-20 px-4">
+        <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white pt-28 pb-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-[#1FB8CD]/20 rounded-full text-[#1FB8CD] text-sm font-medium mb-6">
               Exam Format 2026
@@ -255,6 +258,70 @@ export default function CFALevel1MockExam() {
             </div>
           </div>
         </section>
+
+        {/* Related Resources */}
+        <section className="py-16 px-4 bg-gray-50 border-t">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">More CFA Level 1 Resources</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
+                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Practice Questions</h3>
+                <p className="text-gray-600 text-sm">2,500+ CFA Level 1 practice questions with explanations</p>
+              </Link>
+              <Link href="/free-cfa-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
+                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Questions</h3>
+                <p className="text-gray-600 text-sm">Start with 100 free practice questions - no card required</p>
+              </Link>
+              <Link href="/flashcards" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
+                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Flashcards</h3>
+                <p className="text-gray-600 text-sm">1,600+ flashcards covering all CFA Level 1 topics</p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-200 bg-white px-4 py-12">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 md:grid-cols-4">
+              <div>
+                <Link href="/" className="text-xl font-bold text-gray-900">AnalystTrainer</Link>
+                <p className="mt-4 text-sm text-gray-600">
+                  The leading platform for CFA Level 1 exam preparation.
+                </p>
+              </div>
+              <div>
+                <h4 className="mb-4 font-semibold text-gray-900">Product</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><Link href="/cfa-level-1-practice-questions" className="hover:text-gray-900">Practice Questions</Link></li>
+                  <li><Link href="/cfa-level-1-mock-exam" className="hover:text-gray-900">Mock Exams</Link></li>
+                  <li><Link href="/flashcards" className="hover:text-gray-900">Free Flashcards</Link></li>
+                  <li><Link href="/pricing" className="hover:text-gray-900">Pricing</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-4 font-semibold text-gray-900">Resources</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><Link href="/blog" className="hover:text-gray-900">Blog</Link></li>
+                  <li><Link href="/topics" className="hover:text-gray-900">Study Topics</Link></li>
+                  <li><Link href="/free-cfa-questions" className="hover:text-gray-900">Free Questions</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="mb-4 font-semibold text-gray-900">Legal</h4>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  <li><Link href="/privacy" className="hover:text-gray-900">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="hover:text-gray-900">Terms of Service</Link></li>
+                  <li><Link href="/refund" className="hover:text-gray-900">Refund Policy</Link></li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
+              <p>© 2026 AnalystTrainer. All rights reserved.</p>
+              <p className="mt-2">Not affiliated with or endorsed by the CFA Institute.</p>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   )

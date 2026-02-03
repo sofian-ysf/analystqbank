@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import ArticleSVG from './ArticleSVG'
 import Navigation from '../components/Navigation'
+import { BlogCTABox } from '@/components/BlogCTA'
 import './blog-styles.css'
 
 interface Category {
@@ -85,6 +86,9 @@ export default function BlogClient({ posts }: BlogClientProps) {
               </section>
             )}
 
+            {/* CTA Section */}
+            <BlogCTABox />
+
             {/* Blog Grid */}
             {remainingPosts.length > 0 && (
               <section className="blog-grid-section">
@@ -114,6 +118,25 @@ export default function BlogClient({ posts }: BlogClientProps) {
                 </div>
               </section>
             )}
+
+            {/* Resources Section */}
+            <section className="py-12 border-t border-gray-200 mt-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">CFA Level 1 Study Resources</h2>
+              <div className="grid md:grid-cols-3 gap-4">
+                <Link href="/cfa-level-1-practice-questions" className="p-5 bg-white rounded-xl border border-gray-200 hover:border-[#1FB8CD] transition-colors group">
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#1FB8CD]">Practice Questions</h3>
+                  <p className="text-gray-600 text-sm">2,500+ exam-style questions</p>
+                </Link>
+                <Link href="/cfa-level-1-mock-exam" className="p-5 bg-white rounded-xl border border-gray-200 hover:border-[#1FB8CD] transition-colors group">
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#1FB8CD]">Mock Exams</h3>
+                  <p className="text-gray-600 text-sm">Full 180-question mocks</p>
+                </Link>
+                <Link href="/flashcards" className="p-5 bg-white rounded-xl border border-gray-200 hover:border-[#1FB8CD] transition-colors group">
+                  <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#1FB8CD]">Free Flashcards</h3>
+                  <p className="text-gray-600 text-sm">1,600+ cards - 100% free</p>
+                </Link>
+              </div>
+            </section>
           </>
         )}
         </div>

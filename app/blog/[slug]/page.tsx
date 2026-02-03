@@ -6,6 +6,7 @@ import Link from 'next/link'
 import ArticleSVG from '../ArticleSVG'
 import { generateSVGIndex } from '../utils'
 import Navigation from '../../components/Navigation'
+import { BlogCTAEndOfArticle, BlogCTAInline, BlogCTAFlashcards } from '@/components/BlogCTA'
 import './article.css'
 
 interface Props {
@@ -283,6 +284,9 @@ export default async function BlogPostPage({ params }: Props) {
               className="blog-content"
               dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content || '') }}
             />
+
+            {/* Mid-content CTA - Flashcards */}
+            <BlogCTAFlashcards />
           </div>
 
           {/* Tags */}
@@ -309,6 +313,9 @@ export default async function BlogPostPage({ params }: Props) {
               ))}
             </div>
           )}
+
+          {/* End of Article CTA */}
+          <BlogCTAEndOfArticle />
 
           {/* Footer */}
           <footer className="blog-detail-footer">
