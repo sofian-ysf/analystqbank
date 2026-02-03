@@ -5,14 +5,14 @@ import Link from 'next/link'
 import Navigation from '../components/Navigation'
 
 const formulaCategories = [
-  { name: 'Time Value of Money', count: 12, icon: '📈' },
-  { name: 'Statistics & Probability', count: 15, icon: '📊' },
-  { name: 'Fixed Income', count: 18, icon: '💵' },
-  { name: 'Equity Valuation', count: 14, icon: '📉' },
-  { name: 'Corporate Finance', count: 10, icon: '🏢' },
-  { name: 'Portfolio Management', count: 8, icon: '💼' },
-  { name: 'Derivatives', count: 12, icon: '🔄' },
-  { name: 'Economics', count: 11, icon: '🌐' },
+  { name: 'Time Value of Money', count: 12 },
+  { name: 'Statistics & Probability', count: 15 },
+  { name: 'Fixed Income', count: 18 },
+  { name: 'Equity Valuation', count: 14 },
+  { name: 'Corporate Finance', count: 10 },
+  { name: 'Portfolio Management', count: 8 },
+  { name: 'Derivatives', count: 12 },
+  { name: 'Economics', count: 11 },
 ]
 
 export default function FormulaSheetPage() {
@@ -133,14 +133,16 @@ export default function FormulaSheetPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {formulaCategories.map((category) => (
+            {formulaCategories.map((category, index) => (
               <div
                 key={category.name}
-                className="p-5 bg-gray-50 rounded-xl border border-gray-100"
+                className="p-5 bg-gray-50 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors"
               >
-                <span className="text-2xl mb-2 block">{category.icon}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Topic {index + 1}</span>
+                  <span className="text-xs font-semibold text-[#1FB8CD] bg-[#1FB8CD]/10 px-2 py-0.5 rounded-full">{category.count}</span>
+                </div>
                 <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                <p className="text-sm text-gray-500">{category.count} formulas</p>
               </div>
             ))}
           </div>

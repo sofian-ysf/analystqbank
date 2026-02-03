@@ -334,24 +334,30 @@ export default function Home() {
             <ScrollReveal delay={200}>
               <div className="grid gap-6 md:grid-cols-3 mb-12">
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
-                    <span className="text-2xl">📚</span>
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-green-50 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">1,600+ Flashcards</h3>
                   <p className="text-gray-600 text-sm">Comprehensive coverage of all CFA Level 1 topics, from Ethics to Portfolio Management.</p>
                 </div>
 
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-2xl">🧠</span>
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-50 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Spaced Repetition</h3>
                   <p className="text-gray-600 text-sm">Our SM-2 algorithm schedules reviews at optimal intervals to maximise long-term retention.</p>
                 </div>
 
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-center">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center">
-                    <span className="text-2xl">📊</span>
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-purple-50 flex items-center justify-center">
+                    <svg className="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
                   </div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Track Progress</h3>
                   <p className="text-gray-600 text-sm">See your mastery percentage for each topic and maintain your study streak.</p>
