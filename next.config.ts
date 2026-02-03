@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       { source: '/month', destination: '/', permanent: true },
       { source: '/lifetime', destination: '/', permanent: true },
       { source: '/testimonials', destination: '/', permanent: true },
+      { source: '/resources', destination: '/', permanent: true },
+      { source: '/study-guides', destination: '/', permanent: true },
+      { source: '/pricing', destination: '/', permanent: true },
+      { source: '/features', destination: '/', permanent: true },
     ]
   },
 };
