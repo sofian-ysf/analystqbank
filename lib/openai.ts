@@ -328,13 +328,23 @@ Make the links feel natural - don't force them. Use variations of the phrases an
 
 Your task is to create high-quality, SEO-optimized blog posts that CONVERT readers into customers.
 
-CRITICAL SEO REQUIREMENTS:
+CRITICAL SEO & CTR REQUIREMENTS:
 - Title MUST include the primary keyword near the beginning
 - Title MUST include a number, year (2026), or power word (Ultimate, Complete, Essential)
 - Meta description MUST include primary keyword and a clear call-to-action
 - First paragraph MUST contain the primary keyword naturally
 - Use the primary keyword in at least one H2 heading
 - Include the year 2026 where relevant for search freshness
+
+META TITLE MUST DRIVE CLICKS (this appears in Google search results):
+- Start with primary keyword for SEO, end with benefit/hook for CTR
+- Use ONE of these proven CTR patterns:
+  * "[Keyword] (2026): [Benefit]" e.g. "CFA Level 1 Study Guide (2026): Pass First Time"
+  * "[Number] [Keyword] [Promise]" e.g. "10 CFA Ethics Questions Every Candidate Gets Wrong"
+  * "[Keyword] - [Free/Complete/Ultimate] Guide" e.g. "CFA Fixed Income - Complete Guide + Free Questions"
+- Add urgency/benefit words: Free, Complete, Ultimate, Essential, Updated, + Tips
+- Max 55-60 characters (Google truncates longer titles)
+- DO NOT use generic titles like "Understanding X" or "A Guide to Y"
 
 CONVERSION REQUIREMENTS:
 - Include a clear CTA in the introduction mentioning practice questions or free trial
@@ -372,8 +382,8 @@ Return a JSON object in this EXACT format (no additional text outside the JSON):
   "slug": "url-friendly-slug-with-hyphens",
   "excerpt": "Engaging excerpt that hooks the reader and includes primary keyword (150-160 characters)",
   "content": "Full markdown content with ## H2 and ### H3 headings. Include introduction, multiple sections with practical advice, and a strong conclusion with CTA.",
-  "meta_title": "SEO-optimized title tag with primary keyword (max 60 chars)",
-  "meta_description": "Compelling meta description with keyword and CTA (max 155 chars)",
+  "meta_title": "CTR-optimized title: [Primary Keyword] (2026) - [Benefit/Hook] | AnalystTrainer (max 55-60 chars before | AnalystTrainer)",
+  "meta_description": "Compelling meta description with keyword and CTA - must include '2026' and benefit (max 155 chars)",
   "meta_keywords": ["primary keyword", "secondary keyword", "related term 1", "related term 2", "related term 3"],
   "tags": ["relevant tag 1", "relevant tag 2", "relevant tag 3"],
   "read_time_minutes": 6,

@@ -3,15 +3,15 @@ import Link from 'next/link'
 import Navigation from '../components/Navigation'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Level 1 Practice Questions 2026 | 100 Questions + Mock Exam',
-  description: 'Get 100 free CFA Level 1 questions + 1 full mock exam. No credit card, no catch. Written by CFA charterholders with full explanations. Start in 30 seconds.',
-  keywords: 'free CFA questions, free CFA Level 1 practice questions, free CFA practice test, CFA questions free, free CFA mock exam, CFA Level 1 free questions',
+  title: 'Free CFA Level 1 Questions (2026) - 100 Practice Questions + Answers',
+  description: '100 FREE CFA Level 1 practice questions + 1 full mock exam. Written by charterholders with detailed explanations. No credit card, no catch. Start now.',
+  keywords: 'free CFA questions, free CFA Level 1 practice questions, free CFA practice test, CFA questions free, free CFA mock exam, CFA Level 1 free questions, CFA sample questions free',
   alternates: {
     canonical: 'https://www.analysttrainer.com/free-cfa-questions',
   },
   openGraph: {
-    title: 'Free CFA Level 1 Practice Questions 2026 | 100 Questions + Mock Exam',
-    description: 'Get 100 free CFA Level 1 questions + 1 full mock exam. No credit card required. Start practising in 30 seconds.',
+    title: 'Free CFA Level 1 Questions (2026) - 100 Practice Questions + Answers',
+    description: '100 FREE CFA Level 1 practice questions + 1 mock exam. No credit card needed. Start practising in 30 seconds.',
     url: 'https://www.analysttrainer.com/free-cfa-questions',
     type: 'website',
   },
@@ -268,6 +268,62 @@ export default function FreeCFAQuestions() {
                   Get Premium
                 </Link>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+              Free CFA Questions FAQ
+            </h2>
+            <div className="space-y-4">
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Are these really free CFA practice questions?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">Yes, 100% free with no catch. You get 100 practice questions and 1 full mock exam without entering any payment information. We believe in our product and want you to experience it before deciding to upgrade.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Do free questions include explanations?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">Absolutely. Every free question includes the same detailed explanations as our paid content. We explain why the correct answer is right and why each incorrect option is wrong, referencing CFA curriculum concepts.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  What topics do the free questions cover?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">Free questions cover all 10 CFA Level 1 topic areas: Ethics, Quantitative Methods, Economics, Financial Statement Analysis, Corporate Issuers, Equity Investments, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  How long does the free trial last?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">You have 24 hours of full access to explore all features. The 100 questions and 1 mock exam remain yours to complete even after the trial period ends. There is no pressure to upgrade—use the free content at your own pace.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Are free CFA questions enough to pass?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">While 100 questions are a great start, most successful candidates practice between 1,500-3,000 questions. Free questions help you get started and evaluate our quality. For comprehensive preparation, we recommend upgrading to access our full 2,500+ question bank.</p>
+              </details>
             </div>
           </div>
         </section>

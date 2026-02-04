@@ -472,8 +472,11 @@ export default function EditPostPage() {
                   value={post.meta_title || ''}
                   onChange={(e) => setPost({ ...post, meta_title: e.target.value })}
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg"
+                  placeholder="CFA [Topic] (2026) - [Benefit] | AnalystTrainer"
                 />
-                <p className="text-xs text-gray-500 mt-1">{(post.meta_title || '').length}/60</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {(post.meta_title || '').length}/60 • Include keyword + (2026) + benefit
+                </p>
               </div>
 
               <div>
@@ -483,8 +486,11 @@ export default function EditPostPage() {
                   onChange={(e) => setPost({ ...post, meta_description: e.target.value })}
                   rows={3}
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg"
+                  placeholder="[Benefit statement]. [What reader gets]. Updated for 2026."
                 />
-                <p className="text-xs text-gray-500 mt-1">{(post.meta_description || '').length}/155</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {(post.meta_description || '').length}/155 • Include CTA + benefit + 2026
+                </p>
               </div>
 
               <div>
