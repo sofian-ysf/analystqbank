@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.analysttrainer.com'
 
-  // Static public pages
+  // Static public pages (only include pages that exist and should be indexed)
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -14,34 +14,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/features`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/pricing`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/help`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
     },
     {
       url: `${baseUrl}/privacy`,
@@ -50,48 +26,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/resources`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/study-guides`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/formula-sheets`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/mock-exams`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/question-bank`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/login`,
+      url: `${baseUrl}/terms`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
-      priority: 0.4,
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/signup`,
+      url: `${baseUrl}/refund`,
       lastModified: new Date(),
       changeFrequency: 'yearly',
-      priority: 0.5,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/flashcards`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
   ]
+  // Note: /login, /signup, /forgot-password excluded (noindex)
+  // Note: /features, /pricing, /resources, /study-guides removed (redirected to homepage)
 
   // Topics hub page
   const topicsHub: MetadataRoute.Sitemap = [
@@ -121,65 +75,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/cfa-level-1-practice-questions`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/cfa-level-1-mock-exam`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/free-cfa-questions`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/formula-sheet`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/compare`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/daily-question`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      priority: 0.95,
     },
   ]
 
-  // FAQ pages
-  const faqPages: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/faq`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    ...cfaLevel1Curriculum.map((topic) => ({
-      url: `${baseUrl}/faq/${topic.id}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    })),
-  ]
-
-  // Glossary index
-  const glossaryIndex: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/glossary`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-  ]
 
   // Blog posts
   let blogPages: MetadataRoute.Sitemap = []
@@ -224,8 +135,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...topicsHub,
     ...topicPages,
     ...landingPages,
-    ...faqPages,
-    ...glossaryIndex,
     ...blogPages,
   ]
 }
