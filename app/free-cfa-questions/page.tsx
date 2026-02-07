@@ -32,11 +32,54 @@ export default function FreeCFAQuestions() {
     },
   }
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Are these really free CFA practice questions?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, 100% free with no catch. You get 100 practice questions and 1 full mock exam without entering any payment information.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Do free CFA questions include explanations?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Absolutely. Every free question includes the same detailed explanations as our paid content. We explain why the correct answer is right and why each incorrect option is wrong.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What topics do the free questions cover?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Free questions cover all 10 CFA Level 1 topic areas: Ethics, Quantitative Methods, Economics, Financial Statement Analysis, Corporate Issuers, Equity Investments, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are free CFA questions enough to pass?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'While 100 questions are a great start, most successful candidates practice between 1,500-3,000 questions. For comprehensive preparation, we recommend upgrading to access our full 2,500+ question bank.',
+        },
+      },
+    ],
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <div className="min-h-screen bg-white">

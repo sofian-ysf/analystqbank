@@ -53,11 +53,62 @@ export default function CFALevel1PracticeQuestions() {
     },
   }
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How many CFA Level 1 practice questions are included?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Our question bank includes over 2,500 CFA Level 1 practice questions covering all 10 topic areas. Questions are regularly updated to reflect the latest CFA curriculum.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are the questions similar to the actual CFA exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! Our questions are written to mirror the actual CFA Level 1 exam format, difficulty level, and topic weighting. Many candidates report our questions are slightly harder than the actual exam, which helps them feel more prepared.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Do practice questions include explanations?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Every single question includes a detailed explanation showing why the correct answer is right and why the other options are incorrect. This helps you learn from mistakes and understand the underlying concepts.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How many practice questions should I do before the CFA exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Most successful candidates complete between 1,500 and 3,000 practice questions during their preparation. We recommend doing at least 150-200 questions per topic area.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the pass rate for CFA Level 1?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The CFA Level 1 pass rate typically ranges between 35% and 45%. Candidates who use structured practice questions and mock exams consistently outperform those who only read study materials.',
+        },
+      },
+    ],
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <div className="min-h-screen bg-white">

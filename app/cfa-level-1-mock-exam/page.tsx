@@ -33,11 +33,62 @@ export default function CFALevel1MockExam() {
     },
   }
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How many mock exams are included?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Free trial includes 1 mock exam. Basic plan includes 5 mock exams. Premium plan includes unlimited mock exams for lifetime access.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How long is each CFA Level 1 mock exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Each mock exam contains 180 questions split into two sessions of 90 questions each. You have 2 hours 15 minutes per session, just like the real CFA exam.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What score do I need to pass the CFA Level 1 exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The CFA Institute does not disclose the exact passing score, but it is estimated to be around 70% based on historical data. We recommend aiming for 75%+ on mock exams to build a comfortable margin.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'When should I start taking mock exams?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We recommend taking your first mock exam 6-8 weeks before your exam date to establish a baseline. Then take additional mocks every 1-2 weeks to track improvement and build stamina.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Should I take CFA mock exams on a computer or paper?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The CFA Level 1 exam is now computer-based, so we strongly recommend taking mock exams on a computer to match the actual exam experience.',
+        },
+      },
+    ],
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
       <div className="min-h-screen bg-white">

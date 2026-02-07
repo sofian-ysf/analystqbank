@@ -3,6 +3,15 @@ import type { NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export async function middleware(request: NextRequest) {
+  const hostname = request.headers.get('host') || ''
+
+  // Redirect non-www to www (only in production)
+  if (hostname === 'analysttrainer.com') {
+    const url = request.nextUrl.clone()
+    url.host = 'www.analysttrainer.com'
+    return NextResponse.redirect(url, 301)
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,

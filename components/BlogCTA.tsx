@@ -14,13 +14,13 @@ export function BlogCTAInline() {
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <p className="font-semibold text-lg">Ready to test your knowledge?</p>
-          <p className="text-gray-300 text-sm">Try 100 CFA Level 1 practice questions free.</p>
+          <p className="text-gray-300 text-sm">Try <Link href="/free-cfa-questions" className="underline hover:text-white">100 CFA Level 1 practice questions</Link> free.</p>
         </div>
         <Link
-          href="/signup"
+          href="/cfa-level-1-practice-questions"
           className="shrink-0 px-6 py-3 bg-[#1FB8CD] text-white rounded-full font-medium hover:bg-[#18a3b5] transition-colors"
         >
-          Start Free Trial
+          View Questions
         </Link>
       </div>
     </div>
@@ -100,7 +100,7 @@ export function BlogCTAEndOfArticle() {
           Ready to Pass CFA Level 1?
         </h3>
         <p className="text-gray-300 mb-6">
-          Join thousands of candidates who passed their CFA Level 1 exam using AnalystTrainer. Get instant access to 2,500+ practice questions, mock exams, and detailed explanations.
+          Join thousands of candidates who passed their CFA Level 1 exam using AnalystTrainer. Get instant access to <Link href="/cfa-level-1-practice-questions" className="underline hover:text-white">2,500+ practice questions</Link>, <Link href="/cfa-level-1-mock-exam" className="underline hover:text-white">mock exams</Link>, and detailed explanations.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -110,10 +110,10 @@ export function BlogCTAEndOfArticle() {
             Start Free Trial
           </Link>
           <Link
-            href="/pricing"
+            href="/cfa-level-1-practice-questions"
             className="px-8 py-3 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-colors"
           >
-            View Pricing
+            View Practice Questions
           </Link>
         </div>
         <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-gray-300">
@@ -127,7 +127,7 @@ export function BlogCTAEndOfArticle() {
             <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            100 free questions
+            <Link href="/free-cfa-questions" className="hover:underline">100 free questions</Link>
           </span>
           <span className="flex items-center gap-1.5">
             <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
