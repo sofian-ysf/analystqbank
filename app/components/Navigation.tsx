@@ -68,9 +68,6 @@ export default function Navigation() {
                 FREE
               </span>
             </Link>
-            <Link href="/try-free" className="pill-nav-item">
-              Try Demo
-            </Link>
             <Link href="/#features" className="pill-nav-item">
               Features
             </Link>
@@ -126,9 +123,6 @@ export default function Navigation() {
 
         <div className="pill-mobile-content">
           <div className="pill-mobile-nav-links">
-            <Link href="/try-free" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
-              Try Demo
-            </Link>
             <Link href="/flashcards" className="pill-mobile-nav-link flex items-center gap-2" onClick={closeMobileMenu}>
               Flashcards
               <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">

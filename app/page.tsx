@@ -166,10 +166,10 @@ export default function Home() {
                     Start Free Trial
                   </Link>
                   <Link
-                    href="#features"
+                    href="/try-free"
                     className="pill-btn pill-btn-secondary pill-btn-lg"
                   >
-                    Explore Features
+                    Take Demo
                   </Link>
                 </div>
 
@@ -462,6 +462,24 @@ export default function Home() {
                 <p className="text-gray-600 text-sm">Complete coverage from Ethics to Portfolio Management, with questions weighted to match the actual exam blueprint.</p>
               </div>
             </div>
+
+            {/* CTA */}
+            <div className="mt-12 text-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/signup"
+                  className="pill-btn pill-btn-primary pill-btn-lg"
+                >
+                  Start Free Trial
+                </Link>
+                <Link
+                  href="/try-free"
+                  className="pill-btn pill-btn-secondary pill-btn-lg"
+                >
+                  Take Demo
+                </Link>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -506,6 +524,25 @@ export default function Home() {
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-3">Realistic Mock Exams</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">180-question mock exams that mirror the actual CFA Level 1 format, difficulty, and topic weighting for authentic practice.</p>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="mt-16 text-center">
+              <p className="text-gray-600 mb-6">See how our questions and explanations help you learn</p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/try-free"
+                  className="pill-btn pill-btn-primary pill-btn-lg"
+                >
+                  Take Demo
+                </Link>
+                <Link
+                  href="/signup"
+                  className="pill-btn pill-btn-secondary pill-btn-lg"
+                >
+                  Start Free Trial
+                </Link>
               </div>
             </div>
 
@@ -858,10 +895,10 @@ export default function Home() {
                 Start Free Trial
               </Link>
               <Link
-                href="#pricing"
+                href="/try-free"
                 className="pill-btn pill-btn-secondary pill-btn-lg"
               >
-                View Pricing
+                Take Demo
               </Link>
             </div>
 
