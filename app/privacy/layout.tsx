@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | AnalystTrainer',
-  description: 'Read the privacy policy for AnalystTrainer, the CFA Level 1 exam preparation platform. Learn how we collect, use, and protect your personal information.',
+  description: 'AnalystTrainer privacy policy. Learn how we protect your data and personal information.',
   alternates: {
     canonical: 'https://www.analysttrainer.com/privacy',
   },
