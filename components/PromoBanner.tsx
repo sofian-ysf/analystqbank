@@ -1,15 +1,27 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function PromoBanner() {
   const [isVisible, setIsVisible] = useState(true)
 
+  useEffect(() => {
+    // Add class to body when banner is visible to offset navbar
+    if (isVisible) {
+      document.body.classList.add('has-promo-banner')
+    } else {
+      document.body.classList.remove('has-promo-banner')
+    }
+    return () => {
+      document.body.classList.remove('has-promo-banner')
+    }
+  }, [isVisible])
+
   if (!isVisible) return null
 
   return (
-    <div className="bg-[#13343B] text-white px-4 py-2.5 text-center relative">
+    <div className="fixed top-0 left-0 right-0 z-[1001] bg-[#13343B] text-white px-4 py-2.5 text-center">
       <div className="flex items-center justify-center gap-2 text-sm">
         <span className="hidden sm:inline">Try before you buy:</span>
         <Link

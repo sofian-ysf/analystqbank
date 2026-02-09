@@ -496,3 +496,51 @@ body {
     padding-top: 70px;
   }
 }
+
+/* =============================================
+   PROMO BANNER OFFSET
+   ============================================= */
+
+/* When promo banner is visible, offset the navbar */
+body.has-promo-banner .pill-nav {
+  top: 40px;
+}
+
+/* Also offset mobile overlay when banner is visible */
+body.has-promo-banner .pill-mobile-overlay {
+  top: 40px;
+}
+
+/* Adjust page content spacing when banner is visible */
+body.has-promo-banner .has-pill-nav {
+  padding-top: 120px;
+}
+
+/* Add extra padding to hero section when banner is visible */
+body.has-promo-banner .hero-section {
+  padding-top: 136px; /* 96px (pt-24) + 40px (banner height) */
+}
+
+@media (min-width: 640px) {
+  body.has-promo-banner .hero-section {
+    padding-top: 168px; /* 128px (pt-32) + 40px (banner height) */
+  }
+}
+
+@media (max-width: 640px) {
+  body.has-promo-banner .pill-nav {
+    top: 44px; /* Slightly taller on mobile due to wrapping */
+  }
+
+  body.has-promo-banner .pill-mobile-overlay {
+    top: 44px;
+  }
+
+  body.has-promo-banner .has-pill-nav {
+    padding-top: 114px;
+  }
+
+  body.has-promo-banner .hero-section {
+    padding-top: 140px; /* 96px + 44px */
+  }
+}
