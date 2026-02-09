@@ -139,7 +139,7 @@ export default function DemoQuestion() {
           {showResult ? (
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-sm text-gray-600">
-                Get access to <span className="font-semibold">2,500+ questions</span> like this one
+                Try <span className="font-semibold">14 more questions</span> in our free demo
               </p>
               <div className="flex gap-3">
                 <button
@@ -149,10 +149,10 @@ export default function DemoQuestion() {
                   Try Again
                 </button>
                 <Link
-                  href="/signup"
+                  href="/try-free"
                   className="px-6 py-2.5 bg-[#1FB8CD] text-white rounded-full text-sm font-medium hover:bg-[#18a3b5] transition-colors"
                 >
-                  Start Free Trial
+                  Take Full Demo
                 </Link>
               </div>
             </div>
