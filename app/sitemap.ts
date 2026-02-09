@@ -43,6 +43,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/question-bank`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/mock-exams`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/formula-sheets`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/help`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
   ]
   // Note: /login, /signup, /forgot-password excluded (noindex)
   // Note: /features, /pricing, /resources, /study-guides removed (redirected to homepage)
