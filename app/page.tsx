@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import Navigation from "./components/Navigation";
 import ScrollReveal from "./components/ScrollReveal";
 import { PassGuaranteeFull } from "@/components/PassGuarantee";
+import DemoQuestion from "@/components/DemoQuestion";
 
 const testimonials = [
   { initials: "JC", name: "James C.", role: "Investment Analyst, London", quote: "The question bank mirrors the actual CFA exam remarkably well. I felt genuinely prepared walking into the testing centre." },
@@ -139,61 +140,69 @@ export default function Home() {
         <Navigation />
 
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center pt-24 pb-12 sm:pt-0 sm:pb-0 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
+        <section className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl w-full">
-            <div className="text-center">
-              <div className="pill-badge mb-6">
-                Trusted by finance professionals worldwide
-              </div>
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left: Text Content */}
+              <div className="text-center lg:text-left">
+                <div className="pill-badge mb-6 inline-block">
+                  Trusted by finance professionals worldwide
+                </div>
 
-              <h1 className="mb-6 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
-                Pass Your CFA Level 1
-                <span className="block text-gray-900">On Your First Try</span>
-              </h1>
+                <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+                  Pass Your CFA Level 1
+                  <span className="block text-gray-900">On Your First Try</span>
+                </h1>
 
-              <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600">
-                A thoughtfully designed preparation experience trusted by finance professionals across the UK. Expert-crafted questions, detailed explanations, and the confidence to succeed.
-              </p>
+                <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
+                  Expert-crafted questions with detailed explanations. Try one below to see how our platform helps you learn.
+                </p>
 
-              <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-                <Link
-                  href="/signup"
-                  className="pill-btn pill-btn-primary pill-btn-lg"
-                >
-                  Start Free Trial
-                </Link>
-                <Link
-                  href="#features"
-                  className="pill-btn pill-btn-secondary pill-btn-lg"
-                >
-                  Explore Features
-                </Link>
-              </div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
+                  <Link
+                    href="/signup"
+                    className="pill-btn pill-btn-primary pill-btn-lg"
+                  >
+                    Start Free Trial
+                  </Link>
+                  <Link
+                    href="#features"
+                    className="pill-btn pill-btn-secondary pill-btn-lg"
+                  >
+                    Explore Features
+                  </Link>
+                </div>
 
-              <div className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4">
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">4.8/5</div>
-                  <div className="flex justify-center mt-1 mb-1">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className={`h-3 w-3 sm:h-4 sm:w-4 ${i < 5 ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-bold text-gray-900">4.8/5</div>
+                    <div className="flex justify-center lg:justify-start mt-1 mb-1">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className={`h-3 w-3 ${i < 5 ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <div className="text-xs text-gray-600">User Rating</div>
                   </div>
-                  <div className="text-sm text-gray-600">User Rating</div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-bold text-gray-900">2,500+</div>
+                    <div className="text-xs text-gray-600">Questions</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-bold text-gray-900">10</div>
+                    <div className="text-xs text-gray-600">Topic Areas</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-bold text-gray-900">Lifetime</div>
+                    <div className="text-xs text-gray-600">Access</div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">2,500+</div>
-                  <div className="text-sm text-gray-600">Practice Questions</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">10</div>
-                  <div className="text-sm text-gray-600">Topic Areas Covered</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">Lifetime</div>
-                  <div className="text-sm text-gray-600">Access Included</div>
-                </div>
+              </div>
+
+              {/* Right: Interactive Demo Question */}
+              <div className="lg:pl-8">
+                <DemoQuestion />
               </div>
             </div>
           </div>
