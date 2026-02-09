@@ -191,8 +191,8 @@ export default function Home() {
                   <div className="text-sm text-gray-600">Topic Areas Covered</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">15K+</div>
-                  <div className="text-sm text-gray-600">Candidates Helped</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-900">Lifetime</div>
+                  <div className="text-sm text-gray-600">Access Included</div>
                 </div>
               </div>
             </div>
