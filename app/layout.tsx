@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     icon: "/icon.png",
     apple: "/apple-icon.png",
   },
+  alternates: {
+    canonical: "https://www.analysttrainer.com",
+  },
   description: "Pass CFA Level 1 first time. 2,500+ practice questions & mock exams from £50. Written by charterholders with detailed explanations. 100 FREE questions included.",
   keywords: "CFA Level 1 practice questions, CFA Level 1 mock exam, CFA exam prep, CFA question bank, CFA Level 1 study guide, CFA practice test, pass CFA Level 1, CFA Level 1 questions, CFA preparation, CFA Level 1 2026",
   authors: [{ name: "AnalystTrainer" }],
