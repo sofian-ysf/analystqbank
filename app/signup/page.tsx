@@ -73,7 +73,9 @@ function SignUpForm() {
       const trialEndsAt = new Date();
       trialEndsAt.setHours(trialEndsAt.getHours() + 24);
 
-      // Update user profile with trial info
+      const now = new Date().toISOString();
+
+      // Update user profile with trial info and account creation time
       await supabase
         .from('user_profiles')
         .update({
@@ -81,6 +83,7 @@ function SignUpForm() {
           subscription_status: 'trialing',
           trial_ends_at: trialEndsAt.toISOString(),
           full_name: fullName || email.split('@')[0],
+          account_created_at: now,
         })
         .eq('id', data.user.id);
 
@@ -99,6 +102,20 @@ function SignUpForm() {
         });
       } catch (notificationError) {
         console.error('Failed to send Discord notification:', notificationError);
+      }
+
+      // Send email verification
+      try {
+        await fetch('/api/send-verification-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: email }),
+        });
+      } catch (emailError) {
+        console.error('Failed to send verification email:', emailError);
+        // Don't block signup if email fails
       }
 
       // Redirect immediately based on plan

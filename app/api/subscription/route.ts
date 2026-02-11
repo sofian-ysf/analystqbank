@@ -15,7 +15,7 @@ export async function GET() {
     // Get user profile with subscription info
     const { data: profile, error } = await supabase
       .from('user_profiles')
-      .select('subscription_plan, subscription_status, trial_ends_at')
+      .select('subscription_plan, subscription_status, trial_ends_at, email_verified_at, account_created_at')
       .eq('id', user.id)
       .single();
 
@@ -43,6 +43,17 @@ export async function GET() {
     const status = profile.subscription_status || 'trialing';
     const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
     const now = new Date();
+
+    // Check if email verification is required (24 hours after account creation)
+    const accountCreatedAt = profile.account_created_at ? new Date(profile.account_created_at) : null;
+    const emailVerifiedAt = profile.email_verified_at ? new Date(profile.email_verified_at) : null;
+    const emailVerificationRequired = accountCreatedAt && !emailVerifiedAt;
+
+    let emailVerificationGracePeriodExpired = false;
+    if (emailVerificationRequired && accountCreatedAt) {
+      const hoursSinceCreation = (now.getTime() - accountCreatedAt.getTime()) / (1000 * 60 * 60);
+      emailVerificationGracePeriodExpired = hoursSinceCreation > 24;
+    }
 
     // Check if trial is expired
     const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
@@ -72,16 +83,21 @@ export async function GET() {
     // Check access - 'lifetime' status is for paid users
     const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
 
+    // Block access if email verification grace period has expired
+    const emailBlocksAccess = emailVerificationGracePeriodExpired;
+
     const canAccessMockExams = !isTrialExpired &&
+      !emailBlocksAccess &&
       hasValidStatus &&
       (mockExamsRemaining === null || mockExamsRemaining > 0);
 
     const canAccessQuestions = !isTrialExpired &&
+      !emailBlocksAccess &&
       hasValidStatus &&
       (questionsRemaining === null || questionsRemaining > 0);
 
     // Determine if user needs to upgrade
-    const needsUpgrade = isTrialExpired || !canAccessQuestions || !canAccessMockExams;
+    const needsUpgrade = isTrialExpired || emailBlocksAccess || !canAccessQuestions || !canAccessMockExams;
 
     return NextResponse.json({
       plan,
@@ -96,6 +112,9 @@ export async function GET() {
       questionsRemaining,
       limits,
       needsUpgrade,
+      emailVerified: !!emailVerifiedAt,
+      emailVerificationRequired,
+      emailVerificationGracePeriodExpired,
     });
 
   } catch (error) {

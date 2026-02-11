@@ -7,6 +7,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
+import EmailVerificationBanner from "@/components/EmailVerificationBanner";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -301,6 +302,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
+      <EmailVerificationBanner />
       {/* Dashboard Header */}
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
