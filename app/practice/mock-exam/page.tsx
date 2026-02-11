@@ -7,6 +7,8 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import MathText from "@/components/MathText";
+import { useSubscription } from "@/hooks/useSubscription";
+import { UpgradePrompt } from "@/components/UpgradePrompt";
 
 // CFA Level 1 exam weightings - 180 total questions
 const MOCK_EXAM_DISTRIBUTION: { [key: string]: { topicName: string; questions: number; weight: string } } = {
@@ -74,6 +76,15 @@ export default function MockExam() {
   const [examTimer, setExamTimer] = useState<number>(0); // In seconds
   const [timerRunning, setTimerRunning] = useState(false);
   const supabase = createClient();
+
+  // Subscription access control
+  const {
+    subscription,
+    loading: subscriptionLoading,
+    canAccessMockExams,
+    isTrialExpired,
+    plan,
+  } = useSubscription();
 
   const QUESTIONS_PER_PAGE = 50;
   const TOTAL_EXAM_TIME = 4.5 * 60 * 60; // 4.5 hours in seconds (CFA L1 format)
@@ -147,6 +158,10 @@ export default function MockExam() {
   }, [router, supabase]);
 
   const handleStartExam = async () => {
+    // Double-check access before starting exam
+    if (!canAccessMockExams) {
+      return;
+    }
     setLoading(true);
     const fetchedQuestions = await fetchMockExamQuestions();
     setQuestions(fetchedQuestions);
@@ -311,13 +326,35 @@ export default function MockExam() {
     }
   };
 
-  if (loading) {
+  if (loading || subscriptionLoading) {
     return (
       <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1FB8CD] mx-auto"></div>
           <p className="mt-4 text-[#5f6368]">Loading...</p>
         </div>
+      </div>
+    );
+  }
+
+  // Check subscription access
+  if (!canAccessMockExams) {
+    return (
+      <div className="min-h-screen bg-[#FBFAF4]">
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
+            <div className="flex h-16 items-center justify-between">
+              <Link href="/dashboard">
+                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
+              </Link>
+            </div>
+          </nav>
+        </header>
+        <UpgradePrompt
+          plan={plan}
+          isTrialExpired={isTrialExpired}
+          mockExamsRemaining={subscription?.mockExamsRemaining}
+        />
       </div>
     );
   }
