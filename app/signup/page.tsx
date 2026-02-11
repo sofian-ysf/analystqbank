@@ -59,8 +59,16 @@ function SignUpForm() {
       return;
     }
 
-    // Check if user is signed in (session should be available immediately when email verification is disabled)
-    if (data?.user && data?.session) {
+    // With email verification disabled, user should be immediately signed in
+    if (data?.user) {
+      // Ensure session is established
+      const { data: sessionData } = await supabase.auth.getSession();
+
+      if (!sessionData?.session) {
+        setError('Failed to establish session. Please try logging in.');
+        setLoading(false);
+        return;
+      }
       // Calculate trial end time (24 hours from now)
       const trialEndsAt = new Date();
       trialEndsAt.setHours(trialEndsAt.getHours() + 24);
