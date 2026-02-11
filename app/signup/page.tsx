@@ -42,16 +42,10 @@ function SignUpForm() {
 
     setLoading(true);
 
-    // Include plan in the redirect URL so auth callback can handle it
-    const redirectUrl = selectedPlan === 'basic' || selectedPlan === 'premium'
-      ? `${window.location.origin}/auth/callback?plan=${selectedPlan}`
-      : `${window.location.origin}/auth/callback`;
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl,
         data: {
           full_name: fullName || email.split('@')[0],
           selected_plan: selectedPlan,
@@ -65,7 +59,8 @@ function SignUpForm() {
       return;
     }
 
-    if (data?.user) {
+    // Check if user is signed in (session should be available immediately when email verification is disabled)
+    if (data?.user && data?.session) {
       // Calculate trial end time (24 hours from now)
       const trialEndsAt = new Date();
       trialEndsAt.setHours(trialEndsAt.getHours() + 24);
