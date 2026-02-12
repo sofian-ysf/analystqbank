@@ -15,7 +15,7 @@ export async function GET() {
     // Get user profile with subscription info
     const { data: profile, error } = await supabase
       .from('user_profiles')
-      .select('subscription_plan, subscription_status, trial_ends_at, email_verified_at, account_created_at')
+      .select('subscription_plan, subscription_status, trial_ends_at, account_created_at')
       .eq('id', user.id)
       .single();
 
@@ -45,9 +45,10 @@ export async function GET() {
     const now = new Date();
 
     // Check if email verification is required (24 hours after account creation)
-    const accountCreatedAt = profile.account_created_at ? new Date(profile.account_created_at) : null;
-    const emailVerifiedAt = profile.email_verified_at ? new Date(profile.email_verified_at) : null;
-    const emailVerificationRequired = accountCreatedAt && !emailVerifiedAt;
+    // Use Supabase's built-in email_confirmed_at from user object
+    const accountCreatedAt = profile.account_created_at ? new Date(profile.account_created_at) : (user.created_at ? new Date(user.created_at) : null);
+    const emailConfirmedAt = user.email_confirmed_at ? new Date(user.email_confirmed_at) : null;
+    const emailVerificationRequired = accountCreatedAt && !emailConfirmedAt;
 
     let emailVerificationGracePeriodExpired = false;
     if (emailVerificationRequired && accountCreatedAt) {
@@ -112,7 +113,7 @@ export async function GET() {
       questionsRemaining,
       limits,
       needsUpgrade,
-      emailVerified: !!emailVerifiedAt,
+      emailVerified: !!emailConfirmedAt,
       emailVerificationRequired,
       emailVerificationGracePeriodExpired,
     });

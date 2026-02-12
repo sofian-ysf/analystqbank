@@ -104,19 +104,7 @@ function SignUpForm() {
         console.error('Failed to send Discord notification:', notificationError);
       }
 
-      // Send email verification
-      try {
-        await fetch('/api/send-verification-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: email }),
-        });
-      } catch (emailError) {
-        console.error('Failed to send verification email:', emailError);
-        // Don't block signup if email fails
-      }
+      // Supabase automatically sends verification email when email confirmation is enabled
 
       // Redirect immediately based on plan
       if (selectedPlan === 'basic' || selectedPlan === 'premium') {

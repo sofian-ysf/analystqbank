@@ -16,16 +16,8 @@ export default function EmailVerificationBanner() {
 
       if (user) {
         setUser(user)
-        // Check if email is confirmed in Supabase auth
-        // If using custom verification, check user_profiles table
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('email_verified_at')
-          .eq('id', user.id)
-          .single()
-
-        // If email_verified_at is null, show banner
-        setIsVerified(!!profile?.email_verified_at)
+        // Check Supabase's built-in email_confirmed_at field
+        setIsVerified(!!user.email_confirmed_at)
       }
     }
 
@@ -46,16 +38,16 @@ export default function EmailVerificationBanner() {
     setMessage('')
 
     try {
-      const response = await fetch('/api/send-verification-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email }),
+      // Use Supabase's built-in resend confirmation email
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: user.email,
       })
 
-      if (response.ok) {
-        setMessage('Verification email sent! Check your inbox.')
+      if (error) {
+        setMessage('Failed to send email. Please try again later.')
       } else {
-        setMessage('Failed to send email. Please try again.')
+        setMessage('Verification email sent! Check your inbox.')
       }
     } catch (error) {
       setMessage('Error sending email. Please try again.')
