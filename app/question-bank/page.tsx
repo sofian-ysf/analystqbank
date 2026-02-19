@@ -10,6 +10,7 @@ import { cfaLevel1Curriculum } from "@/lib/curriculum";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt, UpgradeBanner } from "@/components/UpgradePrompt";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { QUESTION_LIMITS_BY_TOPIC } from "@/lib/plans";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -55,7 +56,6 @@ export default function QuestionBank() {
   const [totalDbQuestions, setTotalDbQuestions] = useState(0);
   const [totalAttempted, setTotalAttempted] = useState(0);
   const [totalCorrect, setTotalCorrect] = useState(0);
-  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const supabase = createClient();
 
   // Subscription access control
@@ -67,14 +67,8 @@ export default function QuestionBank() {
     plan,
   } = useSubscription();
 
-  // Check if user can start practice and handle navigation
+  // Navigate to practice session (no limit checking - limits are enforced by availability)
   const handleStartPractice = (url: string) => {
-    // Check if user has questions remaining
-    if (subscription && subscription.questionsRemaining !== null && subscription.questionsRemaining === 0) {
-      setShowUpgradeModal(true);
-      return;
-    }
-    // Navigate to practice session
     router.push(url);
   };
 
@@ -84,6 +78,10 @@ export default function QuestionBank() {
       const questionCountByTopic: { [key: string]: number } = {};
       const questionCountBySubtopic: { [key: string]: number } = {};
 
+      // Get plan limits for displaying available questions
+      const userPlan = plan || 'trial';
+      const planLimits = QUESTION_LIMITS_BY_TOPIC[userPlan];
+
       const countPromises = Object.values(topicIdToDbName).map(async (topicName) => {
         const { count, error } = await supabase
           .from('questions')
@@ -92,7 +90,9 @@ export default function QuestionBank() {
           .eq('topic_area', topicName);
 
         if (!error && count !== null) {
-          questionCountByTopic[topicName] = count;
+          // Apply plan limits to displayed count
+          const topicLimit = planLimits[topicName as keyof typeof planLimits];
+          questionCountByTopic[topicName] = topicLimit === Infinity ? count : Math.min(count, topicLimit);
         }
       });
 
@@ -371,39 +371,6 @@ export default function QuestionBank() {
       </header>
 
       <Breadcrumbs />
-
-      {/* Usage Banner */}
-      {subscription && (plan === 'trial' || plan === 'basic') && subscription.questionsRemaining !== null && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between flex-wrap gap-3">
-              <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">
-                    {subscription.questionsRemaining > 0
-                      ? `${subscription.questionsRemaining} question${subscription.questionsRemaining === 1 ? '' : 's'} remaining`
-                      : 'Question limit reached'}
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    {subscription.questionsAnswered} of {subscription.limits.questions} used
-                  </p>
-                </div>
-              </div>
-              {subscription.questionsRemaining !== null && subscription.questionsRemaining <= 20 && (
-                <Link
-                  href="/pricing"
-                  className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-[#1aa3b5] transition-colors shadow-sm"
-                >
-                  {subscription.questionsRemaining === 0 ? 'Upgrade to Continue' : 'Upgrade Now'}
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -694,20 +661,6 @@ export default function QuestionBank() {
           </div>
         </div>
       </div>
-
-      {/* Upgrade Modal */}
-      {showUpgradeModal && subscription && plan && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => setShowUpgradeModal(false)}>
-          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
-            <UpgradePrompt
-              plan={plan}
-              isTrialExpired={isTrialExpired}
-              questionsRemaining={subscription.questionsRemaining}
-              feature="questions"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

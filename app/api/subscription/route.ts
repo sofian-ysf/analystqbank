@@ -53,21 +53,9 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id);
 
-    // Count practice sessions started (not individual questions answered)
-    const { count: practiceSessionsStarted } = await supabase
-      .from('user_practice_sessions')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-
-    // For backwards compatibility, also count individual question attempts
-    // Use whichever is higher (sessions or questions)
-    const { count: questionsAnswered } = await supabase
-      .from('user_question_attempts')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', user.id);
-
-    // Use practice sessions count for limits, fall back to questions if sessions table doesn't exist yet
-    const effectiveQuestionsUsed = practiceSessionsStarted || questionsAnswered || 0;
+    // For questions, we limit by availability (QUESTION_LIMITS_BY_TOPIC), not by usage
+    // So we don't track "questions used" anymore
+    const questionsAnswered = 0; // Not tracking usage, limiting by availability instead
 
     const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.trial;
 
@@ -76,9 +64,11 @@ export async function GET() {
       ? null
       : Math.max(0, limits.mockExams - (mockExamsUsed || 0));
 
+    // Questions are limited by availability per topic, not by tracking usage
+    // So questionsRemaining represents the total available, not consumed
     const questionsRemaining = limits.questions === Infinity
       ? null
-      : Math.max(0, limits.questions - effectiveQuestionsUsed);
+      : limits.questions;
 
     // Check access - 'lifetime' status is for paid users
     const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
@@ -87,9 +77,8 @@ export async function GET() {
       hasValidStatus &&
       (mockExamsRemaining === null || mockExamsRemaining > 0);
 
-    const canAccessQuestions = !isTrialExpired &&
-      hasValidStatus &&
-      (questionsRemaining === null || questionsRemaining > 0);
+    // Questions are always accessible (limited by availability per plan, not by usage tracking)
+    const canAccessQuestions = !isTrialExpired && hasValidStatus;
 
     // Determine if user needs to upgrade
     const needsUpgrade = isTrialExpired || !canAccessQuestions || !canAccessMockExams;
@@ -102,7 +91,7 @@ export async function GET() {
       canAccessMockExams,
       canAccessQuestions,
       mockExamsUsed: mockExamsUsed || 0,
-      questionsAnswered: effectiveQuestionsUsed,
+      questionsAnswered: 0, // Not tracking usage, limiting by availability
       mockExamsRemaining,
       questionsRemaining,
       limits,

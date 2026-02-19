@@ -9,6 +9,7 @@ import { User } from "@supabase/supabase-js";
 import MathText from "@/components/MathText";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt, UpgradeBanner } from "@/components/UpgradePrompt";
+import { QUESTION_LIMITS_BY_TOPIC } from "@/lib/plans";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -158,12 +159,22 @@ function PracticeSessionContent() {
 
       // Fetch questions from each category to ensure even distribution
       const allQuestions: Question[] = [];
-      const questionsPerCategory = questionLimit
-        ? Math.ceil(questionLimit / topicNames.length)
-        : 500; // For "all", get up to 500 per category
+
+      // Get the user's plan from subscription context
+      // Default to trial limits if not available
+      const userPlan = plan || 'trial';
+      const planLimits = QUESTION_LIMITS_BY_TOPIC[userPlan];
 
       // Fetch from each category separately to ensure coverage
       for (const topicName of topicNames) {
+        // Get the limit for this topic based on user's plan
+        const topicLimit = planLimits[topicName as keyof typeof planLimits] || 500;
+
+        // For user-specified limits (from dropdown), use the smaller of plan limit or user selection
+        const effectiveLimit = questionLimit && topicLimit !== Infinity
+          ? Math.min(Math.ceil(questionLimit / topicNames.length), topicLimit)
+          : topicLimit === Infinity ? 500 : topicLimit;
+
         let query = supabase
           .from("questions")
           .select("*")
@@ -175,7 +186,7 @@ function PracticeSessionContent() {
           query = query.in("subtopic", subtopicList);
         }
 
-        const { data, error } = await query.limit(questionsPerCategory);
+        const { data, error } = await query.limit(effectiveLimit === Infinity ? 500 : effectiveLimit);
 
         if (error) {
           console.error(`Error fetching questions for ${topicName}:`, error);
@@ -242,22 +253,6 @@ function PracticeSessionContent() {
       }
 
       setQuestions(finalQuestions);
-
-      // Track practice session start
-      const sessionId = crypto.randomUUID();
-      supabase
-        .from('user_practice_sessions')
-        .insert({
-          id: sessionId,
-          user_id: user.id,
-          question_count: finalQuestions.length,
-          started_at: new Date().toISOString(),
-        })
-        .then(({ error }) => {
-          if (error) {
-            console.error('Error tracking session:', error);
-          }
-        });
 
       setQuestionsLoaded(true);
       setLoading(false);
