@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { PLAN_LIMITS, PlanType } from '@/lib/plans';
+import { createClient } from '@/lib/supabase';
 
 interface UpgradePromptProps {
   plan: PlanType;
@@ -18,6 +20,51 @@ export function UpgradePrompt({
   mockExamsRemaining,
   feature = 'general',
 }: UpgradePromptProps) {
+  const [isUpgrading, setIsUpgrading] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, [supabase]);
+
+  const handleUpgrade = async (selectedPlan: 'basic' | 'premium') => {
+    if (!user) return;
+
+    setIsUpgrading(true);
+
+    try {
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: selectedPlan,
+          userId: user.id,
+          email: user.email,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to start checkout. Please try again.');
+        setIsUpgrading(false);
+      }
+    } catch (error) {
+      console.error('Upgrade error:', error);
+      alert('An error occurred. Please try again.');
+      setIsUpgrading(false);
+    }
+  };
+
   const getTitle = () => {
     if (isTrialExpired) {
       return 'Your Free Trial Has Ended';
@@ -83,42 +130,90 @@ export function UpgradePrompt({
         </p>
 
         {/* Plan comparison */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-            <h3 className="font-semibold text-gray-900 mb-2">Basic</h3>
-            <p className="text-2xl font-bold text-gray-900 mb-2">£{PLAN_LIMITS.basic.price}</p>
-            <p className="text-xs text-gray-500 mb-3">One-time payment</p>
-            <ul className="text-sm text-gray-600 space-y-1 text-left">
-              <li>• {PLAN_LIMITS.basic.questions.toLocaleString()} questions</li>
-              <li>• {PLAN_LIMITS.basic.mockExams} mock exams</li>
-              <li>• Lifetime access</li>
-            </ul>
-          </div>
-          <div className="bg-[#1FB8CD]/5 rounded-xl p-4 border-2 border-[#1FB8CD]">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          {/* Basic Plan */}
+          {plan !== 'basic' && (
+            <button
+              onClick={() => handleUpgrade('basic')}
+              disabled={isUpgrading}
+              className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:border-gray-900 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <h3 className="font-semibold text-gray-900 mb-2">Basic</h3>
+              <p className="text-3xl font-bold text-gray-900 mb-1">£{PLAN_LIMITS.basic.price}</p>
+              <p className="text-xs text-gray-500 mb-3">One-time payment</p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {PLAN_LIMITS.basic.questions.toLocaleString()} questions
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {PLAN_LIMITS.basic.mockExams} mock exams
+                </li>
+                <li className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Lifetime access
+                </li>
+              </ul>
+              <div className="mt-4 text-center text-sm font-medium text-gray-900">
+                {isUpgrading ? 'Processing...' : 'Select Basic →'}
+              </div>
+            </button>
+          )}
+
+          {/* Premium Plan */}
+          <button
+            onClick={() => handleUpgrade('premium')}
+            disabled={isUpgrading}
+            className={`bg-[#1FB8CD]/5 rounded-xl p-5 border-2 border-[#1FB8CD] hover:bg-[#1FB8CD]/10 transition-all text-left relative disabled:opacity-50 disabled:cursor-not-allowed ${plan === 'basic' ? 'col-span-2' : ''}`}
+          >
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-[#1FB8CD] text-white text-xs font-bold px-3 py-1 rounded-full">
+                RECOMMENDED
+              </span>
+            </div>
             <h3 className="font-semibold text-gray-900 mb-2">Premium</h3>
-            <p className="text-2xl font-bold text-[#1FB8CD] mb-2">£{PLAN_LIMITS.premium.price}</p>
+            <p className="text-3xl font-bold text-[#1FB8CD] mb-1">£{PLAN_LIMITS.premium.price}</p>
             <p className="text-xs text-gray-500 mb-3">One-time payment</p>
-            <ul className="text-sm text-gray-600 space-y-1 text-left">
-              <li>• Unlimited questions</li>
-              <li>• Unlimited mock exams</li>
-              <li>• Priority support</li>
+            <ul className="text-sm text-gray-700 space-y-1">
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="font-semibold">Unlimited questions</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="font-semibold">Unlimited mock exams</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Priority support
+              </li>
             </ul>
-          </div>
+            <div className="mt-4 text-center text-sm font-semibold text-[#1FB8CD]">
+              {isUpgrading ? 'Processing...' : 'Select Premium →'}
+            </div>
+          </button>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Link
-            href="/pricing"
-            className="flex-1 bg-[#1FB8CD] text-white py-3 px-6 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
-          >
-            View Plans
-          </Link>
+        {/* Back button */}
+        <div className="text-center">
           <Link
             href="/dashboard"
-            className="flex-1 border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+            className="text-gray-600 hover:text-gray-900 text-sm font-medium"
           >
-            Back to Dashboard
+            ← Back to Dashboard
           </Link>
         </div>
 
