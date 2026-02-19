@@ -14,6 +14,7 @@ export default function MockExams() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedLevel, setSelectedLevel] = useState("Level I");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const supabase = createClient();
 
   // Subscription access control
@@ -24,6 +25,17 @@ export default function MockExams() {
     isTrialExpired,
     plan,
   } = useSubscription();
+
+  // Check if user can start mock exam and handle navigation
+  const handleStartMockExam = (examId: number) => {
+    // Check if user has mock exams remaining
+    if (subscription && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining === 0) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    // Navigate to mock exam
+    router.push(`/practice/mock-exam?examId=${examId}`);
+  };
 
   useEffect(() => {
     const checkUser = async () => {
@@ -207,6 +219,39 @@ export default function MockExams() {
         </nav>
       </header>
 
+      {/* Usage Banner */}
+      {subscription && (plan === 'trial' || plan === 'basic') && subscription.mockExamsRemaining !== null && (
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {subscription.mockExamsRemaining > 0
+                      ? `${subscription.mockExamsRemaining} mock exam${subscription.mockExamsRemaining === 1 ? '' : 's'} remaining`
+                      : 'Mock exam limit reached'}
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    {subscription.mockExamsUsed} of {subscription.limits.mockExams} used
+                  </p>
+                </div>
+              </div>
+              {subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining <= 2 && (
+                <Link
+                  href="/pricing"
+                  className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg text-sm font-semibold hover:bg-[#1aa3b5] transition-colors shadow-sm"
+                >
+                  {subscription.mockExamsRemaining === 0 ? 'Upgrade to Continue' : 'Upgrade Now'}
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Upgrade Banner if running low */}
@@ -376,15 +421,24 @@ export default function MockExams() {
                   <div className="ml-6 flex gap-3">
                     {exam.completed ? (
                       <>
-                        <button className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <button
+                          onClick={() => router.push(`/practice/mock-exam/results?examId=${exam.id}`)}
+                          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                        >
                           Review Results
                         </button>
-                        <button className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
+                        <button
+                          onClick={() => handleStartMockExam(exam.id)}
+                          className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                        >
                           Retake Exam
                         </button>
                       </>
                     ) : (
-                      <button className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800">
+                      <button
+                        onClick={() => handleStartMockExam(exam.id)}
+                        className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                      >
                         Start Exam
                       </button>
                     )}
@@ -426,6 +480,20 @@ export default function MockExams() {
           </div>
         </div>
       </div>
+
+      {/* Upgrade Modal */}
+      {showUpgradeModal && subscription && plan && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onClick={() => setShowUpgradeModal(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
+            <UpgradePrompt
+              plan={plan}
+              isTrialExpired={isTrialExpired}
+              mockExamsRemaining={subscription.mockExamsRemaining}
+              feature="mockExams"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
