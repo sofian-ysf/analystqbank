@@ -44,18 +44,6 @@ export async function GET() {
     const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
     const now = new Date();
 
-    // Check if email verification is required (24 hours after account creation)
-    // Use Supabase's built-in email_confirmed_at from user object
-    const accountCreatedAt = profile.account_created_at ? new Date(profile.account_created_at) : (user.created_at ? new Date(user.created_at) : null);
-    const emailConfirmedAt = user.email_confirmed_at ? new Date(user.email_confirmed_at) : null;
-    const emailVerificationRequired = accountCreatedAt && !emailConfirmedAt;
-
-    let emailVerificationGracePeriodExpired = false;
-    if (emailVerificationRequired && accountCreatedAt) {
-      const hoursSinceCreation = (now.getTime() - accountCreatedAt.getTime()) / (1000 * 60 * 60);
-      emailVerificationGracePeriodExpired = hoursSinceCreation > 24;
-    }
-
     // Check if trial is expired
     const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
 
@@ -84,21 +72,16 @@ export async function GET() {
     // Check access - 'lifetime' status is for paid users
     const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
 
-    // Block access if email verification grace period has expired
-    const emailBlocksAccess = emailVerificationGracePeriodExpired;
-
     const canAccessMockExams = !isTrialExpired &&
-      !emailBlocksAccess &&
       hasValidStatus &&
       (mockExamsRemaining === null || mockExamsRemaining > 0);
 
     const canAccessQuestions = !isTrialExpired &&
-      !emailBlocksAccess &&
       hasValidStatus &&
       (questionsRemaining === null || questionsRemaining > 0);
 
     // Determine if user needs to upgrade
-    const needsUpgrade = isTrialExpired || emailBlocksAccess || !canAccessQuestions || !canAccessMockExams;
+    const needsUpgrade = isTrialExpired || !canAccessQuestions || !canAccessMockExams;
 
     return NextResponse.json({
       plan,
@@ -113,9 +96,6 @@ export async function GET() {
       questionsRemaining,
       limits,
       needsUpgrade,
-      emailVerified: !!emailConfirmedAt,
-      emailVerificationRequired,
-      emailVerificationGracePeriodExpired,
     });
 
   } catch (error) {
