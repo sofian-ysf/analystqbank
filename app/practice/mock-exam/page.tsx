@@ -159,11 +159,6 @@ export default function MockExam() {
   }, [router, supabase]);
 
   const handleStartExam = async () => {
-    // Double-check access before starting exam
-    if (!canAccessMockExams) {
-      return;
-    }
-
     if (!user) return;
 
     setLoading(true);
@@ -183,7 +178,6 @@ export default function MockExam() {
 
       if (attemptError) {
         console.error('Error creating mock exam attempt:', attemptError);
-        alert('Failed to start exam. Please try again.');
         setLoading(false);
         return;
       }
@@ -196,7 +190,6 @@ export default function MockExam() {
       setTimerRunning(true);
     } catch (error) {
       console.error('Error starting exam:', error);
-      alert('Failed to start exam. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -413,6 +406,27 @@ export default function MockExam() {
         </header>
 
         <div className="max-w-3xl mx-auto px-4 py-12">
+          {/* Usage Banner for trial/basic users */}
+          {subscription && (plan === 'trial' || plan === 'basic') && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-sm font-medium text-blue-900">
+                    {subscription.mockExamsRemaining} mock exam{subscription.mockExamsRemaining === 1 ? '' : 's'} remaining
+                  </span>
+                </div>
+                {subscription.mockExamsRemaining <= 2 && (
+                  <Link href="/pricing" className="text-sm font-medium text-blue-700 hover:text-blue-800">
+                    Upgrade for more →
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="bg-white rounded-xl shadow-sm border border-[#EAEEEF] p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-[#13343B] mb-2">CFA Level 1 Mock Exam</h1>
@@ -466,20 +480,55 @@ export default function MockExam() {
               </ul>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={handleStartExam}
-                className="bg-[#1FB8CD] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#1A6872] transition-colors text-lg"
-              >
-                Start Mock Exam
-              </button>
-              <Link
-                href="/question-bank"
-                className="border border-[#EAEEEF] text-[#5f6368] px-8 py-4 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors text-center"
-              >
-                Back to Question Bank
-              </Link>
-            </div>
+            {/* Check if user has mock exams remaining */}
+            {subscription && subscription.mockExamsRemaining === 0 ? (
+              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6">
+                <div className="text-center mb-4">
+                  <svg className="w-16 h-16 text-amber-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    You've used all your mock exams
+                  </h3>
+                  <p className="text-gray-700 mb-4">
+                    {plan === 'trial'
+                      ? "Your free trial included 1 mock exam. Upgrade to continue practicing with more full-length exams!"
+                      : `You've completed all ${subscription.limits.mockExams} mock exams in your plan. Upgrade to Premium for unlimited access!`
+                    }
+                  </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link
+                    href="/pricing"
+                    className="bg-[#1FB8CD] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#1A6872] transition-colors text-center"
+                  >
+                    View Upgrade Options
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    className="border border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-medium hover:bg-gray-50 transition-colors text-center"
+                  >
+                    Back to Dashboard
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={handleStartExam}
+                  className="bg-[#1FB8CD] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#1A6872] transition-colors text-lg"
+                >
+                  Start Mock Exam
+                </button>
+                <Link
+                  href="/question-bank"
+                  className="border border-[#EAEEEF] text-[#5f6368] px-8 py-4 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors text-center"
+                >
+                  Back to Question Bank
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
