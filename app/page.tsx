@@ -152,12 +152,12 @@ export default function Home() {
                 </div>
 
                 <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                  Pass Your CFA Level 1
-                  <span className="block text-gray-900">On Your First Try</span>
+                  Pass CFA Level 1 First Time
+                  <span className="block text-gray-900">2,500+ Questions by Charterholders</span>
                 </h1>
 
                 <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
-                  Expert-crafted questions with detailed explanations. Try one below to see how our platform helps you learn.
+                  Expert-crafted practice questions with detailed explanations. Join thousands of candidates who passed using AnalystTrainer.
                 </p>
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
@@ -692,7 +692,8 @@ export default function Home() {
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-4xl font-light text-gray-900">£50</span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-500">Lifetime access</p>
+                  <p className="mt-1 text-sm text-gray-500">Lifetime access</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">Less than £0.50/day over 3 months</p>
                 </div>
 
                 <div className="py-6 space-y-3">
@@ -745,7 +746,8 @@ export default function Home() {
                   <div className="flex items-baseline justify-center gap-1">
                     <span className="text-4xl font-light text-gray-900">£75</span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-500">Lifetime access</p>
+                  <p className="mt-1 text-sm text-gray-500">Lifetime access</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">Less than £0.83/day over 3 months</p>
                 </div>
 
                 <div className="py-6 space-y-3">
