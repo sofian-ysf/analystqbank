@@ -9,6 +9,7 @@ import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt, UpgradeBanner } from "@/components/UpgradePrompt";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -356,6 +357,8 @@ export default function QuestionBank() {
           </div>
         </nav>
       </header>
+
+      <Breadcrumbs />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

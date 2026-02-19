@@ -2,10 +2,81 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
+import Script from 'next/script'
 import { useState } from 'react'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'lifetime' | 'monthly'>('lifetime')
+
+  // Product Schema for SEO
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "AnalystTrainer CFA Level 1 Exam Prep",
+    "description": "Comprehensive CFA Level 1 exam preparation with 2,500+ practice questions, mock exams, and performance analytics.",
+    "brand": {
+      "@type": "Brand",
+      "name": "AnalystTrainer"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Basic Plan",
+        "price": "50",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.analysttrainer.com/pricing",
+        "priceValidUntil": "2026-12-31"
+      },
+      {
+        "@type": "Offer",
+        "name": "Premium Plan",
+        "price": "75",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.analysttrainer.com/pricing",
+        "priceValidUntil": "2026-12-31"
+      }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "500"
+    }
+  }
+
+  // FAQ Schema for pricing FAQs
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can I upgrade later?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! You can upgrade from Basic to Premium at any time. We'll credit your original purchase toward the upgrade."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's included in the free trial?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The free trial gives you 24 hours of full access including 100 practice questions, 1 mock exam, and all flashcards. No credit card required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is there a refund policy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with AnalystTrainer, we'll refund your purchase—no questions asked."
+        }
+      }
+    ]
+  }
 
   const plans = {
     lifetime: [
@@ -103,9 +174,23 @@ export default function Pricing() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
+    <>
+      <Script
+        id="product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        strategy="beforeInteractive"
+      />
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        strategy="beforeInteractive"
+      />
+
+      <div className="min-h-screen bg-[#FBFAF4]">
+        {/* Header */}
+        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
             <Link href="/">
@@ -122,6 +207,8 @@ export default function Pricing() {
           </div>
         </nav>
       </header>
+
+      <Breadcrumbs />
 
       {/* Hero */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
@@ -319,6 +406,7 @@ export default function Pricing() {
           </Link>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   )
 }

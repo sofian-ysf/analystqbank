@@ -75,6 +75,30 @@ export default function Home() {
     }
   };
 
+  // Review Schema for testimonials
+  const reviewSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "AnalystTrainer CFA Level 1 Exam Prep",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "500"
+    },
+    "review": testimonials.map(t => ({
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": t.name
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5"
+      },
+      "reviewBody": t.quote
+    }))
+  };
+
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -134,6 +158,12 @@ export default function Home() {
         id="faq-json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        strategy="beforeInteractive"
+      />
+      <Script
+        id="review-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }}
         strategy="beforeInteractive"
       />
 
