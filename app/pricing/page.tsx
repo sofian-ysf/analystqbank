@@ -149,15 +149,15 @@ export default function Pricing() {
   const faqs = [
     {
       question: 'Can I upgrade later?',
-      answer: 'Yes! You can upgrade from Basic to Premium at any time. We'll credit your original purchase toward the upgrade.',
+      answer: "Yes! You can upgrade from Basic to Premium at any time. We'll credit your original purchase toward the upgrade.",
     },
     {
-      question: 'What's included in the free trial?',
+      question: "What's included in the free trial?",
       answer: 'The free trial gives you 24 hours of full access including 100 practice questions, 1 mock exam, and all flashcards. No credit card required.',
     },
     {
       question: 'Is there a refund policy?',
-      answer: 'Yes, we offer a 30-day money-back guarantee. If you're not satisfied with AnalystTrainer, we'll refund your purchase—no questions asked.',
+      answer: "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with AnalystTrainer, we'll refund your purchase—no questions asked.",
     },
     {
       question: 'Do you offer student discounts?',
