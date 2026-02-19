@@ -119,6 +119,7 @@ export default function MockExam() {
   const fetchMockExamQuestions = useCallback(async () => {
     const allQuestions: Question[] = [];
 
+    // Mock exams have full access to all questions (no plan-based limits)
     // Fetch questions from each category based on the distribution
     for (const [, config] of Object.entries(MOCK_EXAM_DISTRIBUTION)) {
       const { data, error } = await supabase
@@ -136,10 +137,14 @@ export default function MockExam() {
       if (data && data.length > 0) {
         // Shuffle and take the required number
         const shuffled = shuffleArray(data);
-        const selected = shuffled.slice(0, config.questions);
+        const selected = shuffled.slice(0, Math.min(config.questions, data.length));
         allQuestions.push(...selected);
+      } else {
+        console.warn(`No questions available for ${config.topicName}`);
       }
     }
+
+    console.log(`Fetched ${allQuestions.length} questions for mock exam`);
 
     // Shuffle all questions for random order
     return shuffleArray(allQuestions);
@@ -178,6 +183,7 @@ export default function MockExam() {
 
       if (attemptError) {
         console.error('Error creating mock exam attempt:', attemptError);
+        alert(`Failed to start exam: ${attemptError.message}. Please check your subscription status.`);
         setLoading(false);
         return;
       }
@@ -185,11 +191,21 @@ export default function MockExam() {
       setMockExamAttemptId(attemptData.id);
 
       const fetchedQuestions = await fetchMockExamQuestions();
+
+      if (fetchedQuestions.length === 0) {
+        console.error('No questions fetched for mock exam');
+        alert('Unable to load exam questions. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
+      console.log(`Starting exam with ${fetchedQuestions.length} questions`);
       setQuestions(fetchedQuestions);
       setExamStarted(true);
       setTimerRunning(true);
     } catch (error) {
       console.error('Error starting exam:', error);
+      alert('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
