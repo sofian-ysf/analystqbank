@@ -75,6 +75,7 @@ export default function MockExam() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [examTimer, setExamTimer] = useState<number>(0); // In seconds
   const [timerRunning, setTimerRunning] = useState(false);
+  const [mockExamAttemptId, setMockExamAttemptId] = useState<string | null>(null);
   const supabase = createClient();
 
   // Subscription access control
@@ -162,12 +163,43 @@ export default function MockExam() {
     if (!canAccessMockExams) {
       return;
     }
+
+    if (!user) return;
+
     setLoading(true);
-    const fetchedQuestions = await fetchMockExamQuestions();
-    setQuestions(fetchedQuestions);
-    setExamStarted(true);
-    setTimerRunning(true);
-    setLoading(false);
+
+    try {
+      // Create mock exam attempt record immediately when starting
+      const { data: attemptData, error: attemptError } = await supabase
+        .from('user_mock_exam_attempts')
+        .insert({
+          user_id: user.id,
+          mock_exam_id: null, // Can be updated if you have specific mock exam IDs
+          status: 'in_progress',
+          started_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (attemptError) {
+        console.error('Error creating mock exam attempt:', attemptError);
+        alert('Failed to start exam. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      setMockExamAttemptId(attemptData.id);
+
+      const fetchedQuestions = await fetchMockExamQuestions();
+      setQuestions(fetchedQuestions);
+      setExamStarted(true);
+      setTimerRunning(true);
+    } catch (error) {
+      console.error('Error starting exam:', error);
+      alert('Failed to start exam. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSignOut = async () => {
@@ -274,23 +306,26 @@ export default function MockExam() {
         }
       });
 
-      // Create mock exam record
+      // Update the existing mock exam attempt record
+      const totalScore = score.correct;
+      const percentageScore = questions.length > 0 ? (score.correct / questions.length) * 100 : 0;
+
       const { data: mockExamData, error: mockExamError } = await supabase
-        .from('mock_exams')
-        .insert({
-          user_id: user.id,
-          total_questions: questions.length,
-          attempted_count: Object.keys(answeredQuestions).length,
-          correct_count: score.correct,
-          time_taken_seconds: examTimer,
-          results_by_topic: resultsByTopic,
+        .from('user_mock_exam_attempts')
+        .update({
+          total_score: totalScore,
+          percentage_score: percentageScore,
+          time_taken_minutes: Math.round(examTimer / 60),
+          status: 'completed',
           completed_at: new Date().toISOString(),
+          topic_scores: resultsByTopic,
         })
+        .eq('id', mockExamAttemptId)
         .select()
         .single();
 
       if (mockExamError) {
-        console.error('Error creating mock exam record:', mockExamError);
+        console.error('Error updating mock exam record:', mockExamError);
       }
 
       // Prepare question attempts for batch insert

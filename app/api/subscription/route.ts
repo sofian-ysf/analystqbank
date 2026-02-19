@@ -53,10 +53,21 @@ export async function GET() {
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id);
 
+    // Count practice sessions started (not individual questions answered)
+    const { count: practiceSessionsStarted } = await supabase
+      .from('user_practice_sessions')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+
+    // For backwards compatibility, also count individual question attempts
+    // Use whichever is higher (sessions or questions)
     const { count: questionsAnswered } = await supabase
       .from('user_question_attempts')
       .select('*', { count: 'exact', head: true })
       .eq('user_id', user.id);
+
+    // Use practice sessions count for limits, fall back to questions if sessions table doesn't exist yet
+    const effectiveQuestionsUsed = practiceSessionsStarted || questionsAnswered || 0;
 
     const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.trial;
 
@@ -67,7 +78,7 @@ export async function GET() {
 
     const questionsRemaining = limits.questions === Infinity
       ? null
-      : Math.max(0, limits.questions - (questionsAnswered || 0));
+      : Math.max(0, limits.questions - effectiveQuestionsUsed);
 
     // Check access - 'lifetime' status is for paid users
     const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
@@ -91,7 +102,7 @@ export async function GET() {
       canAccessMockExams,
       canAccessQuestions,
       mockExamsUsed: mockExamsUsed || 0,
-      questionsAnswered: questionsAnswered || 0,
+      questionsAnswered: effectiveQuestionsUsed,
       mockExamsRemaining,
       questionsRemaining,
       limits,

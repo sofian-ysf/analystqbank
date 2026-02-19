@@ -243,6 +243,22 @@ function PracticeSessionContent() {
 
       setQuestions(finalQuestions);
 
+      // Track practice session start
+      const sessionId = crypto.randomUUID();
+      supabase
+        .from('user_practice_sessions')
+        .insert({
+          id: sessionId,
+          user_id: user.id,
+          question_count: finalQuestions.length,
+          started_at: new Date().toISOString(),
+        })
+        .then(({ error }) => {
+          if (error) {
+            console.error('Error tracking session:', error);
+          }
+        });
+
       setQuestionsLoaded(true);
       setLoading(false);
     };
