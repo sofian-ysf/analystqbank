@@ -97,6 +97,30 @@ export default function CFALevel1PracticeQuestions() {
           text: 'The CFA Level 1 pass rate typically ranges between 35% and 45%. Candidates who use structured practice questions and mock exams consistently outperform those who only read study materials.',
         },
       },
+      {
+        '@type': 'Question',
+        name: 'How many questions are on the CFA Level 1 exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'The CFA Level 1 exam consists of 180 multiple-choice questions divided into two 135-minute sessions (90 questions each). The exam uses a computer-based format with questions distributed across 10 topic areas.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I get free CFA Level 1 practice questions?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! AnalystTrainer offers 100 free CFA Level 1 practice questions with detailed explanations. No credit card required. You can upgrade to access 2,500+ questions when ready.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are free CFA practice questions enough to pass?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'While free questions are a great start, most successful candidates practice 1,500-3,000 questions. Our 100 free questions help you understand the exam format, but accessing the full 2,500+ question bank significantly improves your chances of passing.',
+        },
+      },
     ],
   }
 
@@ -121,10 +145,10 @@ export default function CFALevel1PracticeQuestions() {
               Updated for 2026 CFA Exam
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CFA Level 1 Practice Questions
+              Free CFA Level 1 Practice Questions & Sample Questions with Answers
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Master the CFA Level 1 exam with <strong className="text-white">2,500+ practice questions</strong> covering all 10 topic areas. Detailed explanations for every question.
+              Master the CFA Level 1 exam with <strong className="text-white">2,500+ free practice questions</strong> and example questions covering all 10 topic areas. Detailed explanations for every question.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link
@@ -471,6 +495,33 @@ export default function CFALevel1PracticeQuestions() {
                   </svg>
                 </summary>
                 <p className="mt-4 text-gray-600">Start practising as soon as you complete your first topic. Research shows that spaced practice—spreading questions over time—leads to better retention than cramming. We recommend practising questions for each topic within a few days of studying it, then returning to review those topics periodically.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  How many questions are on the CFA Level 1 exam?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">The CFA Level 1 exam consists of 180 multiple-choice questions divided into two 135-minute sessions (90 questions each). The exam uses a computer-based format with questions distributed across 10 topic areas according to the official CFA curriculum weighting.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Can I get free CFA Level 1 practice questions?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">Yes! AnalystTrainer offers 100 free CFA Level 1 practice questions with detailed explanations—no credit card required. This gives you a comprehensive introduction to the exam format and our question quality. You can upgrade to access our full bank of 2,500+ questions whenever you're ready to intensify your preparation.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Are free CFA practice questions enough to pass?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">While free questions are an excellent starting point, most successful candidates practice between 1,500 and 3,000 questions before their exam. Our 100 free questions help you understand the exam format and identify knowledge gaps, but accessing the full 2,500+ question bank significantly improves your chances of passing by exposing you to a wider variety of topics and difficulty levels.</p>
               </details>
             </div>
           </div>

@@ -187,7 +187,7 @@ export default function Home() {
                 </h1>
 
                 <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
-                  Expert-crafted practice questions with detailed explanations. Join thousands of candidates who passed using AnalystTrainer.
+                  Start with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 practice questions</Link> with detailed explanations. Join thousands of candidates who passed using AnalystTrainer.
                 </p>
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
@@ -448,11 +448,11 @@ export default function Home() {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-1">Ready to test yourself?</h3>
                     <p className="text-gray-600 text-sm max-w-md">
-                      Once you've mastered the concepts, put your knowledge to the test with our exam-style question bank featuring 2,500+ practice questions.
+                      Once you've mastered the concepts, put your knowledge to the test with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 sample questions</Link> featuring 2,500+ practice questions with detailed explanations.
                     </p>
                   </div>
                   <Link
-                    href="/question-bank"
+                    href="/cfa-level-1-practice-questions"
                     className="flex-shrink-0 px-6 py-3 bg-[#13343B] text-white rounded-full font-medium hover:bg-[#13343B]/90 transition-colors"
                   >
                     Explore Question Bank
@@ -555,7 +555,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-3">Realistic Mock Exams</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">180-question mock exams that mirror the actual CFA Level 1 format, difficulty, and topic weighting for authentic practice.</p>
+                <p className="text-gray-600 text-sm leading-relaxed">Take our <Link href="/cfa-level-1-mock-exam" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 mock exam</Link> with 180 questions that mirror the actual exam format, difficulty, and topic weighting for authentic practice.</p>
               </div>
             </div>
 

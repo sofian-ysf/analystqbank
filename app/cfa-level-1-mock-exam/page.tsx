@@ -39,6 +39,30 @@ export default function CFALevel1MockExam() {
     mainEntity: [
       {
         '@type': 'Question',
+        name: 'Can I get a free CFA Level 1 mock exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes! AnalystTrainer offers 1 free CFA Level 1 mock exam with 180 questions in official exam format. No credit card required - just sign up for a free trial to access your free mock test immediately. The mock exam includes timed sessions, detailed explanations, and a comprehensive score report.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How to access CFA mock exam?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for a free account (no credit card required), 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Your free trial includes 1 complete 180-question mock exam. Upgrade to Basic or Premium for access to additional mock exams.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How many mock exams should I take before CFA Level 1?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We recommend taking 4-6 mock exams before your CFA Level 1 exam. Start with your first mock 6-8 weeks before exam day to establish a baseline, then take one mock every 1-2 weeks. This schedule allows time to review results, strengthen weak areas, and track improvement. More mock exams generally lead to better exam-day performance.',
+        },
+      },
+      {
+        '@type': 'Question',
         name: 'How many mock exams are included?',
         acceptedAnswer: {
           '@type': 'Answer',
@@ -101,10 +125,10 @@ export default function CFALevel1MockExam() {
               Exam Format 2026
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CFA Level 1 Mock Exams
+              Free CFA Level 1 Mock Exam - 180 Question Practice Test
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Experience the real CFA exam with our <strong className="text-white">180-question mock tests</strong>. Timed sessions, realistic difficulty, and comprehensive score reports.
+              Experience the real CFA exam with our <strong className="text-white">free 180-question mock test</strong>. Timed sessions, realistic difficulty, and comprehensive score reports. Try 1 free mock exam now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
@@ -401,6 +425,33 @@ export default function CFALevel1MockExam() {
               Mock Exam FAQs
             </h2>
             <div className="space-y-4">
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  Can I get a free CFA Level 1 mock exam?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">Yes! AnalystTrainer offers 1 free CFA Level 1 mock exam with 180 questions in official exam format. No credit card required - just sign up for a free trial to access your free mock test immediately. The mock exam includes timed sessions, detailed explanations, and a comprehensive score report.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  How to access CFA mock exam?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for a free account (no credit card required), 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Your free trial includes 1 complete 180-question mock exam. Upgrade to Basic or Premium for access to additional mock exams.</p>
+              </details>
+              <details className="group bg-gray-50 rounded-xl p-6">
+                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
+                  How many mock exams should I take before CFA Level 1?
+                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-4 text-gray-600">We recommend taking 4-6 mock exams before your CFA Level 1 exam. Start with your first mock 6-8 weeks before exam day to establish a baseline, then take one mock every 1-2 weeks. This schedule allows time to review results, strengthen weak areas, and track improvement. More mock exams generally lead to better exam-day performance.</p>
+              </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
                   How many mock exams are included?
