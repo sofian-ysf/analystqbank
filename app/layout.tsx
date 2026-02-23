@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "CFA Level 1 Question Bank (2026) - 2,500+ Questions | AnalystTrainer",
+    default: "Free CFA Level 1 Practice Questions & Mock Exams 2026 - Sample Questions with Answers",
     template: "%s | AnalystTrainer",
   },
   icons: {
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.analysttrainer.com",
   },
-  description: "CFA Level 1 question bank with 2,500+ exam-style practice questions. Realistic mock exams, detailed explanations, performance analytics. From £50. Try 15 free.",
-  keywords: "CFA Level 1 practice questions, CFA Level 1 mock exam, CFA exam prep, CFA question bank, CFA Level 1 study guide, CFA practice test, pass CFA Level 1, CFA Level 1 questions, CFA preparation, CFA Level 1 2026",
+  description: "2,500+ FREE CFA Level 1 practice questions & sample questions with answers. Free mock exams with 180 questions. Written by charterholders. No credit card required - start now!",
+  keywords: "free cfa level 1 practice questions, cfa level 1 mock exam, example cfa level 1 questions, cfa level 1 sample questions, cfa mock exam free, practice cfa level 1 questions, cfa level 1 questions with answers, cfa level 1 practice test, cfa exam sample questions, free cfa mock exam",
   authors: [{ name: "AnalystTrainer" }],
   creator: "AnalystTrainer",
   publisher: "AnalystTrainer",

@@ -5,9 +5,9 @@ import Navigation from '../components/Navigation'
 import { PassGuaranteeCompact } from '@/components/PassGuarantee'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Practice Questions (2026) - 2,500+ With Answers',
-  description: 'Pass CFA Level 1 first time with 2,500+ practice questions written by charterholders. Detailed explanations for every answer. Try 100 questions FREE — no credit card.',
-  keywords: 'CFA Level 1 practice questions, CFA practice questions, CFA Level 1 questions, CFA question bank, CFA exam questions, CFA Level 1 practice test, CFA Level 1 sample questions, CFA questions with answers',
+  title: 'Free CFA Level 1 Practice Questions 2026 - Sample Questions with Answers',
+  description: '2,500+ FREE CFA Level 1 practice questions & sample questions with detailed answers. Written by charterholders. Try 100 example questions now - no credit card required.',
+  keywords: 'free cfa level 1 practice questions, cfa level 1 sample questions, example cfa level 1 questions, cfa level 1 questions with answers, cfa practice questions level 1 free, cfa level 1 exam questions, cfa question bank, practice cfa level 1 questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
