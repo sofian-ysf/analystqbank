@@ -116,7 +116,7 @@ export default function Navigation() {
           <Link href="/" className="pill-mobile-logo" onClick={closeMobileMenu}>
             <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
           </Link>
-          <button className="pill-mobile-close" onClick={toggleMobileMenu}>
+          <button className="pill-mobile-close" onClick={toggleMobileMenu} aria-label="Close mobile menu">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />

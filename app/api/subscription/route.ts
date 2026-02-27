@@ -45,7 +45,8 @@ export async function GET() {
     const now = new Date();
 
     // Check if trial is expired
-    const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
+    // IMPORTANT: If trial_ends_at is NULL for a trial user, treat as expired (safety measure)
+    const isTrialExpired = plan === 'trial' && (trialEndsAt === null || now > trialEndsAt);
 
     // Get usage counts (all-time for lifetime plans)
     const { count: mockExamsUsed } = await supabase

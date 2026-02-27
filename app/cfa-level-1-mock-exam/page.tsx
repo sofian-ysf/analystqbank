@@ -115,7 +115,7 @@ export default function CFALevel1MockExam() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="min-h-screen bg-white">
+      <main className="min-h-screen bg-white">
         <Navigation />
 
         {/* Hero Section */}
@@ -591,7 +591,7 @@ export default function CFALevel1MockExam() {
             </div>
           </div>
         </footer>
-      </div>
+      </main>
     </>
   )
 }

@@ -167,7 +167,7 @@ export default function Home() {
         strategy="beforeInteractive"
       />
 
-      <div className="min-h-screen bg-white">
+      <main className="min-h-screen bg-white">
         <PromoBanner />
         <Navigation />
 
@@ -446,7 +446,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-1">Ready to test yourself?</h3>
+                    <p className="text-lg font-semibold text-gray-900 mb-1">Ready to test yourself?</p>
                     <p className="text-gray-600 text-sm max-w-md">
                       Once you've mastered the concepts, put your knowledge to the test with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 sample questions</Link> featuring 2,500+ practice questions with detailed explanations.
                     </p>
@@ -583,7 +583,7 @@ export default function Home() {
               <div className="flex items-end justify-between mb-10">
                 <div>
                   <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">Voices from Our Community</p>
-                  <h3 className="text-2xl font-semibold text-gray-900">Stories of Success</h3>
+                  <h2 className="text-2xl font-semibold text-gray-900">Stories of Success</h2>
                 </div>
                 <div className="hidden sm:flex gap-2">
                   <button
@@ -1006,7 +1006,7 @@ export default function Home() {
             </div>
           </div>
         </footer>
-      </div>
+      </main>
     </>
   );
 }

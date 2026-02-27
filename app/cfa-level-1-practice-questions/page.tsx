@@ -135,7 +135,7 @@ export default function CFALevel1PracticeQuestions() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
 
-      <div className="min-h-screen bg-white">
+      <main className="min-h-screen bg-white">
         <Navigation />
 
         {/* Hero Section */}
@@ -590,7 +590,7 @@ export default function CFALevel1PracticeQuestions() {
             </div>
           </div>
         </footer>
-      </div>
+      </main>
     </>
   )
 }
