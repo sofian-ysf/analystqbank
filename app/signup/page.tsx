@@ -76,7 +76,8 @@ function SignUpForm() {
       const now = new Date().toISOString();
 
       // Update user profile with trial info and account creation time
-      await supabase
+      // Note: Database trigger should have already set trial_ends_at, this is a backup
+      const { error: updateError } = await supabase
         .from('user_profiles')
         .update({
           subscription_plan: 'free',
@@ -86,6 +87,11 @@ function SignUpForm() {
           account_created_at: now,
         })
         .eq('id', data.user.id);
+
+      // Log error but don't block signup (trigger should have set trial info)
+      if (updateError) {
+        console.error('Failed to update trial info (trigger should have set it):', updateError);
+      }
 
       // Send Discord notification
       try {
