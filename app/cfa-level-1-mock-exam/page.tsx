@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
+import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbSchema'
 
 export const metadata: Metadata = {
   title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
@@ -114,9 +115,23 @@ export default function CFALevel1MockExam() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: '/' },
+        { name: 'CFA Level 1 Mock Exam', url: '/cfa-level-1-mock-exam' }
+      ]} />
 
       <main className="min-h-screen bg-white">
         <Navigation />
+
+        {/* Breadcrumb Navigation */}
+        <div className="max-w-6xl mx-auto px-4 pt-24 pb-4">
+          <BreadcrumbNavigation
+            items={[
+              { name: 'Home', url: '/' },
+              { name: 'Mock Exam', url: '/cfa-level-1-mock-exam' }
+            ]}
+          />
+        </div>
 
         {/* Hero Section */}
         <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white pt-28 pb-20 px-4">
@@ -545,6 +560,59 @@ export default function CFALevel1MockExam() {
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Flashcards</h3>
                 <p className="text-gray-600 text-sm">1,600+ flashcards covering all CFA Level 1 topics</p>
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Internal Linking - Practice Questions Promotion */}
+        <section className="py-16 px-4 bg-gradient-to-r from-blue-50 to-cyan-50">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+              <div className="flex items-start gap-4 mb-6">
+                <div className="flex-shrink-0 w-12 h-12 bg-[#1FB8CD] rounded-lg flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                    Build Your Foundation with Daily Practice
+                  </h2>
+                  <p className="text-lg text-gray-600 mb-6">
+                    Mock exams test your readiness, but consistent practice builds the knowledge you need to pass. Our 2,500+ practice questions cover every CFA Level 1 topic with detailed explanations.
+                  </p>
+                  <div className="grid md:grid-cols-3 gap-4 mb-6">
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-700">2,500+ Questions</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-700">All 10 Topics</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-sm font-medium text-gray-700">Instant Feedback</span>
+                    </div>
+                  </div>
+                  <Link
+                    href="/cfa-level-1-practice-questions"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#1FB8CD] text-white rounded-lg font-semibold hover:bg-[#18a3b5] transition-colors"
+                  >
+                    Start Practicing Free
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                  <p className="mt-3 text-sm text-gray-500">100 free questions included • No credit card required</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
