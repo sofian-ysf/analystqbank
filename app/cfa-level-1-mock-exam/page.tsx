@@ -3,15 +3,15 @@ import Link from 'next/link'
 import Navigation from '../components/Navigation'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Level 1 Mock Exam 2026 - Full 180 Question Practice Test',
-  description: 'FREE CFA Level 1 mock exam with 180 questions in official exam format. Timed practice test with detailed explanations. No credit card required - start your free mock test now.',
+  title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
+  description: 'Take a full CFA Level 1 mock exam FREE. 180 questions, 4.5 hours, instant scoring & detailed answers. Matches real exam format. No signup required - start now!',
   keywords: 'free cfa level 1 mock exam, cfa level 1 mock test, cfa mock exam free, cfa level 1 practice exam, mock test for cfa level 1, cfa practice test level 1, cfa level 1 mock questions, cfa exam practice questions, cfa level 1 full exam',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
   },
   openGraph: {
-    title: 'CFA Level 1 Mock Exam (2026) - Full 180 Questions | Free Trial',
-    description: 'Full-length CFA Level 1 mock exams in exact exam format. Timed and scored like the real thing. Try 1 FREE mock exam.',
+    title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions',
+    description: 'Full-length CFA Level 1 mock exam. 180 questions, instant results, detailed explanations. Try free now!',
     url: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
     type: 'website',
   },

@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Refund Policy | AnalystTrainer',
-  description: 'Read the refund policy for AnalystTrainer CFA Level 1 exam prep. We offer a 7-day refund policy on all new subscriptions.',
+  title: 'CFA Exam Refund Policy 2026 | Get Your Money Back Guide',
+  description: 'Complete CFA exam refund guide. Learn refund deadlines, requirements, and how to request your money back. Updated for 2026 exam windows. 7-day guarantee.',
   alternates: {
     canonical: 'https://www.analysttrainer.com/refund',
   },
