@@ -23,16 +23,16 @@ export default function ExitIntentWrapper() {
   }
 
   // Determine variant based on current page
-  let variant: 'formula-sheet' | 'free-trial' | 'discount' | 'question-of-day' = 'formula-sheet'
+  let variant: 'formula-sheet' | 'discount' | 'question-of-day' = 'formula-sheet'
 
   if (pathname.startsWith('/blog')) {
     variant = 'formula-sheet'
   } else if (pathname.startsWith('/pricing')) {
-    variant = 'free-trial'
+    variant = 'discount'
   } else if (pathname.startsWith('/topics')) {
     variant = 'question-of-day'
   } else if (pathname === '/' || pathname.startsWith('/cfa-level-1')) {
-    variant = 'free-trial'
+    variant = 'discount'
   } else if (pathname.startsWith('/flashcards')) {
     variant = 'question-of-day'
   }

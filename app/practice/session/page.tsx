@@ -83,7 +83,6 @@ function PracticeSessionContent() {
     subscription,
     loading: subscriptionLoading,
     canAccessQuestions,
-    isTrialExpired,
     plan,
   } = useSubscription();
 
@@ -161,8 +160,8 @@ function PracticeSessionContent() {
       const allQuestions: Question[] = [];
 
       // Get the user's plan from subscription context
-      // Default to trial limits if not available
-      const userPlan = plan || 'trial';
+      // Default to basic limits if not available
+      const userPlan = plan || 'basic';
       const planLimits = QUESTION_LIMITS_BY_TOPIC[userPlan];
 
       // Fetch from each category separately to ensure coverage
@@ -462,7 +461,6 @@ function PracticeSessionContent() {
         </header>
         <UpgradePrompt
           plan={plan}
-          isTrialExpired={isTrialExpired}
           questionsRemaining={subscription?.questionsRemaining}
           feature="questions"
         />

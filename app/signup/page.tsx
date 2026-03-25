@@ -20,10 +20,10 @@ function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
 
-  // Get plan details
-  const selectedPlan = planParam && ['trial', 'basic', 'premium'].includes(planParam)
+  // Get plan details - default to Basic plan
+  const selectedPlan = planParam && ['basic', 'premium'].includes(planParam)
     ? planParam
-    : 'trial';
+    : 'basic';
   const planDetails = PLAN_LIMITS[selectedPlan];
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -69,29 +69,6 @@ function SignUpForm() {
         setLoading(false);
         return;
       }
-      // Calculate trial end time (24 hours from now)
-      const trialEndsAt = new Date();
-      trialEndsAt.setHours(trialEndsAt.getHours() + 24);
-
-      const now = new Date().toISOString();
-
-      // Update user profile with trial info and account creation time
-      // Note: Database trigger should have already set trial_ends_at, this is a backup
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .update({
-          subscription_plan: 'free',
-          subscription_status: 'trialing',
-          trial_ends_at: trialEndsAt.toISOString(),
-          full_name: fullName || email.split('@')[0],
-          account_created_at: now,
-        })
-        .eq('id', data.user.id);
-
-      // Log error but don't block signup (trigger should have set trial info)
-      if (updateError) {
-        console.error('Failed to update trial info (trigger should have set it):', updateError);
-      }
 
       // Send Discord notification
       try {
@@ -110,47 +87,39 @@ function SignUpForm() {
         console.error('Failed to send Discord notification:', notificationError);
       }
 
-      // Supabase automatically sends verification email when email confirmation is enabled
+      // All signups must go through Stripe checkout for payment
+      // Create Stripe checkout session
+      try {
+        const checkoutResponse = await fetch('/api/stripe/create-checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan: selectedPlan,
+            userId: data.user.id,
+            email: email,
+          }),
+        });
 
-      // Redirect immediately based on plan
-      if (selectedPlan === 'basic' || selectedPlan === 'premium') {
-        // Create Stripe checkout session directly
-        try {
-          const checkoutResponse = await fetch('/api/stripe/create-checkout', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              plan: selectedPlan,
-              userId: data.user.id,
-              email: email,
-            }),
-          });
+        const checkoutData = await checkoutResponse.json();
 
-          const checkoutData = await checkoutResponse.json();
-
-          if (checkoutData.url) {
-            // Redirect to Stripe checkout
-            window.location.href = checkoutData.url;
-            return;
-          } else {
-            console.error('No checkout URL returned:', checkoutData);
-            setError('Failed to create checkout. Please try again.');
-            setLoading(false);
-            return;
-          }
-        } catch (checkoutError) {
-          console.error('Checkout error:', checkoutError);
+        if (checkoutData.url) {
+          // Redirect to Stripe checkout
+          window.location.href = checkoutData.url;
+          return;
+        } else {
+          console.error('No checkout URL returned:', checkoutData);
           setError('Failed to create checkout. Please try again.');
           setLoading(false);
           return;
         }
-      } else {
-        // Free trial - go to dashboard
-        router.push("/dashboard");
+      } catch (checkoutError) {
+        console.error('Checkout error:', checkoutError);
+        setError('Failed to create checkout. Please try again.');
+        setLoading(false);
+        return;
       }
-      return; // Don't setLoading(false) since we're redirecting
     }
 
     setLoading(false);
@@ -191,51 +160,19 @@ function SignUpForm() {
           <div className="mt-4 flex items-center justify-center gap-4 text-xs text-[#5f6368]">
             <div className="flex items-center gap-1">
               <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              <span>No credit card required</span>
+              <span>Secure payment via Stripe</span>
             </div>
             <div className="flex items-center gap-1">
               <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span>Secure & encrypted</span>
+              <span>Lifetime access</span>
             </div>
           </div>
         </div>
 
-        {/* What's Included */}
-        {selectedPlan === 'trial' && (
-          <div className="mb-6 bg-white rounded-lg p-4 shadow-sm border border-gray-200">
-            <p className="text-sm font-semibold text-[#13343B] mb-3">Your free trial includes:</p>
-            <ul className="space-y-2 text-sm text-[#5f6368]">
-              <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                100 practice questions
-              </li>
-              <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                1 full mock exam
-              </li>
-              <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Full flashcard access
-              </li>
-              <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Performance analytics
-              </li>
-            </ul>
-          </div>
-        )}
 
         {/* Selected Plan Banner */}
         {selectedPlan && (
@@ -254,16 +191,9 @@ function SignUpForm() {
                 )}
               </div>
             </div>
-            {selectedPlan === 'trial' && (
-              <p className="mt-2 text-xs text-[#5f6368]">
-                24-hour free trial. No credit card required.
-              </p>
-            )}
-            {selectedPlan !== 'trial' && (
-              <p className="mt-2 text-xs text-[#5f6368]">
-                You&apos;ll be redirected to payment after signup.
-              </p>
-            )}
+            <p className="mt-2 text-xs text-[#5f6368]">
+              You&apos;ll be redirected to payment after signup.
+            </p>
             <Link href="/#pricing" className="text-xs text-[#1FB8CD] hover:underline mt-1 inline-block">
               Change plan
             </Link>
@@ -384,7 +314,7 @@ function SignUpForm() {
               disabled={loading}
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#1FB8CD] hover:bg-[#1A6872] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1FB8CD] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? "Creating account..." : selectedPlan === 'trial' ? "Start Free Trial" : "Sign up & Continue to Payment"}
+              {loading ? "Creating account..." : "Sign Up & Continue to Payment"}
             </button>
           </form>
 

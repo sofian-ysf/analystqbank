@@ -58,9 +58,28 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Successfully authenticated - redirect based on plan
-    if (plan === 'basic' || plan === 'premium') {
-      return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
+    // Successfully authenticated - check if user has valid subscription
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (user) {
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('subscription_plan, subscription_status')
+        .eq('id', user.id)
+        .single()
+
+      // If user has a valid paid subscription with lifetime status, go to dashboard
+      if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
+        return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
+      }
+
+      // If plan parameter is provided (from OAuth signup), redirect to Stripe
+      if (plan === 'basic' || plan === 'premium') {
+        return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
+      }
+
+      // Otherwise, redirect to pricing page to select a plan
+      return NextResponse.redirect(new URL('/pricing', requestUrl.origin))
     }
 
     return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))

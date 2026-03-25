@@ -1,19 +1,5 @@
 // Subscription plan limits - safe to import on client side
 export const PLAN_LIMITS = {
-  trial: {
-    name: 'Free Trial',
-    mockExams: 1,
-    questions: 100,
-    durationHours: 24,
-    price: 0,
-    isLifetime: false,
-    features: [
-      '1 mock exam',
-      '100 practice questions',
-      '24-hour access',
-      'Basic analytics',
-    ],
-  },
   basic: {
     name: 'Basic',
     mockExams: 5,
@@ -49,22 +35,9 @@ export const PLAN_LIMITS = {
 export type PlanType = keyof typeof PLAN_LIMITS;
 
 // Question limits per topic based on CFA Level 1 exam weights
-// Trial users get ~100 questions total, distributed by exam weight
 // Basic users get ~2000 questions total, distributed by exam weight
 // Premium users get unlimited (all available questions)
 export const QUESTION_LIMITS_BY_TOPIC = {
-  trial: {
-    'Ethical and Professional Standards': 15,    // 15-20% weight
-    'Quantitative Methods': 7,                    // 6-9% weight
-    'Economics': 7,                                // 6-9% weight
-    'Financial Statement Analysis': 12,           // 11-14% weight
-    'Corporate Issuers': 7,                        // 6-9% weight
-    'Equity Investments': 12,                      // 11-14% weight
-    'Fixed Income': 12,                            // 11-14% weight
-    'Derivatives': 6,                              // 5-8% weight
-    'Alternative Investments': 8,                  // 7-10% weight
-    'Portfolio Management': 10,                    // 8-12% weight
-  },
   basic: {
     'Ethical and Professional Standards': 320,    // 15-20% weight
     'Quantitative Methods': 140,                  // 6-9% weight

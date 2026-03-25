@@ -61,10 +61,10 @@ export default function Pricing() {
       },
       {
         "@type": "Question",
-        "name": "What's included in the free trial?",
+        "name": "Can I try before I buy?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The free trial gives you 24 hours of full access including 100 practice questions, 1 mock exam, and all flashcards. No credit card required."
+          "text": "Yes! Visit /try-free to practice 15 demo questions instantly with no signup required. This lets you experience our question quality before purchasing."
         }
       },
       {
@@ -81,21 +81,6 @@ export default function Pricing() {
   const plans = {
     lifetime: [
       {
-        name: 'Free Trial',
-        price: 0,
-        period: '24 hours',
-        description: 'Try before you buy',
-        features: [
-          '100 practice questions',
-          '1 mock exam',
-          'Basic analytics',
-          'Full flashcard access',
-        ],
-        cta: 'Start Free Trial',
-        href: '/signup?plan=trial',
-        popular: false,
-      },
-      {
         name: 'Basic',
         price: 50,
         period: 'one-time',
@@ -110,7 +95,7 @@ export default function Pricing() {
         ],
         cta: 'Get Started',
         href: '/signup?plan=basic',
-        popular: true,
+        popular: false,
         perDay: '£0.50/day over 3 months',
       },
       {
@@ -128,22 +113,22 @@ export default function Pricing() {
         ],
         cta: 'Get Started',
         href: '/signup?plan=premium',
-        popular: false,
+        popular: true,
         perDay: '£0.83/day over 3 months',
       },
     ],
   }
 
   const comparisonFeatures = [
-    { name: 'Practice Questions', trial: '100', basic: '2,000', premium: '2,500+' },
-    { name: 'Mock Exams', trial: '1', basic: '5', premium: 'Unlimited' },
-    { name: 'Flashcards', trial: true, basic: true, premium: true },
-    { name: 'Performance Analytics', trial: 'Basic', basic: 'Standard', premium: 'Advanced' },
-    { name: 'All 10 CFA L1 Topics', trial: true, basic: true, premium: true },
-    { name: 'Detailed Explanations', trial: true, basic: true, premium: true },
-    { name: 'Lifetime Access', trial: false, basic: true, premium: true },
-    { name: 'Priority Support', trial: false, basic: false, premium: true },
-    { name: 'Direct Analyst Contact', trial: false, basic: false, premium: true },
+    { name: 'Practice Questions', basic: '2,000', premium: '2,500+' },
+    { name: 'Mock Exams', basic: '5', premium: 'Unlimited' },
+    { name: 'Flashcards', basic: true, premium: true },
+    { name: 'Performance Analytics', basic: 'Standard', premium: 'Advanced' },
+    { name: 'All 10 CFA L1 Topics', basic: true, premium: true },
+    { name: 'Detailed Explanations', basic: true, premium: true },
+    { name: 'Lifetime Access', basic: true, premium: true },
+    { name: 'Priority Support', basic: false, premium: true },
+    { name: 'Direct Analyst Contact', basic: false, premium: true },
   ]
 
   const faqs = [
@@ -200,8 +185,8 @@ export default function Pricing() {
               <Link href="/login" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
                 Login
               </Link>
-              <Link href="/signup" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
-                Start Free Trial
+              <Link href="/try-free" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
+                Try Free Demo
               </Link>
             </div>
           </div>
@@ -217,7 +202,7 @@ export default function Pricing() {
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose the plan that fits your CFA Level 1 preparation needs. Start with a free trial, upgrade anytime.
+            Choose the plan that fits your CFA Level 1 preparation needs. Try 15 free demo questions at /try-free before purchasing.
           </p>
         </div>
       </section>
@@ -225,7 +210,7 @@ export default function Pricing() {
       {/* Pricing Cards */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div className="grid gap-8 lg:grid-cols-2">
             {plans.lifetime.map((plan) => (
               <div
                 key={plan.name}
@@ -308,7 +293,6 @@ export default function Pricing() {
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Feature</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Free Trial</th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Basic</th>
                     <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Premium</th>
                   </tr>
@@ -317,21 +301,6 @@ export default function Pricing() {
                   {comparisonFeatures.map((feature, index) => (
                     <tr key={index}>
                       <td className="px-6 py-4 text-sm text-gray-900">{feature.name}</td>
-                      <td className="px-6 py-4 text-center text-sm">
-                        {typeof feature.trial === 'boolean' ? (
-                          feature.trial ? (
-                            <svg className="w-5 h-5 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                          ) : (
-                            <svg className="w-5 h-5 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          )
-                        ) : (
-                          <span className="text-gray-600">{feature.trial}</span>
-                        )}
-                      </td>
                       <td className="px-6 py-4 text-center text-sm">
                         {typeof feature.basic === 'boolean' ? (
                           feature.basic ? (
@@ -396,13 +365,13 @@ export default function Pricing() {
             Ready to pass CFA Level 1?
           </h2>
           <p className="text-xl text-white/80 mb-8">
-            Join thousands of successful candidates. Start your free trial today.
+            Join thousands of successful candidates. Choose your plan and start preparing today.
           </p>
           <Link
-            href="/signup"
+            href="/signup?plan=basic"
             className="inline-block bg-[#1FB8CD] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
           >
-            Start Free Trial
+            Get Started
           </Link>
         </div>
       </section>

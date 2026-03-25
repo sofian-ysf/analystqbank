@@ -48,15 +48,8 @@ export default function Home() {
       "priceCurrency": "GBP",
       "lowPrice": "0",
       "highPrice": "75",
-      "offerCount": "3",
+      "offerCount": "2",
       "offers": [
-        {
-          "@type": "Offer",
-          "name": "Free Trial",
-          "price": "0",
-          "priceCurrency": "GBP",
-          "availability": "https://schema.org/InStock"
-        },
         {
           "@type": "Offer",
           "name": "Basic Plan",
@@ -192,10 +185,10 @@ export default function Home() {
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
                   <Link
-                    href="/signup"
+                    href="/signup?plan=basic"
                     className="pill-btn pill-btn-primary pill-btn-lg"
                   >
-                    Start Free Trial
+                    Get Started
                   </Link>
                   <Link
                     href="/try-free"
@@ -662,56 +655,11 @@ export default function Home() {
                 Choose Your Plan
               </h2>
               <p className="mt-4 text-lg text-gray-600">
-                Start with a free trial. Upgrade when you're ready.
+                Try 15 free demo questions at /try-free. Choose your plan when you're ready.
               </p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-              {/* Free Trial */}
-              <div className="pill-card">
-                <div className="text-center pb-6 border-b border-gray-100">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Free Trial</h3>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">Free</span>
-                  </div>
-                  <p className="mt-2 text-sm text-gray-500">24-hour access</p>
-                </div>
-
-                <div className="py-6 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">100 practice questions</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">1 mock exam</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">Basic analytics</span>
-                  </div>
-                </div>
-
-                <Link
-                  href="/signup?plan=trial"
-                  className="block w-full text-center pill-btn pill-btn-secondary"
-                >
-                  Start Free Trial
-                </Link>
-              </div>
-
+            <div className="grid gap-6 lg:grid-cols-2">
               {/* Basic - Popular */}
               <div className="pill-card relative ring-2 ring-green-500">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">

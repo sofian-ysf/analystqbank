@@ -22,7 +22,6 @@ export default function MockExams() {
     subscription,
     loading: subscriptionLoading,
     canAccessMockExams,
-    isTrialExpired,
     plan,
   } = useSubscription();
 
@@ -167,7 +166,6 @@ export default function MockExams() {
         </header>
         <UpgradePrompt
           plan={plan}
-          isTrialExpired={isTrialExpired}
           mockExamsRemaining={subscription?.mockExamsRemaining}
           feature="mockExams"
         />
@@ -220,7 +218,7 @@ export default function MockExams() {
       </header>
 
       {/* Usage Banner */}
-      {subscription && (plan === 'trial' || plan === 'basic') && subscription.mockExamsRemaining !== null && (
+      {subscription && plan === 'basic' && subscription.mockExamsRemaining !== null && (
         <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between flex-wrap gap-3">
@@ -235,7 +233,7 @@ export default function MockExams() {
                       : 'Mock exam limit reached'}
                   </p>
                   <p className="text-xs text-gray-600">
-                    {subscription.mockExamsUsed} of {subscription.limits.mockExams} used
+                    {subscription.mockExamsUsed} of {subscription.limits?.mockExams} used
                   </p>
                 </div>
               </div>
@@ -487,7 +485,6 @@ export default function MockExams() {
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full" onClick={(e) => e.stopPropagation()}>
             <UpgradePrompt
               plan={plan}
-              isTrialExpired={isTrialExpired}
               mockExamsRemaining={subscription.mockExamsRemaining}
               feature="mockExams"
             />

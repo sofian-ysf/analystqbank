@@ -3,15 +3,15 @@ import Link from 'next/link'
 import Navigation from '../components/Navigation'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Level 1 Questions (2026) - 100 Practice Questions + Answers',
-  description: '100 FREE CFA Level 1 practice questions + 1 full mock exam. Written by charterholders with detailed explanations. No credit card, no catch. Start now.',
-  keywords: 'free CFA questions, free CFA Level 1 practice questions, free CFA practice test, CFA questions free, free CFA mock exam, CFA Level 1 free questions, CFA sample questions free',
+  title: 'Try 15 Free CFA Questions (2026) - No Signup Required',
+  description: 'Try 15 FREE CFA Level 1 practice questions instantly. No signup, no credit card. Written by charterholders with detailed explanations. Start now.',
+  keywords: 'free CFA questions, free CFA Level 1 practice questions, free CFA practice test, CFA questions free, CFA Level 1 free questions, CFA sample questions free, try CFA questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/free-cfa-questions',
   },
   openGraph: {
-    title: 'Free CFA Level 1 Questions (2026) - 100 Practice Questions + Answers',
-    description: '100 FREE CFA Level 1 practice questions + 1 mock exam. No credit card needed. Start practising in 30 seconds.',
+    title: 'Try 15 Free CFA Questions (2026) - No Signup Required',
+    description: 'Try 15 FREE CFA Level 1 demo questions. No signup needed. Start practising in 10 seconds.',
     url: 'https://www.analysttrainer.com/free-cfa-questions',
     type: 'website',
   },
@@ -21,8 +21,8 @@ export default function FreeCFAQuestions() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'Free CFA Level 1 Practice Questions',
-    description: '100 free CFA Level 1 practice questions with detailed explanations',
+    name: 'Free CFA Level 1 Demo Questions',
+    description: '15 free CFA Level 1 practice questions with detailed explanations (no signup required)',
     brand: { '@type': 'Brand', name: 'AnalystTrainer' },
     offers: {
       '@type': 'Offer',
@@ -38,10 +38,10 @@ export default function FreeCFAQuestions() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'Are these really free CFA practice questions?',
+        name: 'Do I need to sign up to try?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes, 100% free with no catch. You get 100 practice questions and 1 full mock exam without entering any payment information.',
+          text: 'No! Use /try-free to practice 15 questions instantly with no signup required. To access more, choose a paid plan.',
         },
       },
       {
@@ -89,21 +89,21 @@ export default function FreeCFAQuestions() {
         <section className="bg-gradient-to-b from-[#1FB8CD] to-[#18a3b5] text-white pt-28 pb-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-white/20 rounded-full text-white text-sm font-medium mb-6">
-              100% Free - No Credit Card Required
+              Try Without Signing Up
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Free CFA Level 1 Practice Questions
+              Try 15 Free CFA Level 1 Questions
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mb-8">
-              Start your CFA exam preparation with <strong>100 free practice questions</strong> and 1 free mock exam. Detailed explanations included.
+              Experience our question quality with <strong>15 free demo questions</strong> (no login required). Detailed explanations included.
             </p>
             <Link
-              href="/signup?plan=trial"
+              href="/try-free"
               className="inline-block px-8 py-4 bg-white text-[#1FB8CD] rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
             >
-              Get Free Questions Now
+              Start Demo Now
             </Link>
-            <p className="mt-4 text-white/70 text-sm">No credit card required. Start in 30 seconds.</p>
+            <p className="mt-4 text-white/70 text-sm">No signup required. Start in 10 seconds.</p>
           </div>
         </section>
 
@@ -111,26 +111,26 @@ export default function FreeCFAQuestions() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              What's Included in Your Free Trial
+              What's Included in the Free Demo
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-2xl mx-auto mb-12">
-              Everything you need to start preparing for your CFA Level 1 exam - completely free.
+              Try our platform risk-free before committing to a paid plan.
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-gradient-to-b from-[#1FB8CD]/5 to-white p-8 rounded-2xl border border-[#1FB8CD]/20">
-                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">100</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Practice Questions</h3>
-                <p className="text-gray-600">Full access to 100 CFA Level 1 practice questions covering all topic areas with detailed explanations.</p>
+                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">15</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Demo Questions</h3>
+                <p className="text-gray-600">Access to 15 CFA Level 1 sample questions with detailed explanations. No login required.</p>
               </div>
               <div className="bg-gradient-to-b from-[#1FB8CD]/5 to-white p-8 rounded-2xl border border-[#1FB8CD]/20">
-                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">1</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Mock Exam</h3>
-                <p className="text-gray-600">Take a full 180-question mock exam to experience the real CFA Level 1 format and timing.</p>
+                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">∞</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Instant Access</h3>
+                <p className="text-gray-600">Start practicing immediately with no signup, no credit card, and no time limit.</p>
               </div>
               <div className="bg-gradient-to-b from-[#1FB8CD]/5 to-white p-8 rounded-2xl border border-[#1FB8CD]/20">
-                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">24h</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Full Access</h3>
-                <p className="text-gray-600">24 hours of complete access to try all features including performance analytics and progress tracking.</p>
+                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">✓</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">Full Explanations</h3>
+                <p className="text-gray-600">Same quality as paid content - detailed explanations for every answer choice.</p>
               </div>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function FreeCFAQuestions() {
                 </p>
               </div>
             </div>
-            <p className="text-center text-gray-500 mt-6">This is just one of 100+ questions you'll get access to for free.</p>
+            <p className="text-center text-gray-500 mt-6">This is just one of 15 demo questions you can try for free (no signup).</p>
           </div>
         </section>
 
@@ -176,10 +176,10 @@ export default function FreeCFAQuestions() {
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Why Are We Giving Away Free Questions?
+              Why Offer a Free Demo?
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              We believe in our product. Once you experience the quality of our questions and explanations, you'll understand why thousands of candidates choose AnalystTrainer for their CFA preparation.
+              We believe in our product. Try 15 questions to experience the quality of our content before purchasing a plan.
             </p>
             <div className="grid md:grid-cols-2 gap-6 text-left">
               <div className="flex gap-4">
@@ -189,8 +189,8 @@ export default function FreeCFAQuestions() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">No Strings Attached</h3>
-                  <p className="text-gray-600 text-sm">Your free trial is truly free. No credit card required, no automatic charges.</p>
+                  <h3 className="font-semibold text-gray-900">No Signup Required</h3>
+                  <p className="text-gray-600 text-sm">Start practicing instantly. No email, no credit card, no account needed.</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -201,7 +201,7 @@ export default function FreeCFAQuestions() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Real Exam Quality</h3>
-                  <p className="text-gray-600 text-sm">Free questions are the same quality as our paid content - no watered-down samples.</p>
+                  <p className="text-gray-600 text-sm">Demo questions are the same quality as our paid content - no watered-down samples.</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -212,7 +212,7 @@ export default function FreeCFAQuestions() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Detailed Explanations</h3>
-                  <p className="text-gray-600 text-sm">Every free question includes full explanations - learn from every answer.</p>
+                  <p className="text-gray-600 text-sm">Every demo question includes full explanations - learn from every answer choice.</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -223,7 +223,7 @@ export default function FreeCFAQuestions() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Upgrade When Ready</h3>
-                  <p className="text-gray-600 text-sm">If you love it, upgrade to access 2,500+ questions. If not, no pressure.</p>
+                  <p className="text-gray-600 text-sm">Ready for more? Choose from Basic (2,000 questions) or Premium (unlimited).</p>
                 </div>
               </div>
             </div>
@@ -234,18 +234,18 @@ export default function FreeCFAQuestions() {
         <section className="py-20 px-4 bg-[#13343B]">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Start Practising for Free Today
+              Ready to Try Our Demo?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
-              Join thousands of CFA candidates who started their journey with our free questions.
+              Experience our question quality instantly - no signup required.
             </p>
             <Link
-              href="/signup?plan=trial"
+              href="/try-free"
               className="inline-block px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
             >
-              Get 100 Free Questions Now
+              Start Free Demo Now
             </Link>
-            <p className="mt-4 text-gray-400 text-sm">Takes 30 seconds. No credit card required.</p>
+            <p className="mt-4 text-gray-400 text-sm">15 questions. No signup. No credit card.</p>
           </div>
         </section>
 
@@ -324,48 +324,48 @@ export default function FreeCFAQuestions() {
             <div className="space-y-4">
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  Are these really free CFA practice questions?
+                  Do I need to sign up to try?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Yes, 100% free with no catch. You get 100 practice questions and 1 full mock exam without entering any payment information. We believe in our product and want you to experience it before deciding to upgrade.</p>
+                <p className="mt-4 text-gray-600">No! Use /try-free to practice 15 questions instantly with no signup, no email, and no credit card required. To access more questions, choose a paid plan (Basic or Premium).</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  Do free questions include explanations?
+                  Do demo questions include explanations?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Absolutely. Every free question includes the same detailed explanations as our paid content. We explain why the correct answer is right and why each incorrect option is wrong, referencing CFA curriculum concepts.</p>
+                <p className="mt-4 text-gray-600">Absolutely. Every demo question includes the same detailed explanations as our paid content. We explain why the correct answer is right and why each incorrect option is wrong, referencing CFA curriculum concepts.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  What topics do the free questions cover?
+                  What topics do the demo questions cover?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Free questions cover all 10 CFA Level 1 topic areas: Ethics, Quantitative Methods, Economics, Financial Statement Analysis, Corporate Issuers, Equity Investments, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management.</p>
+                <p className="mt-4 text-gray-600">Demo questions cover a variety of CFA Level 1 topic areas including Ethics, Quantitative Methods, Economics, Financial Statement Analysis, and more, giving you a representative sample of our content quality.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  How long does the free trial last?
+                  How do I access more questions?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">You have 24 hours of full access to explore all features. The 100 questions and 1 mock exam remain yours to complete even after the trial period ends. There is no pressure to upgrade—use the free content at your own pace.</p>
+                <p className="mt-4 text-gray-600">After trying the 15 demo questions, you can choose a paid plan. Basic (£50) includes 2,000 questions and 5 mock exams. Premium (£75) includes unlimited questions and mock exams, both with lifetime access.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  Are free CFA questions enough to pass?
+                  Are 15 demo questions enough to pass?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">While 100 questions are a great start, most successful candidates practice between 1,500-3,000 questions. Free questions help you get started and evaluate our quality. For comprehensive preparation, we recommend upgrading to access our full 2,500+ question bank.</p>
+                <p className="mt-4 text-gray-600">No - the demo is designed to showcase our question quality. Most successful candidates practice between 1,500-3,000 questions. For comprehensive preparation, we recommend a paid plan: Basic (2,000 questions) or Premium (unlimited questions).</p>
               </details>
             </div>
           </div>

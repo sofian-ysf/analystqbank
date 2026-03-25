@@ -6,8 +6,7 @@ import { PLAN_LIMITS, PlanType } from '@/lib/plans';
 import { createClient } from '@/lib/supabase';
 
 interface UpgradePromptProps {
-  plan: PlanType;
-  isTrialExpired: boolean;
+  plan: PlanType | null;
   questionsRemaining?: number | null;
   mockExamsRemaining?: number | null;
   feature?: 'questions' | 'mockExams' | 'general';
@@ -15,7 +14,6 @@ interface UpgradePromptProps {
 
 export function UpgradePrompt({
   plan,
-  isTrialExpired,
   questionsRemaining,
   mockExamsRemaining,
   feature = 'general',
@@ -66,8 +64,8 @@ export function UpgradePrompt({
   };
 
   const getTitle = () => {
-    if (isTrialExpired) {
-      return 'Your Free Trial Has Ended';
+    if (!plan) {
+      return 'Subscription Required';
     }
     if (feature === 'questions' && questionsRemaining === 0) {
       return "You've Reached Your Question Limit";
@@ -79,24 +77,15 @@ export function UpgradePrompt({
   };
 
   const getMessage = () => {
-    if (isTrialExpired) {
-      return 'Your 24-hour free trial has expired. Upgrade now to continue your CFA exam preparation with unlimited access to practice questions and mock exams.';
-    }
-    if (plan === 'trial') {
-      if (feature === 'questions') {
-        return `You've used all ${PLAN_LIMITS.trial.questions} practice questions in your trial. Upgrade to Basic for ${PLAN_LIMITS.basic.questions.toLocaleString()} questions or Premium for unlimited access.`;
-      }
-      if (feature === 'mockExams') {
-        return `You've completed your ${PLAN_LIMITS.trial.mockExams} free mock exam. Upgrade to Basic for ${PLAN_LIMITS.basic.mockExams} mock exams or Premium for unlimited access.`;
-      }
-      return 'Upgrade your plan to unlock more practice questions, mock exams, and advanced features.';
+    if (!plan) {
+      return 'A paid subscription is required to access this content. Choose a plan below to start your CFA exam preparation with access to practice questions and mock exams.';
     }
     if (plan === 'basic') {
       if (feature === 'questions') {
         return `You've used all ${PLAN_LIMITS.basic.questions.toLocaleString()} practice questions. Upgrade to Premium for unlimited access to the full question bank.`;
       }
       if (feature === 'mockExams') {
-        return `You've completed all ${PLAN_LIMITS.basic.mockExams} mock exams this month. Upgrade to Premium for unlimited mock exams.`;
+        return `You've completed all ${PLAN_LIMITS.basic.mockExams} mock exams. Upgrade to Premium for unlimited mock exams.`;
       }
       return 'Upgrade to Premium for unlimited access to all features.';
     }
@@ -108,15 +97,9 @@ export function UpgradePrompt({
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-lg border border-gray-200 p-8 text-center">
         {/* Icon */}
         <div className="w-16 h-16 mx-auto mb-6 bg-amber-100 rounded-full flex items-center justify-center">
-          {isTrialExpired ? (
-            <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          ) : (
-            <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-          )}
+          <svg className="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
         </div>
 
         {/* Title */}
@@ -132,7 +115,7 @@ export function UpgradePrompt({
         {/* Plan comparison */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           {/* Basic Plan */}
-          {plan !== 'basic' && (
+          {plan !== 'basic' && plan !== 'premium' && (
             <button
               onClick={() => handleUpgrade('basic')}
               disabled={isUpgrading}
@@ -218,7 +201,7 @@ export function UpgradePrompt({
         </div>
 
         {/* Current plan info */}
-        {plan !== 'trial' && (
+        {plan && (
           <p className="mt-6 text-sm text-gray-500">
             Current plan: <span className="font-medium">{PLAN_LIMITS[plan].name}</span>
           </p>
@@ -236,7 +219,7 @@ export function UpgradeBanner({
 }: {
   questionsRemaining?: number | null;
   mockExamsRemaining?: number | null;
-  plan: PlanType;
+  plan: PlanType | null;
 }) {
   const showQuestionWarning = questionsRemaining != null && questionsRemaining <= 10 && questionsRemaining > 0;
   const showExamWarning = mockExamsRemaining != null && mockExamsRemaining <= 1 && mockExamsRemaining > 0;

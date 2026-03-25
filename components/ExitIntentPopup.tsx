@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 
 interface ExitIntentPopupProps {
-  variant?: 'formula-sheet' | 'free-trial' | 'discount' | 'question-of-day'
+  variant?: 'formula-sheet' | 'discount' | 'question-of-day'
   delay?: number // milliseconds before enabling exit detection
   cookieDays?: number // days before showing again
 }
@@ -107,22 +107,13 @@ export default function ExitIntentPopup({
       buttonText: 'Send Me the Formula Sheet',
       showEmailForm: true,
     },
-    'free-trial': {
-      badge: 'FREE TRIAL',
-      badgeColor: 'bg-blue-100 text-blue-700',
-      title: 'Not Ready to Commit?',
-      description: 'Try 100 CFA Level 1 questions + 1 mock exam completely free. No credit card required.',
-      buttonText: 'Start Free Trial',
-      buttonLink: '/signup?plan=trial',
-      showEmailForm: false,
-    },
     'discount': {
       badge: 'LIMITED OFFER',
       badgeColor: 'bg-red-100 text-red-700',
       title: 'Wait! Here\'s 20% Off',
       description: 'Use code STAY20 at checkout for 20% off any plan. Offer expires in 24 hours.',
       buttonText: 'Claim My Discount',
-      buttonLink: '/signup?discount=STAY20',
+      buttonLink: '/pricing?discount=STAY20',
       showEmailForm: false,
     },
     'question-of-day': {

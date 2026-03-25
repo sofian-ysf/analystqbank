@@ -392,8 +392,8 @@ export default function Settings() {
                 {(() => {
                   const planKey = subscription?.subscription_plan === 'basic' ? 'basic'
                     : subscription?.subscription_plan === 'premium' ? 'premium'
-                    : 'trial';
-                  const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.trial;
+                    : 'basic';
+                  const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.basic;
                   return limits.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

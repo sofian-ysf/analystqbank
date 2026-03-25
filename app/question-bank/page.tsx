@@ -63,7 +63,6 @@ export default function QuestionBank() {
     subscription,
     loading: subscriptionLoading,
     canAccessQuestions,
-    isTrialExpired,
     plan,
   } = useSubscription();
 
@@ -79,7 +78,7 @@ export default function QuestionBank() {
       const questionCountBySubtopic: { [key: string]: number } = {};
 
       // Get plan limits for displaying available questions
-      const userPlan = plan || 'trial';
+      const userPlan = plan || 'basic';
       const planLimits = QUESTION_LIMITS_BY_TOPIC[userPlan];
 
       const countPromises = Object.values(topicIdToDbName).map(async (topicName) => {
@@ -308,7 +307,6 @@ export default function QuestionBank() {
         </header>
         <UpgradePrompt
           plan={plan}
-          isTrialExpired={isTrialExpired}
           questionsRemaining={subscription?.questionsRemaining}
           feature="questions"
         />

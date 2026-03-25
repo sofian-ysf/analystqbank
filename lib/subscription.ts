@@ -27,13 +27,13 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
     return null;
   }
 
-  const plan = (profile.subscription_plan || 'trial') as PlanType;
-  const status = profile.subscription_status || 'trialing';
+  const plan = (profile.subscription_plan || 'basic') as PlanType;
+  const status = profile.subscription_status || 'expired';
   const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
   const now = new Date();
 
-  // Check if trial is expired
-  const isTrialExpired = plan === 'trial' && trialEndsAt !== null && now > trialEndsAt;
+  // Check if subscription is expired
+  const isTrialExpired = status === 'expired';
 
   // Get usage counts for the current period
   const { mockExamsUsed, questionsAnswered } = await getUsageCounts(userId, supabase);
@@ -50,7 +50,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
     : Math.max(0, limits.questions - questionsAnswered);
 
   // Check access - 'lifetime' status is for paid users
-  const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
+  const hasValidStatus = status === 'active' || status === 'lifetime';
 
   const canAccessMockExams = !isTrialExpired &&
     hasValidStatus &&
@@ -114,14 +114,7 @@ export function formatTimeRemaining(trialEndsAt: Date): string {
   return `${minutes}m remaining`;
 }
 
-export function getPlanUpgradeMessage(plan: PlanType, feature: 'mockExams' | 'questions'): string {
-  if (plan === 'trial') {
-    if (feature === 'mockExams') {
-      return 'Upgrade to Basic for 5 mock exams/month or Premium for unlimited access.';
-    }
-    return 'Upgrade to Basic for 2,000 questions or Premium for full access.';
-  }
-
+export function getPlanUpgradeMessage(plan: PlanType | null, feature: 'mockExams' | 'questions'): string {
   if (plan === 'basic') {
     if (feature === 'mockExams') {
       return 'Upgrade to Premium for unlimited mock exams.';
@@ -129,5 +122,9 @@ export function getPlanUpgradeMessage(plan: PlanType, feature: 'mockExams' | 'qu
     return 'Upgrade to Premium for full question bank access.';
   }
 
-  return '';
+  // For no plan or premium plan
+  if (feature === 'mockExams') {
+    return 'Choose Basic for 5 mock exams or Premium for unlimited access.';
+  }
+  return 'Choose Basic for 2,000 questions or Premium for full access.';
 }

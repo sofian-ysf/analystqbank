@@ -20,35 +20,40 @@ export async function GET() {
       .single();
 
     if (error || !profile) {
-      // Return default trial info if no profile exists
+      // Return no subscription state if no profile exists
       return NextResponse.json({
-        plan: 'trial',
-        status: 'trialing',
-        trialEndsAt: null,
-        isTrialExpired: true,
+        plan: null,
+        status: 'no_subscription',
         canAccessMockExams: false,
         canAccessQuestions: false,
         mockExamsUsed: 0,
         questionsAnswered: 0,
         mockExamsRemaining: 0,
         questionsRemaining: 0,
-        limits: PLAN_LIMITS.trial,
+        limits: null,
         needsUpgrade: true,
       });
     }
 
-    // Map 'free' to 'trial' (database uses 'free', code uses 'trial')
-    const dbPlan = profile.subscription_plan || 'free';
-    const plan = (dbPlan === 'free' ? 'trial' : dbPlan) as PlanType;
-    const status = profile.subscription_status || 'trialing';
-    const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
-    const now = new Date();
+    // Get subscription plan - must be a valid paid plan
+    const plan = profile.subscription_plan as PlanType | null;
+    const status = profile.subscription_status;
 
-    // Check if trial is expired - respects subscription_status from database
-    // If status is 'expired', block access regardless of trial_ends_at
-    // If status is 'trialing' or 'lifetime' or 'active', check trial_ends_at
-    const isTrialExpired = status === 'expired' ||
-                          (plan === 'trial' && status === 'trialing' && trialEndsAt !== null && now > trialEndsAt);
+    // Users without a valid paid plan should be blocked
+    if (!plan || (plan !== 'basic' && plan !== 'premium')) {
+      return NextResponse.json({
+        plan: null,
+        status: 'no_subscription',
+        canAccessMockExams: false,
+        canAccessQuestions: false,
+        mockExamsUsed: 0,
+        questionsAnswered: 0,
+        mockExamsRemaining: 0,
+        questionsRemaining: 0,
+        limits: null,
+        needsUpgrade: true,
+      });
+    }
 
     // Get usage counts (all-time for lifetime plans)
     const { count: mockExamsUsed } = await supabase
@@ -60,7 +65,7 @@ export async function GET() {
     // So we don't track "questions used" anymore
     const questionsAnswered = 0; // Not tracking usage, limiting by availability instead
 
-    const limits = PLAN_LIMITS[plan] || PLAN_LIMITS.trial;
+    const limits = PLAN_LIMITS[plan];
 
     // Calculate remaining
     const mockExamsRemaining = limits.mockExams === Infinity
@@ -73,24 +78,23 @@ export async function GET() {
       ? null
       : limits.questions;
 
-    // Check access - 'lifetime' status is for paid users
-    const hasValidStatus = status === 'active' || status === 'trialing' || status === 'lifetime';
+    // Check access - valid statuses for paid users
+    const hasValidStatus = status === 'active' || status === 'lifetime';
+    const isExpired = status === 'expired';
 
-    const canAccessMockExams = !isTrialExpired &&
+    const canAccessMockExams = !isExpired &&
       hasValidStatus &&
       (mockExamsRemaining === null || mockExamsRemaining > 0);
 
-    // Questions are always accessible (limited by availability per plan, not by usage tracking)
-    const canAccessQuestions = !isTrialExpired && hasValidStatus;
+    // Questions are always accessible for valid paid subscriptions
+    const canAccessQuestions = !isExpired && hasValidStatus;
 
     // Determine if user needs to upgrade
-    const needsUpgrade = isTrialExpired || !canAccessQuestions || !canAccessMockExams;
+    const needsUpgrade = isExpired || !canAccessQuestions || !canAccessMockExams;
 
     return NextResponse.json({
       plan,
       status,
-      trialEndsAt: trialEndsAt?.toISOString() || null,
-      isTrialExpired,
       canAccessMockExams,
       canAccessQuestions,
       mockExamsUsed: mockExamsUsed || 0,
