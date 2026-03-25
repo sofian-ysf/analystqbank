@@ -73,9 +73,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/disclaimer`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/faq`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
   ]
   // Note: /login, /signup, /forgot-password excluded (noindex)
-  // Note: /features, /pricing, /resources, /study-guides removed (redirected to homepage)
+  // Note: /features, /resources, /study-guides removed (redirected to homepage - legacy URLs)
 
   // Topics hub page
   const topicsHub: MetadataRoute.Sitemap = [
@@ -97,7 +115,90 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Note: Subtopic pages (/topics/:topic/:subtopic) removed - routes redirect to parent topic
   // Note: Free questions pages (/free-questions/:topic) removed - routes redirect to /free-cfa-questions
-  // Note: Tools pages removed - routes don't exist yet
+
+  // FAQ topic-specific pages
+  const faqPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/faq/alternative-investments`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/corporate-issuers`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/economics`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/equity-investments`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/ethical-professional-standards`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/fixed-income`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/portfolio-management`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/faq/quantitative-methods`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+  ]
+
+  // Tools pages
+  const toolsPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/tools/financial-ratios`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/study-estimator`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tools/portfolio-variance`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+  ]
+
+  // Compare pages
+  const comparePages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/compare/cfa-vs-frm`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+  ]
 
   // SEO landing pages
   const landingPages: MetadataRoute.Sitemap = [
@@ -162,6 +263,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticPages,
+    ...faqPages,
+    ...toolsPages,
+    ...comparePages,
     ...topicsHub,
     ...topicPages,
     ...landingPages,
