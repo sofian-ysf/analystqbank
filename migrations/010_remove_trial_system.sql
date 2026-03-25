@@ -26,6 +26,14 @@ ALTER TABLE public.user_profiles
 ADD CONSTRAINT user_profiles_subscription_status_check
 CHECK (subscription_status IN ('active', 'lifetime', 'expired', 'refunded'));
 
+-- Step 3.5: Allow NULL values for subscription_plan and subscription_status
+-- This is needed so new users can sign up without a plan
+ALTER TABLE public.user_profiles
+ALTER COLUMN subscription_plan DROP NOT NULL;
+
+ALTER TABLE public.user_profiles
+ALTER COLUMN subscription_status DROP NOT NULL;
+
 -- Step 4: Update handle_new_user() trigger function to NOT set trial fields
 -- New users will get NULL subscription and must pay before accessing content
 CREATE OR REPLACE FUNCTION public.handle_new_user()
