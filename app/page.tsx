@@ -655,7 +655,11 @@ export default function Home() {
                 Choose Your Plan
               </h2>
               <p className="mt-4 text-lg text-gray-600">
-                Try 15 free demo questions at /try-free. Choose your plan when you're ready.
+                Try 15 free demo questions at{' '}
+                <a href="https://www.analysttrainer.com/try-free" className="text-[#1FB8CD] hover:underline font-medium">
+                  analysttrainer.com/try-free
+                </a>
+                . Choose your plan when you're ready.
               </p>
             </div>
 
