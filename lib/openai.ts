@@ -320,7 +320,7 @@ Make the links feel natural - don't force them. Use variations of the phrases an
 
   const openai = getOpenAIClient();
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'gpt-4o',
     messages: [
       {
         role: 'system',
