@@ -256,7 +256,6 @@ export interface GeneratedBlogPost {
   tags: string[];
   read_time_minutes: number;
   faq_items: { question: string; answer: string }[];
-  internal_linking_suggestions: string[];
   schema_json: object;
 }
 
@@ -391,7 +390,6 @@ Return a JSON object in this EXACT format (no additional text outside the JSON):
     {"question": "Common question CFA candidates ask?", "answer": "Detailed, helpful answer that provides real value..."},
     {"question": "Another relevant question?", "answer": "Another comprehensive answer..."}
   ],
-  "internal_linking_suggestions": ["Related topic for internal link 1", "Related topic 2", "Related topic 3"],
   "schema_json": {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
