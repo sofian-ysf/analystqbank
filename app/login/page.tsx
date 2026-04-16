@@ -65,11 +65,13 @@ function LoginForm() {
     setError("");
     setLoading(true);
 
-    // Pass empty plan so callback redirects to pricing if user has no subscription
+    // Use 'next' param to tell callback where to redirect after OAuth
+    // If user has lifetime subscription, callback sends them to /dashboard
+    // Otherwise they'll go to /pricing (via next param)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?plan=`,
+        redirectTo: `${window.location.origin}/auth/callback?next=/pricing`,
       },
     });
 

@@ -6,6 +6,7 @@ import type { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
+  const next = requestUrl.searchParams.get('next') ?? '/pricing'
   const plan = requestUrl.searchParams.get('plan')
   const error = requestUrl.searchParams.get('error')
   const errorDescription = requestUrl.searchParams.get('error_description')
@@ -69,7 +70,6 @@ export async function GET(request: NextRequest) {
         .single()
 
       // Send Discord notification for OAuth sign-ups (Google)
-      // This ensures all Google sign-ups get a notification
       try {
         await fetch(`${requestUrl.origin}/api/notify-discord`, {
           method: 'POST',
@@ -81,7 +81,6 @@ export async function GET(request: NextRequest) {
           }),
         })
       } catch (notifyError) {
-        // Log but don't fail - notification is non-critical
         console.error('Discord notification failed:', notifyError)
       }
 
@@ -90,16 +89,22 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
       }
 
-      // If plan parameter is provided (from OAuth signup), redirect to Stripe
+      // If plan parameter is provided (from signup with plan selected), redirect to Stripe
       if (plan === 'basic' || plan === 'premium') {
         return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
       }
 
-      // Otherwise, redirect to pricing page to select a plan
-      return NextResponse.redirect(new URL('/pricing', requestUrl.origin))
+      // Otherwise, use the 'next' parameter or fallback to /pricing
+      let redirectUrl = next
+      // Validate next is safe (relative path starting with /)
+      if (!redirectUrl.startsWith('/') || redirectUrl.includes('://')) {
+        redirectUrl = '/pricing'
+      }
+
+      return NextResponse.redirect(new URL(redirectUrl, requestUrl.origin))
     }
 
-    return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
+    return NextResponse.redirect(new URL('/pricing', requestUrl.origin))
   }
 
   // No code provided, redirect to login
