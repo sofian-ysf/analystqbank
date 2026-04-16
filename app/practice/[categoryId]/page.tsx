@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { Check, X } from "@phosphor-icons/react";
 
 interface TableData {
   title: string;
@@ -399,10 +400,10 @@ export default function CategoryPractice() {
           {showExplanation && (
             <div className="border-t pt-6">
               <div className="mb-4">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium gap-1 ${
                   isCorrectAnswer ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                 }`}>
-                  {isCorrectAnswer ? '✓ Correct' : '✗ Incorrect'}
+                  {isCorrectAnswer ? <><Check size={14} weight="bold" /> Correct</> : <><X size={14} weight="bold" /> Incorrect</>}
                 </span>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">

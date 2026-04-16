@@ -11,6 +11,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt, UpgradeBanner } from "@/components/UpgradePrompt";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { QUESTION_LIMITS_BY_TOPIC } from "@/lib/plans";
+import { Icon } from "@phosphor-icons/react";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -454,8 +455,8 @@ export default function QuestionBank() {
                 <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center flex-1">
-                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white text-xl`}>
-                        {topic.icon}
+                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white`}>
+                        {topic.icon && <topic.icon size={24} weight="fill" />}
                       </div>
                       <div className="ml-4 flex-1">
                         <div className="flex items-center space-x-3">

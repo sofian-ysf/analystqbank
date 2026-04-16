@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { EnvelopeSimple, Question } from "@phosphor-icons/react";
+import FloatingGetStartedButton from "../components/FloatingGetStartedButton";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -48,14 +50,14 @@ export default function Contact() {
 
   const contactMethods = [
     {
-      icon: "📧",
+      icon: EnvelopeSimple,
       title: "Email",
       description: "Send us an email anytime",
       contact: "support@analysttrainer.com",
       link: "mailto:support@analysttrainer.com"
     },
     {
-      icon: "❓",
+      icon: Question,
       title: "Help Centre",
       description: "Browse our FAQ and guides",
       contact: "Visit Help Centre",
@@ -132,7 +134,7 @@ export default function Contact() {
                 href={method.link}
                 className="bg-white rounded-xl p-6 border border-[#EAEEEF] hover:shadow-md transition-all text-center"
               >
-                <div className="text-4xl mb-4">{method.icon}</div>
+                <div className="mb-4 flex justify-center"><method.icon size={48} /></div>
                 <h3 className="text-lg font-bold text-[#13343B] mb-2">{method.title}</h3>
                 <p className="text-[#5f6368] text-sm mb-3">{method.description}</p>
                 <span className="text-[#1FB8CD] font-medium">{method.contact}</span>
@@ -314,6 +316,8 @@ export default function Contact() {
           </div>
         </div>
       </footer>
+
+      <FloatingGetStartedButton />
     </div>
   );
 }

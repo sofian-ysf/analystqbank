@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Navigation from '../components/Navigation'
 import { PassGuaranteeCompact } from '@/components/PassGuarantee'
 import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbSchema'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
   title: '2,500+ Free CFA Level 1 Questions 2026 | With Answers',
@@ -658,6 +659,8 @@ export default function CFALevel1PracticeQuestions() {
             </div>
           </div>
         </footer>
+
+        <FloatingGetStartedButton />
       </main>
     </>
   )

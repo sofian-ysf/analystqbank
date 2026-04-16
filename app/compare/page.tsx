@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '@/app/components/Navigation'
+import { Check } from '@phosphor-icons/react'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
   title: 'AnalystTrainer vs AnalystPrep: CFA Prep Comparison 2026',
@@ -35,16 +37,16 @@ export default function ComparePage() {
               <h3 className="text-xl font-bold mb-4">AnalystTrainer</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span> 2,500+ questions
+                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> 2,500+ questions
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span> Unlimited mock exams
+                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> Unlimited mock exams
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span> £75 lifetime access
+                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> £75 lifetime access
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-green-500">✓</span> 1,600+ free flashcards
+                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> 1,600+ free flashcards
                 </li>
               </ul>
             </div>
@@ -70,6 +72,8 @@ export default function ComparePage() {
           </Link>
         </div>
       </section>
+
+      <FloatingGetStartedButton />
     </main>
   )
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { cfaLevel1Curriculum } from '@/lib/curriculum';
 import { CFA_2026_LEARNING_OBJECTIVES, getLearningObjectivesForTopic, getReadingsForTopic, type LearningObjective, type Reading } from '@/lib/learning-objectives-2026';
+import { BookOpen, Icon } from '@phosphor-icons/react';
 
 interface User {
   id: string;
@@ -1035,8 +1036,8 @@ export default function AdminDashboard() {
                                     <span className="mr-2 text-gray-400 w-4">
                                       {isExpanded ? '▼' : '▶'}
                                     </span>
-                                    <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white text-lg mr-3 flex-shrink-0`}>
-                                      {topic.icon}
+                                    <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white mr-3 flex-shrink-0`}>
+                                      {topic.icon && <topic.icon size={20} weight="fill" />}
                                     </div>
                                     <div>
                                       <div className="text-sm font-medium text-white">{topic.name}</div>
@@ -1091,7 +1092,7 @@ export default function AdminDashboard() {
                                             {/* Reading Header */}
                                             <div className="px-4 py-3 bg-gray-700 flex items-center justify-between">
                                               <div className="flex items-center">
-                                                <span className="text-blue-400 mr-2">📖</span>
+                                                <BookOpen size={16} className="text-blue-400 mr-2" />
                                                 <span className="text-sm font-semibold text-white">{reading.name}</span>
                                               </div>
                                               <div className="flex items-center gap-3">

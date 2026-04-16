@@ -4,6 +4,7 @@ import Link from 'next/link'
 import ArticleSVG from './ArticleSVG'
 import Navigation from '../components/Navigation'
 import { BlogCTABox } from '@/components/BlogCTA'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 import './blog-styles.css'
 
 interface Category {
@@ -137,10 +138,12 @@ export default function BlogClient({ posts }: BlogClientProps) {
                 </Link>
               </div>
             </section>
-          </>
-        )}
-        </div>
-      </main>
-    </>
-  )
+
+          <FloatingGetStartedButton />
+        </>
+      )}
+      </div>
+    </main>
+  </>
+)
 }

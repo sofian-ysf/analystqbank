@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import FloatingGetStartedButton from "../components/FloatingGetStartedButton";
 
 export default function Help() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -179,6 +180,8 @@ export default function Help() {
           </div>
         </div>
       </footer>
+
+      <FloatingGetStartedButton />
     </div>
   );
 }

@@ -68,6 +68,23 @@ export async function GET(request: NextRequest) {
         .eq('id', user.id)
         .single()
 
+      // Send Discord notification for OAuth sign-ups (Google)
+      // This ensures all Google sign-ups get a notification
+      try {
+        await fetch(`${requestUrl.origin}/api/notify-discord`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            type: 'new_user',
+            plan: plan || 'basic',
+          }),
+        })
+      } catch (notifyError) {
+        // Log but don't fail - notification is non-critical
+        console.error('Discord notification failed:', notifyError)
+      }
+
       // If user has a valid paid subscription with lifetime status, go to dashboard
       if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
         return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))

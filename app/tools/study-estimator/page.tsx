@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { Check, Warning } from "@phosphor-icons/react";
 
 export default function StudyEstimator() {
   const [examDate, setExamDate] = useState("");
@@ -157,8 +158,8 @@ export default function StudyEstimator() {
                 <div className={`mt-6 p-4 rounded-lg ${estimate.onTrack ? "bg-green-50" : "bg-red-50"}`}>
                   <p className={`font-medium ${estimate.onTrack ? "text-green-800" : "text-red-800"}`}>
                     {estimate.onTrack
-                      ? "✓ You're on track! Stick to your study schedule."
-                      : `⚠ You need to increase to ${estimate.recommendedPerWeek} hours/week to meet recommended study time.`}
+                      ? <><Check size={16} weight="bold" className="inline mr-1" />You're on track! Stick to your study schedule.</>
+                      : <><Warning size={16} weight="bold" className="inline mr-1" />You need to increase to {estimate.recommendedPerWeek} hours/week to meet recommended study time.</>}
                   </p>
                 </div>
               </div>

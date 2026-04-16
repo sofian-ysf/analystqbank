@@ -9,6 +9,7 @@ import { User } from '@supabase/supabase-js'
 import { DeckWithStats } from '@/lib/flashcards/types'
 import { cfaLevel1Curriculum } from '@/lib/curriculum'
 import { QuestionBankUpsell } from '@/components/flashcards'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 // SVG icons for each topic (cleaner than emojis)
 const topicIcons: Record<string, React.ReactNode> = {
@@ -344,6 +345,8 @@ export default function FlashcardsPage() {
             </div>
           </div>
         )}
+
+        <FloatingGetStartedButton />
       </main>
     </div>
   )

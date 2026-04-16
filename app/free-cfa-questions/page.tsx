@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
+import { Check } from '@phosphor-icons/react'
 
 export const metadata: Metadata = {
   title: 'Try 15 Free CFA Questions (2026) - No Signup Required',
@@ -128,7 +129,7 @@ export default function FreeCFAQuestions() {
                 <p className="text-gray-600">Start practicing immediately with no signup, no credit card, and no time limit.</p>
               </div>
               <div className="bg-gradient-to-b from-[#1FB8CD]/5 to-white p-8 rounded-2xl border border-[#1FB8CD]/20">
-                <div className="text-4xl font-bold text-[#1FB8CD] mb-2">✓</div>
+                <div className="text-[#1FB8CD] mb-2 flex justify-center"><Check size={40} weight="bold" /></div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Full Explanations</h3>
                 <p className="text-gray-600">Same quality as paid content - detailed explanations for every answer choice.</p>
               </div>
@@ -156,8 +157,8 @@ export default function FreeCFAQuestions() {
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <span className="font-medium">B.</span> £550,000
                 </div>
-                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <span className="font-medium">C.</span> £570,000 ✓
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+                  <span className="font-medium">C.</span> £570,000 <Check size={16} weight="bold" className="text-green-600" />
                 </div>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">

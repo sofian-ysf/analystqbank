@@ -7,6 +7,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
+import { Icon } from "@phosphor-icons/react";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -504,8 +505,8 @@ export default function Dashboard() {
                 <div key={topic.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
-                      <div className={`w-8 h-8 ${topic.color} rounded flex items-center justify-center text-white text-sm mr-3`}>
-                        {topic.icon}
+                      <div className={`w-8 h-8 ${topic.color} rounded flex items-center justify-center text-white mr-3`}>
+                        {topic.icon && <topic.icon size={16} weight="fill" />}
                       </div>
                       <div>
                         <span className="text-gray-900 font-medium text-sm">{topic.name}</span>

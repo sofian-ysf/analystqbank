@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { ChartBar, ChartLineUp, ClipboardText, Scales, Bank, ArrowsClockwise, Briefcase, Icon } from "@phosphor-icons/react";
 
 interface ResearchHub {
   id: string;
@@ -13,7 +14,7 @@ interface ResearchHub {
   topics: string[];
   studyMaterials: number;
   practiceQuestions: number;
-  icon: string;
+  icon: Icon;
   color: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
 }
@@ -26,7 +27,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Descriptive Statistics", "Probability Distributions", "Hypothesis Testing", "Regression Analysis", "Time Series Analysis"],
     studyMaterials: 45,
     practiceQuestions: 150,
-    icon: "📊",
+    icon: ChartBar,
     color: "bg-blue-500",
     difficulty: "Intermediate"
   },
@@ -37,7 +38,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Supply & Demand", "Market Structures", "GDP & Inflation", "Monetary Policy", "International Trade"],
     studyMaterials: 38,
     practiceQuestions: 120,
-    icon: "📈",
+    icon: ChartLineUp,
     color: "bg-green-500",
     difficulty: "Beginner"
   },
@@ -48,7 +49,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Financial Statements", "Revenue Recognition", "Asset Valuation", "Financial Ratios", "Cash Flow Analysis"],
     studyMaterials: 52,
     practiceQuestions: 200,
-    icon: "📋",
+    icon: ClipboardText,
     color: "bg-purple-500",
     difficulty: "Advanced"
   },
@@ -59,7 +60,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Code of Ethics", "Standards of Practice", "Asset Manager Code", "Research Objectivity", "Client Relations"],
     studyMaterials: 25,
     practiceQuestions: 80,
-    icon: "⚖️",
+    icon: Scales,
     color: "bg-yellow-500",
     difficulty: "Beginner"
   },
@@ -70,7 +71,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Bond Valuation", "Yield Measures", "Duration & Convexity", "Credit Analysis", "Fixed Income Strategies"],
     studyMaterials: 41,
     practiceQuestions: 140,
-    icon: "🏦",
+    icon: Bank,
     color: "bg-indigo-500",
     difficulty: "Advanced"
   },
@@ -81,7 +82,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Equity Valuation", "Market Efficiency", "Behavioral Finance", "Industry Analysis", "Portfolio Construction"],
     studyMaterials: 47,
     practiceQuestions: 160,
-    icon: "📊",
+    icon: ChartBar,
     color: "bg-red-500",
     difficulty: "Intermediate"
   },
@@ -92,7 +93,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Options Strategies", "Futures Contracts", "Swaps", "Risk Management", "Arbitrage"],
     studyMaterials: 33,
     practiceQuestions: 100,
-    icon: "🔄",
+    icon: ArrowsClockwise,
     color: "bg-pink-500",
     difficulty: "Advanced"
   },
@@ -103,7 +104,7 @@ const researchHubs: ResearchHub[] = [
     topics: ["Asset Allocation", "Risk Budgeting", "Performance Attribution", "Alternative Investments", "ESG Investing"],
     studyMaterials: 39,
     practiceQuestions: 130,
-    icon: "💼",
+    icon: Briefcase,
     color: "bg-teal-500",
     difficulty: "Advanced"
   }
@@ -227,8 +228,8 @@ export default function ResearchHubs() {
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center">
-                    <div className={`w-12 h-12 ${hub.color} rounded-lg flex items-center justify-center text-white text-xl`}>
-                      {hub.icon}
+                    <div className={`w-12 h-12 ${hub.color} rounded-lg flex items-center justify-center text-white`}>
+                      {hub.icon && <hub.icon size={24} weight="fill" />}
                     </div>
                     <div className="ml-4">
                       <h3 className="text-xl font-bold text-gray-900">{hub.name}</h3>

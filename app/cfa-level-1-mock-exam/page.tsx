@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbSchema'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
   title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
@@ -659,6 +660,8 @@ export default function CFALevel1MockExam() {
             </div>
           </div>
         </footer>
+
+        <FloatingGetStartedButton />
       </main>
     </>
   )

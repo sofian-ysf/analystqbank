@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { cfaLevel1Curriculum, getTotalSubtopics, getTotalLearningOutcomes } from '@/lib/curriculum'
+import { Icon } from '@phosphor-icons/react'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Topics 2026 | All 10 Exam Areas Explained',
@@ -144,7 +146,7 @@ export default function TopicsPage() {
                   className="group block bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:border-blue-200 transition-all duration-200"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="text-4xl">{topic.icon}</span>
+                    <span className="text-4xl"><topic.icon size={40} weight="fill" /></span>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-xs font-medium text-[#9aa0a6]">
@@ -218,7 +220,7 @@ export default function TopicsPage() {
                           href={`/topics/${topic.id}`}
                           className="flex items-center gap-2 text-gray-900 hover:text-blue-600"
                         >
-                          <span>{topic.icon}</span>
+                          <span><topic.icon size={20} weight="fill" /></span>
                           <span>{topic.name}</span>
                         </Link>
                       </td>
@@ -325,6 +327,8 @@ export default function TopicsPage() {
             </div>
           </div>
         </footer>
+
+        <FloatingGetStartedButton />
       </div>
     </>
   )

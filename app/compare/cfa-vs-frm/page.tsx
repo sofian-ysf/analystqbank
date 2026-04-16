@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { Check } from "@phosphor-icons/react";
+import FloatingGetStartedButton from "../../components/FloatingGetStartedButton";
 
 export default function CFAVsFRM() {
   const comparisonData = [
@@ -129,23 +131,23 @@ export default function CFAVsFRM() {
             <h2 className="text-2xl font-bold text-[#1FB8CD] mb-4">Choose CFA If:</h2>
             <ul className="space-y-3 text-[#5f6368]">
               <li className="flex items-start">
-                <span className="text-[#1FB8CD] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#1FB8CD] mr-2 flex-shrink-0" />
                 You want to become a portfolio manager or investment analyst
               </li>
               <li className="flex items-start">
-                <span className="text-[#1FB8CD] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#1FB8CD] mr-2 flex-shrink-0" />
                 You're interested in broad investment topics (equity, fixed income, alternatives)
               </li>
               <li className="flex items-start">
-                <span className="text-[#1FB8CD] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#1FB8CD] mr-2 flex-shrink-0" />
                 You want the most globally recognized finance certification
               </li>
               <li className="flex items-start">
-                <span className="text-[#1FB8CD] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#1FB8CD] mr-2 flex-shrink-0" />
                 You're committed to a multi-year study program
               </li>
               <li className="flex items-start">
-                <span className="text-[#1FB8CD] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#1FB8CD] mr-2 flex-shrink-0" />
                 Ethics and professional standards are important to your career
               </li>
             </ul>
@@ -156,23 +158,23 @@ export default function CFAVsFRM() {
             <h2 className="text-2xl font-bold text-[#13343B] mb-4">Choose FRM If:</h2>
             <ul className="space-y-3 text-[#5f6368]">
               <li className="flex items-start">
-                <span className="text-[#13343B] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#13343B] mr-2 flex-shrink-0" />
                 You want to specialize in risk management
               </li>
               <li className="flex items-start">
-                <span className="text-[#13343B] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#13343B] mr-2 flex-shrink-0" />
                 You're interested in derivatives, hedging, and quantitative methods
               </li>
               <li className="flex items-start">
-                <span className="text-[#13343B] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#13343B] mr-2 flex-shrink-0" />
                 You want a faster certification (1 year vs 2.5-4 years)
               </li>
               <li className="flex items-start">
-                <span className="text-[#13343B] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#13343B] mr-2 flex-shrink-0" />
                 You work or want to work in banking risk departments
               </li>
               <li className="flex items-start">
-                <span className="text-[#13343B] mr-2">✓</span>
+                <Check size={16} weight="bold" className="text-[#13343B] mr-2 flex-shrink-0" />
                 Regulatory compliance and operational risk interest you
               </li>
             </ul>
@@ -233,6 +235,8 @@ export default function CFAVsFRM() {
           </div>
         </div>
       </section>
+
+      <FloatingGetStartedButton />
     </div>
   );
 }

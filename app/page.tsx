@@ -9,6 +9,7 @@ import ScrollReveal from "./components/ScrollReveal";
 import { PassGuaranteeFull } from "@/components/PassGuarantee";
 import DemoQuestion from "@/components/DemoQuestion";
 import PromoBanner from "@/components/PromoBanner";
+import FloatingGetStartedButton from "./components/FloatingGetStartedButton";
 
 const testimonials = [
   { initials: "JC", name: "James C.", role: "Investment Analyst, London", quote: "The question bank mirrors the actual CFA exam remarkably well. I felt genuinely prepared walking into the testing centre." },
@@ -958,6 +959,8 @@ export default function Home() {
             </div>
           </div>
         </footer>
+
+        <FloatingGetStartedButton />
       </main>
     </>
   );

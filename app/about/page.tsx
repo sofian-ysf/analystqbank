@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { Trophy, Lightbulb, Handshake, Scales, Check } from "@phosphor-icons/react";
+import FloatingGetStartedButton from "../components/FloatingGetStartedButton";
 
 export default function About() {
   const stats = [
@@ -15,22 +17,22 @@ export default function About() {
     {
       title: "Excellence",
       description: "We maintain the highest standards in content quality and educational delivery.",
-      icon: "🏆"
+      icon: Trophy
     },
     {
       title: "Innovation",
       description: "We leverage technology to create engaging and effective learning experiences.",
-      icon: "💡"
+      icon: Lightbulb
     },
     {
       title: "Support",
       description: "We provide comprehensive support to help every student achieve their goals.",
-      icon: "🤝"
+      icon: Handshake
     },
     {
       title: "Integrity",
       description: "We operate with transparency and ethical practices in everything we do.",
-      icon: "⚖️"
+      icon: Scales
     }
   ];
 
@@ -127,19 +129,19 @@ export default function About() {
               <h3 className="text-xl font-bold text-[#13343B] mb-4">Why Choose Us?</h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
-                  <span className="text-[#1FB8CD] text-xl">✓</span>
+                  <Check className="text-[#1FB8CD] text-xl flex-shrink-0" size={20} />
                   <span className="text-[#5f6368]">CFA charterholder-created content</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#1FB8CD] text-xl">✓</span>
+                  <Check className="text-[#1FB8CD] text-xl flex-shrink-0" size={20} />
                   <span className="text-[#5f6368]">AI-powered adaptive learning</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#1FB8CD] text-xl">✓</span>
+                  <Check className="text-[#1FB8CD] text-xl flex-shrink-0" size={20} />
                   <span className="text-[#5f6368]">Comprehensive question bank</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#1FB8CD] text-xl">✓</span>
+                  <Check className="text-[#1FB8CD] text-xl flex-shrink-0" size={20} />
                   <span className="text-[#5f6368]">Detailed performance analytics</span>
                 </li>
               </ul>
@@ -161,7 +163,7 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="bg-white rounded-xl p-6 border border-[#EAEEEF] text-center">
-                <div className="text-4xl mb-4">{value.icon}</div>
+                <div className="mb-4 flex justify-center"><value.icon size={48} className="text-[#1FB8CD]" /></div>
                 <h3 className="text-lg font-bold text-[#13343B] mb-3">{value.title}</h3>
                 <p className="text-[#5f6368] text-sm">{value.description}</p>
               </div>
@@ -256,6 +258,8 @@ export default function About() {
           </div>
         </div>
       </footer>
+
+      <FloatingGetStartedButton />
     </div>
   );
 }

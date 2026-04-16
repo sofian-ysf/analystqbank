@@ -7,6 +7,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
+import { Icon } from "@phosphor-icons/react";
 
 export default function Practice() {
   const router = useRouter();
@@ -159,8 +160,8 @@ export default function Practice() {
                 <div className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center flex-1">
-                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white text-xl`}>
-                        {topic.icon}
+                      <div className={`w-12 h-12 ${topic.color} rounded-lg flex items-center justify-center text-white`}>
+                        {topic.icon && <topic.icon size={24} weight="fill" />}
                       </div>
                       <div className="ml-4 flex-1">
                         <div className="flex items-center space-x-3 flex-wrap gap-y-2">

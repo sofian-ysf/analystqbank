@@ -12,10 +12,8 @@ function SignUpForm() {
   const searchParams = useSearchParams();
   const planParam = searchParams.get('plan') as PlanType | null;
 
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
@@ -26,14 +24,33 @@ function SignUpForm() {
     : 'basic';
   const planDetails = PLAN_LIMITS[selectedPlan];
 
+  // Check if user is already logged in and redirect to Stripe
+  useEffect(() => {
+    const checkAuthAndRedirect = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user && selectedPlan) {
+        // User already logged in with a plan selected - redirect to Stripe
+        try {
+          const res = await fetch('/api/stripe/create-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plan: selectedPlan, userId: user.id, email: user.email }),
+          })
+          const { url } = await res.json()
+          if (url) {
+            window.location.href = url
+          }
+        } catch (err) {
+          console.error('Checkout redirect error:', err)
+        }
+      }
+    }
+    checkAuthAndRedirect()
+  }, [selectedPlan, supabase.auth])
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
 
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
@@ -47,7 +64,6 @@ function SignUpForm() {
       password,
       options: {
         data: {
-          full_name: fullName || email.split('@')[0],
           selected_plan: selectedPlan,
         }
       },
@@ -211,26 +227,6 @@ function SignUpForm() {
 
             <div>
               <label
-                htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Full Name
-              </label>
-              <input
-                id="fullName"
-                name="fullName"
-                type="text"
-                autoComplete="name"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
-                placeholder="John Doe"
-              />
-            </div>
-
-            <div>
-              <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
@@ -264,26 +260,6 @@ function SignUpForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                required
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
                 placeholder="••••••••"
               />

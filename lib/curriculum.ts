@@ -1,6 +1,8 @@
 // CFA Level 1 Curriculum Structure based on 2025/2026 Learning Objectives
 // Total: 180 questions across 10 main topics
 
+import { Icon, Scales, ChartBar, Globe, ClipboardText, Buildings, ChartLineUp, Bank, ArrowsClockwise, Hammer, Briefcase } from "@phosphor-icons/react";
+
 export interface Subtopic {
   id: string;
   name: string;
@@ -12,7 +14,7 @@ export interface Topic {
   name: string;
   examWeight: string;
   questionCount: number;
-  icon: string;
+  icon: Icon;
   color: string;
   description: string;
   subtopics: Subtopic[];
@@ -24,7 +26,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Ethical and Professional Standards",
     examWeight: "15-20%",
     questionCount: 320,
-    icon: "⚖️",
+    icon: Scales,
     color: "bg-yellow-500",
     description: "Ethics, professional standards, and GIPS",
     subtopics: [
@@ -40,7 +42,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Quantitative Methods",
     examWeight: "6-9%",
     questionCount: 140,
-    icon: "📊",
+    icon: ChartBar,
     color: "bg-blue-500",
     description: "Statistics, probability, and quantitative analysis",
     subtopics: [
@@ -62,7 +64,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Economics",
     examWeight: "6-9%",
     questionCount: 140,
-    icon: "🌍",
+    icon: Globe,
     color: "bg-green-500",
     description: "Micro and macroeconomics, international trade",
     subtopics: [
@@ -81,7 +83,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Financial Statement Analysis",
     examWeight: "11-14%",
     questionCount: 230,
-    icon: "📋",
+    icon: ClipboardText,
     color: "bg-purple-500",
     description: "Financial reporting, analysis, and interpretation",
     subtopics: [
@@ -104,7 +106,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Corporate Issuers",
     examWeight: "6-9%",
     questionCount: 140,
-    icon: "🏢",
+    icon: Buildings,
     color: "bg-gray-500",
     description: "Corporate governance, capital structure, investments",
     subtopics: [
@@ -122,7 +124,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Equity Investments",
     examWeight: "11-14%",
     questionCount: 230,
-    icon: "📈",
+    icon: ChartLineUp,
     color: "bg-red-500",
     description: "Equity securities, markets, and valuation",
     subtopics: [
@@ -141,7 +143,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Fixed Income",
     examWeight: "11-14%",
     questionCount: 230,
-    icon: "🏦",
+    icon: Bank,
     color: "bg-indigo-500",
     description: "Bonds, fixed-income securities, and credit analysis",
     subtopics: [
@@ -171,7 +173,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Derivatives",
     examWeight: "5-8%",
     questionCount: 108,
-    icon: "🔄",
+    icon: ArrowsClockwise,
     color: "bg-pink-500",
     description: "Forwards, futures, options, and swaps",
     subtopics: [
@@ -192,7 +194,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Alternative Investments",
     examWeight: "7-10%",
     questionCount: 162,
-    icon: "🏗️",
+    icon: Hammer,
     color: "bg-orange-500",
     description: "Private equity, real estate, hedge funds, commodities",
     subtopics: [
@@ -210,7 +212,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     name: "Portfolio Management",
     examWeight: "8-12%",
     questionCount: 180,
-    icon: "💼",
+    icon: Briefcase,
     color: "bg-teal-500",
     description: "Portfolio theory, CAPM, and risk management",
     subtopics: [

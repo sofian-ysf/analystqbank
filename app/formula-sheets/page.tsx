@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import FloatingGetStartedButton from "../components/FloatingGetStartedButton";
 
 export default function FormulaSheets() {
   const [selectedLevel, setSelectedLevel] = useState("Level I");
@@ -369,6 +370,8 @@ export default function FormulaSheets() {
           </div>
         </div>
       </footer>
+
+      <FloatingGetStartedButton />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Script from 'next/script'
 import { useState } from 'react'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'lifetime' | 'monthly'>('lifetime')
@@ -375,6 +376,8 @@ export default function Pricing() {
           </Link>
         </div>
       </section>
+
+        <FloatingGetStartedButton />
       </div>
     </>
   )

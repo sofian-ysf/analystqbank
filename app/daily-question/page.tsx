@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
+import { Check } from '@phosphor-icons/react'
 
 const sampleQuestion = {
   topic: 'Fixed Income',
@@ -151,7 +152,7 @@ export default function DailyQuestionPage() {
                       <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
                       {option}
                       {showAnswer && isCorrect && (
-                        <span className="float-right text-green-600">✓ Correct</span>
+                        <span className="float-right text-green-600"><Check size={16} weight="bold" /> Correct</span>
                       )}
                     </button>
                   )

@@ -94,8 +94,13 @@ export default function Navigation() {
             {/* Mobile Hamburger */}
             <button
               className={`pill-nav-hamburger ${isMobileMenuOpen ? 'open' : ''}`}
-              onClick={toggleMobileMenu}
+              onClick={(e) => {
+                e.stopPropagation()
+                toggleMobileMenu()
+              }}
               aria-label="Menu"
+              aria-expanded={isMobileMenuOpen}
+              type="button"
             >
               <span></span>
               <span></span>

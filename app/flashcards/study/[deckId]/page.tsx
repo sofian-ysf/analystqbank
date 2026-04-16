@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase'
 import { FlashcardWithProgress, ReviewRating, StudySession, SessionStats } from '@/lib/flashcards/types'
 import { FlashcardDisplay, ReviewButtons, QuestionBankUpsell } from '@/components/flashcards'
 import { cfaLevel1Curriculum } from '@/lib/curriculum'
+import { SmileyXEyes, Confetti, Icon } from '@phosphor-icons/react'
 
 interface DeckInfo {
   id: string
@@ -143,8 +144,8 @@ export default function StudyPage() {
             {deck && (
               <div className="flex items-center gap-2">
                 {topicMeta && (
-                  <span className={`w-6 h-6 ${topicMeta.color} rounded-md flex items-center justify-center text-white text-xs`}>
-                    {topicMeta.icon}
+                  <span className={`w-6 h-6 ${topicMeta.color} rounded-md flex items-center justify-center text-white`}>
+                    {topicMeta.icon && <topicMeta.icon size={14} weight="fill" />}
                   </span>
                 )}
                 <span className="text-sm font-medium text-gray-900 hidden sm:block">
@@ -179,7 +180,7 @@ export default function StudyPage() {
         {/* Error State */}
         {error && (
           <div className="text-center py-20">
-            <div className="text-5xl mb-4">😕</div>
+            <div className="mb-4 flex justify-center"><SmileyXEyes size={64} className="text-gray-400" /></div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Something went wrong</h2>
             <p className="text-gray-600 mb-4">{error}</p>
             <button
@@ -195,7 +196,7 @@ export default function StudyPage() {
         {!loading && !error && sessionComplete && (
           <div className="py-8">
             <div className="text-center mb-8">
-              <div className="text-6xl mb-4">🎉</div>
+              <div className="mb-4 flex justify-center"><Confetti size={64} className="text-[#1FB8CD]" /></div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h2>
               <p className="text-gray-600">
                 {totalReviewed > 0
