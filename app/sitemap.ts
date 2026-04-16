@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.analysttrainer.com'
 
-  // Static public pages (only include pages that exist and should be indexed)
+  // Static pages (same for all environments)
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
@@ -223,17 +223,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
 
-  // Blog posts
+  // Blog posts - only fetch if admin client is available
   let blogPages: MetadataRoute.Sitemap = []
   try {
-    const supabase = createAdminClient()
-    const { data: posts } = await supabase
-      .from('blog_posts')
-      .select('slug, updated_at, published_at')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-    if (posts) {
+    if (supabaseUrl && supabaseServiceKey) {
+      const supabase = createAdminClient()
+      const { data: posts } = await supabase
+        .from('blog_posts')
+        .select('slug, updated_at, published_at')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+
+      if (posts) {
+        blogPages = [
+          {
+            url: `${baseUrl}/blog`,
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.8,
+          },
+          ...posts.map((post) => ({
+            url: `${baseUrl}/blog/${post.slug}`,
+            lastModified: new Date(post.updated_at || post.published_at),
+            changeFrequency: 'weekly' as const,
+            priority: 0.7,
+          })),
+        ]
+      }
+    } else {
+      // Env vars not set during build - return just the blog index
       blogPages = [
         {
           url: `${baseUrl}/blog`,
@@ -241,12 +262,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           changeFrequency: 'daily',
           priority: 0.8,
         },
-        ...posts.map((post) => ({
-          url: `${baseUrl}/blog/${post.slug}`,
-          lastModified: new Date(post.updated_at || post.published_at),
-          changeFrequency: 'weekly' as const,
-          priority: 0.7,
-        })),
       ]
     }
   } catch (error) {

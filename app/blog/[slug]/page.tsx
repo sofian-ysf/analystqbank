@@ -17,6 +17,23 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
 
+  // Check if env vars are available
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    // During build, return fallback metadata
+    const fallbackTitle = slug
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+
+    return {
+      title: fallbackTitle,
+      description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+    }
+  }
+
   try {
     const supabase = createAdminClient()
 
