@@ -42,7 +42,22 @@ export default function Dashboard() {
   const [topicStats, setTopicStats] = useState<TopicStats>({});
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [examDate, setExamDate] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const supabase = createClient();
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    if (!isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    document.body.style.overflow = '';
+  };
 
   const fetchUserStats = useCallback(async (userId: string) => {
     try {
@@ -349,7 +364,11 @@ export default function Dashboard() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]" aria-label="Open menu">
+            <button
+              className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]"
+              onClick={toggleMobileMenu}
+              aria-label="Open menu"
+            >
               <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
@@ -357,6 +376,53 @@ export default function Dashboard() {
           </div>
         </nav>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={closeMobileMenu}
+      />
+
+      {/* Mobile Menu */}
+      <div className={`fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-xl transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <Link href="/dashboard" onClick={closeMobileMenu}>
+            <Image src="/logo.png" alt="AnalystTrainer" width={140} height={32} className="h-7 w-auto" />
+          </Link>
+          <button
+            onClick={closeMobileMenu}
+            className="p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]"
+            aria-label="Close menu"
+          >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="p-4 space-y-2">
+          <Link href="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#13343B] font-medium bg-[#F3F3EE]">
+            Dashboard
+          </Link>
+          <Link href="/flashcards" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B] flex items-center gap-2">
+            Flashcards
+            <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded">FREE</span>
+          </Link>
+          <Link href="/question-bank" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
+            Practice
+          </Link>
+          <Link href="/settings" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
+            Settings
+          </Link>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+          <button
+            onClick={handleSignOut}
+            className="w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 text-left"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
 
       {/* Welcome Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

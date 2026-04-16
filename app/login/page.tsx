@@ -39,8 +39,22 @@ function LoginForm() {
     }
 
     if (data?.user) {
-      console.log("Sign in successful, redirecting to dashboard");
-      router.push("/dashboard");
+      console.log("Sign in successful, checking subscription status");
+
+      // Check subscription status
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('subscription_plan, subscription_status')
+        .eq('id', data.user.id)
+        .single()
+
+      // If user has lifetime subscription, go to dashboard
+      if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
+        router.push("/dashboard");
+      } else {
+        // No subscription or not lifetime - go to pricing
+        router.push("/pricing");
+      }
       router.refresh();
     }
 
@@ -51,10 +65,11 @@ function LoginForm() {
     setError("");
     setLoading(true);
 
+    // Pass empty plan so callback redirects to pricing if user has no subscription
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?plan=`,
       },
     });
 
