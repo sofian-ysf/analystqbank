@@ -26,8 +26,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'Arial', 'Helvetica', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'monospace'],
+        sans: ['var(--font-host-grotesk)', 'system-ui', 'sans-serif'],
       },
     },
   },
