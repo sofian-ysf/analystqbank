@@ -1,7 +1,13 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '../components/Navigation'
-import { Check } from '@phosphor-icons/react'
+
+// Inline SVG checkmark - avoids Phosphor icons createContext issue in server components
+const CheckIcon = ({ size = 40, className = "" }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+)
 
 export const metadata: Metadata = {
   title: 'Try 15 Free CFA Questions (2026) - No Signup Required',
@@ -129,7 +135,7 @@ export default function FreeCFAQuestions() {
                 <p className="text-gray-600">Start practicing immediately with no signup, no credit card, and no time limit.</p>
               </div>
               <div className="bg-gradient-to-b from-[#1FB8CD]/5 to-white p-8 rounded-2xl border border-[#1FB8CD]/20">
-                <div className="text-[#1FB8CD] mb-2 flex justify-center"><Check size={40} weight="bold" /></div>
+                <div className="text-[#1FB8CD] mb-2 flex justify-center"><CheckIcon size={40} /></div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">Full Explanations</h3>
                 <p className="text-gray-600">Same quality as paid content - detailed explanations for every answer choice.</p>
               </div>
@@ -158,7 +164,7 @@ export default function FreeCFAQuestions() {
                   <span className="font-medium">B.</span> £550,000
                 </div>
                 <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
-                  <span className="font-medium">C.</span> £570,000 <Check size={16} weight="bold" className="text-green-600" />
+                  <span className="font-medium">C.</span> £570,000 <CheckIcon size={16} className="text-green-600" />
                 </div>
               </div>
               <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">

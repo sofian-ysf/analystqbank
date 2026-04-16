@@ -1,8 +1,14 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Navigation from '@/app/components/Navigation'
-import { Check } from '@phosphor-icons/react'
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
+
+// Inline SVG checkmark - avoids Phosphor icons createContext issue in server components
+const CheckIcon = ({ size = 16, className = "" }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+)
 
 export const metadata: Metadata = {
   title: 'AnalystTrainer vs AnalystPrep: CFA Prep Comparison 2026',
@@ -37,16 +43,16 @@ export default function ComparePage() {
               <h3 className="text-xl font-bold mb-4">AnalystTrainer</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> 2,500+ questions
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> 2,500+ questions
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> Unlimited mock exams
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> Unlimited mock exams
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> £75 lifetime access
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> £75 lifetime access
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check size={16} weight="bold" className="text-green-500 flex-shrink-0" /> 1,600+ free flashcards
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> 1,600+ free flashcards
                 </li>
               </ul>
             </div>

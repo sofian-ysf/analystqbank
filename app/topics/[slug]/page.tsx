@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { cfaLevel1Curriculum } from '@/lib/curriculum'
+import { cfaLevel1Curriculum } from '@/lib/curriculum-data'
 
 // Generate static params for all topics
 export async function generateStaticParams() {

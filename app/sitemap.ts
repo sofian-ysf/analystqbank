@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { cfaLevel1Curriculum } from '@/lib/curriculum'
+import { cfaLevel1Curriculum } from '@/lib/curriculum-data'
 import { createAdminClient } from '@/lib/supabase'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
