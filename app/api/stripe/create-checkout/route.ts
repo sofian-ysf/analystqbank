@@ -15,13 +15,13 @@ export async function GET(request: NextRequest) {
     const plan = request.nextUrl.searchParams.get('plan');
 
     if (!plan || !['basic', 'premium'].includes(plan)) {
-      return NextResponse.redirect(new URL('/dashboard?error=Invalid plan', request.url));
+      return NextResponse.redirect(new URL('/pricing?error=Invalid plan', request.url));
     }
 
     const priceId = plan === 'basic' ? STRIPE_PRICES.basic : STRIPE_PRICES.premium;
 
     if (!priceId) {
-      return NextResponse.redirect(new URL('/dashboard?error=Price not configured', request.url));
+      return NextResponse.redirect(new URL('/pricing?error=Price not configured', request.url));
     }
 
     // Check if user already has a Stripe customer ID
@@ -75,10 +75,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(session.url);
     }
 
-    return NextResponse.redirect(new URL('/dashboard?error=Failed to create checkout', request.url));
+    return NextResponse.redirect(new URL('/pricing?error=Failed to create checkout', request.url));
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return NextResponse.redirect(new URL('/dashboard?error=Checkout failed', request.url));
+    return NextResponse.redirect(new URL('/pricing?error=Checkout failed', request.url));
   }
 }
 
