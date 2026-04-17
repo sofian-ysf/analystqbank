@@ -88,7 +88,7 @@ export default function Navigation() {
               Login
             </Link>
             <Link href="/signup" className="pill-nav-cta">
-              Start Free Trial
+              Get Started
             </Link>
 
             {/* Mobile Hamburger */}
@@ -157,7 +157,7 @@ export default function Navigation() {
               Login
             </Link>
             <Link href="/signup" className="pill-mobile-cta-btn" onClick={closeMobileMenu}>
-              Start Free Trial
+              Get Started
             </Link>
           </div>
         </div>

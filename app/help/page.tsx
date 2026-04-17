@@ -14,10 +14,6 @@ export default function Help() {
       answer: "Click on 'Forgot Password' on the login page and follow the instructions sent to your email."
     },
     {
-      question: "How long does the free trial last?",
-      answer: "The free trial lasts 24 hours and gives you access to 1 mock exam and 100 practice questions. No credit card required."
-    },
-    {
       question: "How do I upgrade my subscription?",
       answer: "Go to Settings in your dashboard and click on 'Upgrade' under the Subscription section. You can also manage your billing from there."
     },

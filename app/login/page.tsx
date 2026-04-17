@@ -212,7 +212,7 @@ function LoginForm() {
           <div className="mt-6 text-center text-sm">
             <span className="text-[#5f6368]">Don&apos;t have an account?</span>{" "}
             <Link href="/signup" className="font-medium text-[#1FB8CD] hover:underline">
-              Sign up for free
+              Sign up
             </Link>
           </div>
         </div>

@@ -27,7 +27,7 @@ export default function CheckoutCancel() {
           </p>
 
           <p className="text-sm text-[#5f6368] mb-6">
-            You can still continue using your free trial or choose a plan whenever you&apos;re ready.
+            You can choose a plan whenever you&apos;re ready.
           </p>
 
           <div className="space-y-3">
@@ -39,10 +39,10 @@ export default function CheckoutCancel() {
             </Link>
 
             <Link
-              href="/dashboard"
+              href="/"
               className="block w-full border border-[#EAEEEF] text-[#13343B] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors"
             >
-              Continue with Free Trial
+              Return Home
             </Link>
           </div>
 

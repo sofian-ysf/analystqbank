@@ -4,8 +4,6 @@ import { PLAN_LIMITS, PlanType } from '@/lib/plans';
 export interface SubscriptionInfo {
   plan: PlanType;
   status: string;
-  trialEndsAt: Date | null;
-  isTrialExpired: boolean;
   canAccessMockExams: boolean;
   canAccessQuestions: boolean;
   mockExamsRemaining: number | null; // null = unlimited
@@ -19,7 +17,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
   // Get user profile with subscription info
   const { data: profile, error } = await supabase
     .from('user_profiles')
-    .select('subscription_plan, subscription_status, trial_ends_at')
+    .select('subscription_plan, subscription_status')
     .eq('id', userId)
     .single();
 
@@ -28,12 +26,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
   }
 
   const plan = (profile.subscription_plan || 'basic') as PlanType;
-  const status = profile.subscription_status || 'expired';
-  const trialEndsAt = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null;
-  const now = new Date();
-
-  // Check if subscription is expired
-  const isTrialExpired = status === 'expired';
+  const status = profile.subscription_status || 'none';
 
   // Get usage counts for the current period
   const { mockExamsUsed, questionsAnswered } = await getUsageCounts(userId, supabase);
@@ -52,19 +45,15 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
   // Check access - 'lifetime' status is for paid users
   const hasValidStatus = status === 'active' || status === 'lifetime';
 
-  const canAccessMockExams = !isTrialExpired &&
-    hasValidStatus &&
+  const canAccessMockExams = hasValidStatus &&
     (mockExamsRemaining === null || mockExamsRemaining > 0);
 
-  const canAccessQuestions = !isTrialExpired &&
-    hasValidStatus &&
+  const canAccessQuestions = hasValidStatus &&
     (questionsRemaining === null || questionsRemaining > 0);
 
   return {
     plan,
     status,
-    trialEndsAt,
-    isTrialExpired,
     canAccessMockExams,
     canAccessQuestions,
     mockExamsRemaining,
@@ -95,23 +84,6 @@ async function getUsageCounts(userId: string, supabase: ReturnType<typeof create
     mockExamsUsed: mockExamsUsed || 0,
     questionsAnswered: questionsAnswered || 0,
   };
-}
-
-export function formatTimeRemaining(trialEndsAt: Date): string {
-  const now = new Date();
-  const diff = trialEndsAt.getTime() - now.getTime();
-
-  if (diff <= 0) {
-    return 'Expired';
-  }
-
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-  if (hours > 0) {
-    return `${hours}h ${minutes}m remaining`;
-  }
-  return `${minutes}m remaining`;
 }
 
 export function getPlanUpgradeMessage(plan: PlanType | null, feature: 'mockExams' | 'questions'): string {

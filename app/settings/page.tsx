@@ -11,7 +11,6 @@ import { PLAN_LIMITS } from "@/lib/plans";
 interface SubscriptionData {
   subscription_plan: string;
   subscription_status: string;
-  trial_ends_at: string | null;
   stripe_customer_id: string | null;
   current_period_end: string | null;
   cancel_at: string | null;
@@ -58,8 +57,7 @@ export default function Settings() {
             setStudyGoal(profile.study_goal || 2);
             setSubscription({
               subscription_plan: profile.subscription_plan || 'free',
-              subscription_status: profile.subscription_status || 'trialing',
-              trial_ends_at: profile.trial_ends_at,
+              subscription_status: profile.subscription_status || 'none',
               stripe_customer_id: profile.stripe_customer_id,
               current_period_end: profile.current_period_end,
               cancel_at: profile.cancel_at,
@@ -136,36 +134,12 @@ export default function Settings() {
     return diffDays;
   };
 
-  const getTrialTimeRemaining = () => {
-    if (!subscription?.trial_ends_at) return null;
-    const now = new Date();
-    const trialEnd = new Date(subscription.trial_ends_at);
-    const diff = trialEnd.getTime() - now.getTime();
-
-    if (diff <= 0) return { expired: true, text: "Expired" };
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (hours > 24) {
-      const days = Math.floor(hours / 24);
-      return { expired: false, text: `${days} day${days > 1 ? 's' : ''} remaining` };
-    }
-    if (hours > 0) {
-      return { expired: false, text: `${hours}h ${minutes}m remaining` };
-    }
-    return { expired: false, text: `${minutes}m remaining` };
-  };
-
   const getPlanDisplayName = () => {
-    if (!subscription) return "Free";
+    if (!subscription) return "No Plan";
     const plan = subscription.subscription_plan;
-    if (plan === 'free' && subscription.subscription_status === 'trialing') {
-      return "Free Trial";
-    }
     if (plan === 'basic') return "Basic";
     if (plan === 'premium') return "Premium";
-    return "Free";
+    return "No Plan";
   };
 
   const handleManageBilling = async () => {
@@ -344,17 +318,6 @@ export default function Settings() {
                 <div>
                   <p className="text-sm text-gray-600">Current Plan</p>
                   <p className="text-2xl font-bold text-[#13343B]">{getPlanDisplayName()}</p>
-                  {subscription?.subscription_status === 'trialing' && (
-                    <div className="mt-1">
-                      {(() => {
-                        const trialInfo = getTrialTimeRemaining();
-                        if (trialInfo?.expired) {
-                          return <span className="text-sm text-red-600 font-medium">Trial expired</span>;
-                        }
-                        return <span className="text-sm text-[#1FB8CD] font-medium">{trialInfo?.text}</span>;
-                      })()}
-                    </div>
-                  )}
                   {subscription?.subscription_status === 'lifetime' && (
                     <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       Lifetime Access
@@ -407,7 +370,7 @@ export default function Settings() {
             </div>
 
             {/* Upgrade Options */}
-            {(!subscription || subscription?.subscription_plan === 'free' || subscription?.subscription_status === 'trialing') && (
+            {(!subscription || subscription?.subscription_plan === 'free' || subscription?.subscription_status !== 'lifetime') && (
               <div className="space-y-3 mb-6">
                 <p className="text-sm font-medium text-gray-700">Get lifetime access:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -471,12 +434,11 @@ export default function Settings() {
               </div>
             )}
 
-            {/* Trial info - no payment method yet */}
-            {(!subscription?.stripe_customer_id && (subscription?.subscription_status === 'trialing' || subscription?.subscription_plan === 'free')) && (
+            {/* Info for users without a plan */}
+            {(!subscription?.stripe_customer_id && subscription?.subscription_status !== 'lifetime') && (
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-600">
-                  You&apos;re currently on a free trial. No payment method on file.
-                  Your trial will expire automatically - no action needed to cancel.
+                  Choose a plan above to get started with full access.
                 </p>
               </div>
             )}

@@ -72,17 +72,10 @@ function AuthConfirmContent() {
     ) => {
       setStatus("Setting up your account...");
 
-      // Calculate trial end time (24 hours from now)
-      const trialEndsAt = new Date();
-      trialEndsAt.setHours(trialEndsAt.getHours() + 24);
-
-      // Update user profile with trial info
+      // Update user profile
       const { error: updateError } = await supabase
         .from("user_profiles")
         .update({
-          subscription_plan: "free",
-          subscription_status: "trialing",
-          trial_ends_at: trialEndsAt.toISOString(),
           full_name: fullName || email?.split("@")[0],
         })
         .eq("id", userId);
@@ -96,8 +89,8 @@ function AuthConfirmContent() {
         setStatus("Redirecting to checkout...");
         router.push(`/api/stripe/create-checkout?plan=${plan}`);
       } else {
-        setStatus("Redirecting to dashboard...");
-        router.push("/dashboard");
+        setStatus("Redirecting to pricing...");
+        router.push("/pricing");
       }
     };
 
