@@ -6,7 +6,7 @@ import type { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
-  const next = requestUrl.searchParams.get('next') ?? '/pricing'
+  const next = requestUrl.searchParams.get('next') ?? '/signup?plan=6month'
   const plan = requestUrl.searchParams.get('plan')
   const error = requestUrl.searchParams.get('error')
   const errorDescription = requestUrl.searchParams.get('error_description')
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
           body: JSON.stringify({
             email: user.email,
             type: 'new_user',
-            plan: plan || 'basic',
+            plan: plan || '6month',
           }),
         })
       } catch (notifyError) {
@@ -94,17 +94,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
       }
 
-      // Otherwise, use the 'next' parameter or fallback to /pricing
+      // Otherwise, use the 'next' parameter or fallback to /signup
       let redirectUrl = next
       // Validate next is safe (relative path starting with /)
       if (!redirectUrl.startsWith('/') || redirectUrl.includes('://')) {
-        redirectUrl = '/pricing'
+        redirectUrl = '/signup?plan=6month'
       }
 
       return NextResponse.redirect(new URL(redirectUrl, requestUrl.origin))
     }
 
-    return NextResponse.redirect(new URL('/pricing', requestUrl.origin))
+    return NextResponse.redirect(new URL('/signup?plan=6month', requestUrl.origin))
   }
 
   // No code provided, redirect to login

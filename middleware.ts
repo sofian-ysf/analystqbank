@@ -105,11 +105,11 @@ export async function middleware(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    // If user has lifetime subscription, go to dashboard; otherwise go to pricing
+    // If user has lifetime subscription, go to dashboard; otherwise go to signup with plan
     if (profile?.subscription_status === 'lifetime') {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
-    return NextResponse.redirect(new URL('/pricing', request.url))
+    return NextResponse.redirect(new URL('/signup?plan=6month', request.url))
   }
 
   return response

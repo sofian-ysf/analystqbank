@@ -39,13 +39,14 @@ export async function GET(request: NextRequest) {
     const plan = request.nextUrl.searchParams.get('plan');
 
     if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
-      return NextResponse.redirect(new URL('/pricing?error=Invalid plan', request.url));
+      return NextResponse.redirect(new URL('/signup?plan=6month&error=Invalid plan', request.url));
     }
 
     const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
-      return NextResponse.redirect(new URL('/pricing?error=Price not configured', request.url));
+      console.error('Missing price ID for plan:', plan, 'Available:', STRIPE_PRICES);
+      return NextResponse.redirect(new URL('/signup?plan=6month&error=Price not configured', request.url));
     }
 
     // Check if user already has a Stripe customer ID
@@ -99,10 +100,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(session.url);
     }
 
-    return NextResponse.redirect(new URL('/pricing?error=Failed to create checkout', request.url));
+    return NextResponse.redirect(new URL('/signup?plan=6month&error=Failed to create checkout', request.url));
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return NextResponse.redirect(new URL('/pricing?error=Checkout failed', request.url));
+    return NextResponse.redirect(new URL('/signup?plan=6month&error=Checkout failed', request.url));
   }
 }
 
@@ -129,6 +130,7 @@ export async function POST(request: NextRequest) {
     const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
+      console.error('Missing price ID for plan:', plan, 'Available:', STRIPE_PRICES);
       return NextResponse.json(
         { error: 'Price not configured. Please contact support.' },
         { status: 500 }
