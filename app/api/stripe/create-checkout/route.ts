@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
 
     const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
-    console.log('Price ID for', plan, ':', priceId ? 'SET' : 'UNSET');
+    console.log('Price ID for', plan, ':', priceId);
 
     if (!priceId) {
       console.error('Missing price ID for plan:', plan, 'Available:', {
@@ -172,10 +172,13 @@ export async function POST(request: NextRequest) {
       .eq('id', userId)
       .single();
 
+    console.log('Profile stripe_customer_id:', profile?.stripe_customer_id);
+
     let customerId = profile?.stripe_customer_id;
 
     // Create Stripe customer if not exists
     if (!customerId) {
+      console.log('Creating new Stripe customer for:', email);
       const customer = await stripe.customers.create({
         email: email,
         metadata: {
@@ -183,15 +186,19 @@ export async function POST(request: NextRequest) {
         },
       });
       customerId = customer.id;
+      console.log('New Stripe customer created:', customerId);
 
       // Save customer ID to profile
       await supabase
         .from('user_profiles')
         .update({ stripe_customer_id: customerId })
         .eq('id', userId);
+      console.log('Customer ID saved to profile');
     }
 
     const origin = request.headers.get('origin') || request.nextUrl.origin;
+
+    console.log('Creating checkout session for customer:', customerId, 'with price:', priceId);
 
     // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
@@ -212,11 +219,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({ url: session.url });
+    console.log('Checkout session created:', session.id, 'url:', session.url);
   } catch (error) {
     console.error('Stripe checkout error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error type:', error?.constructor?.name);
+    console.error('Stripe error details:', (error as any).stripeError);
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: 'Failed to create checkout session', details: errorMessage },
       { status: 500 }
     );
   }
