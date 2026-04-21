@@ -27,7 +27,6 @@ export default function Pricing() {
         "price": "25",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
-        "url": "https://www.analysttrainer.com/pricing",
         "priceValidUntil": "2026-12-31"
       },
       {
@@ -36,7 +35,6 @@ export default function Pricing() {
         "price": "40",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
-        "url": "https://www.analysttrainer.com/pricing",
         "priceValidUntil": "2026-12-31"
       },
       {
@@ -45,7 +43,6 @@ export default function Pricing() {
         "price": "60",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
-        "url": "https://www.analysttrainer.com/pricing",
         "priceValidUntil": "2026-12-31"
       }
     ],
@@ -403,7 +400,7 @@ export default function Pricing() {
             Join thousands of successful candidates. Choose your plan and start preparing today.
           </p>
           <Link
-            href="/signup?plan=basic"
+            href="/signup?plan=6month"
             className="inline-block bg-[#1FB8CD] text-white px-8 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
           >
             Get Started
