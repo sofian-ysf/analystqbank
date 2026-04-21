@@ -137,8 +137,8 @@ export default function Settings() {
   const getPlanDisplayName = () => {
     if (!subscription) return "No Plan";
     const plan = subscription.subscription_plan;
-    if (plan === 'month_2') return "2 Month";
-    if (plan === 'month_6') return "6 Month";
+    if (plan === '2month') return "2 Month";
+    if (plan === '6month') return "6 Month";
     if (plan === 'lifetime') return "Lifetime";
     return "No Plan";
   };
@@ -336,10 +336,10 @@ export default function Settings() {
                   )}
                 </div>
                 <div className="text-right">
-                  {subscription?.subscription_plan === 'month_2' && (
+                  {subscription?.subscription_plan === '2month' && (
                     <p className="text-xl font-bold text-gray-900">£25<span className="text-sm font-normal text-gray-500 block">2 Month</span></p>
                   )}
-                  {subscription?.subscription_plan === 'month_6' && (
+                  {subscription?.subscription_plan === '6month' && (
                     <p className="text-xl font-bold text-gray-900">£40<span className="text-sm font-normal text-gray-500 block">6 Month</span></p>
                   )}
                   {subscription?.subscription_plan === 'lifetime' && (
@@ -357,8 +357,8 @@ export default function Settings() {
               <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
               <ul className="space-y-1">
                 {(() => {
-                  const planKey = subscription?.subscription_plan as keyof typeof PLAN_LIMITS || 'month_2';
-                  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS.month_2;
+                  const planKey = subscription?.subscription_plan as keyof typeof PLAN_LIMITS || '2month';
+                  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS['2month'];
                   return limits.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

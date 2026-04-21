@@ -7,8 +7,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 // Price IDs - to be set after creating products in Stripe Dashboard
 export const STRIPE_PRICES = {
-  month_2: process.env.STRIPE_2MONTH_PRICE_ID!,
-  month_6: process.env.STRIPE_6MONTH_PRICE_ID!,
+  '2month': process.env.STRIPE_2MONTH_PRICE_ID!,
+  '6month': process.env.STRIPE_6MONTH_PRICE_ID!,
   lifetime: process.env.STRIPE_LIFETIME_PRICE_ID!,
 };
 

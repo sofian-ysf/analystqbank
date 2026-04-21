@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL('/pricing?error=Invalid plan', request.url));
     }
 
-    const priceId = plan === '2month' ? STRIPE_PRICES.month_2 : plan === '6month' ? STRIPE_PRICES.month_6 : STRIPE_PRICES.lifetime;
+    const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
       return NextResponse.redirect(new URL('/pricing?error=Price not configured', request.url));
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const priceId = plan === '2month' ? STRIPE_PRICES.month_2 : plan === '6month' ? STRIPE_PRICES.month_6 : STRIPE_PRICES.lifetime;
+    const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
       return NextResponse.json(
