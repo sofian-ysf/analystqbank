@@ -85,8 +85,10 @@ export async function GET(request: NextRequest) {
         console.error('Discord notification failed:', notifyError)
       }
 
+      console.log('Profile after callback login:', JSON.stringify(profile));
+
       // If user has a valid paid subscription with lifetime status, go to dashboard
-      if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
+      if (profile?.subscription_status === 'lifetime') {
         console.log('User has lifetime subscription, redirecting to dashboard');
         return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
       }
