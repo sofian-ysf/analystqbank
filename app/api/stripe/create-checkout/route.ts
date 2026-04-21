@@ -6,12 +6,16 @@ import { createClient } from '@/lib/supabase';
 
 // Handle GET request (redirect from auth callback)
 export async function GET(request: NextRequest) {
-  console.log('GET /api/stripe/create-checkout called');
+  console.log('=== GET /api/stripe/create-checkout START ===');
   console.log('URL:', request.url);
+  console.log('Method:', request.method);
   console.log('User agent:', request.headers.get('user-agent'));
+  console.log('Cookies:', request.cookies.getAll());
 
   try {
     const cookieStore = await cookies();
+
+    console.log('Creating Supabase server client...');
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -34,6 +38,7 @@ export async function GET(request: NextRequest) {
       }
     );
 
+    console.log('Getting user from session...');
     const { data: { user } } = await supabase.auth.getUser();
 
     console.log('User from session:', user ? user.id : 'NONE');
