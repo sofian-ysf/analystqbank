@@ -45,9 +45,15 @@ export async function GET(request: NextRequest) {
     const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
-      console.error('Missing price ID for plan:', plan, 'Available:', STRIPE_PRICES);
+      console.error('Missing price ID for plan:', plan, 'Available:', {
+        '2month': STRIPE_PRICES['2month'] ? 'SET' : 'UNSET',
+        '6month': STRIPE_PRICES['6month'] ? 'SET' : 'UNSET',
+        lifetime: STRIPE_PRICES.lifetime ? 'SET' : 'UNSET',
+      });
       return NextResponse.redirect(new URL('/signup?plan=6month&error=Price not configured', request.url));
     }
+
+    console.log('Creating checkout for plan:', plan, 'priceId:', priceId);
 
     // Check if user already has a Stripe customer ID
     const { data: profile } = await supabase
@@ -77,6 +83,8 @@ export async function GET(request: NextRequest) {
 
     const origin = request.headers.get('origin') || request.nextUrl.origin;
 
+    console.log('Creating checkout for plan:', plan, 'priceId:', priceId);
+
     // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -96,6 +104,8 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    console.log('Checkout session created:', session.id);
+
     if (session.url) {
       return NextResponse.redirect(session.url);
     }
@@ -111,6 +121,8 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { plan, userId, email } = await request.json();
+
+    console.log('POST /api/stripe/create-checkout - plan:', plan, 'userId:', userId, 'email:', email);
 
     // Validate inputs
     if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
@@ -129,8 +141,14 @@ export async function POST(request: NextRequest) {
 
     const priceId = plan === '2month' ? STRIPE_PRICES['2month'] : plan === '6month' ? STRIPE_PRICES['6month'] : STRIPE_PRICES.lifetime;
 
+    console.log('Price ID for', plan, ':', priceId ? 'SET' : 'UNSET');
+
     if (!priceId) {
-      console.error('Missing price ID for plan:', plan, 'Available:', STRIPE_PRICES);
+      console.error('Missing price ID for plan:', plan, 'Available:', {
+        '2month': STRIPE_PRICES['2month'] ? 'SET' : 'UNSET',
+        '6month': STRIPE_PRICES['6month'] ? 'SET' : 'UNSET',
+        lifetime: STRIPE_PRICES.lifetime ? 'SET' : 'UNSET',
+      });
       return NextResponse.json(
         { error: 'Price not configured. Please contact support.' },
         { status: 500 }
