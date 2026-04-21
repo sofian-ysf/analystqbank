@@ -161,7 +161,7 @@ function PracticeSessionContent() {
 
       // Get the user's plan from subscription context
       // Default to basic limits if not available
-      const userPlan = plan || 'basic';
+      const userPlan = plan || '2month';
       const planLimits = QUESTION_LIMITS_BY_TOPIC[userPlan];
 
       // Fetch from each category separately to ensure coverage
