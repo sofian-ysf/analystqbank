@@ -225,8 +225,8 @@ export default function Pricing() {
 
       {/* Pricing Cards */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-2">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid gap-6 lg:grid-cols-3 items-stretch">
             {plans.lifetime.map((plan) => (
               <div
                 key={plan.name}
