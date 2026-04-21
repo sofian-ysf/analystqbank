@@ -186,7 +186,7 @@ export default function Home() {
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
                   <Link
-                    href="/signup?plan=basic"
+                    href="/signup?plan=6month"
                     className="pill-btn pill-btn-primary pill-btn-lg"
                   >
                     Get Started
@@ -664,73 +664,16 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              {/* Basic - Popular */}
-              <div className="pill-card relative ring-2 ring-green-500">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  Most Popular
-                </div>
-                <div className="text-center pb-6 border-b border-gray-100">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Basic</h3>
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">£50</span>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Lifetime access</p>
-                  <p className="mt-1 text-xs text-green-600 font-medium">Less than £0.50/day over 3 months</p>
-                </div>
-
-                <div className="py-6 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">2,000 practice questions</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">5 mock exams</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">Performance analytics</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <span className="text-gray-700 text-sm">Lifetime access</span>
-                  </div>
-                </div>
-
-                <Link
-                  href="/signup?plan=basic"
-                  className="block w-full text-center pill-btn pill-btn-primary"
-                >
-                  Get Started
-                </Link>
-              </div>
-
-              {/* Premium */}
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* 2 Month */}
               <div className="pill-card">
                 <div className="text-center pb-6 border-b border-gray-100">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Premium</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">2 Month</h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">£75</span>
+                    <span className="text-4xl font-light text-gray-900">£25</span>
                   </div>
-                  <p className="mt-1 text-sm text-gray-500">Lifetime access</p>
-                  <p className="mt-1 text-xs text-green-600 font-medium">Less than £0.83/day over 3 months</p>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">£0.42/day</p>
                 </div>
 
                 <div className="py-6 space-y-3">
@@ -740,7 +683,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">Full question bank access</span>
+                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -756,7 +699,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">Advanced analytics</span>
+                    <span className="text-gray-700 text-sm">Detailed explanations</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -764,12 +707,123 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">Direct CFA analyst support</span>
+                    <span className="text-gray-700 text-sm">Performance analytics</span>
                   </div>
                 </div>
 
                 <Link
-                  href="/signup?plan=premium"
+                  href="/signup?plan=2month"
+                  className="block w-full text-center pill-btn pill-btn-secondary"
+                >
+                  Get Started
+                </Link>
+              </div>
+
+              {/* 6 Month - Most Popular */}
+              <div className="pill-card relative ring-2 ring-green-500">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  Most Popular
+                </div>
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">6 Month</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-light text-gray-900">£40</span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">£0.22/day</p>
+                </div>
+
+                <div className="py-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Unlimited mock exams</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Detailed explanations</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Performance analytics</span>
+                  </div>
+                </div>
+
+                <Link
+                  href="/signup?plan=6month"
+                  className="block w-full text-center pill-btn pill-btn-primary"
+                >
+                  Get Started
+                </Link>
+              </div>
+
+              {/* Lifetime */}
+              <div className="pill-card">
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Lifetime</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-light text-gray-900">£60</span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">Best value</p>
+                </div>
+
+                <div className="py-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Unlimited mock exams</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Detailed explanations</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-sm">Priority email support</span>
+                  </div>
+                </div>
+
+                <Link
+                  href="/signup?plan=lifetime"
                   className="block w-full text-center pill-btn pill-btn-secondary"
                 >
                   Get Started
