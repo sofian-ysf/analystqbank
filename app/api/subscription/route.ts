@@ -3,10 +3,13 @@ import { createClient } from '@/app/lib/supabase/server';
 import { PLAN_LIMITS, PlanType } from '@/lib/plans';
 
 export async function GET() {
+  console.log('=== GET /api/subscription START ===');
   try {
     const supabase = await createClient();
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    console.log('User:', user?.id || 'NONE');
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -19,28 +22,19 @@ export async function GET() {
       .eq('id', user.id)
       .single();
 
-    if (error || !profile) {
-      // Return no subscription state if no profile exists
-      return NextResponse.json({
-        plan: null,
-        status: 'no_subscription',
-        canAccessMockExams: false,
-        canAccessQuestions: false,
-        mockExamsUsed: 0,
-        questionsAnswered: 0,
-        mockExamsRemaining: 0,
-        questionsRemaining: 0,
-        limits: null,
-        needsUpgrade: true,
-      });
-    }
+    console.log('Profile:', JSON.stringify(profile));
+    console.log('Profile subscription_plan:', profile?.subscription_plan);
+    console.log('Profile subscription_status:', profile?.subscription_status);
 
     // Get subscription plan - must be a valid paid plan
-    const plan = profile.subscription_plan as PlanType | null;
-    const status = profile.subscription_status;
+    const plan = profile?.subscription_plan as PlanType | null;
+    const status = profile?.subscription_status;
+
+    console.log('Parsed plan:', plan, 'Parsed status:', status);
 
     // Users without a valid paid plan should be blocked
     if (!plan || (plan !== '2month' && plan !== '6month' && plan !== 'lifetime')) {
+      console.log('No valid plan - returning no_subscription');
       return NextResponse.json({
         plan: null,
         status: 'no_subscription',
@@ -67,6 +61,8 @@ export async function GET() {
 
     const limits = PLAN_LIMITS[plan];
 
+    console.log('Plan:', plan, 'Status:', status, 'Limits:', JSON.stringify(limits));
+
     // Calculate remaining
     const mockExamsRemaining = limits.mockExams === Infinity
       ? null
@@ -82,12 +78,16 @@ export async function GET() {
     const hasValidStatus = status === 'active' || status === 'lifetime';
     const isExpired = status === 'expired';
 
+    console.log('hasValidStatus:', hasValidStatus, 'isExpired:', isExpired);
+
     const canAccessMockExams = !isExpired &&
       hasValidStatus &&
       (mockExamsRemaining === null || mockExamsRemaining > 0);
 
     // Questions are always accessible for valid paid subscriptions
     const canAccessQuestions = !isExpired && hasValidStatus;
+
+    console.log('canAccessMockExams:', canAccessMockExams, 'canAccessQuestions:', canAccessQuestions);
 
     // Determine if user needs to upgrade
     const needsUpgrade = isExpired || !canAccessQuestions || !canAccessMockExams;
