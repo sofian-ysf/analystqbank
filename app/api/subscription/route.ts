@@ -26,11 +26,31 @@ export async function GET() {
     console.log('Profile subscription_plan:', profile?.subscription_plan);
     console.log('Profile subscription_status:', profile?.subscription_status);
 
-    // Get subscription plan - must be a valid paid plan
+    // Get subscription plan and status
     const plan = profile?.subscription_plan as PlanType | null;
     const status = profile?.subscription_status;
 
     console.log('Parsed plan:', plan, 'Parsed status:', status);
+
+    // Check if user has lifetime status - they should have full access
+    if (status === 'lifetime') {
+      console.log('User has lifetime status - granting full access');
+
+      const limits = PLAN_LIMITS[plan || 'lifetime'];
+
+      return NextResponse.json({
+        plan: plan || 'lifetime',
+        status: 'lifetime',
+        canAccessMockExams: true,
+        canAccessQuestions: true,
+        mockExamsUsed: 0,
+        questionsAnswered: 0,
+        mockExamsRemaining: null,
+        questionsRemaining: null,
+        limits,
+        needsUpgrade: false,
+      });
+    }
 
     // Users without a valid paid plan should be blocked
     if (!plan || (plan !== '2month' && plan !== '6month' && plan !== 'lifetime')) {
