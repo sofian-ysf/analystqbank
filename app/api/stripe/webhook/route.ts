@@ -6,6 +6,7 @@ import Stripe from 'stripe';
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: NextRequest) {
+  console.log('=== Stripe Webhook START ===');
   try {
     const body = await request.text();
     const signature = request.headers.get('stripe-signature');
@@ -29,6 +30,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log('Webhook event type:', event.type);
+
     const supabase = createAdminClient();
 
     switch (event.type) {
@@ -37,21 +40,35 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.supabase_user_id;
         const plan = session.metadata?.plan;
 
+        console.log('Checkout completed - userId:', userId, 'plan:', plan);
+        console.log('Session customer:', session.customer);
+        console.log('Session payment_status:', session.payment_status);
+
         if (userId && plan) {
-          // For one-time payments, activate lifetime access immediately
-          await supabase
+          console.log('Updating user profile for user:', userId);
+          console.log('Setting subscription_plan:', plan, 'subscription_status: lifetime');
+
+          const { data, error } = await supabase
             .from('user_profiles')
             .update({
               subscription_plan: plan,
               subscription_status: 'lifetime',
               stripe_customer_id: session.customer as string,
-              // Clear any subscription-related fields
               current_period_end: null,
               cancel_at: null,
             })
-            .eq('id', userId);
+            .eq('id', userId)
+            .select();
+
+          if (error) {
+            console.error('Error updating user profile:', error);
+          } else {
+            console.log('User profile updated successfully:', JSON.stringify(data));
+          }
 
           console.log(`Lifetime access activated for user ${userId}: ${plan}`);
+        } else {
+          console.log('Missing userId or plan in session metadata!');
         }
         break;
       }
