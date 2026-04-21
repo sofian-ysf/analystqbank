@@ -49,40 +49,36 @@ export async function POST(request: NextRequest) {
 
         if (userId && plan) {
           console.log('Updating user profile for user:', userId);
-          console.log('Setting subscription_plan:', plan, 'subscription_status: lifetime');
 
-          const { data: existingProfile } = await supabase
-            .from('user_profiles')
-            .select('id, subscription_plan, subscription_status')
-            .eq('id', userId)
-            .single();
-
-          console.log('Existing profile check:', existingProfile ? JSON.stringify(existingProfile) : 'NOT FOUND');
-
-          // Always update the profile - set subscription fields
-          console.log('Updating profile with:', {
+          // Build the update object explicitly
+          const updateData = {
             subscription_plan: plan,
             subscription_status: 'lifetime',
-            stripe_customer_id: session.customer
-          });
+            stripe_customer_id: session.customer as string,
+            current_period_end: null,
+            cancel_at: null,
+          };
+
+          console.log('Update data:', JSON.stringify(updateData));
 
           const { data, error } = await supabase
             .from('user_profiles')
-            .update({
-              subscription_plan: plan,
-              subscription_status: 'lifetime',
-              stripe_customer_id: session.customer as string,
-              current_period_end: null,
-              cancel_at: null,
-            })
+            .update(updateData)
             .eq('id', userId)
             .select();
 
           if (error) {
-            console.error('Error updating user profile:', error);
+            console.error('Error updating user profile:', error.message);
+            console.error('Error code:', error.code);
             console.error('Error details:', JSON.stringify(error));
+          } else if (data && data.length > 0) {
+            console.log('=== PROFILE UPDATE SUCCESS ===');
+            console.log('Updated profile:', JSON.stringify(data[0]));
+            console.log('subscription_plan:', data[0].subscription_plan);
+            console.log('subscription_status:', data[0].subscription_status);
+            console.log('stripe_customer_id:', data[0].stripe_customer_id);
           } else {
-            console.log('User profile updated successfully:', JSON.stringify(data));
+            console.error('No data returned from update - profile may not exist');
           }
 
           console.log(`Lifetime access activated for user ${userId}: ${plan}`);
