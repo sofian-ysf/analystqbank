@@ -30,7 +30,7 @@ export function UpgradePrompt({
     getUser();
   }, [supabase]);
 
-  const handleUpgrade = async (selectedPlan: 'basic' | 'premium') => {
+  const handleUpgrade = async (selectedPlan: PlanType) => {
     if (!user) return;
 
     setIsUpgrading(true);
@@ -80,14 +80,14 @@ export function UpgradePrompt({
     if (!plan) {
       return 'A paid subscription is required to access this content. Choose a plan below to start your CFA exam preparation with access to practice questions and mock exams.';
     }
-    if (plan === 'basic') {
+    if (plan !== 'lifetime') {
       if (feature === 'questions') {
-        return `You've used all ${PLAN_LIMITS.basic.questions.toLocaleString()} practice questions. Upgrade to Premium for unlimited access to the full question bank.`;
+        return "You've used all your practice questions. Upgrade to Lifetime for unlimited access to the full question bank.";
       }
       if (feature === 'mockExams') {
-        return `You've completed all ${PLAN_LIMITS.basic.mockExams} mock exams. Upgrade to Premium for unlimited mock exams.`;
+        return "You've completed all your mock exams. Upgrade to Lifetime for unlimited mock exams.";
       }
-      return 'Upgrade to Premium for unlimited access to all features.';
+      return 'Upgrade to Lifetime for unlimited access to all features.';
     }
     return 'Contact support if you believe this is an error.';
   };
@@ -113,63 +113,83 @@ export function UpgradePrompt({
         </p>
 
         {/* Plan comparison */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* Basic Plan */}
-          {plan !== 'basic' && plan !== 'premium' && (
-            <button
-              onClick={() => handleUpgrade('basic')}
-              disabled={isUpgrading}
-              className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:border-gray-900 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <h3 className="font-semibold text-gray-900 mb-2">Basic</h3>
-              <p className="text-3xl font-bold text-gray-900 mb-1">£{PLAN_LIMITS.basic.price}</p>
-              <p className="text-xs text-gray-500 mb-3">One-time payment</p>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  {PLAN_LIMITS.basic.questions.toLocaleString()} questions
-                </li>
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  {PLAN_LIMITS.basic.mockExams} mock exams
-                </li>
-                <li className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Lifetime access
-                </li>
-              </ul>
-              <div className="mt-4 text-center text-sm font-medium text-gray-900">
-                {isUpgrading ? 'Processing...' : 'Select Basic →'}
-              </div>
-            </button>
-          )}
-
-          {/* Premium Plan */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {/* 2 Month Plan */}
           <button
-            onClick={() => handleUpgrade('premium')}
+            onClick={() => handleUpgrade('2month')}
             disabled={isUpgrading}
-            className={`bg-[#1FB8CD]/5 rounded-xl p-5 border-2 border-[#1FB8CD] hover:bg-[#1FB8CD]/10 transition-all text-left relative disabled:opacity-50 disabled:cursor-not-allowed ${plan === 'basic' ? 'col-span-2' : ''}`}
+            className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:border-gray-900 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <h3 className="font-semibold text-gray-900 mb-2">2 Month</h3>
+            <p className="text-2xl font-bold text-gray-900 mb-1">£25</p>
+            <p className="text-xs text-gray-500 mb-3">One-time payment</p>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                2,000+ questions
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Unlimited mock exams
+              </li>
+            </ul>
+            <div className="mt-4 text-center text-sm font-medium text-gray-900">
+              {isUpgrading ? 'Processing...' : 'Select →'}
+            </div>
+          </button>
+
+          {/* 6 Month Plan */}
+          <button
+            onClick={() => handleUpgrade('6month')}
+            disabled={isUpgrading}
+            className="bg-white rounded-xl p-5 border-2 border-gray-200 hover:border-gray-900 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <h3 className="font-semibold text-gray-900 mb-2">6 Month</h3>
+            <p className="text-2xl font-bold text-gray-900 mb-1">£40</p>
+            <p className="text-xs text-gray-500 mb-3">One-time payment</p>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                2,000+ questions
+              </li>
+              <li className="flex items-center gap-2">
+                <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Unlimited mock exams
+              </li>
+            </ul>
+            <div className="mt-4 text-center text-sm font-medium text-gray-900">
+              {isUpgrading ? 'Processing...' : 'Select →'}
+            </div>
+          </button>
+
+          {/* Lifetime Plan */}
+          <button
+            onClick={() => handleUpgrade('lifetime')}
+            disabled={isUpgrading}
+            className="bg-[#1FB8CD]/5 rounded-xl p-5 border-2 border-[#1FB8CD] hover:bg-[#1FB8CD]/10 transition-all text-left relative disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <span className="bg-[#1FB8CD] text-white text-xs font-bold px-3 py-1 rounded-full">
-                RECOMMENDED
+                BEST VALUE
               </span>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Premium</h3>
-            <p className="text-3xl font-bold text-[#1FB8CD] mb-1">£{PLAN_LIMITS.premium.price}</p>
+            <h3 className="font-semibold text-gray-900 mb-2">Lifetime</h3>
+            <p className="text-2xl font-bold text-[#1FB8CD] mb-1">£60</p>
             <p className="text-xs text-gray-500 mb-3">One-time payment</p>
             <ul className="text-sm text-gray-700 space-y-1">
               <li className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="font-semibold">Unlimited questions</span>
+                <span className="font-semibold">2,000+ questions</span>
               </li>
               <li className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +205,7 @@ export function UpgradePrompt({
               </li>
             </ul>
             <div className="mt-4 text-center text-sm font-semibold text-[#1FB8CD]">
-              {isUpgrading ? 'Processing...' : 'Select Premium →'}
+              {isUpgrading ? 'Processing...' : 'Select →'}
             </div>
           </button>
         </div>

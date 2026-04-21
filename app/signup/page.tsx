@@ -18,10 +18,10 @@ function SignUpForm() {
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
 
-  // Get plan details - default to Basic plan
-  const selectedPlan = planParam && ['basic', 'premium'].includes(planParam)
+  // Get plan details - default to 6month plan (most popular)
+  const selectedPlan = planParam && ['2month', '6month', 'lifetime'].includes(planParam)
     ? planParam
-    : 'basic';
+    : '6month';
   const planDetails = PLAN_LIMITS[selectedPlan];
 
   // Check if user is already logged in and redirect to Stripe

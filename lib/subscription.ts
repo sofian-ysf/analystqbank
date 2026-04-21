@@ -87,16 +87,16 @@ async function getUsageCounts(userId: string, supabase: ReturnType<typeof create
 }
 
 export function getPlanUpgradeMessage(plan: PlanType | null, feature: 'mockExams' | 'questions'): string {
-  if (plan === 'basic') {
+  if (plan !== 'lifetime') {
     if (feature === 'mockExams') {
-      return 'Upgrade to Premium for unlimited mock exams.';
+      return 'Upgrade to Lifetime for unlimited mock exams.';
     }
-    return 'Upgrade to Premium for full question bank access.';
+    return 'Upgrade to Lifetime for full question bank access.';
   }
 
-  // For no plan or premium plan
+  // For lifetime plan
   if (feature === 'mockExams') {
-    return 'Choose Basic for 5 mock exams or Premium for unlimited access.';
+    return 'You have unlimited mock exams.';
   }
-  return 'Choose Basic for 2,000 questions or Premium for full access.';
+  return 'You have full question bank access.';
 }
