@@ -6,6 +6,10 @@ import { createClient } from '@/lib/supabase';
 
 // Handle GET request (redirect from auth callback)
 export async function GET(request: NextRequest) {
+  console.log('GET /api/stripe/create-checkout called');
+  console.log('URL:', request.url);
+  console.log('User agent:', request.headers.get('user-agent'));
+
   try {
     const cookieStore = await cookies();
 
@@ -32,11 +36,15 @@ export async function GET(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
+    console.log('User from session:', user ? user.id : 'NONE');
+
     if (!user) {
+      console.log('No user found, redirecting to login');
       return NextResponse.redirect(new URL('/login?message=Please log in to continue', request.url));
     }
 
     const plan = request.nextUrl.searchParams.get('plan');
+    console.log('Plan from URL:', plan);
 
     if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
       return NextResponse.redirect(new URL('/signup?plan=6month&error=Invalid plan', request.url));
