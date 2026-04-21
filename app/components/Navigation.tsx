@@ -87,7 +87,7 @@ export default function Navigation() {
             <Link href="/login" className="pill-nav-item">
               Login
             </Link>
-            <Link href="/signup" className="pill-nav-cta">
+            <Link href="/signup?plan=6month" className="pill-nav-cta">
               Get Started
             </Link>
 
@@ -156,7 +156,7 @@ export default function Navigation() {
             <Link href="/login" className="pill-mobile-cta-btn secondary" onClick={closeMobileMenu}>
               Login
             </Link>
-            <Link href="/signup" className="pill-mobile-cta-btn" onClick={closeMobileMenu}>
+            <Link href="/signup?plan=6month" className="pill-mobile-cta-btn" onClick={closeMobileMenu}>
               Get Started
             </Link>
           </div>
