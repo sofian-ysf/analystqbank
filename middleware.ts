@@ -79,13 +79,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Redirect authenticated users away from auth pages
+  // Redirect authenticated users away from auth pages (unless just browsing)
   const authPaths = ['/login', '/signup']
   const isAuthPath = authPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   )
 
   if (isAuthPath && user) {
+    // If there's a plan parameter, allow them through to checkout
+    const hasPlanParam = request.nextUrl.searchParams.has('plan')
+    if (hasPlanParam) {
+      // Let them through to proceed to checkout
+      return NextResponse.next()
+    }
+
     // Check if user has a paid subscription
     const { data: profile } = await supabase
       .from('user_profiles')
