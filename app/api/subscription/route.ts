@@ -40,7 +40,7 @@ export async function GET() {
     const status = profile.subscription_status;
 
     // Users without a valid paid plan should be blocked
-    if (!plan || (plan !== 'basic' && plan !== 'premium')) {
+    if (!plan || (plan !== 'month_2' && plan !== 'month_6' && plan !== 'lifetime')) {
       return NextResponse.json({
         plan: null,
         status: 'no_subscription',
