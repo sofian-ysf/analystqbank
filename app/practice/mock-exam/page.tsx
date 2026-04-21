@@ -9,6 +9,7 @@ import { User } from "@supabase/supabase-js";
 import MathText from "@/components/MathText";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt } from "@/components/UpgradePrompt";
+import { PlanType } from "@/lib/plans";
 
 // CFA Level 1 exam weightings - 180 total questions
 const MOCK_EXAM_DISTRIBUTION: { [key: string]: { topicName: string; questions: number; weight: string } } = {
@@ -216,7 +217,7 @@ export default function MockExam() {
     router.push("/");
   };
 
-  const handleUpgrade = async (selectedPlan: 'basic' | 'premium') => {
+  const handleUpgrade = async (selectedPlan: PlanType) => {
     if (!user) return;
 
     setIsUpgrading(true);
