@@ -120,7 +120,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.redirect(new URL('/signup?plan=6month&error=Failed to create checkout', request.url));
   } catch (error) {
-    console.error('Stripe checkout error:', error);
+    const stripeError = error as any;
+    console.error('Stripe checkout error:', stripeError?.message);
+    console.error('Stripe error type:', stripeError?.type);
+    console.error('Stripe error code:', stripeError?.code);
+    console.error('Stripe error param:', stripeError?.param);
+    console.error('Full error object:', JSON.stringify(stripeError, null, 2));
     return NextResponse.redirect(new URL('/signup?plan=6month&error=Checkout failed', request.url));
   }
 }
@@ -199,6 +204,8 @@ export async function POST(request: NextRequest) {
     const origin = request.headers.get('origin') || request.nextUrl.origin;
 
     console.log('Creating checkout session for customer:', customerId, 'with price:', priceId);
+    console.log('Success URL:', `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
+    console.log('Cancel URL:', `${origin}/checkout/cancel`);
 
     // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
@@ -221,12 +228,14 @@ export async function POST(request: NextRequest) {
 
     console.log('Checkout session created:', session.id, 'url:', session.url);
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error type:', error?.constructor?.name);
-    console.error('Stripe error details:', (error as any).stripeError);
+    const stripeError = error as any;
+    console.error('Stripe checkout error:', stripeError?.message);
+    console.error('Stripe error type:', stripeError?.type);
+    console.error('Stripe error code:', stripeError?.code);
+    console.error('Stripe error param:', stripeError?.param);
+    console.error('Stripe error response:', stripeError?.response);
     return NextResponse.json(
-      { error: 'Failed to create checkout session', details: errorMessage },
+      { error: 'Failed to create checkout session', details: stripeError?.message },
       { status: 500 }
     );
   }
