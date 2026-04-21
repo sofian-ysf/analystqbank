@@ -1,33 +1,49 @@
 // Subscription plan limits - safe to import on client side
 export const PLAN_LIMITS = {
-  basic: {
-    name: 'Basic',
-    mockExams: 5,
-    questions: 2000,
-    durationHours: null,
-    price: 50,
-    isLifetime: true,
-    features: [
-      '5 mock exams',
-      '2,000 practice questions',
-      'Performance analytics',
-      'Lifetime access',
-    ],
-  },
-  premium: {
-    name: 'Premium',
+  month_2: {
+    name: '2 Month',
     mockExams: Infinity,
     questions: Infinity,
     durationHours: null,
-    price: 75,
+    price: 25,
+    isLifetime: false,
+    features: [
+      '2,000+ practice questions',
+      'Unlimited mock exams',
+      'Detailed explanations',
+      'Performance analytics',
+      'All 10 CFA L1 topics',
+    ],
+  },
+  month_6: {
+    name: '6 Month',
+    mockExams: Infinity,
+    questions: Infinity,
+    durationHours: null,
+    price: 40,
+    isLifetime: false,
+    features: [
+      '2,000+ practice questions',
+      'Unlimited mock exams',
+      'Detailed explanations',
+      'Performance analytics',
+      'All 10 CFA L1 topics',
+    ],
+  },
+  lifetime: {
+    name: 'Lifetime',
+    mockExams: Infinity,
+    questions: Infinity,
+    durationHours: null,
+    price: 60,
     isLifetime: true,
     features: [
+      '2,000+ practice questions',
       'Unlimited mock exams',
-      'Full question bank access',
-      'Advanced analytics',
-      'Direct contact with CFA analysts',
+      'Detailed explanations',
+      'Performance analytics',
+      'All 10 CFA L1 topics',
       'Priority email support',
-      'Lifetime access',
     ],
   },
 };
@@ -35,22 +51,32 @@ export const PLAN_LIMITS = {
 export type PlanType = keyof typeof PLAN_LIMITS;
 
 // Question limits per topic based on CFA Level 1 exam weights
-// Basic users get ~2000 questions total, distributed by exam weight
-// Premium users get unlimited (all available questions)
 export const QUESTION_LIMITS_BY_TOPIC = {
-  basic: {
-    'Ethical and Professional Standards': 320,    // 15-20% weight
-    'Quantitative Methods': 140,                  // 6-9% weight
-    'Economics': 140,                              // 6-9% weight
-    'Financial Statement Analysis': 260,          // 11-14% weight
-    'Corporate Issuers': 140,                      // 6-9% weight
-    'Equity Investments': 260,                     // 11-14% weight
-    'Fixed Income': 260,                           // 11-14% weight
-    'Derivatives': 120,                            // 5-8% weight
-    'Alternative Investments': 160,                // 7-10% weight
-    'Portfolio Management': 200,                   // 8-12% weight
+  month_2: {
+    'Ethical and Professional Standards': Infinity,
+    'Quantitative Methods': Infinity,
+    'Economics': Infinity,
+    'Financial Statement Analysis': Infinity,
+    'Corporate Issuers': Infinity,
+    'Equity Investments': Infinity,
+    'Fixed Income': Infinity,
+    'Derivatives': Infinity,
+    'Alternative Investments': Infinity,
+    'Portfolio Management': Infinity,
   },
-  premium: {
+  month_6: {
+    'Ethical and Professional Standards': Infinity,
+    'Quantitative Methods': Infinity,
+    'Economics': Infinity,
+    'Financial Statement Analysis': Infinity,
+    'Corporate Issuers': Infinity,
+    'Equity Investments': Infinity,
+    'Fixed Income': Infinity,
+    'Derivatives': Infinity,
+    'Alternative Investments': Infinity,
+    'Portfolio Management': Infinity,
+  },
+  lifetime: {
     'Ethical and Professional Standards': Infinity,
     'Quantitative Methods': Infinity,
     'Economics': Infinity,

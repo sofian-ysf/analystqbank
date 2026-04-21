@@ -38,11 +38,11 @@ export async function GET(request: NextRequest) {
 
     const plan = request.nextUrl.searchParams.get('plan');
 
-    if (!plan || !['basic', 'premium'].includes(plan)) {
+    if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
       return NextResponse.redirect(new URL('/pricing?error=Invalid plan', request.url));
     }
 
-    const priceId = plan === 'basic' ? STRIPE_PRICES.basic : STRIPE_PRICES.premium;
+    const priceId = plan === '2month' ? STRIPE_PRICES.month_2 : plan === '6month' ? STRIPE_PRICES.month_6 : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
       return NextResponse.redirect(new URL('/pricing?error=Price not configured', request.url));
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     const { plan, userId, email } = await request.json();
 
     // Validate inputs
-    if (!plan || !['basic', 'premium'].includes(plan)) {
+    if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
       return NextResponse.json(
         { error: 'Invalid plan selected' },
         { status: 400 }
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const priceId = plan === 'basic' ? STRIPE_PRICES.basic : STRIPE_PRICES.premium;
+    const priceId = plan === '2month' ? STRIPE_PRICES.month_2 : plan === '6month' ? STRIPE_PRICES.month_6 : STRIPE_PRICES.lifetime;
 
     if (!priceId) {
       return NextResponse.json(

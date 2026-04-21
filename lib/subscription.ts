@@ -25,7 +25,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
     return null;
   }
 
-  const plan = (profile.subscription_plan || 'basic') as PlanType;
+  const plan = (profile.subscription_plan || 'month_2') as PlanType;
   const status = profile.subscription_status || 'none';
 
   // Get usage counts for the current period

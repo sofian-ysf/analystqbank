@@ -15,7 +15,7 @@ export default function Pricing() {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "AnalystTrainer CFA Level 1 Exam Prep",
-    "description": "Comprehensive CFA Level 1 exam preparation with 2,500+ practice questions, mock exams, and performance analytics.",
+    "description": "Comprehensive CFA Level 1 exam preparation with 2,000+ practice questions, unlimited mock exams, and detailed explanations.",
     "brand": {
       "@type": "Brand",
       "name": "AnalystTrainer"
@@ -23,8 +23,8 @@ export default function Pricing() {
     "offers": [
       {
         "@type": "Offer",
-        "name": "Basic Plan",
-        "price": "50",
+        "name": "2 Month Plan",
+        "price": "25",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
         "url": "https://www.analysttrainer.com/pricing",
@@ -32,8 +32,17 @@ export default function Pricing() {
       },
       {
         "@type": "Offer",
-        "name": "Premium Plan",
-        "price": "75",
+        "name": "6 Month Plan",
+        "price": "40",
+        "priceCurrency": "GBP",
+        "availability": "https://schema.org/InStock",
+        "url": "https://www.analysttrainer.com/pricing",
+        "priceValidUntil": "2026-12-31"
+      },
+      {
+        "@type": "Offer",
+        "name": "Lifetime Plan",
+        "price": "60",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
         "url": "https://www.analysttrainer.com/pricing",
@@ -82,54 +91,67 @@ export default function Pricing() {
   const plans = {
     lifetime: [
       {
-        name: 'Basic',
-        price: 50,
+        name: '2 Month',
+        price: 25,
         period: 'one-time',
-        description: 'Perfect for focused preparation',
+        description: 'Essential exam preparation',
         features: [
-          '2,000 practice questions',
-          '5 mock exams',
-          'Performance analytics',
-          'Lifetime access',
-          'All 10 CFA L1 topics',
+          '2,000+ practice questions',
+          'Unlimited mock exams',
           'Detailed explanations',
+          'Performance analytics',
+          'All 10 CFA L1 topics',
         ],
         cta: 'Get Started',
-        href: '/signup?plan=basic',
+        href: '/signup?plan=2month',
         popular: false,
-        perDay: '£0.50/day over 3 months',
+        perDay: '£0.42/day',
       },
       {
-        name: 'Premium',
-        price: 75,
+        name: '6 Month',
+        price: 40,
         period: 'one-time',
-        description: 'Complete exam mastery',
+        description: 'Extended exam mastery',
         features: [
-          'Full question bank (2,500+)',
+          '2,000+ practice questions',
           'Unlimited mock exams',
-          'Advanced analytics',
-          'Lifetime access',
-          'Priority email support',
-          'Direct analyst contact',
+          'Detailed explanations',
+          'Performance analytics',
+          'All 10 CFA L1 topics',
         ],
         cta: 'Get Started',
-        href: '/signup?plan=premium',
+        href: '/signup?plan=6month',
         popular: true,
-        perDay: '£0.83/day over 3 months',
+        perDay: '£0.22/day',
+      },
+      {
+        name: 'Lifetime',
+        price: 60,
+        period: 'one-time',
+        description: 'Complete lifetime access',
+        features: [
+          '2,000+ practice questions',
+          'Unlimited mock exams',
+          'Detailed explanations',
+          'Performance analytics',
+          'All 10 CFA L1 topics',
+          'Priority email support',
+        ],
+        cta: 'Get Started',
+        href: '/signup?plan=lifetime',
+        popular: false,
+        perDay: 'Best value',
       },
     ],
   }
 
   const comparisonFeatures = [
-    { name: 'Practice Questions', basic: '2,000', premium: '2,500+' },
-    { name: 'Mock Exams', basic: '5', premium: 'Unlimited' },
-    { name: 'Flashcards', basic: true, premium: true },
-    { name: 'Performance Analytics', basic: 'Standard', premium: 'Advanced' },
-    { name: 'All 10 CFA L1 Topics', basic: true, premium: true },
-    { name: 'Detailed Explanations', basic: true, premium: true },
-    { name: 'Lifetime Access', basic: true, premium: true },
-    { name: 'Priority Support', basic: false, premium: true },
-    { name: 'Direct Analyst Contact', basic: false, premium: true },
+    { name: 'Practice Questions', tier2: '2,000+', tier6: '2,000+', tierLifetime: '2,000+' },
+    { name: 'Mock Exams', tier2: 'Unlimited', tier6: 'Unlimited', tierLifetime: 'Unlimited' },
+    { name: 'Detailed Explanations', tier2: true, tier6: true, tierLifetime: true },
+    { name: 'Performance Analytics', tier2: true, tier6: true, tierLifetime: true },
+    { name: 'All 10 CFA L1 Topics', tier2: true, tier6: true, tierLifetime: true },
+    { name: 'Priority Email Support', tier2: false, tier6: false, tierLifetime: true },
   ]
 
   const faqs = [
@@ -290,8 +312,9 @@ export default function Pricing() {
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Feature</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Basic</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Premium</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">2 Month</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">6 Month</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Lifetime</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -299,8 +322,8 @@ export default function Pricing() {
                     <tr key={index}>
                       <td className="px-6 py-4 text-sm text-gray-900">{feature.name}</td>
                       <td className="px-6 py-4 text-center text-sm">
-                        {typeof feature.basic === 'boolean' ? (
-                          feature.basic ? (
+                        {typeof feature.tier2 === 'boolean' ? (
+                          feature.tier2 ? (
                             <svg className="w-5 h-5 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
@@ -310,12 +333,12 @@ export default function Pricing() {
                             </svg>
                           )
                         ) : (
-                          <span className="text-gray-600">{feature.basic}</span>
+                          <span className="text-gray-600">{feature.tier2}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-center text-sm">
-                        {typeof feature.premium === 'boolean' ? (
-                          feature.premium ? (
+                        {typeof feature.tier6 === 'boolean' ? (
+                          feature.tier6 ? (
                             <svg className="w-5 h-5 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                             </svg>
@@ -325,7 +348,22 @@ export default function Pricing() {
                             </svg>
                           )
                         ) : (
-                          <span className="text-gray-600">{feature.premium}</span>
+                          <span className="text-gray-600">{feature.tier6}</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-center text-sm">
+                        {typeof feature.tierLifetime === 'boolean' ? (
+                          feature.tierLifetime ? (
+                            <svg className="w-5 h-5 text-green-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )
+                        ) : (
+                          <span className="text-gray-600">{feature.tierLifetime}</span>
                         )}
                       </td>
                     </tr>
