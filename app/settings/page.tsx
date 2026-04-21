@@ -137,8 +137,9 @@ export default function Settings() {
   const getPlanDisplayName = () => {
     if (!subscription) return "No Plan";
     const plan = subscription.subscription_plan;
-    if (plan === 'basic') return "Basic";
-    if (plan === 'premium') return "Premium";
+    if (plan === 'month_2') return "2 Month";
+    if (plan === 'month_6') return "6 Month";
+    if (plan === 'lifetime') return "Lifetime";
     return "No Plan";
   };
 
@@ -335,11 +336,14 @@ export default function Settings() {
                   )}
                 </div>
                 <div className="text-right">
-                  {subscription?.subscription_plan === 'basic' && (
-                    <p className="text-xl font-bold text-gray-900">£50<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
+                  {subscription?.subscription_plan === 'month_2' && (
+                    <p className="text-xl font-bold text-gray-900">£25<span className="text-sm font-normal text-gray-500 block">2 Month</span></p>
                   )}
-                  {subscription?.subscription_plan === 'premium' && (
-                    <p className="text-xl font-bold text-gray-900">£75<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
+                  {subscription?.subscription_plan === 'month_6' && (
+                    <p className="text-xl font-bold text-gray-900">£40<span className="text-sm font-normal text-gray-500 block">6 Month</span></p>
+                  )}
+                  {subscription?.subscription_plan === 'lifetime' && (
+                    <p className="text-xl font-bold text-gray-900">£60<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
                   )}
                   {(subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
                     <p className="text-xl font-bold text-gray-900">Free</p>
@@ -353,10 +357,8 @@ export default function Settings() {
               <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
               <ul className="space-y-1">
                 {(() => {
-                  const planKey = subscription?.subscription_plan === 'basic' ? 'basic'
-                    : subscription?.subscription_plan === 'premium' ? 'premium'
-                    : 'basic';
-                  const limits = PLAN_LIMITS[planKey as keyof typeof PLAN_LIMITS] || PLAN_LIMITS.basic;
+                  const planKey = subscription?.subscription_plan as keyof typeof PLAN_LIMITS || 'month_2';
+                  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS.month_2;
                   return limits.features.map((feature: string, index: number) => (
                     <li key={index} className="flex items-center text-sm text-gray-600">
                       <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -370,50 +372,44 @@ export default function Settings() {
             </div>
 
             {/* Upgrade Options */}
-            {(!subscription || subscription?.subscription_plan === 'free' || subscription?.subscription_status !== 'lifetime') && (
+            {(!subscription || subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
               <div className="space-y-3 mb-6">
-                <p className="text-sm font-medium text-gray-700">Get lifetime access:</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <p className="text-sm font-medium text-gray-700">Get access:</p>
+                <div className="grid grid-cols-1 gap-4">
                   <button
-                    onClick={() => handleUpgrade('basic')}
+                    onClick={() => handleUpgrade('2month')}
                     disabled={managingBilling}
                     className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-left">
-                      <p className="font-medium text-gray-900">Basic</p>
-                      <p className="text-sm text-gray-500">5 mocks, 2,000 questions</p>
+                      <p className="font-medium text-gray-900">2 Month</p>
+                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
                     </div>
-                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£50'}</p>
+                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£25'}</p>
                   </button>
                   <button
-                    onClick={() => handleUpgrade('premium')}
+                    onClick={() => handleUpgrade('6month')}
+                    disabled={managingBilling}
+                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <div className="text-left">
+                      <p className="font-medium text-gray-900">6 Month</p>
+                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
+                    </div>
+                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£40'}</p>
+                  </button>
+                  <button
+                    onClick={() => handleUpgrade('lifetime')}
                     disabled={managingBilling}
                     className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="text-left">
-                      <p className="font-medium text-gray-900">Premium</p>
-                      <p className="text-sm text-gray-500">Unlimited lifetime access</p>
+                      <p className="font-medium text-gray-900">Lifetime</p>
+                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams, priority support</p>
                     </div>
-                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£75'}</p>
+                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£60'}</p>
                   </button>
                 </div>
-              </div>
-            )}
-
-            {/* Upgrade from Basic to Premium */}
-            {subscription?.subscription_plan === 'basic' && subscription?.subscription_status === 'lifetime' && (
-              <div className="mb-6">
-                <button
-                  onClick={() => handleUpgrade('premium')}
-                  disabled={managingBilling}
-                  className="w-full flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="text-left">
-                    <p className="font-medium text-gray-900">Upgrade to Premium</p>
-                    <p className="text-sm text-gray-500">Unlimited mocks & full question bank access</p>
-                  </div>
-                  <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£100'}</p>
-                </button>
               </div>
             )}
 

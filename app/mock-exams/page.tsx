@@ -218,7 +218,7 @@ export default function MockExams() {
       </header>
 
       {/* Usage Banner */}
-      {subscription && plan === 'basic' && subscription.mockExamsRemaining !== null && (
+      {subscription && subscription.mockExamsRemaining !== null && (
         <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between flex-wrap gap-3">

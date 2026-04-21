@@ -454,8 +454,8 @@ export default function MockExam() {
         </header>
 
         <div className="max-w-3xl mx-auto px-4 py-12">
-          {/* Usage Banner for basic users */}
-          {subscription && plan === 'basic' && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining > 0 && (
+          {/* Usage Banner for limited users */}
+          {subscription && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining > 0 && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -539,57 +539,94 @@ export default function MockExam() {
                     You've used all your mock exams
                   </h3>
                   <p className="text-gray-700 mb-6">
-                    {plan === 'basic'
-                      ? `You've completed all ${subscription.limits?.mockExams} mock exams. Upgrade to Premium for unlimited access:`
+                    {subscription?.mockExamsRemaining === 0
+                      ? "You've completed all your mock exams. Upgrade for unlimited access:"
                       : "Choose a plan to continue taking mock exams:"
                     }
                   </p>
                 </div>
 
                 {/* Plan Cards */}
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  {/* Basic Plan */}
-                  {plan !== 'basic' && (
-                    <div className="bg-white rounded-lg border-2 border-gray-200 p-6 hover:border-[#1FB8CD] transition-all">
-                      <div className="text-center mb-4">
-                        <h4 className="text-lg font-bold text-gray-900 mb-1">Basic</h4>
-                        <div className="flex items-baseline justify-center gap-1 mb-2">
-                          <span className="text-3xl font-bold text-gray-900">£50</span>
-                          <span className="text-gray-600 text-sm">one-time</span>
-                        </div>
-                        <p className="text-xs text-gray-500">Just £0.50/day for 100 days</p>
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  {/* 2 Month Plan */}
+                  <div className="bg-white rounded-lg border-2 border-gray-200 p-6 hover:border-[#1FB8CD] transition-all">
+                    <div className="text-center mb-4">
+                      <h4 className="text-lg font-bold text-gray-900 mb-1">2 Month</h4>
+                      <div className="flex items-baseline justify-center gap-1 mb-2">
+                        <span className="text-3xl font-bold text-gray-900">£25</span>
+                        <span className="text-gray-600 text-sm">one-time</span>
                       </div>
-                      <ul className="space-y-2 mb-6 text-sm text-gray-700">
-                        <li className="flex items-center gap-2">
-                          <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span>5 mock exams</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span>2,000 practice questions</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span>Lifetime access</span>
-                        </li>
-                      </ul>
-                      <button
-                        onClick={() => handleUpgrade('basic')}
-                        disabled={isUpgrading}
-                        className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isUpgrading ? 'Processing...' : 'Get Basic'}
-                      </button>
+                      <p className="text-xs text-gray-500">£0.42/day</p>
                     </div>
-                  )}
+                    <ul className="space-y-2 mb-6 text-sm text-gray-700">
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>2,000+ questions</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Unlimited mock exams</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Detailed explanations</span>
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleUpgrade('2month')}
+                      disabled={isUpgrading}
+                      className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isUpgrading ? 'Processing...' : 'Get 2 Month'}
+                    </button>
+                  </div>
 
-                  {/* Premium Plan */}
+                  {/* 6 Month Plan */}
+                  <div className="bg-white rounded-lg border-2 border-gray-200 p-6 hover:border-[#1FB8CD] transition-all">
+                    <div className="text-center mb-4">
+                      <h4 className="text-lg font-bold text-gray-900 mb-1">6 Month</h4>
+                      <div className="flex items-baseline justify-center gap-1 mb-2">
+                        <span className="text-3xl font-bold text-gray-900">£40</span>
+                        <span className="text-gray-600 text-sm">one-time</span>
+                      </div>
+                      <p className="text-xs text-gray-500">£0.22/day</p>
+                    </div>
+                    <ul className="space-y-2 mb-6 text-sm text-gray-700">
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>2,000+ questions</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Unlimited mock exams</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Detailed explanations</span>
+                      </li>
+                    </ul>
+                    <button
+                      onClick={() => handleUpgrade('6month')}
+                      disabled={isUpgrading}
+                      className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isUpgrading ? 'Processing...' : 'Get 6 Month'}
+                    </button>
+                  </div>
+
+                  {/* Lifetime Plan */}
                   <div className="bg-white rounded-lg border-2 border-[#1FB8CD] p-6 relative">
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                       <span className="bg-[#1FB8CD] text-white text-xs font-bold px-3 py-1 rounded-full">
@@ -597,14 +634,20 @@ export default function MockExam() {
                       </span>
                     </div>
                     <div className="text-center mb-4">
-                      <h4 className="text-lg font-bold text-gray-900 mb-1">Premium</h4>
+                      <h4 className="text-lg font-bold text-gray-900 mb-1">Lifetime</h4>
                       <div className="flex items-baseline justify-center gap-1 mb-2">
-                        <span className="text-3xl font-bold text-[#1FB8CD]">£75</span>
+                        <span className="text-3xl font-bold text-[#1FB8CD]">£60</span>
                         <span className="text-gray-600 text-sm">one-time</span>
                       </div>
-                      <p className="text-xs text-gray-500">Just £0.75/day for 100 days</p>
+                      <p className="text-xs text-gray-500">Best value</p>
                     </div>
                     <ul className="space-y-2 mb-6 text-sm text-gray-700">
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="font-semibold">2,000+ questions</span>
+                      </li>
                       <li className="flex items-center gap-2">
                         <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -615,27 +658,15 @@ export default function MockExam() {
                         <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        <span className="font-semibold">Full question bank</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Priority support</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Lifetime access</span>
+                        <span>Priority email support</span>
                       </li>
                     </ul>
                     <button
-                      onClick={() => handleUpgrade('premium')}
+                      onClick={() => handleUpgrade('lifetime')}
                       disabled={isUpgrading}
                       className="w-full bg-[#1FB8CD] text-white py-3 rounded-lg font-semibold hover:bg-[#1A6872] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isUpgrading ? 'Processing...' : 'Get Premium'}
+                      {isUpgrading ? 'Processing...' : 'Get Lifetime'}
                     </button>
                   </div>
                 </div>

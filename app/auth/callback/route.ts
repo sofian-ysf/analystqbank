@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
       }
 
       // If plan parameter is provided (from signup with plan selected), redirect to Stripe
-      if (plan === 'basic' || plan === 'premium') {
+      if (plan === '2month' || plan === '6month' || plan === 'lifetime') {
         return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
       }
 
