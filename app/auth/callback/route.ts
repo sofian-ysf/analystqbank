@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code')
   const next = requestUrl.searchParams.get('next') ?? '/signup?plan=6month'
   const plan = requestUrl.searchParams.get('plan')
+  console.log('Callback - code:', !!code, 'plan:', plan, 'next:', next);
   const error = requestUrl.searchParams.get('error')
   const errorDescription = requestUrl.searchParams.get('error_description')
 
@@ -86,15 +87,18 @@ export async function GET(request: NextRequest) {
 
       // If user has a valid paid subscription with lifetime status, go to dashboard
       if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
+        console.log('User has lifetime subscription, redirecting to dashboard');
         return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
       }
 
       // If plan parameter is provided (from signup with plan selected), redirect to Stripe
       if (plan === '2month' || plan === '6month' || plan === 'lifetime') {
+        console.log('Plan found, redirecting to Stripe checkout:', plan);
         return NextResponse.redirect(new URL(`/api/stripe/create-checkout?plan=${plan}`, requestUrl.origin))
       }
 
       // Otherwise, use the 'next' parameter or fallback to /signup
+      console.log('No plan param, redirecting to signup');
       let redirectUrl = next
       // Validate next is safe (relative path starting with /)
       if (!redirectUrl.startsWith('/') || redirectUrl.includes('://')) {
@@ -104,6 +108,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL(redirectUrl, requestUrl.origin))
     }
 
+    console.log('No user after code exchange, redirecting to signup');
     return NextResponse.redirect(new URL('/signup?plan=6month', requestUrl.origin))
   }
 
