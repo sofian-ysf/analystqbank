@@ -48,12 +48,20 @@ function LoginForm() {
         .eq('id', data.user.id)
         .single()
 
-      // If user has lifetime subscription, go to dashboard
-      if (profile?.subscription_plan && profile.subscription_status === 'lifetime') {
+      console.log("Profile after login:", JSON.stringify(profile));
+
+      // If user has a valid paid subscription status (lifetime), go to dashboard
+      if (profile?.subscription_plan && profile?.subscription_status === 'lifetime') {
+        console.log("User has lifetime status, going to dashboard");
         router.push("/dashboard");
+      } else if (profile?.subscription_plan) {
+        // User has a plan but status is not lifetime - still go to signup to complete purchase
+        console.log("User has plan but no lifetime status, going to signup");
+        router.push("/signup?plan=6month");
       } else {
-        // No subscription or not lifetime - go to pricing
-        router.push("/pricing");
+        // No subscription - go to signup to purchase
+        console.log("User has no plan, going to signup");
+        router.push("/signup?plan=6month");
       }
       router.refresh();
     }
