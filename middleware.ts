@@ -86,14 +86,19 @@ export async function middleware(request: NextRequest) {
   )
 
   if (isAuthPath && user) {
-    // If there's a plan parameter, allow them through to checkout
+    // If there's a plan parameter, allow them through to proceed to checkout
     const hasPlanParam = request.nextUrl.searchParams.has('plan')
     if (hasPlanParam) {
       // Let them through to proceed to checkout
       return NextResponse.next()
     }
 
-    // Check if user has a paid subscription
+    // For /login, always let them through (they might want to log out or switch accounts)
+    if (request.nextUrl.pathname === '/login') {
+      return NextResponse.next()
+    }
+
+    // For /signup without plan param, check subscription status
     const { data: profile } = await supabase
       .from('user_profiles')
       .select('subscription_status')
