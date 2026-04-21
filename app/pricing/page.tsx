@@ -218,7 +218,7 @@ export default function Pricing() {
             Simple, Transparent Pricing
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose the plan that fits your CFA Level 1 preparation needs. Try 15 free demo questions at /try-free before purchasing.
+            Choose the plan that fits your CFA Level 1 preparation needs. <Link href="/try-free" className="text-[#1FB8CD] hover:underline">Try 15 free demo questions</Link> before purchasing.
           </p>
         </div>
       </section>
