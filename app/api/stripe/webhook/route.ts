@@ -40,6 +40,9 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.supabase_user_id;
         const plan = session.metadata?.plan;
 
+        console.log('=== Checkout Session Completed ===');
+        console.log('Full session object:', JSON.stringify(session, null, 2));
+        console.log('Session metadata:', JSON.stringify(session.metadata));
         console.log('Checkout completed - userId:', userId, 'plan:', plan);
         console.log('Session customer:', session.customer);
         console.log('Session payment_status:', session.payment_status);
@@ -47,6 +50,21 @@ export async function POST(request: NextRequest) {
         if (userId && plan) {
           console.log('Updating user profile for user:', userId);
           console.log('Setting subscription_plan:', plan, 'subscription_status: lifetime');
+
+          const { data: existingProfile } = await supabase
+            .from('user_profiles')
+            .select('id, subscription_plan, subscription_status')
+            .eq('id', userId)
+            .single();
+
+          console.log('Existing profile check:', existingProfile ? JSON.stringify(existingProfile) : 'NOT FOUND');
+
+          // Always update the profile - set subscription fields
+          console.log('Updating profile with:', {
+            subscription_plan: plan,
+            subscription_status: 'lifetime',
+            stripe_customer_id: session.customer
+          });
 
           const { data, error } = await supabase
             .from('user_profiles')
@@ -62,6 +80,7 @@ export async function POST(request: NextRequest) {
 
           if (error) {
             console.error('Error updating user profile:', error);
+            console.error('Error details:', JSON.stringify(error));
           } else {
             console.log('User profile updated successfully:', JSON.stringify(data));
           }
