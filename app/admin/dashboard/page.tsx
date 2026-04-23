@@ -791,6 +791,8 @@ export default function AdminDashboard() {
                 onClick={() => {
                   if (tab === 'blog') {
                     router.push('/admin/blog');
+                  } else if (tab === 'users') {
+                    router.push('/admin/users');
                   } else {
                     setActiveTab(tab as typeof activeTab);
                   }

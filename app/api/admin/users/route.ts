@@ -1,8 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search')?.toLowerCase() || '';
+    const examLevel = searchParams.get('exam_level');
+    const subscriptionPlan = searchParams.get('subscription_plan');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '50');
+
     const supabase = createAdminClient();
 
     // Fetch users from Supabase Auth using admin client
@@ -14,7 +21,7 @@ export async function GET() {
     }
 
     // Transform auth users to match expected format
-    const users = authUsers?.map(user => ({
+    let users = authUsers?.map(user => ({
       id: user.id,
       email: user.email || 'No email',
       full_name: user.user_metadata?.full_name || 'No name',
@@ -23,10 +30,29 @@ export async function GET() {
       created_at: user.created_at
     })) || [];
 
-    // Keep the error variable for later use but silence the unused variable warning
-    const error = authError;
+    // Apply filters
+    if (search) {
+      users = users.filter(u =>
+        u.email.toLowerCase().includes(search) ||
+        u.full_name.toLowerCase().includes(search)
+      );
+    }
+    if (examLevel) {
+      users = users.filter(u => u.exam_level === examLevel);
+    }
+    if (subscriptionPlan) {
+      users = users.filter(u => u.subscription_plan === subscriptionPlan);
+    }
 
-    const totalUsers = users?.length || 0;
+    // Sort by created_at descending (newest first)
+    users.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+    // Paginate
+    const totalUsers = users.length;
+    const startIndex = (page - 1) * limit;
+    const paginatedUsers = users.slice(startIndex, startIndex + limit);
+
+    const total = users.length || 0;
 
     const today = new Date();
     const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -51,9 +77,12 @@ export async function GET() {
     }, {} as Record<string, number>) || {};
 
     return NextResponse.json({
-      users,
+      users: paginatedUsers,
+      total,
+      page,
+      limit,
       stats: {
-        totalUsers,
+        totalUsers: users.length,
         newUsersThisWeek,
         newUsersThisMonth,
         subscriptionStats,
