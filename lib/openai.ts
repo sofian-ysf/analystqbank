@@ -656,6 +656,98 @@ Return ONLY the JSON object.`
   }
 }
 
+// =============================================
+// EMAIL GENERATION
+// =============================================
+
+export interface GeneratedEmail {
+  subject: string;
+  body: string;
+}
+
+export async function generateEmailContent(
+  templateName: string,
+  userData: { name: string; email: string; exam_level?: string },
+  customInstructions?: string
+): Promise<GeneratedEmail> {
+  const firstName = userData.name.split(' ')[0] || 'there';
+
+  const systemPrompt = `You are an expert email copywriter specializing in CFA exam prep cold outreach.
+
+Your expertise:
+- Writing persuasive, personalized cold outreach emails
+- Understanding CFA curriculum and exam preparation
+- Creating compelling subject lines that drive open rates
+- Writing professional yet friendly email body copy
+- Including clear calls-to-action
+
+Guidelines:
+- Keep emails concise but impactful (150-250 words body)
+- Use a professional but approachable tone
+- Personalize content based on recipient's exam level if provided
+- Focus on value proposition and benefits
+- Include one clear call-to-action
+- Avoid spam trigger words and excessive punctuation
+- Write in the recipient's first name`;
+
+  const userPrompt = `Generate a ${templateName} email for a potential customer.
+
+Recipient Information:
+- Name: ${userData.name}
+- Email: ${userData.email}
+${userData.exam_level ? `- Exam Level: ${userData.exam_level}` : ''}
+
+${customInstructions ? `Custom Instructions: ${customInstructions}` : ''}
+
+Requirements:
+1. Generate a compelling subject line (under 60 characters, no [brackets] or asterisks)
+2. Write an email body (150-250 words) that:
+   - Starts with personalized greeting using "${firstName}"
+   - Hooks the reader in the first sentence
+   - Focuses on how CFA exam prep can benefit them
+   - Includes a clear call-to-action at the end
+   - Is professional but friendly
+3. Use the template's variables like {{first_name}} - replace with actual first name
+
+Return a JSON object in this exact format:
+{
+  "subject": "Your compelling subject line here",
+  "body": "Full email body with proper line breaks using \\n"
+}
+
+Return ONLY the JSON object, no additional text.`;
+
+  try {
+    const openai = getOpenAIClient();
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 1500,
+      response_format: { type: 'json_object' }
+    });
+
+    const content = response.choices[0]?.message?.content;
+    if (!content) {
+      throw new Error('No response from OpenAI');
+    }
+
+    const email = JSON.parse(content);
+
+    if (!email.subject || !email.body) {
+      throw new Error('Invalid email format: missing subject or body');
+    }
+
+    return email;
+  } catch (error) {
+    console.error('Error generating email content:', error);
+    throw new Error(`Failed to generate email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 // Generate embedding for text
 export async function generateEmbedding(text: string): Promise<number[]> {
   const openai = getOpenAIClient();
