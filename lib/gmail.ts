@@ -201,12 +201,13 @@ export async function fetchEmailThreads(userEmail: string, maxResults = 20): Pro
     throw new Error('Gmail not connected');
   }
 
-  const gmail = await import('googleapis').then(g => g.gmail({ version: 'v1', auth: client }));
+  const { gmail } = await import('googleapis');
+  const gmailClient = gmail({ version: 'v1', auth: client });
 
   // Search for emails between admin and user
   const query = `from:me to:${userEmail} OR from:${userEmail}`;
 
-  const response = await gmail.users.threads.list({
+  const response = await gmailClient.users.threads.list({
     userId: 'me',
     q: query,
     maxResults
@@ -219,7 +220,7 @@ export async function fetchEmailThreads(userEmail: string, maxResults = 20): Pro
   for (const thread of threads) {
     if (!thread.id) continue;
 
-    const threadData = await gmail.users.threads.get({
+    const threadData = await gmailClient.users.threads.get({
       userId: 'me',
       id: thread.id,
       fields: 'messages(id,threadId,payload/headers,snippet,internalDate)'
@@ -289,7 +290,8 @@ export async function sendEmail(
     return { success: false, error: 'Gmail not connected' };
   }
 
-  const gmail = await import('googleapis').then(g => g.gmail({ version: 'v1', auth: client }));
+  const { gmail } = await import('googleapis');
+  const gmailClient = gmail({ version: 'v1', auth: client });
 
   // Construct email
   const email = [
@@ -307,7 +309,7 @@ export async function sendEmail(
     .replace(/=+$/, '');
 
   try {
-    const response = await gmail.users.messages.send({
+    const response = await gmailClient.users.messages.send({
       userId: 'me',
       requestBody: {
         raw: encodedMessage
