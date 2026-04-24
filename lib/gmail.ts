@@ -318,7 +318,7 @@ export async function sendEmail(
 
     return {
       success: true,
-      messageId: response.data.id
+      messageId: response.data.id ?? undefined
     };
   } catch (err: any) {
     console.error('Failed to send email:', err);
