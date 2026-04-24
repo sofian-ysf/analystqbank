@@ -125,6 +125,13 @@ export default function UserDetailPage() {
     }
   }, [params.id, router]);
 
+  // Fetch email threads when Gmail connects or user data loads
+  useEffect(() => {
+    if (gmailConnected && data?.user?.email && activeSubTab === 'emails') {
+      fetchEmailThreads(data.user.email);
+    }
+  }, [gmailConnected, data?.user?.email, activeSubTab]);
+
   const checkGmailConnection = async () => {
     try {
       const response = await fetch('/api/admin/emails/gmail?action=status');
@@ -247,10 +254,6 @@ export default function UserDetailPage() {
 
       if (response.ok) {
         setData(result);
-        // Fetch email threads if Gmail is connected
-        if (gmailConnected) {
-          fetchEmailThreads(result.user.email);
-        }
       } else {
         setError(result.error || 'Failed to fetch user');
       }
