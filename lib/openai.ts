@@ -710,7 +710,7 @@ Requirements:
    - Includes the signup link as a hyperlink: https://www.analysttrainer.com/signup?plan=6month
    - Is professional but friendly
 3. Use the template's variables like {{first_name}} - replace with actual first name
-4. Do NOT add any email signature at the end`
+4. Do NOT add any email signature at the end
 
 Return a JSON object in this exact format:
 {
