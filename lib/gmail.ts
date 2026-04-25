@@ -204,8 +204,8 @@ export async function fetchEmailThreads(userEmail: string, maxResults = 20): Pro
   const googleapis = await import('googleapis');
   const gmail = googleapis.google.gmail({ version: 'v1', auth: client });
 
-  // Search for emails between admin and user
-  const query = `from:me to:${userEmail} OR from:${userEmail}`;
+  // Search for emails involving this user (both sent and received)
+  const query = `to:${userEmail} OR from:${userEmail}`;
 
   const response = await gmail.users.threads.list({
     userId: 'me',
@@ -239,18 +239,42 @@ export async function fetchEmailThreads(userEmail: string, maxResults = 20): Pro
       const to = getHeader('To');
       const date = getHeader('Date');
 
-      // Get email body
+      // Get email body - handle multipart messages properly
       let body = '';
+      const decodeBody = (data: string | undefined) => {
+        if (!data) return '';
+        // Handle URL-safe base64
+        const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
+        return Buffer.from(base64, 'base64').toString('utf-8');
+      };
+
       const parts = message.payload?.parts;
       if (parts) {
+        // First try to get plain text, then fall back to HTML
         for (const part of parts) {
-          if (part.body?.data) {
-            body = Buffer.from(part.body.data, 'base64').toString('utf-8');
+          if (part.mimeType === 'text/plain' && part.body?.data) {
+            body = decodeBody(part.body.data);
             break;
           }
         }
+        // If no plain text, try HTML
+        if (!body) {
+          for (const part of parts) {
+            if (part.mimeType === 'text/html' && part.body?.data) {
+              body = decodeBody(part.body.data);
+              // Strip HTML tags for display
+              body = body.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+              break;
+            }
+          }
+        }
       } else if (message.payload?.body?.data) {
-        body = Buffer.from(message.payload.body.data, 'base64').toString('utf-8');
+        body = decodeBody(message.payload.body.data);
+      }
+
+      // Also get snippet if body is empty
+      if (!body && message.snippet) {
+        body = message.snippet;
       }
 
       parsedMessages.push({
