@@ -688,7 +688,9 @@ Guidelines:
 - Focus on value proposition and benefits
 - Include one clear call-to-action
 - Avoid spam trigger words and excessive punctuation
-- Write in the recipient's first name`;
+- Write in the recipient's first name
+- ALWAYS include the signup link as a hyperlink: https://www.analysttrainer.com/signup?plan=6month
+- Do NOT add any email signature - the recipient's Gmail signature will be used automatically`;
 
   const userPrompt = `Generate a ${templateName} email for a potential customer.
 
@@ -705,9 +707,10 @@ Requirements:
    - Starts with personalized greeting using "${firstName}"
    - Hooks the reader in the first sentence
    - Focuses on how CFA exam prep can benefit them
-   - Includes a clear call-to-action at the end
+   - Includes the signup link as a hyperlink: https://www.analysttrainer.com/signup?plan=6month
    - Is professional but friendly
 3. Use the template's variables like {{first_name}} - replace with actual first name
+4. Do NOT add any email signature at the end`
 
 Return a JSON object in this exact format:
 {
