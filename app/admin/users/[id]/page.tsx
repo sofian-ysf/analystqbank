@@ -109,6 +109,8 @@ export default function UserDetailPage() {
   const [generatingEmail, setGeneratingEmail] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailStatus, setEmailStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [replyingToMessage, setReplyingToMessage] = useState<{ id: string; from: string; body: string; date: string } | null>(null);
+  const [replyingToThread, setReplyingToThread] = useState<string | null>(null);
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('admin_logged_in');
@@ -208,6 +210,48 @@ export default function UserDetailPage() {
       }
     } catch (err) {
       console.error('Failed to generate email:', err);
+    } finally {
+      setGeneratingEmail(false);
+    }
+  };
+
+  const generateReply = async (messageId: string, threadId: string, originalMessage: { from: string; body: string; date: string }) => {
+    if (!data) return;
+
+    setReplyingToMessage(originalMessage);
+    setReplyingToThread(threadId);
+    setShowEmailComposer(true);
+    setSelectedTemplate('');
+    setEmailSubject('');
+    setEmailBody('');
+    setGeneratingEmail(true);
+
+    try {
+      const response = await fetch('/api/admin/emails/generate-reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userData: {
+            name: data.user.full_name,
+            email: data.user.email,
+            exam_level: data.user.exam_level
+          },
+          originalMessage: {
+            from: originalMessage.from,
+            body: originalMessage.body,
+            date: originalMessage.date
+          },
+          threadId
+        })
+      });
+
+      const result = await response.json();
+      if (result.email) {
+        setEmailSubject(result.email.subject);
+        setEmailBody(result.email.body);
+      }
+    } catch (err) {
+      console.error('Failed to generate reply:', err);
     } finally {
       setGeneratingEmail(false);
     }
@@ -448,7 +492,20 @@ export default function UserDetailPage() {
                       <div className="p-4 bg-gray-900 space-y-4">
                         {thread.messages.map((message) => (
                           <div key={message.id} className="border-l-2 border-gray-600 pl-4">
-                            <p className="text-sm text-gray-500">From: {message.from} | Date: {formatDate(message.date)}</p>
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm text-gray-500">From: {message.from} | Date: {formatDate(message.date)}</p>
+                              {!message.from.includes(data.user.email) && (
+                                <button
+                                  onClick={() => generateReply(message.id, thread.id, { from: message.from, body: message.body, date: message.date })}
+                                  className="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded text-sm transition-colors flex items-center gap-1"
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                                  </svg>
+                                  Reply with AI
+                                </button>
+                              )}
+                            </div>
                             <p className="mt-2 whitespace-pre-wrap">{message.body}</p>
                           </div>
                         ))}

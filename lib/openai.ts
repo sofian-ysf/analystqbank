@@ -752,6 +752,106 @@ CRITICAL formatting rules:
   }
 }
 
+// Generate a reply to an existing email conversation
+export async function generateReplyEmail(
+  userData: { name: string; email: string; exam_level?: string },
+  originalMessage: { from: string; body: string; date: string }
+): Promise<GeneratedEmail> {
+  const firstName = userData.name.split(' ')[0] || 'there';
+
+  const systemPrompt = `You are a real person who runs a CFA exam prep business, writing a thoughtful reply to a potential customer's email.
+
+Your writing style:
+- Conversational and natural, like you're texting a colleague
+- Short sentences mixed with longer ones for rhythm
+- Never sounds robotic, AI-generated, or like a marketing template
+- Uses everyday phrases, not corporate buzzwords
+- Personal and direct, like you actually care
+- Always acknowledge what they said before moving on
+
+Email goals:
+- Understand and respond to their specific question or concern
+- If they're interested, naturally mention how you can help them
+- If they're hesitant, ask a question to keep the conversation going
+- Look for sales opportunities without being pushy
+- Include signup link naturally if relevant: https://www.analysttrainer.com/signup?plan=6month
+
+What to NEVER do:
+- Don't start with "Thank you for reaching out" or "Thanks for your email"
+- Don't use: "I hope this finds you", "Kindly", "As a professional", "Leverage", "Synergy"
+- Don't ignore what they actually said - always reference their message
+- Don't be overly formal or use marketing speak
+- No email signature (Gmail handles that)`;
+
+  const userPrompt = `Write a reply email to a potential CFA exam student.
+
+Their original message:
+---
+From: ${originalMessage.from}
+Date: ${originalMessage.date}
+Message: ${originalMessage.body}
+---
+
+About the recipient:
+- Name: ${userData.name}
+- Email: ${userData.email}
+${userData.exam_level ? `- Exam Level: ${userData.exam_level}` : ''}
+
+What to do:
+1. Start with their name: "${firstName},"
+2. Acknowledge what they said - reference something specific from their message
+3. Respond to their question or address their concern directly
+4. If they're interested, naturally mention how your question bank helps
+5. If they're hesitant or asking about pricing/options, give helpful info
+6. End with a question that encourages them to respond
+7. Include signup link if natural: https://www.analysttrainer.com/signup?plan=6month
+
+Keep it conversational - 100-180 words max. Think text message energy, not mass email.
+
+Return JSON only:
+{
+  "subject": "Re: [original subject if you can infer it, otherwise a casual short subject]",
+  "body": "Reply body with \\n\\n between paragraphs"
+}
+
+CRITICAL formatting rules:
+- Each paragraph is ONE continuous block of text with NO line breaks inside
+- Only use \\n\\n (double newline) to separate paragraphs
+- Never use \\n alone to break sentences
+- No markdown, asterisks, bold, italics, or brackets`;
+
+  try {
+    const openai = getOpenAIClient();
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      max_tokens: 800,
+      temperature: 0.85
+    });
+
+    const content = response.choices[0]?.message?.content?.trim();
+    if (!content) {
+      throw new Error('Empty response from OpenAI');
+    }
+
+    // Parse JSON response
+    const email = JSON.parse(content) as GeneratedEmail;
+
+    // Validate response structure
+    if (!email.subject || !email.body) {
+      throw new Error('Invalid email structure from OpenAI');
+    }
+
+    return email;
+  } catch (error: any) {
+    console.error('Error generating email reply:', error);
+    throw new Error(`Failed to generate email reply: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 // Generate embedding for text
 export async function generateEmbedding(text: string): Promise<number[]> {
   const openai = getOpenAIClient();
