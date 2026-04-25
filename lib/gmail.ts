@@ -293,13 +293,40 @@ export async function sendEmail(
   const googleapis = await import('googleapis');
   const gmailClient = googleapis.google.gmail({ version: 'v1', auth: client });
 
-  // Construct email
+  // Convert plain text body to HTML
+  // Split by double newlines (paragraph breaks)
+  const paragraphs = body.split(/\n\n/);
+
+  // Convert signup URL to hyperlink
+  const signupLink = 'https://www.analysttrainer.com/signup?plan=6month';
+  const bodyWithLink = paragraphs
+    .map(p => {
+      // Replace plain URL with hyperlink, avoiding double-linking if already linked
+      const paragraphWithLink = p.includes(signupLink)
+        ? p
+        : p.replace(signupLink, `<a href="${signupLink}">${signupLink}</a>`);
+      return paragraphWithLink;
+    })
+    .map(p => `<p>${p}</p>`)
+    .join('');
+
+  const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head></head>
+<body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #333;">
+${bodyWithLink}
+</body>
+</html>
+`.trim();
+
+  // Construct email as HTML
   const email = [
     `To: ${to}`,
     `Subject: ${subject}`,
-    'Content-Type: text/plain; charset=utf-8',
+    'Content-Type: text/html; charset=utf-8',
     '',
-    body
+    htmlBody
   ].join('\n');
 
   const encodedMessage = Buffer.from(email)
