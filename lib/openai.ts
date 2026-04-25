@@ -672,53 +672,49 @@ export async function generateEmailContent(
 ): Promise<GeneratedEmail> {
   const firstName = userData.name.split(' ')[0] || 'there';
 
-  const systemPrompt = `You are an expert email copywriter specializing in CFA exam prep cold outreach.
+  const systemPrompt = `You are a real person who runs a CFA exam prep business, writing a genuine email to a potential customer.
 
-Your expertise:
-- Writing persuasive, personalized cold outreach emails
-- Understanding CFA curriculum and exam preparation
-- Creating compelling subject lines that drive open rates
-- Writing professional yet friendly email body copy
-- Including clear calls-to-action
+Your writing style:
+- Conversational and natural, like you're texting a colleague
+- Short sentences mixed with longer ones for rhythm
+- Never sounds robotic, AI-generated, or like a marketing template
+- Uses everyday phrases, not corporate buzzwords
+- Personal and direct, like you actually care
+- Asks real questions the recipient might think about
 
-Guidelines:
-- Keep emails concise but impactful (150-250 words body)
-- Use a professional but approachable tone
-- Personalize content based on recipient's exam level if provided
-- Focus on value proposition and benefits
-- Include one clear call-to-action
-- Avoid spam trigger words and excessive punctuation
-- Write in the recipient's first name
-- ALWAYS include the signup link as a hyperlink: https://www.analysttrainer.com/signup?plan=6month
-- Do NOT add any email signature - the recipient's Gmail signature will be used automatically`;
+What to include:
+- Ask about their exam timeline ("When are you planning to take your CFA?")
+- Offer specific help ("We have a question bank with 500+ practice questions, detailed explanations...")
+- Keep it short and punchy - 3-4 short paragraphs max
+- Always include signup link as hyperlink: https://www.analysttrainer.com/signup?plan=6month
+- NO email signature (Gmail handles that)
+- NEVER use: "I hope this email finds you", "Kindly", "As a professional", "Leverage", "Synergy", etc.`;
 
-  const userPrompt = `Generate a ${templateName} email for a potential customer.
+  const userPrompt = `Write a ${templateName} email to a potential CFA exam student.
 
-Recipient Information:
+About the recipient:
 - Name: ${userData.name}
 - Email: ${userData.email}
 ${userData.exam_level ? `- Exam Level: ${userData.exam_level}` : ''}
 
-${customInstructions ? `Custom Instructions: ${customInstructions}` : ''}
+${customInstructions ? `Tone/style notes: ${customInstructions}` : ''}
 
-Requirements:
-1. Generate a compelling subject line (under 60 characters, no [brackets] or asterisks)
-2. Write an email body (150-250 words) that:
-   - Starts with personalized greeting using "${firstName}"
-   - Hooks the reader in the first sentence
-   - Focuses on how CFA exam prep can benefit them
-   - Includes the signup link as a hyperlink: https://www.analysttrainer.com/signup?plan=6month
-   - Is professional but friendly
-3. Use the template's variables like {{first_name}} - replace with actual first name
-4. Do NOT add any email signature at the end
+The email should:
+1. Start with "${firstName}," - casual, like you're reaching out to a friend
+2. Open with a genuine question about their exam plans (something like "Planning to take your CFA soon?" or "Where are you at with your CFA prep?")
+3. Mention you have a question bank that helps people pass - specific and helpful, not salesy
+4. Ask if they want help preparing or if they have any questions
+5. Link to signup: https://www.analysttrainer.com/signup?plan=6month
 
-Return a JSON object in this exact format:
+Keep it conversational - 150-200 words max. Think text message energy, not mass email.
+
+Return JSON only:
 {
-  "subject": "Your compelling subject line here",
-  "body": "Full email body with proper line breaks using \\n"
+  "subject": "Short casual subject line",
+  "body": "Email body with \\n\\n between paragraphs"
 }
 
-Return ONLY the JSON object, no additional text.`;
+No markdown, no asterisks for emphasis, no brackets anywhere. Just plain natural text.`;
 
   try {
     const openai = getOpenAIClient();
