@@ -218,7 +218,7 @@ export default function UserDetailPage() {
   const generateReply = async (messageId: string, threadId: string, originalMessage: { from: string; body: string; date: string }) => {
     if (!data) return;
 
-    setReplyingToMessage(originalMessage);
+    setReplyingToMessage({ id: messageId, ...originalMessage });
     setReplyingToThread(threadId);
     setShowEmailComposer(true);
     setSelectedTemplate('');
@@ -237,6 +237,7 @@ export default function UserDetailPage() {
             exam_level: data.user.exam_level
           },
           originalMessage: {
+            id: messageId,
             from: originalMessage.from,
             body: originalMessage.body,
             date: originalMessage.date
