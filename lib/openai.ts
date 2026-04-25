@@ -711,10 +711,15 @@ Keep it conversational - 150-200 words max. Think text message energy, not mass 
 Return JSON only:
 {
   "subject": "Short casual subject line",
-  "body": "Email body with \\n\\n between paragraphs"
+  "body": "Paragraph 1 text here.\\n\\nParagraph 2 text here.\\n\\nParagraph 3 text here."
 }
 
-No markdown, no asterisks for emphasis, no brackets anywhere. Just plain natural text.`;
+CRITICAL formatting rules:
+- Each paragraph is ONE continuous block of text with NO line breaks inside
+- Only use \\n\\n (double newline) to separate paragraphs
+- NEVER use \\n alone to break sentences
+- NO markdown, asterisks, bold, italics, or brackets
+- Just plain sentences separated into paragraphs`;
 
   try {
     const openai = getOpenAIClient();
