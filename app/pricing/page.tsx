@@ -40,7 +40,7 @@ export default function Pricing() {
       {
         "@type": "Offer",
         "name": "Lifetime Plan",
-        "price": "60",
+        "price": "70",
         "priceCurrency": "GBP",
         "availability": "https://schema.org/InStock",
         "priceValidUntil": "2026-12-31"
@@ -123,7 +123,7 @@ export default function Pricing() {
       },
       {
         name: 'Lifetime',
-        price: 60,
+        price: 70,
         period: 'one-time',
         description: 'Complete lifetime access',
         features: [
