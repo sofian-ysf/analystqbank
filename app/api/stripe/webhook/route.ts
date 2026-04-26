@@ -97,17 +97,28 @@ export async function POST(request: NextRequest) {
               console.log('New profile:', JSON.stringify(newProfile?.[0]));
 
               // Send checkout complete notification to Discord
-              const discordPayload = createCheckoutCompleteNotification(
-                session.customer_details?.email || '',
-                userId,
-                session.customer_details?.name || '',
-                plan,
-                session.amount_total || 0,
-                session.currency?.toUpperCase() || 'GBP'
-              );
-              sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL!, discordPayload)
-                .then(() => console.log('Discord checkout complete notification sent'))
-                .catch(err => console.error('Failed to send Discord notification:', err));
+              if (!process.env.DISCORD_WEBHOOK_URL) {
+                console.error('DISCORD_WEBHOOK_URL is not set!');
+              } else {
+                console.log('Sending Discord notification...');
+                const discordPayload = createCheckoutCompleteNotification(
+                  session.customer_details?.email || '',
+                  userId,
+                  session.customer_details?.name || '',
+                  plan,
+                  session.amount_total || 0,
+                  session.currency?.toUpperCase() || 'GBP'
+                );
+                sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL, discordPayload)
+                  .then((success) => {
+                    if (success) {
+                      console.log('Discord checkout complete notification sent');
+                    } else {
+                      console.error('Discord notification failed - check webhook URL');
+                    }
+                  })
+                  .catch(err => console.error('Failed to send Discord notification:', err));
+              }
             }
           } else {
             console.log('Profile exists, updating...');
@@ -128,17 +139,28 @@ export async function POST(request: NextRequest) {
               console.log('Updated profile:', JSON.stringify(data[0]));
 
               // Send checkout complete notification to Discord
-              const discordPayload = createCheckoutCompleteNotification(
-                session.customer_details?.email || '',
-                userId,
-                session.customer_details?.name || '',
-                plan,
-                session.amount_total || 0,
-                session.currency?.toUpperCase() || 'GBP'
-              );
-              sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL!, discordPayload)
-                .then(() => console.log('Discord checkout complete notification sent'))
-                .catch(err => console.error('Failed to send Discord notification:', err));
+              if (!process.env.DISCORD_WEBHOOK_URL) {
+                console.error('DISCORD_WEBHOOK_URL is not set!');
+              } else {
+                console.log('Sending Discord notification...');
+                const discordPayload = createCheckoutCompleteNotification(
+                  session.customer_details?.email || '',
+                  userId,
+                  session.customer_details?.name || '',
+                  plan,
+                  session.amount_total || 0,
+                  session.currency?.toUpperCase() || 'GBP'
+                );
+                sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL, discordPayload)
+                  .then((success) => {
+                    if (success) {
+                      console.log('Discord checkout complete notification sent');
+                    } else {
+                      console.error('Discord notification failed - check webhook URL');
+                    }
+                  })
+                  .catch(err => console.error('Failed to send Discord notification:', err));
+              }
             } else {
               console.log('Update returned no data - forcing update...');
               const rawUpdate = await supabase

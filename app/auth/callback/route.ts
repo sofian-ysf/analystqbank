@@ -70,15 +70,16 @@ export async function GET(request: NextRequest) {
         .eq('id', user.id)
         .single()
 
-      // Send Discord notification for OAuth sign-ups (Google)
+      // Send Discord notification for login
       try {
         await fetch(`${requestUrl.origin}/api/notify-discord`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: user.email,
-            type: 'new_user',
-            plan: plan || '6month',
+            userId: user.id,
+            type: 'login',
+            fullName: profile?.full_name || ''
           }),
         })
       } catch (notifyError) {
