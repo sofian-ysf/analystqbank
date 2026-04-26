@@ -62,58 +62,20 @@ export async function POST(request: NextRequest) {
 
           console.log('Update data:', JSON.stringify(updateData));
 
-          // First try updating by user ID
-          let { data, error } = await supabase
+          // First check if profile exists
+          console.log('Checking if profile exists for userId:', userId);
+          const { data: existingProfile } = await supabase
             .from('user_profiles')
-            .update(updateData)
+            .select('id, email, subscription_plan, subscription_status')
             .eq('id', userId)
-            .select();
+            .single();
 
-          // If no rows updated, try finding by email (in case user_id doesn't match)
-          if ((!data || data.length === 0) && session.customer_details?.email) {
-            console.log('No profile found by userId, trying email lookup...');
-            const { data: profileByEmail } = await supabase
-              .from('user_profiles')
-              .select('id')
-              .eq('email', session.customer_details.email)
-              .single();
+          console.log('Existing profile check result:', existingProfile);
 
-            if (profileByEmail) {
-              console.log('Found profile by email:', profileByEmail.id);
-              const result = await supabase
-                .from('user_profiles')
-                .update(updateData)
-                .eq('id', profileByEmail.id)
-                .select();
-              data = result.data;
-              error = result.error;
-            }
-          }
+          if (!existingProfile) {
+            console.log('Profile does NOT exist for userId:', userId);
+            console.log('Attempting to create profile...');
 
-          // If still no match, try by stripe_customer_id
-          if ((!data || data.length === 0) && customerId) {
-            console.log('No profile found by email, trying stripe_customer_id lookup...');
-            const { data: profileByStripe } = await supabase
-              .from('user_profiles')
-              .select('id')
-              .eq('stripe_customer_id', customerId)
-              .single();
-
-            if (profileByStripe) {
-              console.log('Found profile by stripe_customer_id:', profileByStripe.id);
-              const result = await supabase
-                .from('user_profiles')
-                .update(updateData)
-                .eq('id', profileByStripe.id)
-                .select();
-              data = result.data;
-              error = result.error;
-            }
-          }
-
-          // If profile still doesn't exist, create it
-          if ((!data || data.length === 0)) {
-            console.log('No existing profile found - creating new profile for user:', userId);
             const { data: newProfile, error: createError } = await supabase
               .from('user_profiles')
               .insert({
@@ -128,28 +90,39 @@ export async function POST(request: NextRequest) {
 
             if (createError) {
               console.error('Error creating user profile:', createError.message);
+              console.error('Create error details:', JSON.stringify(createError));
             } else {
               console.log('=== NEW PROFILE CREATED ===');
               console.log('New profile:', JSON.stringify(newProfile?.[0]));
-              data = newProfile;
-              error = createError;
             }
-          }
-
-          if (error) {
-            console.error('Error updating user profile:', error.message);
-            console.error('Error code:', error.code);
-            console.error('Error details:', JSON.stringify(error));
-          } else if (data && data.length > 0) {
-            console.log('=== PROFILE UPDATE SUCCESS ===');
-            console.log('Updated profile:', JSON.stringify(data[0]));
-            console.log('subscription_plan:', data[0].subscription_plan);
-            console.log('subscription_status:', data[0].subscription_status);
-            console.log('stripe_customer_id:', data[0].stripe_customer_id);
           } else {
-            console.error('No data returned from update - profile may not exist');
-            console.error('Searched for userId:', userId);
-            console.error('Searched for email:', session.customer_details?.email);
+            console.log('Profile exists, updating...');
+            console.log('Current profile values:', existingProfile);
+
+            const { data, error } = await supabase
+              .from('user_profiles')
+              .update(updateData)
+              .eq('id', userId)
+              .select();
+
+            if (error) {
+              console.error('Error updating user profile:', error.message);
+              console.error('Error code:', error.code);
+              console.error('Error details:', JSON.stringify(error));
+            } else if (data && data.length > 0) {
+              console.log('=== PROFILE UPDATE SUCCESS ===');
+              console.log('Updated profile:', JSON.stringify(data[0]));
+            } else {
+              console.log('Update returned no data - forcing update...');
+              const rawUpdate = await supabase
+                .from('user_profiles')
+                .update(updateData)
+                .eq('id', userId);
+              console.log('Force update result:', JSON.stringify(rawUpdate));
+              if (!rawUpdate.error) {
+                console.log('=== PROFILE UPDATE SUCCESS (forced) ===');
+              }
+            }
           }
 
           console.log(`Lifetime access activated for user ${userId}: ${plan}`);
