@@ -232,6 +232,8 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('Checkout session created:', session.id, 'url:', session.url);
+
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     const stripeError = error as any;
     console.error('Stripe checkout error:', stripeError?.message);
