@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sendDiscordNotification, createNewUserNotification, createContactFormNotification } from '@/lib/discord';
+import { sendDiscordNotification, createNewUserNotification, createContactFormNotification, createLoginNotification, createCheckoutStartNotification, createCheckoutCompleteNotification } from '@/lib/discord';
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,6 +40,24 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
         }
         payload = createContactFormNotification(body.name, body.email, body.subject, body.message);
+        break;
+      case 'login':
+        if (!body.email || !body.userId) {
+          return NextResponse.json({ error: 'Email and userId are required' }, { status: 400 });
+        }
+        payload = createLoginNotification(body.email, body.userId, body.fullName);
+        break;
+      case 'checkout_start':
+        if (!body.email || !body.userId || !body.plan) {
+          return NextResponse.json({ error: 'Email, userId, and plan are required' }, { status: 400 });
+        }
+        payload = createCheckoutStartNotification(body.email, body.userId, body.fullName, body.plan);
+        break;
+      case 'checkout_complete':
+        if (!body.email || !body.userId || !body.plan || !body.amount) {
+          return NextResponse.json({ error: 'Email, userId, plan, and amount are required' }, { status: 400 });
+        }
+        payload = createCheckoutCompleteNotification(body.email, body.userId, body.fullName, body.plan, body.amount, body.currency);
         break;
       default:
         return NextResponse.json(

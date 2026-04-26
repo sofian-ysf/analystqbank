@@ -106,6 +106,26 @@ function SignUpForm() {
       // All signups must go through Stripe checkout for payment
       // Create Stripe checkout session
       try {
+        // Get full name from profile for Discord notification
+        const { data: profileData } = await supabase
+          .from('user_profiles')
+          .select('full_name')
+          .eq('id', data.user.id)
+          .single();
+
+        // Send checkout start notification
+        fetch('/api/notify-discord', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'checkout_start',
+            email: email,
+            userId: data.user.id,
+            fullName: profileData?.full_name || email,
+            plan: selectedPlan
+          })
+        }).catch(err => console.error('Failed to send checkout start notification:', err));
+
         const checkoutResponse = await fetch('/api/stripe/create-checkout', {
           method: 'POST',
           headers: {

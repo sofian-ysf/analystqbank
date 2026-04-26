@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase';
 import Stripe from 'stripe';
+import { sendDiscordNotification, createCheckoutCompleteNotification } from '@/lib/discord';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -94,6 +95,19 @@ export async function POST(request: NextRequest) {
             } else {
               console.log('=== NEW PROFILE CREATED ===');
               console.log('New profile:', JSON.stringify(newProfile?.[0]));
+
+              // Send checkout complete notification to Discord
+              const discordPayload = createCheckoutCompleteNotification(
+                session.customer_details?.email || '',
+                userId,
+                session.customer_details?.name || '',
+                plan,
+                session.amount_total || 0,
+                session.currency?.toUpperCase() || 'GBP'
+              );
+              sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL!, discordPayload)
+                .then(() => console.log('Discord checkout complete notification sent'))
+                .catch(err => console.error('Failed to send Discord notification:', err));
             }
           } else {
             console.log('Profile exists, updating...');

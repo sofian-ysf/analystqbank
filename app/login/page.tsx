@@ -41,20 +41,32 @@ function LoginForm() {
     if (data?.user) {
       console.log("Sign in successful, checking subscription status");
 
-      // Check subscription status
-      const { data: profile } = await supabase
+      // Get full name from profile
+      const { data: profileData } = await supabase
         .from('user_profiles')
-        .select('subscription_plan, subscription_status')
+        .select('subscription_plan, subscription_status, full_name')
         .eq('id', data.user.id)
         .single()
 
-      console.log("Profile after login:", JSON.stringify(profile));
+      console.log("Profile after login:", JSON.stringify(profileData));
+
+      // Send login notification to Discord
+      fetch('/api/notify-discord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'login',
+          email: data.user.email,
+          userId: data.user.id,
+          fullName: profileData?.full_name || ''
+        })
+      }).catch(err => console.error('Failed to send login notification:', err));
 
       // If user has a valid paid subscription status (lifetime), go to dashboard
-      if (profile?.subscription_plan && profile?.subscription_status === 'lifetime') {
+      if (profileData?.subscription_plan && profileData?.subscription_status === 'lifetime') {
         console.log("User has lifetime status, going to dashboard");
         router.push("/dashboard");
-      } else if (profile?.subscription_plan) {
+      } else if (profileData?.subscription_plan) {
         // User has a plan but status is not lifetime - still go to signup to complete purchase
         console.log("User has plan but no lifetime status, going to signup");
         router.push("/signup?plan=6month");

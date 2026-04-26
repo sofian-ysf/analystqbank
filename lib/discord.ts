@@ -97,3 +97,146 @@ export function createContactFormNotification(
     ],
   };
 }
+
+export function createLoginNotification(
+  email: string,
+  userId: string,
+  fullName?: string
+): DiscordWebhookPayload {
+  return {
+    embeds: [
+      {
+        title: '👤 User Login',
+        description: 'A user has logged in successfully',
+        color: 0x0074d4, // Blue
+        timestamp: new Date().toISOString(),
+        fields: [
+          {
+            name: 'Full Name',
+            value: fullName || 'N/A',
+            inline: true,
+          },
+          {
+            name: 'Email',
+            value: email,
+            inline: true,
+          },
+          {
+            name: 'User ID',
+            value: userId,
+            inline: false,
+          },
+          {
+            name: 'Time',
+            value: new Date().toLocaleString(),
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function createCheckoutStartNotification(
+  email: string,
+  userId: string,
+  fullName: string | undefined,
+  plan: string
+): DiscordWebhookPayload {
+  const planDisplay = plan === '2month' ? '2 Months' : plan === '6month' ? '6 Months' : plan === 'lifetime' ? 'Lifetime' : plan;
+  return {
+    embeds: [
+      {
+        title: '🛒 Checkout Started',
+        description: 'A user has signed up and started checkout',
+        color: 0xff9500, // Orange
+        timestamp: new Date().toISOString(),
+        fields: [
+          {
+            name: 'Full Name',
+            value: fullName || 'N/A',
+            inline: true,
+          },
+          {
+            name: 'Email',
+            value: email,
+            inline: true,
+          },
+          {
+            name: 'User ID',
+            value: userId,
+            inline: false,
+          },
+          {
+            name: 'Plan Selected',
+            value: planDisplay,
+            inline: true,
+          },
+          {
+            name: 'Time',
+            value: new Date().toLocaleString(),
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function createCheckoutCompleteNotification(
+  email: string,
+  userId: string,
+  fullName: string | undefined,
+  plan: string,
+  amount: number,
+  currency: string = 'GBP'
+): DiscordWebhookPayload {
+  const planDisplay = plan === '2month' ? '2 Months' : plan === '6month' ? '6 Months' : plan === 'lifetime' ? 'Lifetime' : plan;
+  const formattedAmount = new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: currency,
+  }).format(amount / 100); // Stripe amounts are in pence/cents
+
+  return {
+    embeds: [
+      {
+        title: '✅ Checkout Complete',
+        description: 'A user has completed payment',
+        color: 0x00ff00, // Green
+        timestamp: new Date().toISOString(),
+        fields: [
+          {
+            name: 'Full Name',
+            value: fullName || 'N/A',
+            inline: true,
+          },
+          {
+            name: 'Email',
+            value: email,
+            inline: true,
+          },
+          {
+            name: 'User ID',
+            value: userId,
+            inline: false,
+          },
+          {
+            name: 'Plan Purchased',
+            value: planDisplay,
+            inline: true,
+          },
+          {
+            name: 'Amount Paid',
+            value: formattedAmount,
+            inline: true,
+          },
+          {
+            name: 'Time',
+            value: new Date().toLocaleString(),
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
+}
