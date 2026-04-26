@@ -758,22 +758,22 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-gray-900 text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-gray-800 shadow-lg">
+      <header className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+              className="bg-red-600 hover:bg-red-700 text-gray-900 px-4 py-2 rounded-lg transition-colors"
             >
               Logout
             </button>
@@ -782,7 +782,7 @@ export default function AdminDashboard() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-gray-800 border-t border-gray-700">
+      <nav className="bg-white border-t border-gray-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             {['overview', 'users', 'questions', 'ai-generator', 'blog'].map((tab) => (
@@ -800,7 +800,7 @@ export default function AdminDashboard() {
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab
                     ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                 }`}
               >
                 {tab === 'ai-generator' ? 'AI Generator' :
@@ -816,24 +816,24 @@ export default function AdminDashboard() {
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white">Overview</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Overview</h2>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-300">Total Users</h3>
-                <p className="text-3xl font-bold text-white">{stats?.totalUsers || 0}</p>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-lg font-medium text-gray-600">Total Users</h3>
+                <p className="text-3xl font-bold text-gray-900">{stats?.totalUsers || 0}</p>
               </div>
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-300">New This Week</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-lg font-medium text-gray-600">New This Week</h3>
                 <p className="text-3xl font-bold text-green-400">{stats?.newUsersThisWeek || 0}</p>
               </div>
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-300">New This Month</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-lg font-medium text-gray-600">New This Month</h3>
                 <p className="text-3xl font-bold text-blue-400">{stats?.newUsersThisMonth || 0}</p>
               </div>
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-lg font-medium text-gray-300">Premium Users</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-lg font-medium text-gray-600">Premium Users</h3>
                 <p className="text-3xl font-bold text-yellow-400">
                   {(stats?.subscriptionStats?.premium || 0) + (stats?.subscriptionStats?.professional || 0)}
                 </p>
@@ -842,25 +842,25 @@ export default function AdminDashboard() {
 
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-white mb-4">Subscription Plans</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Subscription Plans</h3>
                 <div className="space-y-3">
                   {Object.entries(stats?.subscriptionStats || {}).map(([plan, count]) => (
                     <div key={plan} className="flex justify-between">
-                      <span className="text-gray-300 capitalize">{plan}</span>
-                      <span className="text-white font-semibold">{count}</span>
+                      <span className="text-gray-600 capitalize">{plan}</span>
+                      <span className="text-gray-900 font-semibold">{count}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-white mb-4">Exam Levels</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Exam Levels</h3>
                 <div className="space-y-3">
                   {Object.entries(stats?.examLevelStats || {}).map(([level, count]) => (
                     <div key={level} className="flex justify-between">
-                      <span className="text-gray-300">{level}</span>
-                      <span className="text-white font-semibold">{count}</span>
+                      <span className="text-gray-600">{level}</span>
+                      <span className="text-gray-900 font-semibold">{count}</span>
                     </div>
                   ))}
                 </div>
@@ -871,39 +871,39 @@ export default function AdminDashboard() {
 
         {activeTab === 'users' && (
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-white">Users</h2>
+            <h2 className="text-3xl font-bold text-gray-900">Users</h2>
 
-            <div className="bg-gray-800 rounded-lg overflow-hidden">
+            <div className="bg-white rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-700">
-                  <thead className="bg-gray-700">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         User
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Exam Level
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Plan
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                         Created At
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-gray-800 divide-y divide-gray-700">
+                  <tbody className="bg-white divide-y divide-gray-700">
                     {users.map((user) => (
                       <tr key={user.id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div>
-                            <div className="text-sm font-medium text-white">
+                            <div className="text-sm font-medium text-gray-900">
                               {user.full_name || 'No name'}
                             </div>
-                            <div className="text-sm text-gray-400">{user.email}</div>
+                            <div className="text-sm text-gray-500">{user.email}</div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                           {user.exam_level}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -916,7 +916,7 @@ export default function AdminDashboard() {
                             {user.subscription_plan}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                           {new Date(user.created_at).toLocaleDateString()}
                         </td>
                       </tr>
@@ -932,13 +932,13 @@ export default function AdminDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-3xl font-bold text-white">Question Bank Statistics</h2>
-                <p className="text-gray-400">Overview of questions in your database by category</p>
+                <h2 className="text-3xl font-bold text-gray-900">Question Bank Statistics</h2>
+                <p className="text-gray-500">Overview of questions in your database by category</p>
               </div>
               <button
                 onClick={fetchQuestionStats}
                 disabled={questionStatsLoading}
-                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-gray-900 px-4 py-2 rounded-lg transition-colors"
               >
                 {questionStatsLoading ? 'Refreshing...' : 'Refresh'}
               </button>
@@ -947,63 +947,63 @@ export default function AdminDashboard() {
             {questionStatsLoading ? (
               <div className="flex items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                <span className="ml-3 text-gray-300">Loading question statistics...</span>
+                <span className="ml-3 text-gray-600">Loading question statistics...</span>
               </div>
             ) : questionStats ? (
               <>
                 {/* Summary Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div className="bg-gray-800 p-6 rounded-lg">
-                    <h3 className="text-lg font-medium text-gray-300">Total Questions</h3>
-                    <p className="text-4xl font-bold text-white">{questionStats.summary.totalQuestions.toLocaleString()}</p>
+                  <div className="bg-white p-6 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-600">Total Questions</h3>
+                    <p className="text-4xl font-bold text-gray-900">{questionStats.summary.totalQuestions.toLocaleString()}</p>
                   </div>
-                  <div className="bg-gray-800 p-6 rounded-lg">
-                    <h3 className="text-lg font-medium text-gray-300">Active Questions</h3>
+                  <div className="bg-white p-6 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-600">Active Questions</h3>
                     <p className="text-4xl font-bold text-green-400">{questionStats.summary.totalActive.toLocaleString()}</p>
                   </div>
-                  <div className="bg-gray-800 p-6 rounded-lg">
-                    <h3 className="text-lg font-medium text-gray-300">With Learning Objective</h3>
+                  <div className="bg-white p-6 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-600">With Learning Objective</h3>
                     <p className="text-4xl font-bold text-purple-400">{questionStats.summary.totalWithLO?.toLocaleString() || 0}</p>
                   </div>
-                  <div className="bg-gray-800 p-6 rounded-lg">
-                    <h3 className="text-lg font-medium text-gray-300">Categories</h3>
+                  <div className="bg-white p-6 rounded-lg">
+                    <h3 className="text-lg font-medium text-gray-600">Categories</h3>
                     <p className="text-4xl font-bold text-blue-400">{questionStats.summary.totalTopics}</p>
                   </div>
                 </div>
 
                 {/* Questions by Category */}
-                <div className="bg-gray-800 rounded-lg overflow-hidden">
-                  <div className="p-6 border-b border-gray-700">
-                    <h3 className="text-xl font-semibold text-white">Questions by Category</h3>
+                <div className="bg-white rounded-lg overflow-hidden">
+                  <div className="p-6 border-b border-gray-300">
+                    <h3 className="text-xl font-semibold text-gray-900">Questions by Category</h3>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-700">
-                      <thead className="bg-gray-700">
+                      <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Category
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Total
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Beginner
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Intermediate
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Advanced
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             LOs Covered
                           </th>
-                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-center text-xs font-medium text-gray-600 uppercase tracking-wider">
                             Active
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-gray-800 divide-y divide-gray-700">
+                      <tbody className="bg-white divide-y divide-gray-700">
                         {cfaLevel1Curriculum.map((topic) => {
                           const topicData = questionStats.topicStats[topic.name] || {
                             total: 0,
@@ -1035,20 +1035,20 @@ export default function AdminDashboard() {
                               >
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="flex items-center">
-                                    <span className="mr-2 text-gray-400 w-4">
+                                    <span className="mr-2 text-gray-500 w-4">
                                       {isExpanded ? '▼' : '▶'}
                                     </span>
-                                    <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-white mr-3 flex-shrink-0`}>
+                                    <div className={`w-10 h-10 ${topic.color} rounded-lg flex items-center justify-center text-gray-900 mr-3 flex-shrink-0`}>
                                       {topic.icon && <topic.icon size={20} weight="fill" />}
                                     </div>
                                     <div>
-                                      <div className="text-sm font-medium text-white">{topic.name}</div>
-                                      <div className="text-xs text-gray-400">{topic.examWeight}</div>
+                                      <div className="text-sm font-medium text-gray-900">{topic.name}</div>
+                                      <div className="text-xs text-gray-500">{topic.examWeight}</div>
                                     </div>
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                  <span className="text-lg font-bold text-white">{topicData.total}</span>
+                                  <span className="text-lg font-bold text-gray-900">{topicData.total}</span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
                                   <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-900 text-green-300">
@@ -1066,7 +1066,7 @@ export default function AdminDashboard() {
                                   </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-center">
-                                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${loCount > 0 ? 'bg-purple-900 text-purple-300' : 'bg-gray-700 text-gray-400'}`}>
+                                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${loCount > 0 ? 'bg-purple-900 text-purple-300' : 'bg-gray-50 text-gray-500'}`}>
                                     {loCount}/{totalLOsForTopic}
                                   </span>
                                 </td>
@@ -1078,7 +1078,7 @@ export default function AdminDashboard() {
                               </tr>
                               {isExpanded && (
                                 <tr>
-                                  <td colSpan={7} className="px-6 py-4 bg-gray-900/50">
+                                  <td colSpan={7} className="px-6 py-4 bg-gray-100/50">
                                     <div className="ml-8 space-y-4">
                                       {getReadingsForTopic(topic.name).map((reading) => {
                                         const readingLOs = reading.learningObjectives;
@@ -1090,18 +1090,18 @@ export default function AdminDashboard() {
                                         ).length;
 
                                         return (
-                                          <div key={reading.name} className="bg-gray-800 rounded-lg overflow-hidden">
+                                          <div key={reading.name} className="bg-white rounded-lg overflow-hidden">
                                             {/* Reading Header */}
-                                            <div className="px-4 py-3 bg-gray-700 flex items-center justify-between">
+                                            <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
                                               <div className="flex items-center">
                                                 <BookOpen size={16} className="text-blue-400 mr-2" />
-                                                <span className="text-sm font-semibold text-white">{reading.name}</span>
+                                                <span className="text-sm font-semibold text-gray-900">{reading.name}</span>
                                               </div>
                                               <div className="flex items-center gap-3">
-                                                <span className="text-xs text-gray-400">
+                                                <span className="text-xs text-gray-500">
                                                   {coveredLOsInReading}/{readingLOs.length} LOs covered
                                                 </span>
-                                                <span className="bg-blue-600 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                                                <span className="bg-blue-600 text-gray-900 px-2 py-0.5 rounded-full text-xs font-semibold">
                                                   {readingQuestionCount} Q{readingQuestionCount !== 1 ? 's' : ''}
                                                 </span>
                                               </div>
@@ -1115,21 +1115,21 @@ export default function AdminDashboard() {
                                                   <div
                                                     key={lo.id}
                                                     className={`flex items-start justify-between px-3 py-2 rounded text-xs ${
-                                                      questionCount > 0 ? 'bg-gray-700' : 'bg-gray-800/50'
+                                                      questionCount > 0 ? 'bg-gray-50' : 'bg-white/50'
                                                     }`}
                                                   >
                                                     <div className="flex-1 mr-3">
                                                       <span className={`font-semibold ${questionCount > 0 ? 'text-purple-400' : 'text-gray-500'}`}>
                                                         {lo.id}
                                                       </span>
-                                                      <span className={`ml-2 ${questionCount > 0 ? 'text-gray-300' : 'text-gray-500'}`}>
+                                                      <span className={`ml-2 ${questionCount > 0 ? 'text-gray-600' : 'text-gray-500'}`}>
                                                         {lo.text}
                                                       </span>
                                                     </div>
                                                     <span className={`px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${
                                                       questionCount > 0
-                                                        ? 'bg-purple-600 text-white'
-                                                        : 'bg-gray-700 text-gray-500'
+                                                        ? 'bg-purple-600 text-gray-900'
+                                                        : 'bg-gray-50 text-gray-500'
                                                     }`}>
                                                       {questionCount}
                                                     </span>
@@ -1156,15 +1156,15 @@ export default function AdminDashboard() {
                 {Object.keys(questionStats.topicStats).some(key =>
                   !cfaLevel1Curriculum.find(t => t.name === key)
                 ) && (
-                  <div className="bg-gray-800 rounded-lg p-6">
-                    <h3 className="text-xl font-semibold text-white mb-4">Other Categories</h3>
+                  <div className="bg-white rounded-lg p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Other Categories</h3>
                     <div className="space-y-2">
                       {Object.entries(questionStats.topicStats)
                         .filter(([key]) => !cfaLevel1Curriculum.find(t => t.name === key))
                         .map(([category, data]) => (
-                          <div key={category} className="flex justify-between items-center bg-gray-700 p-3 rounded">
-                            <span className="text-gray-300">{category}</span>
-                            <span className="text-white font-semibold">{data.total} questions</span>
+                          <div key={category} className="flex justify-between items-center bg-gray-50 p-3 rounded">
+                            <span className="text-gray-600">{category}</span>
+                            <span className="text-gray-900 font-semibold">{data.total} questions</span>
                           </div>
                         ))}
                     </div>
@@ -1173,7 +1173,7 @@ export default function AdminDashboard() {
               </>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-400">Failed to load question statistics. Please try refreshing.</p>
+                <p className="text-gray-500">Failed to load question statistics. Please try refreshing.</p>
               </div>
             )}
           </div>
@@ -1182,20 +1182,20 @@ export default function AdminDashboard() {
         {activeTab === 'ai-generator' && (
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <h2 className="text-3xl font-bold text-white">AI Question Generator</h2>
-              <span className="bg-green-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">RAG-Powered</span>
+              <h2 className="text-3xl font-bold text-gray-900">AI Question Generator</h2>
+              <span className="bg-green-600 text-gray-900 text-xs font-semibold px-2.5 py-1 rounded-full">RAG-Powered</span>
             </div>
-            <p className="text-gray-400">Generate high-quality CFA Level 1 questions grounded on your training materials in cfatrainingmaterial/</p>
+            <p className="text-gray-500">Generate high-quality CFA Level 1 questions grounded on your training materials in cfatrainingmaterial/</p>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* AI Generator Form */}
-              <div className="bg-gray-800 p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-white mb-4">Generate Question</h3>
+              <div className="bg-white p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Generate Question</h3>
 
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-medium text-gray-300">
+                      <label className="block text-sm font-medium text-gray-600">
                         Topic Area
                       </label>
                       <label className="flex items-center cursor-pointer">
@@ -1210,7 +1210,7 @@ export default function AdminDashboard() {
                               setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: '' });
                             }
                           }}
-                          className="mr-2 w-4 h-4 rounded bg-gray-700 border-gray-600 text-orange-600 focus:ring-orange-500"
+                          className="mr-2 w-4 h-4 rounded bg-gray-50 border-gray-600 text-orange-600 focus:ring-orange-500"
                         />
                         <span className="text-xs text-orange-400 font-medium">Generate for ALL Readings</span>
                       </label>
@@ -1218,7 +1218,7 @@ export default function AdminDashboard() {
                     <select
                       value={aiGeneratorData.topic_area}
                       onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, topic_area: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 bg-gray-50 border border-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
                       {CFA_TOPICS.map((topic) => (
                         <option key={topic} value={topic}>{topic}</option>
@@ -1237,13 +1237,13 @@ export default function AdminDashboard() {
 
                   {!generateAllReadings && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-600 mb-2">
                         Reading / Section
                       </label>
                       <select
                         value={selectedReading}
                         onChange={(e) => setSelectedReading(e.target.value)}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 bg-gray-50 border border-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="">-- Select a Reading --</option>
                         {availableReadings.map((reading) => (
@@ -1256,7 +1256,7 @@ export default function AdminDashboard() {
                   {!generateAllReadings && selectedReading && availableLOs.length > 0 && (
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <label className="block text-sm font-medium text-gray-300">
+                        <label className="block text-sm font-medium text-gray-600">
                           Learning Objective
                           <span className="text-xs text-blue-400 ml-2">({availableLOs.length} available)</span>
                         </label>
@@ -1270,7 +1270,7 @@ export default function AdminDashboard() {
                                 setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: '' });
                               }
                             }}
-                            className="mr-2 w-4 h-4 rounded bg-gray-700 border-gray-600 text-purple-600 focus:ring-purple-500"
+                            className="mr-2 w-4 h-4 rounded bg-gray-50 border-gray-600 text-purple-600 focus:ring-purple-500"
                           />
                           <span className="text-xs text-purple-400 font-medium">Generate for ALL LOs</span>
                         </label>
@@ -1280,7 +1280,7 @@ export default function AdminDashboard() {
                           <select
                             value={aiGeneratorData.learning_objective_id}
                             onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, learning_objective_id: e.target.value })}
-                            className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
+                            className="w-full px-4 py-2 bg-gray-50 border border-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm"
                           >
                             <option value="">-- Any Learning Objective --</option>
                             {availableLOs.map((lo) => (
@@ -1307,13 +1307,13 @@ export default function AdminDashboard() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-600 mb-2">
                         Difficulty Level
                       </label>
                       <select
                         value={aiGeneratorData.difficulty}
                         onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, difficulty: e.target.value })}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 bg-gray-50 border border-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="beginner">Beginner</option>
                         <option value="intermediate">Intermediate</option>
@@ -1322,13 +1322,13 @@ export default function AdminDashboard() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                      <label className="block text-sm font-medium text-gray-600 mb-2">
                         Number of Questions
                       </label>
                       <select
                         value={aiGeneratorData.questionCount}
                         onChange={(e) => setAiGeneratorData({ ...aiGeneratorData, questionCount: parseInt(e.target.value) })}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="w-full px-4 py-2 bg-gray-50 border border-gray-600 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500"
                       >
                         <option value={1}>1 Question</option>
                         <option value={2}>2 Questions</option>
@@ -1345,7 +1345,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleBatchAllReadingsGeneration(false)}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                          className="flex-1 bg-orange-600 hover:bg-orange-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors"
                         >
                           {aiGeneratorData.generating && !generatingTable
                             ? `Generating...`
@@ -1354,7 +1354,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleBatchAllReadingsGeneration(true)}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                           title="Generate table questions for all readings"
                         >
                           {generatingTable ? (
@@ -1374,7 +1374,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleBatchLOGeneration(false)}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors"
                         >
                           {aiGeneratorData.generating && !generatingTable
                             ? `Generating...`
@@ -1383,7 +1383,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleBatchLOGeneration(true)}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                           title="Generate table questions for all LOs"
                         >
                           {generatingTable ? (
@@ -1403,7 +1403,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleAIGeneration()}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors"
                         >
                           {aiGeneratorData.generating
                             ? `Generating ${aiGeneratorData.questionCount} Q...`
@@ -1412,7 +1412,7 @@ export default function AdminDashboard() {
                         <button
                           onClick={() => handleTableGeneration()}
                           disabled={aiGeneratorData.generating || generatingTable}
-                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                          className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
                           title="Generate a question with table data"
                         >
                           {generatingTable ? (
@@ -1433,14 +1433,14 @@ export default function AdminDashboard() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleExportQuestions()}
-                            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm"
+                            className="flex-1 bg-gray-600 hover:bg-gray-50 text-gray-900 font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
                             Export Backup
                           </button>
-                          <label className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm cursor-pointer">
+                          <label className="flex-1 bg-gray-600 hover:bg-gray-50 text-gray-900 font-semibold py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-1 text-sm cursor-pointer">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m4-8l-4-4m0 0l-4 4m4-4v12" />
                             </svg>
@@ -1455,7 +1455,7 @@ export default function AdminDashboard() {
                         </div>
                         <button
                           onClick={() => handleSaveAllQuestions()}
-                          className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                          className="w-full bg-green-600 hover:bg-green-700 text-gray-900 font-semibold py-3 px-4 rounded-lg transition-colors"
                         >
                           Save All {aiGeneratorData.generatedQuestions.length} Question{aiGeneratorData.generatedQuestions.length > 1 ? 's' : ''} to Database
                         </button>
@@ -1463,7 +1463,7 @@ export default function AdminDashboard() {
                     )}
                     {/* Import button when no questions exist */}
                     {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && !generatingTable && (
-                      <label className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                      <label className="w-full bg-gray-600 hover:bg-gray-50 text-gray-900 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m4-8l-4-4m0 0l-4 4m4-4v12" />
                         </svg>
@@ -1497,7 +1497,7 @@ export default function AdminDashboard() {
                             <span>Reading {batchProgress.currentReadingIndex + 1} / {batchProgress.totalReadings}</span>
                             <span>{batchProgress.completedReadings.length} readings completed</span>
                           </div>
-                          <div className="w-full bg-gray-700 rounded-full h-1.5 mb-2">
+                          <div className="w-full bg-gray-50 rounded-full h-1.5 mb-2">
                             <div
                               className="bg-orange-500 h-1.5 rounded-full transition-all duration-500"
                               style={{ width: `${((batchProgress.currentReadingIndex + 1) / batchProgress.totalReadings) * 100}%` }}
@@ -1510,7 +1510,7 @@ export default function AdminDashboard() {
                       )}
 
                       {/* LO progress bar */}
-                      <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                      <div className="w-full bg-gray-50 rounded-full h-2 mb-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-500 ${batchProgress.totalReadings > 0 ? 'bg-orange-600' : 'bg-purple-600'}`}
                           style={{ width: `${((batchProgress.currentLOIndex + 1) / batchProgress.totalLOs) * 100}%` }}
@@ -1519,14 +1519,14 @@ export default function AdminDashboard() {
                       <div className={`text-xs ${batchProgress.totalReadings > 0 ? 'text-orange-200' : 'text-purple-200'}`}>
                         Currently generating: <strong>{batchProgress.currentLOId}</strong>
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div className="text-xs text-gray-500 mt-1">
                         Questions generated so far: {aiGeneratorData.generatedQuestions.length}
                       </div>
                     </div>
                   )}
 
                   {/* Token Estimation */}
-                  <div className="mt-4 p-3 bg-gray-700 rounded text-xs text-gray-400">
+                  <div className="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-500">
                     {generateAllReadings ? (
                       <>
                         <strong>Estimated tokens (full topic):</strong> ~{(availableReadings.reduce((sum, r) => sum + r.learningObjectives.length, 0) * aiGeneratorData.questionCount * 3400).toLocaleString()} tokens
@@ -1551,9 +1551,9 @@ export default function AdminDashboard() {
               </div>
 
               {/* Generated Questions Preview */}
-              <div className="bg-gray-800 p-6 rounded-lg">
+              <div className="bg-white p-6 rounded-lg">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-white">Generated Questions</h3>
+                  <h3 className="text-xl font-semibold text-gray-900">Generated Questions</h3>
                   {aiGeneratorData.generatedQuestions.length > 0 && (
                     <span className="bg-green-700 text-green-100 text-xs font-medium px-2 py-1 rounded">
                       {aiGeneratorData.generatedQuestions.length} Questions Ready
@@ -1564,7 +1564,7 @@ export default function AdminDashboard() {
                 {(aiGeneratorData.generating || generatingTable) && (
                   <div className="flex flex-col items-center justify-center py-8">
                     <div className={`animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 ${generatingTable ? 'border-amber-500' : 'border-blue-500'}`}></div>
-                    <span className="mt-3 text-gray-300">
+                    <span className="mt-3 text-gray-600">
                       {generatingTable
                         ? 'AI is generating table question...'
                         : `AI is generating ${aiGeneratorData.questionCount} question${aiGeneratorData.questionCount > 1 ? 's' : ''}...`
@@ -1579,11 +1579,11 @@ export default function AdminDashboard() {
                 {aiGeneratorData.generatedQuestions.length > 0 && !aiGeneratorData.generating && !generatingTable && (
                   <div className="space-y-4">
                     {/* Question Navigation */}
-                    <div className="flex items-center justify-between bg-gray-700 p-2 rounded-lg">
+                    <div className="flex items-center justify-between bg-gray-50 p-2 rounded-lg">
                       <button
                         onClick={() => setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1))}
                         disabled={selectedQuestionIndex === 0}
-                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm"
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 rounded text-sm"
                       >
                         ← Prev
                       </button>
@@ -1594,8 +1594,8 @@ export default function AdminDashboard() {
                             onClick={() => setSelectedQuestionIndex(idx)}
                             className={`w-8 h-8 rounded-full text-sm font-semibold ${
                               idx === selectedQuestionIndex
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                                ? 'bg-blue-600 text-gray-900'
+                                : 'bg-gray-600 text-gray-600 hover:bg-gray-500'
                             }`}
                           >
                             {idx + 1}
@@ -1605,7 +1605,7 @@ export default function AdminDashboard() {
                       <button
                         onClick={() => setSelectedQuestionIndex(Math.min(aiGeneratorData.generatedQuestions.length - 1, selectedQuestionIndex + 1))}
                         disabled={selectedQuestionIndex === aiGeneratorData.generatedQuestions.length - 1}
-                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm"
+                        className="px-3 py-1 bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 rounded text-sm"
                       >
                         Next →
                       </button>
@@ -1619,28 +1619,28 @@ export default function AdminDashboard() {
                         <div className="space-y-4">
                           <div>
                             <div className="flex items-center gap-2 mb-2">
-                              <h4 className="font-medium text-gray-300">Question {selectedQuestionIndex + 1}:</h4>
+                              <h4 className="font-medium text-gray-600">Question {selectedQuestionIndex + 1}:</h4>
                               {currentQuestion.has_table && (
-                                <span className="bg-amber-600 text-white text-xs font-semibold px-2 py-0.5 rounded">
+                                <span className="bg-amber-600 text-gray-900 text-xs font-semibold px-2 py-0.5 rounded">
                                   Table
                                 </span>
                               )}
                             </div>
-                            <p className="text-white bg-gray-700 p-3 rounded">{currentQuestion.question_text}</p>
+                            <p className="text-gray-900 bg-gray-50 p-3 rounded">{currentQuestion.question_text}</p>
                           </div>
 
                           {/* Table Display */}
                           {currentQuestion.has_table && currentQuestion.table_data && (
-                            <div className="bg-gray-900 border border-amber-700 rounded-lg overflow-hidden">
-                              <div className="bg-amber-900/30 px-4 py-2 border-b border-amber-700">
+                            <div className="bg-gray-100 border border-amber-300 rounded-lg overflow-hidden">
+                              <div className="bg-amber-900/30 px-4 py-2 border-b border-amber-300">
                                 <h4 className="font-medium text-amber-300 text-sm">{currentQuestion.table_data.title}</h4>
                               </div>
                               <div className="overflow-x-auto">
                                 <table className="w-full text-sm">
                                   <thead>
-                                    <tr className="bg-gray-800">
+                                    <tr className="bg-white">
                                       {currentQuestion.table_data.headers.map((header: string, idx: number) => (
-                                        <th key={idx} className="px-4 py-2 text-left text-gray-300 font-semibold border-b border-gray-700">
+                                        <th key={idx} className="px-4 py-2 text-left text-gray-600 font-semibold border-b border-gray-300">
                                           {header}
                                         </th>
                                       ))}
@@ -1648,14 +1648,14 @@ export default function AdminDashboard() {
                                   </thead>
                                   <tbody>
                                     {currentQuestion.table_data.rows.map((row: { label?: string; values: (string | number)[] }, rowIdx: number) => (
-                                      <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-gray-800/50' : 'bg-gray-800/30'}>
+                                      <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white/50' : 'bg-white/30'}>
                                         {row.label && (
-                                          <td className="px-4 py-2 text-gray-300 font-medium border-b border-gray-700/50">
+                                          <td className="px-4 py-2 text-gray-600 font-medium border-b border-gray-300/50">
                                             {row.label}
                                           </td>
                                         )}
                                         {row.values.map((value: string | number, valIdx: number) => (
-                                          <td key={valIdx} className="px-4 py-2 text-white border-b border-gray-700/50">
+                                          <td key={valIdx} className="px-4 py-2 text-gray-900 border-b border-gray-300/50">
                                             {typeof value === 'number' ? value.toLocaleString() : value}
                                           </td>
                                         ))}
@@ -1665,7 +1665,7 @@ export default function AdminDashboard() {
                                 </table>
                               </div>
                               {currentQuestion.table_data.footnote && (
-                                <div className="px-4 py-2 text-xs text-gray-400 italic border-t border-gray-700">
+                                <div className="px-4 py-2 text-xs text-gray-500 italic border-t border-gray-300">
                                   {currentQuestion.table_data.footnote}
                                 </div>
                               )}
@@ -1673,39 +1673,39 @@ export default function AdminDashboard() {
                           )}
 
                           <div>
-                            <h4 className="font-medium text-gray-300 mb-2">Options:</h4>
+                            <h4 className="font-medium text-gray-600 mb-2">Options:</h4>
                             <div className="space-y-2">
-                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'A' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                                <span className="font-bold text-white">A. </span>
-                                <span className="text-white">{currentQuestion.option_a}</span>
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'A' ? 'bg-green-700' : 'bg-gray-50'}`}>
+                                <span className="font-bold text-gray-900">A. </span>
+                                <span className="text-gray-900">{currentQuestion.option_a}</span>
                               </div>
-                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'B' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                                <span className="font-bold text-white">B. </span>
-                                <span className="text-white">{currentQuestion.option_b}</span>
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'B' ? 'bg-green-700' : 'bg-gray-50'}`}>
+                                <span className="font-bold text-gray-900">B. </span>
+                                <span className="text-gray-900">{currentQuestion.option_b}</span>
                               </div>
-                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'C' ? 'bg-green-700' : 'bg-gray-700'}`}>
-                                <span className="font-bold text-white">C. </span>
-                                <span className="text-white">{currentQuestion.option_c}</span>
+                              <div className={`p-2 rounded ${currentQuestion.correct_answer === 'C' ? 'bg-green-700' : 'bg-gray-50'}`}>
+                                <span className="font-bold text-gray-900">C. </span>
+                                <span className="text-gray-900">{currentQuestion.option_c}</span>
                               </div>
                             </div>
                           </div>
 
                           <div>
-                            <h4 className="font-medium text-gray-300 mb-2">Explanation:</h4>
-                            <div className="text-white bg-gray-700 p-3 rounded whitespace-pre-line">{currentQuestion.explanation}</div>
+                            <h4 className="font-medium text-gray-600 mb-2">Explanation:</h4>
+                            <div className="text-gray-900 bg-gray-50 p-3 rounded whitespace-pre-line">{currentQuestion.explanation}</div>
                           </div>
 
-                          <div className="flex justify-between text-sm text-gray-400">
+                          <div className="flex justify-between text-sm text-gray-500">
                             <span>Difficulty: {currentQuestion.difficulty_level}</span>
                             <span>Correct Answer: {currentQuestion.correct_answer}</span>
                           </div>
 
                           {currentQuestion.keywords && (
                             <div>
-                              <h4 className="font-medium text-gray-300 mb-2">Keywords:</h4>
+                              <h4 className="font-medium text-gray-600 mb-2">Keywords:</h4>
                               <div className="flex flex-wrap gap-2">
                                 {currentQuestion.keywords.map((keyword: string, index: number) => (
-                                  <span key={index} className="bg-blue-600 text-white px-2 py-1 rounded text-xs">
+                                  <span key={index} className="bg-blue-600 text-gray-900 px-2 py-1 rounded text-xs">
                                     {keyword}
                                   </span>
                                 ))}
@@ -1724,10 +1724,10 @@ export default function AdminDashboard() {
                           )}
 
                           {/* Individual Save/Discard Buttons */}
-                          <div className="flex gap-2 pt-2 border-t border-gray-700">
+                          <div className="flex gap-2 pt-2 border-t border-gray-300">
                             <button
                               onClick={() => handleSaveQuestion(selectedQuestionIndex)}
-                              className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
+                              className="flex-1 bg-green-600 hover:bg-green-700 text-gray-900 font-semibold py-2 px-4 rounded-lg transition-colors text-sm"
                             >
                               Save This Question
                             </button>
@@ -1739,7 +1739,7 @@ export default function AdminDashboard() {
                                   setSelectedQuestionIndex(updated.length - 1);
                                 }
                               }}
-                              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors text-sm"
+                              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-gray-900 font-semibold rounded-lg transition-colors text-sm"
                             >
                               Discard
                             </button>
@@ -1752,16 +1752,16 @@ export default function AdminDashboard() {
 
                 {aiGeneratorData.generatedQuestions.length === 0 && !aiGeneratorData.generating && !generatingTable && (
                   <div className="text-center py-8">
-                    <p className="text-gray-400">No questions generated yet. Click &quot;Generate Q&quot; for regular questions or &quot;Table Q&quot; for questions with data tables.</p>
+                    <p className="text-gray-500">No questions generated yet. Click &quot;Generate Q&quot; for regular questions or &quot;Table Q&quot; for questions with data tables.</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Instructions */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold text-white mb-4">How RAG-Powered Generation Works</h3>
-              <div className="space-y-2 text-gray-300">
+            <div className="bg-white p-6 rounded-lg">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">How RAG-Powered Generation Works</h3>
+              <div className="space-y-2 text-gray-600">
                 <p>• <strong>Batch Generation:</strong> Generates multiple questions at once for efficient content creation</p>
                 <p>• <strong>Table Questions:</strong> Generate questions with data tables (cash flows, ratios, etc.) for calculation-based problems</p>
                 <p>• <strong>Grounded on Your Materials:</strong> Questions are generated using content from your cfatrainingmaterial/ folder</p>
