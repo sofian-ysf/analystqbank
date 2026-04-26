@@ -18,6 +18,9 @@ export async function sendDiscordNotification(
   payload: DiscordWebhookPayload
 ): Promise<boolean> {
   try {
+    console.log('Discord: Sending to webhook URL:', webhookUrl.substring(0, 50) + '...');
+    console.log('Discord: Payload:', JSON.stringify(payload));
+
     const response = await fetch(webhookUrl, {
       method: 'POST',
       headers: {
@@ -25,6 +28,10 @@ export async function sendDiscordNotification(
       },
       body: JSON.stringify(payload),
     });
+
+    console.log('Discord: Response status:', response.status);
+    const responseText = await response.text();
+    console.log('Discord: Response body:', responseText);
 
     return response.ok;
   } catch (error) {
