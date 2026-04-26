@@ -126,6 +126,19 @@ export async function POST(request: NextRequest) {
             } else if (data && data.length > 0) {
               console.log('=== PROFILE UPDATE SUCCESS ===');
               console.log('Updated profile:', JSON.stringify(data[0]));
+
+              // Send checkout complete notification to Discord
+              const discordPayload = createCheckoutCompleteNotification(
+                session.customer_details?.email || '',
+                userId,
+                session.customer_details?.name || '',
+                plan,
+                session.amount_total || 0,
+                session.currency?.toUpperCase() || 'GBP'
+              );
+              sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL!, discordPayload)
+                .then(() => console.log('Discord checkout complete notification sent'))
+                .catch(err => console.error('Failed to send Discord notification:', err));
             } else {
               console.log('Update returned no data - forcing update...');
               const rawUpdate = await supabase
@@ -135,6 +148,19 @@ export async function POST(request: NextRequest) {
               console.log('Force update result:', JSON.stringify(rawUpdate));
               if (!rawUpdate.error) {
                 console.log('=== PROFILE UPDATE SUCCESS (forced) ===');
+
+                // Send checkout complete notification to Discord
+                const discordPayload = createCheckoutCompleteNotification(
+                  session.customer_details?.email || '',
+                  userId,
+                  session.customer_details?.name || '',
+                  plan,
+                  session.amount_total || 0,
+                  session.currency?.toUpperCase() || 'GBP'
+                );
+                sendDiscordNotification(process.env.DISCORD_WEBHOOK_URL!, discordPayload)
+                  .then(() => console.log('Discord checkout complete notification sent'))
+                  .catch(err => console.error('Failed to send Discord notification:', err));
               }
             }
           }
