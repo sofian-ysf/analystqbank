@@ -328,32 +328,32 @@ export default function UserDetailPage() {
 
   const getPlanBadgeColor = (plan: string) => {
     switch (plan) {
-      case 'lifetime': return 'bg-yellow-900/50 text-yellow-300';
-      case '6month': return 'bg-purple-900/50 text-purple-300';
-      case '2month': return 'bg-blue-900/50 text-blue-300';
-      case 'pro': return 'bg-purple-900/50 text-purple-300';
-      case 'premium': return 'bg-yellow-900/50 text-yellow-300';
-      case 'basic': return 'bg-blue-900/50 text-blue-300';
-      default: return 'bg-gray-700 text-gray-300';
+      case 'lifetime': return 'bg-yellow-100 text-yellow-800';
+      case '6month': return 'bg-purple-100 text-purple-800';
+      case '2month': return 'bg-blue-100 text-blue-800';
+      case 'pro': return 'bg-purple-100 text-purple-800';
+      case 'premium': return 'bg-yellow-100 text-yellow-800';
+      case 'basic': return 'bg-blue-100 text-blue-800';
+      default: return 'bg-gray-200 text-gray-800';
     }
   };
 
   if (loading || gmailChecking) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-lg">Loading user details...</div>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-gray-700 text-lg">Loading user details...</div>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-400 text-lg mb-4">{error || 'User not found'}</p>
+          <p className="text-red-600 text-lg mb-4">{error || 'User not found'}</p>
           <button
             onClick={() => router.push('/admin/users')}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
           >
             Back to Users
           </button>
@@ -365,26 +365,26 @@ export default function UserDetailPage() {
   const { user, streak, stats, progressByTopic, sessions, attempts, mockExams, achievements } = data;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
+    <div className="min-h-screen bg-gray-100 text-gray-900 p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => router.push('/admin/users')}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors mb-4"
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors mb-4"
           >
             Back to Users
           </button>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">{user.full_name}</h1>
-              <p className="text-gray-400">{user.email}</p>
+              <p className="text-gray-600">{user.email}</p>
             </div>
             <div className="flex gap-3">
               <span className={`px-3 py-1 rounded text-sm font-medium ${getPlanBadgeColor(user.subscription_plan)}`}>
                 {user.subscription_plan}
               </span>
-              <span className="px-3 py-1 bg-blue-900/50 text-blue-300 rounded text-sm font-medium">
+              <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm font-medium">
                 {user.exam_level}
               </span>
             </div>
@@ -401,7 +401,7 @@ export default function UserDetailPage() {
                 </svg>
                 <div>
                   <p className="font-semibold text-blue-300">Connect Gmail to enable email features</p>
-                  <p className="text-sm text-gray-400">View email history and send AI-generated cold outreach emails</p>
+                  <p className="text-sm text-gray-600">View email history and send AI-generated cold outreach emails</p>
                 </div>
               </div>
               <button
@@ -421,7 +421,7 @@ export default function UserDetailPage() {
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeSubTab === 'activity'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-gray-800 text-gray-600 hover:bg-gray-700'
             }`}
           >
             Activity
@@ -436,7 +436,7 @@ export default function UserDetailPage() {
             className={`px-4 py-2 rounded-lg transition-colors ${
               activeSubTab === 'emails'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                : 'bg-gray-800 text-gray-600 hover:bg-gray-700'
             }`}
           >
             Emails
@@ -461,10 +461,10 @@ export default function UserDetailPage() {
             {loadingThreads ? (
               <div className="text-center py-8">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                <p className="text-gray-400 mt-2">Loading email threads...</p>
+                <p className="text-gray-600 mt-2">Loading email threads...</p>
               </div>
             ) : emailThreads.length === 0 ? (
-              <p className="text-gray-400">No email history found. Send the first email to this user!</p>
+              <p className="text-gray-600">No email history found. Send the first email to this user!</p>
             ) : (
               <div className="space-y-4">
                 {emailThreads.map((thread) => (
@@ -475,7 +475,7 @@ export default function UserDetailPage() {
                     >
                       <div>
                         <p className="font-semibold">{thread.subject}</p>
-                        <p className="text-sm text-gray-400">{thread.snippet}</p>
+                        <p className="text-sm text-gray-600">{thread.snippet}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500">{formatDate(thread.lastMessageDate)}</span>
@@ -525,19 +525,19 @@ export default function UserDetailPage() {
             {/* Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               <div className="bg-gray-800 p-4 rounded-lg">
-                <p className="text-gray-400 text-sm">Member Since</p>
+                <p className="text-gray-600 text-sm">Member Since</p>
                 <p className="text-xl font-bold">{formatDate(user.created_at).split(',')[0]}</p>
               </div>
               <div className="bg-gray-800 p-4 rounded-lg">
-                <p className="text-gray-400 text-sm">Total Questions</p>
+                <p className="text-gray-600 text-sm">Total Questions</p>
                 <p className="text-xl font-bold">{stats.totalQuestions.toLocaleString()}</p>
               </div>
               <div className="bg-gray-800 p-4 rounded-lg">
-                <p className="text-gray-400 text-sm">Accuracy Rate</p>
+                <p className="text-gray-600 text-sm">Accuracy Rate</p>
                 <p className="text-xl font-bold text-green-400">{stats.accuracyRate}%</p>
               </div>
               <div className="bg-gray-800 p-4 rounded-lg">
-                <p className="text-gray-400 text-sm">Study Time</p>
+                <p className="text-gray-600 text-sm">Study Time</p>
                 <p className="text-xl font-bold">{formatDuration(stats.totalStudyTime)}</p>
               </div>
             </div>
@@ -550,19 +550,19 @@ export default function UserDetailPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
                       <p className="text-3xl font-bold text-orange-400">{streak.current_streak}</p>
-                      <p className="text-gray-400 text-sm">Current Streak</p>
+                      <p className="text-gray-600 text-sm">Current Streak</p>
                     </div>
                     <div className="text-center">
                       <p className="text-3xl font-bold text-yellow-400">{streak.longest_streak}</p>
-                      <p className="text-gray-400 text-sm">Longest Streak</p>
+                      <p className="text-gray-600 text-sm">Longest Streak</p>
                     </div>
                     <div className="text-center">
                       <p className="text-lg font-bold">{streak.last_study_date ? formatDate(streak.last_study_date).split(',')[0] : 'N/A'}</p>
-                      <p className="text-gray-400 text-sm">Last Study</p>
+                      <p className="text-gray-600 text-sm">Last Study</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-gray-400">No streak data available</p>
+                  <p className="text-gray-600">No streak data available</p>
                 )}
               </div>
 
@@ -571,19 +571,19 @@ export default function UserDetailPage() {
                 <h2 className="text-xl font-bold mb-4">Activity Summary</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-gray-400 text-sm">Questions Attempted</p>
+                    <p className="text-gray-600 text-sm">Questions Attempted</p>
                     <p className="text-2xl font-bold">{stats.totalQuestions}</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">Correct Answers</p>
+                    <p className="text-gray-600 text-sm">Correct Answers</p>
                     <p className="text-2xl font-bold text-green-400">{stats.totalCorrect}</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">Study Sessions</p>
+                    <p className="text-gray-600 text-sm">Study Sessions</p>
                     <p className="text-2xl font-bold">{sessions.length}</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-sm">Mock Exams</p>
+                    <p className="text-gray-600 text-sm">Mock Exams</p>
                     <p className="text-2xl font-bold">{mockExams.length}</p>
                   </div>
                 </div>
@@ -615,21 +615,21 @@ export default function UserDetailPage() {
                           <td className="px-4 py-3 text-sm">
                             <span className={`px-2 py-1 rounded text-xs ${
                               session.score_percentage >= 70 ? 'bg-green-900/50 text-green-300' :
-                              session.score_percentage >= 50 ? 'bg-yellow-900/50 text-yellow-300' :
+                              session.score_percentage >= 50 ? 'bg-yellow-100 text-yellow-800' :
                               'bg-red-900/50 text-red-300'
                             }`}>
                               {session.score_percentage}%
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm">{formatDuration(session.duration_minutes)}</td>
-                          <td className="px-4 py-3 text-sm text-gray-400">{formatDate(session.created_at)}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{formatDate(session.created_at)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-400">No study sessions recorded</p>
+                <p className="text-gray-600">No study sessions recorded</p>
               )}
             </div>
 
@@ -659,14 +659,14 @@ export default function UserDetailPage() {
                             </span>
                           </td>
                           <td className="px-4 py-3 text-sm">{attempt.time_spent_seconds}s</td>
-                          <td className="px-4 py-3 text-sm text-gray-400">{formatDate(attempt.attempted_at)}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{formatDate(attempt.attempted_at)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-400">No question attempts recorded</p>
+                <p className="text-gray-600">No question attempts recorded</p>
               )}
             </div>
 
@@ -694,7 +694,7 @@ export default function UserDetailPage() {
                           <td className="px-4 py-3 text-sm">
                             <span className={`px-2 py-1 rounded text-xs ${
                               exam.percentage_score >= 70 ? 'bg-green-900/50 text-green-300' :
-                              exam.percentage_score >= 50 ? 'bg-yellow-900/50 text-yellow-300' :
+                              exam.percentage_score >= 50 ? 'bg-yellow-100 text-yellow-800' :
                               'bg-red-900/50 text-red-300'
                             }`}>
                               {exam.percentage_score}%
@@ -702,14 +702,14 @@ export default function UserDetailPage() {
                           </td>
                           <td className="px-4 py-3 text-sm">{formatDuration(exam.time_taken_minutes)}</td>
                           <td className="px-4 py-3 text-sm capitalize">{exam.status}</td>
-                          <td className="px-4 py-3 text-sm text-gray-400">{formatDate(exam.created_at)}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{formatDate(exam.created_at)}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               ) : (
-                <p className="text-gray-400">No mock exams taken</p>
+                <p className="text-gray-600">No mock exams taken</p>
               )}
             </div>
 
@@ -725,13 +725,13 @@ export default function UserDetailPage() {
                       </div>
                       <div>
                         <p className="font-semibold">{achievement.achievement_name}</p>
-                        <p className="text-sm text-gray-400 capitalize">{achievement.achievement_type}</p>
+                        <p className="text-sm text-gray-600 capitalize">{achievement.achievement_type}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-400">No achievements earned yet</p>
+                <p className="text-gray-600">No achievements earned yet</p>
               )}
             </div>
           </>
@@ -747,7 +747,7 @@ export default function UserDetailPage() {
                 <h2 className="text-xl font-bold">Compose Email</h2>
                 <button
                   onClick={() => setShowEmailComposer(false)}
-                  className="text-gray-400 hover:text-white"
+                  className="text-gray-600 hover:text-white"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -832,7 +832,7 @@ export default function UserDetailPage() {
             <div className="p-6 border-t border-gray-700 flex justify-end gap-3">
               <button
                 onClick={() => setShowEmailComposer(false)}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
               >
                 Cancel
               </button>
