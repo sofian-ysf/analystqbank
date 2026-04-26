@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     if (user) {
       const { data: profile } = await supabase
         .from('user_profiles')
-        .select('subscription_plan, subscription_status')
+        .select('subscription_plan, subscription_status, full_name')
         .eq('id', user.id)
         .single()
 
