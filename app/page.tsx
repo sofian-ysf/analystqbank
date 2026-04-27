@@ -781,7 +781,7 @@ export default function Home() {
                 <div className="text-center pb-6 border-b border-gray-100">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Lifetime</h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-light text-gray-900">£60</span>
+                    <span className="text-4xl font-light text-gray-900">£70</span>
                   </div>
                   <p className="mt-1 text-sm text-gray-500">one-time</p>
                   <p className="mt-1 text-xs text-green-600 font-medium">Best value</p>

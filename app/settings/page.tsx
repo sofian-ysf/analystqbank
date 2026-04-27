@@ -343,7 +343,7 @@ export default function Settings() {
                     <p className="text-xl font-bold text-gray-900">£40<span className="text-sm font-normal text-gray-500 block">6 Month</span></p>
                   )}
                   {subscription?.subscription_plan === 'lifetime' && (
-                    <p className="text-xl font-bold text-gray-900">£60<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
+                    <p className="text-xl font-bold text-gray-900">£70<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
                   )}
                   {(subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
                     <p className="text-xl font-bold text-gray-900">Free</p>
@@ -407,7 +407,7 @@ export default function Settings() {
                       <p className="font-medium text-gray-900">Lifetime</p>
                       <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams, priority support</p>
                     </div>
-                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£60'}</p>
+                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£70'}</p>
                   </button>
                 </div>
               </div>

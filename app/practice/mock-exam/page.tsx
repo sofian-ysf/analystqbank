@@ -637,7 +637,7 @@ export default function MockExam() {
                     <div className="text-center mb-4">
                       <h4 className="text-lg font-bold text-gray-900 mb-1">Lifetime</h4>
                       <div className="flex items-baseline justify-center gap-1 mb-2">
-                        <span className="text-3xl font-bold text-[#1FB8CD]">£60</span>
+                        <span className="text-3xl font-bold text-[#1FB8CD]">£70</span>
                         <span className="text-gray-600 text-sm">one-time</span>
                       </div>
                       <p className="text-xs text-gray-500">Best value</p>
