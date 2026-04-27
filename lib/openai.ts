@@ -283,6 +283,88 @@ const DEFAULT_CTA_LINKS = [
   { phrase: 'sign up', url: '/signup' },
 ];
 
+// Topic-specific internal links for SEO enhancement
+const TOPIC_SPECIFIC_LINKS: Record<string, { phrase: string; url: string }[]> = {
+  'ethics': [
+    { phrase: 'ethics topic page', url: '/topics/ethical-professional-standards' },
+    { phrase: 'ethics study guide', url: '/topics/ethical-professional-standards' },
+    { phrase: 'ethics practice questions', url: '/cfa-level-1-practice-questions?topic=ethics' },
+    { phrase: 'cfa ethics questions', url: '/topics/ethical-professional-standards' },
+  ],
+  'ethical': [
+    { phrase: 'ethics topic page', url: '/topics/ethical-professional-standards' },
+    { phrase: 'ethics study guide', url: '/topics/ethical-professional-standards' },
+    { phrase: 'ethics practice questions', url: '/cfa-level-1-practice-questions?topic=ethics' },
+  ],
+  'fixed income': [
+    { phrase: 'fixed income topic page', url: '/topics/fixed-income' },
+    { phrase: 'fixed income study guide', url: '/topics/fixed-income' },
+    { phrase: 'fixed income practice questions', url: '/cfa-level-1-practice-questions?topic=fixed-income' },
+  ],
+  'derivatives': [
+    { phrase: 'derivatives topic page', url: '/topics/derivatives' },
+    { phrase: 'derivatives study guide', url: '/topics/derivatives' },
+    { phrase: 'derivatives practice questions', url: '/cfa-level-1-practice-questions?topic=derivatives' },
+  ],
+  'quantitative methods': [
+    { phrase: 'quantitative methods topic page', url: '/topics/quantitative-methods' },
+    { phrase: 'quantitative methods study guide', url: '/topics/quantitative-methods' },
+    { phrase: 'quant practice questions', url: '/cfa-level-1-practice-questions?topic=quantitative-methods' },
+  ],
+  'quant': [
+    { phrase: 'quantitative methods topic page', url: '/topics/quantitative-methods' },
+    { phrase: 'quant practice questions', url: '/cfa-level-1-practice-questions?topic=quantitative-methods' },
+  ],
+  'economics': [
+    { phrase: 'economics topic page', url: '/topics/economics' },
+    { phrase: 'economics study guide', url: '/topics/economics' },
+    { phrase: 'economics practice questions', url: '/cfa-level-1-practice-questions?topic=economics' },
+  ],
+  'financial statement analysis': [
+    { phrase: 'financial statement analysis topic page', url: '/topics/financial-statement-analysis' },
+    { phrase: 'financial statement analysis study guide', url: '/topics/financial-statement-analysis' },
+    { phrase: 'FSA practice questions', url: '/cfa-level-1-practice-questions?topic=financial-statement-analysis' },
+  ],
+  'fra': [
+    { phrase: 'financial statement analysis topic page', url: '/topics/financial-statement-analysis' },
+    { phrase: 'FSA practice questions', url: '/cfa-level-1-practice-questions?topic=financial-statement-analysis' },
+  ],
+  'corporate issuers': [
+    { phrase: 'corporate issuers topic page', url: '/topics/corporate-issuers' },
+    { phrase: 'corporate issuers study guide', url: '/topics/corporate-issuers' },
+    { phrase: 'corporate issuers practice questions', url: '/cfa-level-1-practice-questions?topic=corporate-issuers' },
+  ],
+  'equity investments': [
+    { phrase: 'equity investments topic page', url: '/topics/equity-investments' },
+    { phrase: 'equity study guide', url: '/topics/equity-investments' },
+    { phrase: 'equity practice questions', url: '/cfa-level-1-practice-questions?topic=equity-investments' },
+  ],
+  'alternative investments': [
+    { phrase: 'alternative investments topic page', url: '/topics/alternative-investments' },
+    { phrase: 'alternative investments study guide', url: '/topics/alternative-investments' },
+    { phrase: 'alternative investments practice questions', url: '/cfa-level-1-practice-questions?topic=alternative-investments' },
+  ],
+  'portfolio management': [
+    { phrase: 'portfolio management topic page', url: '/topics/portfolio-management' },
+    { phrase: 'portfolio management study guide', url: '/topics/portfolio-management' },
+    { phrase: 'portfolio practice questions', url: '/cfa-level-1-practice-questions?topic=portfolio-management' },
+  ],
+};
+
+// Helper function to get topic-specific links based on context
+function getTopicSpecificLinks(context: string, topic: string): { phrase: string; url: string }[] {
+  const lowerContext = (context + ' ' + topic).toLowerCase();
+  const links: { phrase: string; url: string }[] = [];
+
+  for (const [keyword, topicLinks] of Object.entries(TOPIC_SPECIFIC_LINKS)) {
+    if (lowerContext.includes(keyword)) {
+      links.push(...topicLinks);
+    }
+  }
+
+  return links;
+}
+
 // Generate SEO-optimized blog post for CFA Level 1
 export async function generateBlogPost(
   context: string,
@@ -300,9 +382,10 @@ export async function generateBlogPost(
   // Build internal links instruction
   const ctaLinks = [...DEFAULT_CTA_LINKS, ...(internalLinks?.ctaLinks || [])];
   const blogLinks = internalLinks?.blogPosts || [];
+  const topicLinks = getTopicSpecificLinks(context, topic);
 
   let internalLinksInstruction = '';
-  if (blogLinks.length > 0 || ctaLinks.length > 0) {
+  if (blogLinks.length > 0 || ctaLinks.length > 0 || topicLinks.length > 0) {
     internalLinksInstruction = `
 
 IMPORTANT - INTERNAL LINKING REQUIREMENTS:
@@ -310,6 +393,9 @@ You MUST include internal links naturally within the content using markdown link
 
 CTA Links - Include 2-3 of these where contextually appropriate:
 ${ctaLinks.map(l => `- When mentioning "${l.phrase}" or similar, link to: ${l.url}`).join('\n')}
+
+${topicLinks.length > 0 ? `Topic-Specific Links - Include where contextually appropriate:
+${topicLinks.map(l => `- When mentioning "${l.phrase}" or similar, link to: ${l.url}`).join('\n')}` : ''}
 
 ${blogLinks.length > 0 ? `Related Blog Posts - Link to 1-2 of these where relevant:
 ${blogLinks.map(l => `- "${l.title}": ${l.url}`).join('\n')}` : ''}
@@ -335,15 +421,26 @@ CRITICAL SEO & CTR REQUIREMENTS:
 - Use the primary keyword in at least one H2 heading
 - Include the year 2026 where relevant for search freshness
 
-META TITLE MUST DRIVE CLICKS (this appears in Google search results):
-- Start with primary keyword for SEO, end with benefit/hook for CTR
-- Use ONE of these proven CTR patterns:
+META TITLE MUST DRIVE CLICKS (this appears in Google search results - your most important output):
+- START with the primary keyword for SEO
+- END with a benefit/hook to drive clicks
+- Use ONE of these proven high-CTR patterns:
   * "[Keyword] (2026): [Benefit]" e.g. "CFA Level 1 Study Guide (2026): Pass First Time"
   * "[Number] [Keyword] [Promise]" e.g. "10 CFA Ethics Questions Every Candidate Gets Wrong"
-  * "[Keyword] - [Free/Complete/Ultimate] Guide" e.g. "CFA Fixed Income - Complete Guide + Free Questions"
-- Add urgency/benefit words: Free, Complete, Ultimate, Essential, Updated, + Tips
-- Max 55-60 characters (Google truncates longer titles)
-- DO NOT use generic titles like "Understanding X" or "A Guide to Y"
+  * "[How to/What] [Keyword] - [Free/Complete/Ultimate] Guide" e.g. "How to Pass CFA Fixed Income (2026) - Free Guide"
+  * "[Keyword] vs [Something] - [Ultimate/Best] Guide" e.g. "CFA vs ACCA - Best Finance Cert (2026)"
+- Add urgency/benefit words: Free, Complete, Ultimate, Essential, Updated, Proven, Fast
+- KEEP TITLE UNDER 55-60 CHARACTERS - Google truncates longer titles
+- NEVER use: "Understanding X", "A Guide to Y", "Introduction to Z" - these get zero clicks
+- DO NOT include your site name in meta_title (it will be added automatically)
+
+META DESCRIPTION MUST COMPEL CLICK (max 155 characters):
+- Start with primary keyword
+- Include year 2026 for freshness
+- Add a HOOK that creates curiosity or addresses pain point
+- End with CTA: "Learn more", "Get started free", "Practice now", etc.
+- Example structure: "[Primary keyword] (2026): [Hook sentence]. [Benefit]. [CTA]"
+- Example: "CFA Level 1 practice questions (2026): Struggling with ethics? Get 200+ free questions with detailed explanations. Start practicing now."
 
 CONVERSION REQUIREMENTS:
 - Include a clear CTA in the introduction mentioning practice questions or free trial
@@ -381,8 +478,8 @@ Return a JSON object in this EXACT format (no additional text outside the JSON):
   "slug": "url-friendly-slug-with-hyphens",
   "excerpt": "Engaging excerpt that hooks the reader and includes primary keyword (150-160 characters)",
   "content": "Full markdown content with ## H2 and ### H3 headings. Include introduction, multiple sections with practical advice, and a strong conclusion with CTA.",
-  "meta_title": "CTR-optimized title: [Primary Keyword] (2026) - [Benefit/Hook] | AnalystTrainer (max 55-60 chars before | AnalystTrainer)",
-  "meta_description": "Compelling meta description with keyword and CTA - must include '2026' and benefit (max 155 chars)",
+  "meta_title": "Primary keyword (2026): Benefit/Hook - keep under 55 chars, NO site name",
+  "meta_description": "Primary keyword (2026): [Hook]. [Benefit]. [CTA] - max 155 chars, must include keyword + CTA",
   "meta_keywords": ["primary keyword", "secondary keyword", "related term 1", "related term 2", "related term 3"],
   "tags": ["relevant tag 1", "relevant tag 2", "relevant tag 3"],
   "read_time_minutes": 6,

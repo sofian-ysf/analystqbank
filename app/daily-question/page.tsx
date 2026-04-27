@@ -17,6 +17,74 @@ const sampleQuestion = {
   explanation: 'When a bond is trading at a premium (price > par value), it means the coupon rate is higher than the current market yield (YTM). Investors are willing to pay more than par value because the bond\'s coupon payments are more attractive than current market rates.',
 }
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is the CFA Question of the Day?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'The CFA Question of the Day is a free daily practice question delivered to your email inbox each morning. It covers topics from the CFA Level 1 curriculum with a detailed explanation to help you learn and retain key concepts.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is the Question of the Day really free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, the CFA Question of the Day is completely free. Simply subscribe with your email address and receive one question every morning. No credit card required.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What topics are covered in the Question of the Day?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Questions rotate through all 10 CFA Level 1 topic areas: Ethics, Quantitative Methods, Economics, Financial Statement Analysis, Corporate Issuers, Equity Investments, Fixed Income, Derivatives, Alternative Investments, and Portfolio Management.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I unsubscribe at any time?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, every email includes an unsubscribe link at the bottom. You can cancel your subscription at any time with just one click.',
+      },
+    },
+  ],
+}
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Subscribe to CFA Question of the Day',
+  description: 'Subscribe to receive a free daily CFA Level 1 practice question delivered to your email inbox each morning.',
+  step: [
+    {
+      '@type': 'HowToStep',
+      name: 'Enter your email address',
+      text: 'Type your email address into the subscription form on this page.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Click Subscribe',
+      text: 'Click the "Subscribe Free" button to submit your subscription.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Confirm your email',
+      text: 'Check your inbox for a confirmation email and click the confirmation link to activate your subscription.',
+    },
+    {
+      '@type': 'HowToStep',
+      name: 'Receive daily questions',
+      text: 'Starting tomorrow, you will receive one CFA practice question each morning with a detailed explanation.',
+    },
+  ],
+}
+
 export default function DailyQuestionPage() {
   const [email, setEmail] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -46,8 +114,17 @@ export default function DailyQuestionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navigation />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+      />
+      <div className="min-h-screen bg-white">
+        <Navigation />
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-purple-900 to-purple-800 text-white pt-28 pb-20 px-4">
@@ -284,6 +361,7 @@ export default function DailyQuestionPage() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }

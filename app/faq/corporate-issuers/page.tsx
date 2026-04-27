@@ -34,8 +34,23 @@ export default function CorporateIssuersFAQ() {
     }
   ];
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      'name': faq.question,
+      'acceptedAnswer': { '@type': 'Answer', 'text': faq.answer }
+    }))
+  }
+
   return (
-    <div className="min-h-screen bg-[#FBFAF4]">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <div className="min-h-screen bg-[#FBFAF4]">
       <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
         <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
           <div className="flex h-16 items-center justify-between">
@@ -99,5 +114,6 @@ export default function CorporateIssuersFAQ() {
         </div>
       </section>
     </div>
+    </>
   );
 }
