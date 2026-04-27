@@ -49,7 +49,8 @@ export async function GET(request: NextRequest) {
     }
 
     const plan = request.nextUrl.searchParams.get('plan');
-    console.log('Plan from URL:', plan);
+    const discountCode = request.nextUrl.searchParams.get('code');
+    console.log('Plan from URL:', plan, 'Discount code:', discountCode);
 
     if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
       return NextResponse.redirect(new URL('/signup?plan=6month&error=Invalid plan', request.url));
@@ -98,17 +99,35 @@ export async function GET(request: NextRequest) {
 
     console.log('Creating checkout for plan:', plan, 'priceId:', priceId);
 
+    // Validate discount code if provided
+    let validatedDiscountCode: string | undefined;
+    if (discountCode) {
+      try {
+        const coupon = await stripe.coupons.retrieve(discountCode);
+        if (coupon) {
+          validatedDiscountCode = discountCode;
+          console.log('Discount code validated:', discountCode);
+        }
+      } catch (e) {
+        console.log('Invalid coupon code:', discountCode);
+      }
+    }
+
+    // Build line items with optional discount
+    const lineItems: any[] = [{
+      price: priceId,
+      quantity: 1,
+    }];
+    if (validatedDiscountCode) {
+      lineItems[0].discount = { coupon: validatedDiscountCode };
+    }
+
     // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      payment_method_types: ['card', 'klarna'],
+      line_items: lineItems,
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
       metadata: {
@@ -138,9 +157,9 @@ export async function GET(request: NextRequest) {
 // Handle POST request (from frontend)
 export async function POST(request: NextRequest) {
   try {
-    const { plan, userId, email } = await request.json();
+    const { plan, userId, email, discountCode } = await request.json();
 
-    console.log('POST /api/stripe/create-checkout - plan:', plan, 'userId:', userId, 'email:', email);
+    console.log('POST /api/stripe/create-checkout - plan:', plan, 'userId:', userId, 'email:', email, 'discountCode:', discountCode);
 
     // Validate inputs
     if (!plan || !['2month', '6month', 'lifetime'].includes(plan)) {
@@ -212,17 +231,35 @@ export async function POST(request: NextRequest) {
     console.log('Success URL:', `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`);
     console.log('Cancel URL:', `${origin}/checkout/cancel`);
 
+    // Validate discount code if provided
+    let validatedDiscountCode: string | undefined;
+    if (discountCode) {
+      try {
+        const coupon = await stripe.coupons.retrieve(discountCode);
+        if (coupon) {
+          validatedDiscountCode = discountCode;
+          console.log('Discount code validated:', discountCode);
+        }
+      } catch (e) {
+        console.log('Invalid coupon code:', discountCode);
+      }
+    }
+
+    // Build line items with optional discount
+    const lineItems: any[] = [{
+      price: priceId,
+      quantity: 1,
+    }];
+    if (validatedDiscountCode) {
+      lineItems[0].discount = { coupon: validatedDiscountCode };
+    }
+
     // Create Stripe Checkout Session for one-time payment
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      payment_method_types: ['card', 'klarna'],
+      line_items: lineItems,
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout/cancel`,
       metadata: {

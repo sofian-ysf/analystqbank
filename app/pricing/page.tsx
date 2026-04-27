@@ -9,6 +9,8 @@ import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export default function Pricing() {
   const [billingCycle, setBillingCycle] = useState<'lifetime' | 'monthly'>('lifetime')
+  const [showPromoCode, setShowPromoCode] = useState(false)
+  const [promoCode, setPromoCode] = useState('')
 
   // Product Schema for SEO
   const productSchema = {
@@ -84,6 +86,12 @@ export default function Pricing() {
       }
     ]
   }
+
+  // Helper to build signup URL with optional promo code
+  const getSignupUrl = (plan: string) => {
+    const baseUrl = `/signup?plan=${plan}`;
+    return promoCode.trim() ? `${baseUrl}&code=${encodeURIComponent(promoCode.trim())}` : baseUrl;
+  };
 
   const plans = {
     lifetime: [
@@ -266,7 +274,7 @@ export default function Pricing() {
                 </div>
 
                 <Link
-                  href={plan.href}
+                  href={getSignupUrl(plan.name.toLowerCase().replace(' ', ''))}
                   className={`block w-full text-center pill-btn ${
                     plan.popular ? 'pill-btn-primary' : 'pill-btn-secondary'
                   }`}
@@ -277,6 +285,36 @@ export default function Pricing() {
             ))}
           </div>
         </div>
+
+        {/* Promo Code Input */}
+        {!showPromoCode ? (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => setShowPromoCode(true)}
+              className="text-sm text-[#1FB8CD] hover:underline"
+            >
+              Have a promo code?
+            </button>
+          </div>
+        ) : (
+          <div className="mt-6 max-w-md mx-auto">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Enter promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-400 focus:outline-none focus:ring-[#1FB8CD] focus:border-[#1FB8CD]"
+              />
+              <button
+                onClick={() => setShowPromoCode(false)}
+                className="px-3 py-2 text-sm text-gray-500 hover:text-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Money-Back Guarantee */}

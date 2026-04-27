@@ -11,6 +11,7 @@ function SignUpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get('plan') as PlanType | null;
+  const promoCode = searchParams.get('code');
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +35,7 @@ function SignUpForm() {
           const res = await fetch('/api/stripe/create-checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ plan: selectedPlan, userId: user.id, email: user.email }),
+            body: JSON.stringify({ plan: selectedPlan, userId: user.id, email: user.email, discountCode: promoCode }),
           })
           const { url } = await res.json()
           if (url) {
@@ -135,6 +136,7 @@ function SignUpForm() {
             plan: selectedPlan,
             userId: data.user.id,
             email: email,
+            discountCode: promoCode,
           }),
         });
 
