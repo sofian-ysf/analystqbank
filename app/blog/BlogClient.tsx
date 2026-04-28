@@ -122,34 +122,62 @@ export default function BlogClient({ posts, currentPage, totalPages }: BlogClien
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-2 mt-8">
+                  <div className="flex justify-center items-center gap-1 mt-8">
                     {currentPage > 1 && (
                       <Link
                         href={`/blog?page=${currentPage - 1}`}
-                        className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm"
                       >
-                        Previous
+                        ← Previous
                       </Link>
                     )}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                      <Link
-                        key={page}
-                        href={`/blog?page=${page}`}
-                        className={`px-4 py-2 rounded-lg transition-colors ${
-                          page === currentPage
-                            ? 'bg-[#1FB8CD] text-white'
-                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        {page}
-                      </Link>
-                    ))}
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).reduce((acc: (number | 'ellipsis')[], page) => {
+                      // Always show first page
+                      if (page === 1) {
+                        acc.push(page)
+                        return acc
+                      }
+                      // Always show last page
+                      if (page === totalPages) {
+                        acc.push(page)
+                        return acc
+                      }
+                      // Show page if within 1 of current
+                      if (page <= currentPage + 1 && page >= currentPage - 1) {
+                        acc.push(page)
+                        return acc
+                      }
+                      // Add ellipsis if we haven't already and this is a gap
+                      const lastItem = acc[acc.length - 1]
+                      if (lastItem !== 'ellipsis' && (page === currentPage + 2 || page === currentPage - 2)) {
+                        acc.push('ellipsis')
+                      }
+                      return acc
+                    }, []).map((item, idx) =>
+                      item === 'ellipsis' ? (
+                        <span key={`ellipsis-${idx}`} className="px-2 py-2 text-gray-400">…</span>
+                      ) : (
+                        <Link
+                          key={item}
+                          href={`/blog?page=${item}`}
+                          className={`min-w-[40px] h-10 flex items-center justify-center rounded-lg transition-colors text-sm font-medium ${
+                            item === currentPage
+                              ? 'bg-[#1FB8CD] text-white'
+                              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {item}
+                        </Link>
+                      )
+                    )}
+
                     {currentPage < totalPages && (
                       <Link
                         href={`/blog?page=${currentPage + 1}`}
-                        className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors text-sm"
                       >
-                        Next
+                        Next →
                       </Link>
                     )}
                   </div>
