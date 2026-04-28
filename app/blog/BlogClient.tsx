@@ -30,6 +30,8 @@ interface Post {
 interface BlogClientProps {
   posts: Post[]
   categories: Category[]
+  currentPage: number
+  totalPages: number
 }
 
 // Format date helper
@@ -45,9 +47,9 @@ function formatDate(dateString: string) {
   }
 }
 
-export default function BlogClient({ posts }: BlogClientProps) {
-  const featuredPost = posts[0]
-  const remainingPosts = posts.slice(1)
+export default function BlogClient({ posts, currentPage, totalPages }: BlogClientProps) {
+  const featuredPost = currentPage === 1 ? posts[0] : null
+  const remainingPosts = currentPage === 1 ? posts.slice(1) : posts
 
   return (
     <>
@@ -117,6 +119,41 @@ export default function BlogClient({ posts }: BlogClientProps) {
                     </Link>
                   ))}
                 </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-2 mt-8">
+                    {currentPage > 1 && (
+                      <Link
+                        href={`/blog?page=${currentPage - 1}`}
+                        className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Previous
+                      </Link>
+                    )}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <Link
+                        key={page}
+                        href={`/blog?page=${page}`}
+                        className={`px-4 py-2 rounded-lg transition-colors ${
+                          page === currentPage
+                            ? 'bg-[#1FB8CD] text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </Link>
+                    ))}
+                    {currentPage < totalPages && (
+                      <Link
+                        href={`/blog?page=${currentPage + 1}`}
+                        className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Next
+                      </Link>
+                    )}
+                  </div>
+                )}
               </section>
             )}
 
