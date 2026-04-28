@@ -35,7 +35,7 @@ export const PLAN_LIMITS = {
     mockExams: Infinity,
     questions: Infinity,
     durationHours: null,
-    price: 60,
+    price: 70,
     isLifetime: true,
     features: [
       '2,000+ practice questions',

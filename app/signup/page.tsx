@@ -225,7 +225,7 @@ function SignUpForm() {
                   {planDetails.price === 0 ? 'Free' : `£${planDetails.price}`}
                 </p>
                 {planDetails.price > 0 && (
-                  <p className="text-sm text-[#5f6368]">/month</p>
+                  <p className="text-sm text-[#5f6368]">one-time</p>
                 )}
               </div>
             </div>
