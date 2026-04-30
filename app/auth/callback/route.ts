@@ -90,6 +90,22 @@ export async function GET(request: NextRequest) {
         } else if (newProfile) {
           console.log('Profile created successfully:', newProfile.id);
           profile = newProfile;
+
+          // Send new_user notification for brand new users (both OAuth and email signup)
+          try {
+            await fetch(`${requestUrl.origin}/api/notify-discord`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: user.email,
+                userId: user.id,
+                type: 'new_user',
+                fullName: profile?.full_name || ''
+              }),
+            })
+          } catch (notifyError) {
+            console.error('New user Discord notification failed:', notifyError)
+          }
         }
       }
 
