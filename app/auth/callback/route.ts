@@ -64,13 +64,39 @@ export async function GET(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user) {
-      const { data: profile } = await supabase
+      let { data: profile } = await supabase
         .from('user_profiles')
         .select('subscription_plan, subscription_status, full_name')
         .eq('id', user.id)
         .single()
 
-      // Send Discord notification for login
+      // Create profile if it doesn't exist (fallback if database trigger didn't fire for OAuth)
+      if (!profile) {
+        console.log('No profile found for user, creating one:', user.id);
+        const { data: newProfile, error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.email,
+            subscription_plan: 'free',
+            subscription_status: 'free'
+          })
+          .select()
+          .single()
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError.message);
+        } else if (newProfile) {
+          console.log('Profile created successfully:', newProfile.id);
+          profile = newProfile;
+        }
+      }
+
+      // Determine if this is a new user (no profile existed before)
+      const isNewUser = !profile;
+
+      // Send appropriate Discord notification
       try {
         await fetch(`${requestUrl.origin}/api/notify-discord`, {
           method: 'POST',
@@ -78,7 +104,7 @@ export async function GET(request: NextRequest) {
           body: JSON.stringify({
             email: user.email,
             userId: user.id,
-            type: 'login',
+            type: isNewUser ? 'new_user' : 'login',
             fullName: profile?.full_name || ''
           }),
         })

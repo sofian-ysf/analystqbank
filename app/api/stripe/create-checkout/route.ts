@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     // Check if user already has a Stripe customer ID
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, id')
       .eq('id', user.id)
       .single();
 
@@ -88,11 +88,25 @@ export async function GET(request: NextRequest) {
       });
       customerId = customer.id;
 
-      // Save customer ID to profile
-      await supabase
-        .from('user_profiles')
-        .update({ stripe_customer_id: customerId })
-        .eq('id', user.id);
+      // Save customer ID to profile, creating if necessary
+      if (!profile) {
+        console.log('No profile exists, creating one with customer ID');
+        await supabase
+          .from('user_profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.email,
+            stripe_customer_id: customerId,
+            subscription_plan: 'free',
+            subscription_status: 'free'
+          });
+      } else {
+        await supabase
+          .from('user_profiles')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', user.id);
+      }
     }
 
     const origin = request.headers.get('origin') || request.nextUrl.origin;
@@ -197,7 +211,7 @@ export async function POST(request: NextRequest) {
     // Check if user already has a Stripe customer ID
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('stripe_customer_id')
+      .select('stripe_customer_id, id')
       .eq('id', userId)
       .single();
 
@@ -217,11 +231,24 @@ export async function POST(request: NextRequest) {
       customerId = customer.id;
       console.log('New Stripe customer created:', customerId);
 
-      // Save customer ID to profile
-      await supabase
-        .from('user_profiles')
-        .update({ stripe_customer_id: customerId })
-        .eq('id', userId);
+      // Save customer ID to profile, creating if necessary
+      if (!profile) {
+        console.log('No profile exists, creating one with customer ID');
+        await supabase
+          .from('user_profiles')
+          .insert({
+            id: userId,
+            email: email,
+            stripe_customer_id: customerId,
+            subscription_plan: 'free',
+            subscription_status: 'free'
+          });
+      } else {
+        await supabase
+          .from('user_profiles')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', userId);
+      }
       console.log('Customer ID saved to profile');
     }
 
