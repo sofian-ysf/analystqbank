@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
             full_name: user.user_metadata?.full_name || user.email,
             stripe_customer_id: customerId,
             subscription_plan: 'free',
-            subscription_status: 'free'
+            subscription_status: null
           });
       } else {
         await supabase
@@ -241,7 +241,7 @@ export async function POST(request: NextRequest) {
             email: email,
             stripe_customer_id: customerId,
             subscription_plan: 'free',
-            subscription_status: 'free'
+            subscription_status: null
           });
       } else {
         await supabase

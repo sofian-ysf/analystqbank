@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
             email: user.email,
             full_name: user.user_metadata?.full_name || user.email,
             subscription_plan: 'free',
-            subscription_status: 'free'
+            subscription_status: null
           })
           .select()
           .single()
