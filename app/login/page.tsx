@@ -50,29 +50,13 @@ function LoginForm() {
 
       console.log("Profile after login:", JSON.stringify(profileData));
 
-      // Send login notification to Discord
-      fetch('/api/notify-discord', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'login',
-          email: data.user.email,
-          userId: data.user.id,
-          fullName: profileData?.full_name || ''
-        })
-      }).catch(err => console.error('Failed to send login notification:', err));
-
-      // If user has a valid paid subscription status (lifetime), go to dashboard
-      if (profileData?.subscription_plan && profileData?.subscription_status === 'lifetime') {
+      // If user has lifetime status (paying user), go to dashboard - no Discord notification
+      if (profileData?.subscription_status === 'lifetime') {
         console.log("User has lifetime status, going to dashboard");
         router.push("/dashboard");
-      } else if (profileData?.subscription_plan) {
-        // User has a plan but status is not lifetime - still go to signup to complete purchase
-        console.log("User has plan but no lifetime status, going to signup");
-        router.push("/signup?plan=6month");
       } else {
-        // No subscription - go to signup to purchase
-        console.log("User has no plan, going to signup");
+        // User does not have lifetime - redirect to signup, no Discord notification
+        console.log("User has no lifetime status, going to signup");
         router.push("/signup?plan=6month");
       }
       router.refresh();
