@@ -72,13 +72,13 @@ export async function GET(request: NextRequest) {
     // Check if user already has a Stripe customer ID
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('stripe_customer_id, id')
+      .select('stripe_customer_id, id, full_name')
       .eq('id', user.id)
       .single();
 
     let customerId = profile?.stripe_customer_id;
 
-    // Create Stripe customer if not exists
+    // Create Stripe customer if not exists - this means user is at checkout
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user.email,
@@ -87,6 +87,23 @@ export async function GET(request: NextRequest) {
         },
       });
       customerId = customer.id;
+
+      // Send checkout_start notification - user has progressed to payment
+      try {
+        await fetch(`${request.headers.get('origin') || request.nextUrl.origin}/api/notify-discord`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: user.email,
+            userId: user.id,
+            type: 'checkout_start',
+            fullName: profile?.full_name || user.user_metadata?.full_name || user.email,
+            plan: plan
+          }),
+        })
+      } catch (notifyError) {
+        console.error('Checkout start Discord notification failed:', notifyError)
+      }
 
       // Save customer ID to profile, creating if necessary
       if (!profile) {
@@ -211,7 +228,7 @@ export async function POST(request: NextRequest) {
     // Check if user already has a Stripe customer ID
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('stripe_customer_id, id')
+      .select('stripe_customer_id, id, full_name')
       .eq('id', userId)
       .single();
 
@@ -219,7 +236,7 @@ export async function POST(request: NextRequest) {
 
     let customerId = profile?.stripe_customer_id;
 
-    // Create Stripe customer if not exists
+    // Create Stripe customer if not exists - this means user is at checkout
     if (!customerId) {
       console.log('Creating new Stripe customer for:', email);
       const customer = await stripe.customers.create({
@@ -230,6 +247,25 @@ export async function POST(request: NextRequest) {
       });
       customerId = customer.id;
       console.log('New Stripe customer created:', customerId);
+
+      // Send checkout_start notification - user has progressed to payment
+      try {
+        const origin = request.headers.get('origin') || request.nextUrl.origin;
+        await fetch(`${origin}/api/notify-discord`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            userId: userId,
+            type: 'checkout_start',
+            fullName: profile?.full_name || email,
+            plan: plan
+          }),
+        })
+        console.log('Checkout start notification sent');
+      } catch (notifyError) {
+        console.error('Checkout start Discord notification failed:', notifyError)
+      }
 
       // Save customer ID to profile, creating if necessary
       if (!profile) {

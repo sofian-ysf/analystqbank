@@ -93,30 +93,23 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // Determine if this is a new user (no profile existed before)
-      const isNewUser = !profile;
-
-      // Send appropriate Discord notification
-      try {
-        await fetch(`${requestUrl.origin}/api/notify-discord`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: user.email,
-            userId: user.id,
-            type: isNewUser ? 'new_user' : 'login',
-            fullName: profile?.full_name || ''
-          }),
-        })
-      } catch (notifyError) {
-        console.error('Discord notification failed:', notifyError)
-      }
-
-      console.log('Profile after callback login:', JSON.stringify(profile));
-
-      // If user has a valid paid subscription with lifetime status, go to dashboard
+      // If user has a valid paid subscription with lifetime status, send login notification and go to dashboard
       if (profile?.subscription_status === 'lifetime') {
-        console.log('User has lifetime subscription, redirecting to dashboard');
+        console.log('User has lifetime subscription, sending login notification and redirecting to dashboard');
+        try {
+          await fetch(`${requestUrl.origin}/api/notify-discord`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: user.email,
+              userId: user.id,
+              type: 'login',
+              fullName: profile?.full_name || ''
+            }),
+          })
+        } catch (notifyError) {
+          console.error('Discord notification failed:', notifyError)
+        }
         return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
       }
 
