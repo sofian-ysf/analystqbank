@@ -99,6 +99,7 @@ export default function UserDetailPage() {
   const [showEmailComposer, setShowEmailComposer] = useState(false);
   const [gmailConnected, setGmailConnected] = useState(false);
   const [gmailChecking, setGmailChecking] = useState(true);
+  const [gmailNeedsReconnect, setGmailNeedsReconnect] = useState(false);
   const [emailThreads, setEmailThreads] = useState<GmailThread[]>([]);
   const [loadingThreads, setLoadingThreads] = useState(false);
   const [expandedThread, setExpandedThread] = useState<string | null>(null);
@@ -139,10 +140,46 @@ export default function UserDetailPage() {
       const response = await fetch('/api/admin/emails/gmail?action=status');
       const result = await response.json();
       setGmailConnected(result.connected || false);
+      setGmailNeedsReconnect(false);
     } catch (err) {
       setGmailConnected(false);
+      setGmailNeedsReconnect(false);
     } finally {
       setGmailChecking(false);
+    }
+  };
+
+  const disconnectGmail = async () => {
+    if (!confirm('Are you sure you want to disconnect Gmail? You will need to reconnect to use email features.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/emails/gmail', {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        setGmailConnected(false);
+        setGmailNeedsReconnect(false);
+        setEmailThreads([]);
+      }
+    } catch (err) {
+      console.error('Failed to disconnect Gmail:', err);
+    }
+  };
+
+  const reconnectGmail = async () => {
+    try {
+      const response = await fetch('/api/admin/emails/gmail', {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        connectGmail();
+      }
+    } catch (err) {
+      console.error('Failed to disconnect before reconnect:', err);
     }
   };
 
@@ -163,6 +200,14 @@ export default function UserDetailPage() {
     try {
       const response = await fetch(`/api/admin/emails/gmail?user_email=${encodeURIComponent(userEmail)}`);
       const result = await response.json();
+
+      if (response.status === 401 && result.invalid_grant) {
+        // Token is invalid/expired, needs reconnect
+        setGmailNeedsReconnect(true);
+        setGmailConnected(false);
+        return;
+      }
+
       if (result.threads) {
         setEmailThreads(result.threads);
       }
@@ -274,6 +319,15 @@ export default function UserDetailPage() {
         })
       });
       const result = await response.json();
+
+      if (response.status === 401 && result.invalid_grant) {
+        // Token is invalid/expired, needs reconnect
+        setGmailNeedsReconnect(true);
+        setGmailConnected(false);
+        setEmailStatus({ type: 'error', message: 'Gmail connection expired. Please reconnect.' });
+        return;
+      }
+
       if (result.success) {
         setEmailStatus({ type: 'success', message: 'Email sent successfully!' });
         setShowEmailComposer(false);
@@ -392,7 +446,29 @@ export default function UserDetailPage() {
         </div>
 
         {/* Gmail Connection Banner */}
-        {!gmailConnected && (
+        {gmailNeedsReconnect && (
+          <div className="bg-red-900/30 border border-red-700 p-4 rounded-lg mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-red-300">Gmail connection expired</p>
+                  <p className="text-sm text-gray-600">Your Gmail authorization has expired. Please reconnect to continue using email features.</p>
+                </div>
+              </div>
+              <button
+                onClick={reconnectGmail}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-lg transition-colors text-white font-medium"
+              >
+                Reconnect Gmail
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!gmailConnected && !gmailNeedsReconnect && (
           <div className="bg-blue-900/30 border border-blue-700 p-4 rounded-lg mb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -409,6 +485,28 @@ export default function UserDetailPage() {
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors text-white font-medium"
               >
                 Connect Gmail
+              </button>
+            </div>
+          </div>
+        )}
+
+        {gmailConnected && !gmailNeedsReconnect && (
+          <div className="bg-green-900/30 border border-green-700 p-4 rounded-lg mb-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <p className="font-semibold text-green-300">Gmail Connected</p>
+                  <p className="text-sm text-gray-600">Your Gmail account is connected and ready to send emails.</p>
+                </div>
+              </div>
+              <button
+                onClick={disconnectGmail}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-white font-medium"
+              >
+                Disconnect
               </button>
             </div>
           </div>
