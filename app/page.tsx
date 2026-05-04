@@ -496,7 +496,7 @@ export default function Home() {
                   href="/signup"
                   className="pill-btn pill-btn-primary pill-btn-lg"
                 >
-                  Start Free Trial
+                  Start Your Prep
                 </Link>
                 <Link
                   href="/try-free"
@@ -567,7 +567,7 @@ export default function Home() {
                   href="/signup"
                   className="pill-btn pill-btn-secondary pill-btn-lg"
                 >
-                  Start Free Trial
+                  Start Your Prep
                 </Link>
               </div>
             </div>
@@ -933,7 +933,7 @@ export default function Home() {
                 href="/signup"
                 className="pill-btn pill-btn-primary pill-btn-lg"
               >
-                Start Free Trial
+                Start Your Prep
               </Link>
               <Link
                 href="/try-free"

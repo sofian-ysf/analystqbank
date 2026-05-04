@@ -5,15 +5,15 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
-  description: 'Take a full CFA Level 1 mock exam FREE. 180 questions, 4.5 hours, instant scoring & detailed answers. Matches real exam format. No signup required - start now!',
-  keywords: 'free cfa level 1 mock exam, cfa level 1 mock test, cfa mock exam free, cfa level 1 practice exam, mock test for cfa level 1, cfa practice test level 1, cfa level 1 mock questions, cfa exam practice questions, cfa level 1 full exam',
+  title: 'CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
+  description: 'Take a full CFA Level 1 mock exam. 180 questions, 4.5 hours, instant scoring & detailed answers. Matches real exam format. Sign up for access.',
+  keywords: 'cfa level 1 mock exam, cfa level 1 mock test, cfa level 1 practice exam, mock test for cfa level 1, cfa practice test level 1, cfa level 1 mock questions, cfa exam practice questions, cfa level 1 full exam',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
   },
   openGraph: {
-    title: 'Free CFA Level 1 Mock Exam 2026 | 180 Questions',
-    description: 'Full-length CFA Level 1 mock exam. 180 questions, instant results, detailed explanations. Try free now!',
+    title: 'CFA Level 1 Mock Exam 2026 | 180 Questions',
+    description: 'Full-length CFA Level 1 mock exam. 180 questions, instant results, detailed explanations.',
     url: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
     type: 'website',
   },
@@ -41,18 +41,10 @@ export default function CFALevel1MockExam() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'Can I get a free CFA Level 1 mock exam?',
+        name: 'How do I access the CFA mock exam?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! AnalystTrainer offers 1 free CFA Level 1 mock exam with 180 questions in official exam format. No credit card required - just sign up for a free trial to access your free mock test immediately. The mock exam includes timed sessions, detailed explanations, and a comprehensive score report.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How to access CFA mock exam?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for a free account (no credit card required), 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Your free trial includes 1 complete 180-question mock exam. Upgrade to Basic or Premium for access to additional mock exams.',
+          text: 'To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for an account, 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Basic and Premium plans include multiple mock exams.',
         },
       },
       {
@@ -68,7 +60,7 @@ export default function CFALevel1MockExam() {
         name: 'How many mock exams are included?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Free trial includes 1 mock exam. Basic plan includes 5 mock exams. Premium plan includes unlimited mock exams for lifetime access.',
+          text: 'Basic plan includes 5 mock exams. Premium plan includes unlimited mock exams for lifetime access.',
         },
       },
       {
@@ -141,17 +133,17 @@ export default function CFALevel1MockExam() {
               Exam Format 2026
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Free CFA Level 1 Mock Exam - 180 Question Practice Test
+              CFA Level 1 Mock Exam - 180 Question Practice Test
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Experience the real CFA exam with our <strong className="text-white">free 180-question mock test</strong>. Timed sessions, realistic difficulty, and comprehensive score reports. Try 1 free mock exam now.
+              Experience the real CFA exam with our <strong className="text-white">180-question mock test</strong>. Timed sessions, realistic difficulty, and comprehensive score reports. Start your mock exam today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
                 href="/signup"
                 className="px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
               >
-                Start Free Mock Exam
+                Start Mock Exam
               </Link>
               <Link
                 href="/pricing"
@@ -428,9 +420,9 @@ export default function CFALevel1MockExam() {
               href="/signup"
               className="inline-block px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
             >
-              Start Free Mock Exam
+              Start Mock Exam
             </Link>
-            <p className="mt-4 text-gray-400 text-sm">1 free mock exam included with trial. No credit card required.</p>
+            <p className="mt-4 text-gray-400 text-sm">Mock exams included with all paid plans. No credit card required.</p>
           </div>
         </section>
 
@@ -443,12 +435,12 @@ export default function CFALevel1MockExam() {
             <div className="space-y-4">
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  Can I get a free CFA Level 1 mock exam?
+                  How to access CFA mock exam?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Yes! AnalystTrainer offers 1 free CFA Level 1 mock exam with 180 questions in official exam format. No credit card required - just sign up for a free trial to access your free mock test immediately. The mock exam includes timed sessions, detailed explanations, and a comprehensive score report.</p>
+                <p className="mt-4 text-gray-600">To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for an account, 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Basic and Premium plans include multiple mock exams.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -457,7 +449,7 @@ export default function CFALevel1MockExam() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for a free account (no credit card required), 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Your free trial includes 1 complete 180-question mock exam. Upgrade to Basic or Premium for access to additional mock exams.</p>
+                <p className="mt-4 text-gray-600">To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for an account, 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Basic and Premium plans include multiple mock exams.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -475,7 +467,7 @@ export default function CFALevel1MockExam() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Free trial includes 1 mock exam. Basic plan includes 5 mock exams. Premium plan includes unlimited mock exams for lifetime access.</p>
+                <p className="mt-4 text-gray-600">Basic plan includes 5 mock exams. Premium plan includes unlimited mock exams for lifetime access.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -555,7 +547,7 @@ export default function CFALevel1MockExam() {
               </Link>
               <Link href="/free-cfa-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Questions</h3>
-                <p className="text-gray-600 text-sm">Start with 100 free practice questions - no card required</p>
+                <p className="text-gray-600 text-sm">15 free demo questions - no signup required</p>
               </Link>
               <Link href="/flashcards" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Flashcards</h3>
@@ -607,11 +599,10 @@ export default function CFALevel1MockExam() {
                     className="inline-flex items-center gap-2 px-6 py-3 bg-[#1FB8CD] text-white rounded-lg font-semibold hover:bg-[#18a3b5] transition-colors"
                   >
                     Start Practicing Free
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </Link>
-                  <p className="mt-3 text-sm text-gray-500">100 free questions included • No credit card required</p>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
                 </div>
               </div>
             </div>

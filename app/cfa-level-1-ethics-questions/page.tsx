@@ -159,7 +159,7 @@ export default function EthicsPracticeQuestionsPage() {
                 href="/signup"
                 className="px-8 py-4 bg-white text-purple-900 rounded-full font-semibold text-lg hover:bg-purple-50 transition-colors"
               >
-                Start Free Trial
+                Get Started
               </Link>
               <Link
                 href="/cfa-level-1-practice-questions?topic=ethics"
@@ -243,9 +243,9 @@ export default function EthicsPracticeQuestionsPage() {
               href="/signup"
               className="inline-block px-8 py-4 bg-purple-600 text-white rounded-full font-semibold text-lg hover:bg-purple-700 transition-colors"
             >
-              Start Free Trial
+              Get Started
             </Link>
-            <p className="mt-4 text-gray-500 text-sm">No credit card required • 30 free questions on signup</p>
+            <p className="mt-4 text-gray-500 text-sm">No credit card required • 15 free demo questions</p>
           </div>
         </section>
 

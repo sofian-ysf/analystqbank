@@ -79,7 +79,7 @@ export default function FinancialStatementAnalysis() {
                 href="/signup"
                 className="px-8 py-4 border-2 border-white/30 text-white rounded-full font-semibold text-lg hover:bg-white/10 transition-colors"
               >
-                Start Free Trial
+                Get Started
               </Link>
             </div>
           </div>
@@ -209,7 +209,7 @@ export default function FinancialStatementAnalysis() {
               Ready to Master Financial Statement Analysis?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Access 350+ FSA practice questions with step-by-step solutions. Free trial includes 40 FSA questions.
+              Access 350+ FSA practice questions with step-by-step solutions. All paid plans include access to our full question bank.
             </p>
             <Link
               href="/signup"

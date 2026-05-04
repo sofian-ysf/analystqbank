@@ -346,7 +346,7 @@ export default function DailyQuestionPage() {
             href="/signup"
             className="inline-block px-8 py-3 bg-[#13343B] text-white rounded-lg font-semibold hover:bg-[#1a4a54] transition-colors"
           >
-            Start Free Trial - 100 Questions Free
+            Get Started
           </Link>
         </div>
       </section>

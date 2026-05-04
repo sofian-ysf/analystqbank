@@ -104,7 +104,7 @@ export default function TryFreePage() {
               href="/signup"
               className="block w-full bg-[#1FB8CD] text-white py-3 rounded-lg font-medium hover:bg-[#18a3b5] transition-colors mb-3"
             >
-              Start Free Trial
+              Get Started
             </Link>
             <p className="text-xs text-gray-500">2,500+ questions with detailed explanations</p>
           </div>
@@ -210,7 +210,7 @@ export default function TryFreePage() {
               href="/signup"
               className="block w-full text-center bg-[#1FB8CD] text-white py-2.5 rounded-lg text-sm font-medium hover:bg-[#18a3b5] transition-colors"
             >
-              Start Free Trial
+              Get Started
             </Link>
           </div>
         </aside>
@@ -411,7 +411,7 @@ export default function TryFreePage() {
           href="/signup"
           className="bg-[#1FB8CD] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#18a3b5]"
         >
-          Start Free Trial
+          Get Started
         </Link>
       </div>
     </div>

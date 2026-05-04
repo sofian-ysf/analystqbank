@@ -37,7 +37,7 @@ export default function Terms() {
                 Login
               </Link>
               <Link href="/signup" className="bg-[#1FB8CD] text-white px-5 py-2 rounded-lg hover:bg-[#1A6872] transition-all font-medium">
-                Start Free Trial
+                Get Started
               </Link>
             </div>
 

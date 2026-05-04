@@ -7,15 +7,15 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
-  title: '2,500+ Free CFA Level 1 Questions 2026 | With Answers',
-  description: 'Master CFA Level 1 with 2,500+ free practice questions covering all 10 topics. Detailed explanations, instant feedback, track your progress. Start practicing free - no signup!',
-  keywords: 'free cfa level 1 practice questions, cfa level 1 sample questions, example cfa level 1 questions, cfa level 1 questions with answers, cfa practice questions level 1 free, cfa level 1 exam questions, cfa question bank, practice cfa level 1 questions',
+  title: '2,500+ CFA Level 1 Questions 2026 | With Answers',
+  description: 'Master CFA Level 1 with 2,500+ practice questions covering all 10 topics. Detailed explanations, instant feedback, track your progress. Sign up to access.',
+  keywords: 'cfa level 1 practice questions, cfa level 1 sample questions, cfa level 1 questions with answers, cfa practice questions level 1, cfa level 1 exam questions, cfa question bank, practice cfa level 1 questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
   openGraph: {
-    title: '2,500+ Free CFA Level 1 Practice Questions 2026',
-    description: '2,500+ practice questions covering all 10 CFA Level 1 topics. Detailed explanations, instant feedback. Try free now!',
+    title: '2,500+ CFA Level 1 Practice Questions 2026',
+    description: '2,500+ practice questions covering all 10 CFA Level 1 topics. Detailed explanations, instant feedback.',
     url: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
     type: 'website',
   },
@@ -112,7 +112,7 @@ export default function CFALevel1PracticeQuestions() {
         name: 'Can I get free CFA Level 1 practice questions?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes! AnalystTrainer offers 100 free CFA Level 1 practice questions with detailed explanations. No credit card required. You can upgrade to access 2,500+ questions when ready.',
+          text: 'Yes! You can try 15 demo questions instantly at /try-free with no signup required. This lets you experience our question quality before purchasing a plan.',
         },
       },
       {
@@ -120,7 +120,7 @@ export default function CFALevel1PracticeQuestions() {
         name: 'Are free CFA practice questions enough to pass?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'While free questions are a great start, most successful candidates practice 1,500-3,000 questions. Our 100 free questions help you understand the exam format, but accessing the full 2,500+ question bank significantly improves your chances of passing.',
+          text: 'While the 15 free demo questions are a great start, most successful candidates practice 1,500-3,000 questions. The demo helps you understand the exam format, but accessing the full 2,500+ question bank significantly improves your chances of passing.',
         },
       },
     ],
@@ -161,17 +161,17 @@ export default function CFALevel1PracticeQuestions() {
               Updated for 2026 CFA Exam
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Free CFA Level 1 Practice Questions & Sample Questions with Answers
+              CFA Level 1 Practice Questions & Sample Questions with Answers
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Master the CFA Level 1 exam with <strong className="text-white">2,500+ free practice questions</strong> and example questions covering all 10 topic areas. Detailed explanations for every question.
+              Master the CFA Level 1 exam with <strong className="text-white">2,500+ practice questions</strong> and example questions covering all 10 topic areas. Detailed explanations for every question.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link
                 href="/signup"
                 className="px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
               >
-                Start Free Trial - No Card Required
+                Get Started
               </Link>
               <Link
                 href="/pricing"
@@ -427,9 +427,9 @@ export default function CFALevel1PracticeQuestions() {
               href="/signup"
               className="inline-block px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
             >
-              Start Your Free Trial Now
+              Start Your Prep
             </Link>
-            <p className="mt-4 text-gray-400 text-sm">No credit card required. 100 free questions included.</p>
+            <p className="mt-4 text-gray-400 text-sm">2,500+ questions with detailed explanations. No credit card required.</p>
           </div>
         </section>
 
@@ -523,12 +523,12 @@ export default function CFALevel1PracticeQuestions() {
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  Can I get free CFA Level 1 practice questions?
+                  Can I try CFA Level 1 questions for free?
                   <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Yes! AnalystTrainer offers 100 free CFA Level 1 practice questions with detailed explanations—no credit card required. This gives you a comprehensive introduction to the exam format and our question quality. You can upgrade to access our full bank of 2,500+ questions whenever you're ready to intensify your preparation.</p>
+                <p className="mt-4 text-gray-600">Yes! You can try 15 demo questions instantly at /try-free with no signup required. This lets you experience our question quality before purchasing a plan.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -537,7 +537,7 @@ export default function CFALevel1PracticeQuestions() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">While free questions are an excellent starting point, most successful candidates practice between 1,500 and 3,000 questions before their exam. Our 100 free questions help you understand the exam format and identify knowledge gaps, but accessing the full 2,500+ question bank significantly improves your chances of passing by exposing you to a wider variety of topics and difficulty levels.</p>
+                <p className="mt-4 text-gray-600">While demo questions are a great starting point, most successful candidates practice between 1,500 and 3,000 questions before their exam. Our 15 free demo questions help you understand the exam format and identify knowledge gaps, but accessing the full 2,500+ question bank significantly improves your chances of passing by exposing you to a wider variety of topics and difficulty levels.</p>
               </details>
             </div>
           </div>
@@ -553,8 +553,8 @@ export default function CFALevel1PracticeQuestions() {
                 <p className="text-gray-600 text-sm">Full 180-question mock exams in real exam format</p>
               </Link>
               <Link href="/free-cfa-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
-                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Questions</h3>
-                <p className="text-gray-600 text-sm">Start with 100 free practice questions - no card required</p>
+                <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Try Demo Questions</h3>
+                <p className="text-gray-600 text-sm">15 free demo questions - no signup required</p>
               </Link>
               <Link href="/flashcards" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Flashcards</h3>
@@ -610,7 +610,6 @@ export default function CFALevel1PracticeQuestions() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </Link>
-                  <p className="mt-3 text-sm text-gray-500">1 free mock exam included • Matches real CFA exam format</p>
                 </div>
               </div>
             </div>

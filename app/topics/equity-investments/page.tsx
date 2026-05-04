@@ -131,7 +131,7 @@ export default function EquityInvestmentsTopicPage() {
                 href="/signup"
                 className="px-8 py-4 border-2 border-white/30 text-white rounded-full font-semibold text-lg hover:bg-white/10 transition-colors"
               >
-                Start Free Trial
+                Get Started
               </Link>
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function EquityInvestmentsTopicPage() {
               Start Practicing Equity Questions
             </h2>
             <p className="text-xl text-red-100 mb-8">
-              Access 230+ equity investments practice questions with detailed explanations. Free trial includes 30 equity questions.
+              Access 230+ equity investments practice questions with detailed explanations. All paid plans include access to our full question bank.
             </p>
             <Link
               href="/signup"

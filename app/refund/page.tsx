@@ -285,7 +285,7 @@ export default function Refund() {
               href="/free-cfa-questions"
               className="inline-block px-8 py-3 bg-[#1FB8CD] text-white rounded-full font-semibold hover:bg-[#18a3b5] transition-colors"
             >
-              Start Free Trial
+              Get Started
             </Link>
           </div>
         </section>

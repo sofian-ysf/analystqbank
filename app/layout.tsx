@@ -11,7 +11,7 @@ const hostGrotesk = Host_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: "Free CFA Level 1 Exam Prep 2026 | 2,500+ Questions & Mock Exams",
+    default: "CFA Level 1 Exam Prep 2026 | 2,500+ Practice Questions & Mock Exams",
     template: "%s | AnalystTrainer",
   },
   icons: {
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.analysttrainer.com",
   },
-  description: "Prepare for CFA Level 1 with 2,500+ free practice questions, mock exams, and flashcards. Instant feedback, detailed explanations. Start your free trial - no credit card required!",
-  keywords: "free cfa level 1 practice questions, cfa level 1 mock exam, example cfa level 1 questions, cfa level 1 sample questions, cfa mock exam free, practice cfa level 1 questions, cfa level 1 questions with answers, cfa level 1 practice test, cfa exam sample questions, free cfa mock exam",
+  description: "Prepare for CFA Level 1 with 2,500+ practice questions, mock exams, and flashcards. Instant feedback, detailed explanations. Get started with a paid plan.",
+  keywords: "cfa level 1 practice questions, cfa level 1 mock exam, cfa level 1 sample questions, cfa level 1 questions with answers, cfa level 1 practice test, cfa exam questions, cfa question bank",
   authors: [{ name: "AnalystTrainer" }],
   creator: "AnalystTrainer",
   publisher: "AnalystTrainer",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.analysttrainer.com"),
   openGraph: {
     title: "CFA Level 1 Practice Questions & Mock Exams 2026 | AnalystTrainer",
-    description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations. Start your free trial today.",
+    description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations.",
     url: "https://www.analysttrainer.com",
     siteName: "AnalystTrainer",
     images: [
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "CFA Level 1 Practice Questions & Mock Exams 2026",
-    description: "Pass CFA Level 1 with 2,500+ practice questions & mock exams. Start free trial today!",
+    description: "Pass CFA Level 1 with 2,500+ practice questions & mock exams.",
     images: ["/twitter-image.png"],
     creator: "@analysttrainer",
   },

@@ -255,13 +255,13 @@ export default function FormulaSheetPage() {
             Ready for More? Try Our Full Question Bank
           </h3>
           <p className="text-gray-600 mb-6">
-            2,500+ practice questions with detailed explanations. 100 free questions included.
+            2,500+ practice questions with detailed explanations. Sign up to access.
           </p>
           <Link
             href="/signup"
             className="inline-block px-8 py-3 bg-[#13343B] text-white rounded-lg font-semibold hover:bg-[#1a4a54] transition-colors"
           >
-            Start Free Trial
+            Get Started
           </Link>
         </div>
       </section>

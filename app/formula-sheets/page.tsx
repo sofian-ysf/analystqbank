@@ -309,7 +309,7 @@ export default function FormulaSheets() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/signup" className="bg-white text-gray-900 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors">
-              Start Free Trial
+              Get Started
             </Link>
             <Link href="/pricing" className="border border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-gray-900 transition-colors">
               View Pricing

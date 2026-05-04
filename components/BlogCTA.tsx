@@ -31,9 +31,6 @@ export function BlogCTABox() {
   return (
     <div className="my-12 p-8 bg-[#fbfaf4] border border-gray-200 rounded-2xl">
       <div className="text-center max-w-xl mx-auto">
-        <span className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-4">
-          Free Trial Available
-        </span>
         <h3 className="text-2xl font-bold text-gray-900 mb-3">
           Put Your Knowledge to the Test
         </h3>
@@ -45,16 +42,16 @@ export function BlogCTABox() {
             href="/signup"
             className="px-6 py-3 bg-[#13343B] text-white rounded-full font-medium hover:bg-[#1a4a54] transition-colors"
           >
-            Start Free Trial
+            Get Started
           </Link>
           <Link
-            href="/cfa-level-1-practice-questions"
+            href="/try-free"
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:border-gray-400 transition-colors"
           >
-            Learn More
+            Try Demo
           </Link>
         </div>
-        <p className="mt-4 text-xs text-gray-500">No credit card required. 100 free questions included.</p>
+        <p className="mt-4 text-xs text-gray-500">15 free demo questions available with no signup required.</p>
       </div>
     </div>
   )
@@ -65,13 +62,13 @@ export function BlogCTASidebar() {
     <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm sticky top-24">
       <h4 className="font-semibold text-gray-900 mb-2">Practice CFA Questions</h4>
       <p className="text-sm text-gray-600 mb-4">
-        2,500+ questions with detailed explanations. Start with 100 free questions.
+        2,500+ questions with detailed explanations. Try 15 demo questions free.
       </p>
       <Link
-        href="/signup"
+        href="/try-free"
         className="block w-full text-center px-4 py-2.5 bg-[#13343B] text-white rounded-lg font-medium hover:bg-[#1a4a54] transition-colors text-sm"
       >
-        Try Free
+        Try Demo Free
       </Link>
       <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-xs text-gray-500 mb-2">Also available:</p>
@@ -107,13 +104,13 @@ export function BlogCTAEndOfArticle() {
             href="/signup"
             className="px-8 py-3 bg-[#1FB8CD] text-white rounded-full font-semibold hover:bg-[#18a3b5] transition-colors"
           >
-            Start Free Trial
+            Get Started
           </Link>
           <Link
-            href="/cfa-level-1-practice-questions"
+            href="/try-free"
             className="px-8 py-3 border-2 border-white/30 text-white rounded-full font-semibold hover:bg-white/10 transition-colors"
           >
-            View Practice Questions
+            Try Demo
           </Link>
         </div>
         <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-gray-300">
@@ -127,7 +124,7 @@ export function BlogCTAEndOfArticle() {
             <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-            <Link href="/free-cfa-questions" className="hover:underline">100 free questions</Link>
+            15 free demo questions
           </span>
           <span className="flex items-center gap-1.5">
             <svg className="w-4 h-4 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">

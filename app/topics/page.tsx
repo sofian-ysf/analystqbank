@@ -93,7 +93,7 @@ export default function TopicsPage() {
                   href="/signup"
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                  Start Free Trial
+                  Get Started
                 </Link>
               </div>
             </nav>
@@ -281,7 +281,7 @@ export default function TopicsPage() {
                 href="/signup"
                 className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
               >
-                Start Free Trial
+                Get Started
               </Link>
               <Link
                 href="/pricing"
