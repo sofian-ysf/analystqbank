@@ -214,27 +214,55 @@ function SignUpForm() {
 
         {/* Selected Plan Banner */}
         {selectedPlan && (
-          <div className="mb-6 bg-[#1FB8CD]/10 border border-[#1FB8CD]/20 rounded-lg p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-[#13343B]">Selected Plan</p>
-                <p className="text-lg font-bold text-[#1FB8CD]">{planDetails.name}</p>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-[#13343B]">
-                  {planDetails.price === 0 ? 'Free' : `£${planDetails.price}`}
-                </p>
-                {planDetails.price > 0 && (
-                  <p className="text-sm text-[#5f6368]">one-time</p>
-                )}
-              </div>
+          <div className="mb-6 bg-white border border-[#1FB8CD]/20 rounded-lg p-4">
+            <p className="text-sm font-medium text-[#13343B] mb-3">Select Your Plan</p>
+            <div className="grid grid-cols-3 gap-3">
+              {(['2month', '6month', 'lifetime'] as const).map((planKey) => {
+                const plan = PLAN_LIMITS[planKey];
+                const isSelected = selectedPlan === planKey;
+                return (
+                  <button
+                    key={planKey}
+                    onClick={() => {
+                      const params = new URLSearchParams(searchParams.toString());
+                      params.set('plan', planKey);
+                      router.replace(`/signup?${params.toString()}`);
+                    }}
+                    className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all ${
+                      isSelected
+                        ? 'border-[#1FB8CD] bg-[#1FB8CD]/10'
+                        : 'border-gray-200 bg-white hover:border-[#1FB8CD]/50'
+                    }`}
+                  >
+                    <span className={`text-sm font-medium ${isSelected ? 'text-[#1FB8CD]' : 'text-[#13343B]'}`}>
+                      {plan.name}
+                    </span>
+                    {planKey === '6month' && (
+                      <span className="text-[10px] font-medium text-white bg-[#1FB8CD] px-1.5 py-0.5 rounded mt-1">
+                        Best value
+                      </span>
+                    )}
+                    <span className={`text-lg font-bold mt-1 ${isSelected ? 'text-[#1FB8CD]' : 'text-[#13343B]'}`}>
+                      £{plan.price}
+                    </span>
+                    <span className="text-xs text-[#5f6368]">one-time</span>
+                  </button>
+                );
+              })}
             </div>
-            <p className="mt-2 text-xs text-[#5f6368]">
-              You&apos;ll be redirected to payment after signup.
-            </p>
-            <Link href="/#pricing" className="text-xs text-[#1FB8CD] hover:underline mt-1 inline-block">
-              Change plan
-            </Link>
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <p className="text-xs text-[#5f6368] mb-2">What's included:</p>
+              <ul className="grid grid-cols-2 gap-1">
+                {PLAN_LIMITS[selectedPlan].features.map((feature, i) => (
+                  <li key={i} className="flex items-center gap-1.5 text-xs text-[#13343B]">
+                    <svg className="w-3.5 h-3.5 text-[#1FB8CD] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
 
