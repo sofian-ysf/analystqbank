@@ -237,7 +237,7 @@ function SignUpForm() {
                     <span className={`text-sm font-medium ${isSelected ? 'text-[#1FB8CD]' : 'text-[#13343B]'}`}>
                       {plan.name}
                     </span>
-                    {planKey === '6month' && (
+                    {planKey === 'lifetime' && (
                       <span className="text-[10px] font-medium text-white bg-[#1FB8CD] px-1.5 py-0.5 rounded mt-1">
                         Best value
                       </span>
