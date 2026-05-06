@@ -5,15 +5,15 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Mock Exam 2026 | 180 Questions + Answers',
-  description: 'Take a full CFA Level 1 mock exam. 180 questions, 4.5 hours, instant scoring & detailed answers. Matches real exam format. Sign up for access.',
-  keywords: 'cfa level 1 mock exam, cfa level 1 mock test, cfa level 1 practice exam, mock test for cfa level 1, cfa practice test level 1, cfa level 1 mock questions, cfa exam practice questions, cfa level 1 full exam',
+  title: 'CFA Mock Exam 2026 | 180 Questions + Detailed Answers',
+  description: 'Take a full CFA mock exam with 180 questions matching the real CFA exam format. Timed sessions, instant scoring, and detailed explanations. Prepare for exam day with AnalystTrainer.',
+  keywords: 'cfa mock exam, cfa mock test, cfa exam practice, cfa practice exam, cfa level 1 mock exam, mock exam cfa, cfa practice test, cfa exam simulation, cfa mock questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
   },
   openGraph: {
-    title: 'CFA Level 1 Mock Exam 2026 | 180 Questions',
-    description: 'Full-length CFA Level 1 mock exam. 180 questions, instant results, detailed explanations.',
+    title: 'CFA Mock Exam 2026 | 180 Questions | CFA Exam Prep',
+    description: 'Full-length CFA mock exam. 180 questions, instant results, detailed explanations.',
     url: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
     type: 'website',
   },

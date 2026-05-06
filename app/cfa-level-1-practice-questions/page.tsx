@@ -7,15 +7,15 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export const metadata: Metadata = {
-  title: '2,500+ CFA Level 1 Questions 2026 | With Answers',
-  description: 'Master CFA Level 1 with 2,500+ practice questions covering all 10 topics. Detailed explanations, instant feedback, track your progress. Sign up to access.',
-  keywords: 'cfa level 1 practice questions, cfa level 1 sample questions, cfa level 1 questions with answers, cfa practice questions level 1, cfa level 1 exam questions, cfa question bank, practice cfa level 1 questions',
+  title: '2,500+ CFA Practice Questions 2026 | With Detailed Answers',
+  description: 'Master the CFA exam with 2,500+ CFA practice questions covering all 10 topics. Step-by-step explanations, instant feedback, and performance tracking. Start your free trial.',
+  keywords: 'cfa practice questions, cfa exam practice questions, cfa level 1 practice questions, cfa sample questions, cfa practice test, cfa level 1 questions, cfa exam questions with answers, cfa mock exam questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
   openGraph: {
-    title: '2,500+ CFA Level 1 Practice Questions 2026',
-    description: '2,500+ practice questions covering all 10 CFA Level 1 topics. Detailed explanations, instant feedback.',
+    title: '2,500+ CFA Practice Questions 2026 | CFA Exam Prep',
+    description: '2,500+ CFA practice questions covering all 10 CFA Level 1 topics. Detailed explanations, instant feedback.',
     url: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
     type: 'website',
   },
