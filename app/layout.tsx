@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Host_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ExitIntentWrapper from "@/components/ExitIntentWrapper";
 
@@ -89,6 +90,22 @@ export default function RootLayout({
       >
         {children}
         <ExitIntentWrapper />
+        {/* Google tag (gtag.js) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18143203755"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-tag-config"
+          strategy="afterInteractive"
+        >
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18143203755');
+          `}
+        </Script>
       </body>
     </html>
   );
