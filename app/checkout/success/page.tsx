@@ -12,6 +12,16 @@ function SuccessContent() {
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
+    // Fire Google Ads purchase conversion event
+    if (typeof window.gtag !== 'undefined') {
+      window.gtag('event', 'conversion', {
+        'send_to': 'AW-18143203755/gcSgCMb6rpXcEKujrctD',
+        'value': 1.0,
+        'currency': 'GBP',
+        'transaction_id': ''
+      });
+    }
+
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
