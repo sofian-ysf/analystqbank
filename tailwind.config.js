@@ -26,7 +26,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-host-grotesk)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-source-serif)', 'Georgia', 'serif'],
       },
     },
   },

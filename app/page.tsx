@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Script from "next/script";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import Navigation from "./components/Navigation";
 import ScrollReveal from "./components/ScrollReveal";
 import { PassGuaranteeFull } from "@/components/PassGuarantee";
@@ -12,16 +12,35 @@ import PromoBanner from "@/components/PromoBanner";
 import FloatingGetStartedButton from "./components/FloatingGetStartedButton";
 
 const testimonials = [
-  { initials: "JC", name: "James C.", role: "Investment Analyst, London", quote: "The question bank mirrors the actual CFA exam remarkably well. I felt genuinely prepared walking into the testing centre." },
-  { initials: "SK", name: "Sarah K.", role: "Portfolio Manager, Manchester", quote: "After struggling with other prep materials, this platform gave me the structure and confidence I needed. Passed on my first attempt." },
-  { initials: "ML", name: "Michael L.", role: "Financial Analyst, Birmingham", quote: "The mock exams are exceptionally thorough. They prepared me for scenarios even more challenging than the real assessment." },
-  { initials: "AP", name: "Aisha P.", role: "Risk Analyst, Leeds", quote: "The detailed explanations for each question helped me understand not just the what, but the why. Invaluable for deep learning." },
-  { initials: "RB", name: "Richard B.", role: "Equity Research, Bristol", quote: "I appreciated the calm, structured approach. No pressure tactics, just quality content that speaks for itself." },
-  { initials: "EH", name: "Emily H.", role: "Credit Analyst, Edinburgh", quote: "The quantitative methods section alone was worth the subscription. Complex formulas broken down beautifully." },
+  { initials: "OL", name: "Oluwaseun L.", role: "Final Year, University of Lagos", quote: "Sorted my exam prep in no time. Questions are exactly what you need to practice." },
+  { initials: "MW", name: "Marcus W.", role: "Second Year, University of Dundee", quote: "Dead good. Helped me loads during summer revision." },
+  { initials: "SK", name: "Sophie K.", role: "Masters, University of Exeter", quote: "Way better than the expensive books. Makes actual sense." },
+  { initials: "YT", name: "Yuki T.", role: "Second Year, University of Toronto", quote: "Brilliant question bank. The explanations actually make sense unlike some of the textbooks." },
+  { initials: "NM", name: "Nia M.", role: "Final Year, University of Cape Town", quote: "Really helped with my exam prep. Good value for a student budget." },
+  { initials: "JR", name: "James R.", role: "Second Year, University of Lincoln", quote: "The mock exams are spot on. Felt fully prepared on the day." },
 ];
 
 export default function Home() {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false);
+
+  useEffect(() => {
+    if (userInteracted) return;
+
+    let index = 0;
+    const sequence = [2, 0, null, 2, 0, null];
+    const delays = [2500, 5000, 4000, 2500, 5000, 4000];
+
+    const runSequence = () => {
+      if (userInteracted) return;
+      setSelectedOption(sequence[index]);
+      index = (index + 1) % sequence.length;
+      setTimeout(runSequence, delays[index]);
+    };
+
+    setTimeout(runSequence, 1000);
+  }, [userInteracted]);
 
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
@@ -175,13 +194,12 @@ export default function Home() {
                   Trusted by finance professionals worldwide
                 </div>
 
-                <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                  Pass CFA Level 1 First Time
-                  <span className="block text-gray-900">2,500+ Questions by Charterholders</span>
+                <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl hover-target">
+                  Pass <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">CFA Level 1</span></span> <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">First Time</span></span> — <em>2,500+ Questions</em> by Charterholders
                 </h1>
 
                 <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
-                  Start with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 practice questions</Link> with detailed explanations. Join thousands of candidates who passed using AnalystTrainer.
+                  Start with our <Link href="/try-free" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 practice questions</Link> with detailed explanations. Join thousands of candidates who passed using AnalystTrainer.
                 </p>
 
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
@@ -201,7 +219,7 @@ export default function Home() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                   <div className="text-center lg:text-left">
-                    <div className="text-2xl font-bold text-gray-900">4.8/5</div>
+                    <div className="text-2xl font-medium text-gray-900">4.8/5</div>
                     <div className="flex justify-center lg:justify-start mt-1 mb-1">
                       {[...Array(5)].map((_, i) => (
                         <svg key={i} className={`h-3 w-3 ${i < 5 ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
@@ -212,15 +230,15 @@ export default function Home() {
                     <div className="text-xs text-gray-600">User Rating</div>
                   </div>
                   <div className="text-center lg:text-left">
-                    <div className="text-2xl font-bold text-gray-900">2,500+</div>
+                    <div className="text-2xl font-medium text-gray-900">2,500+</div>
                     <div className="text-xs text-gray-600">Questions</div>
                   </div>
                   <div className="text-center lg:text-left">
-                    <div className="text-2xl font-bold text-gray-900">10</div>
+                    <div className="text-2xl font-medium text-gray-900">10</div>
                     <div className="text-xs text-gray-600">Topic Areas</div>
                   </div>
                   <div className="text-center lg:text-left">
-                    <div className="text-2xl font-bold text-gray-900">Lifetime</div>
+                    <div className="text-2xl font-medium text-gray-900">Lifetime</div>
                     <div className="text-xs text-gray-600">Access</div>
                   </div>
                 </div>
@@ -239,29 +257,29 @@ export default function Home() {
           <div className="mx-auto max-w-6xl">
             <div className="text-center mb-10">
               <p className="text-[#1FB8CD] text-sm uppercase tracking-widest mb-2">Proven Results</p>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white">
+              <h2 className="text-2xl md:text-3xl font-medium text-white">
                 Candidates See Real Improvement
               </h2>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">89%</div>
+                <div className="text-4xl md:text-5xl font-medium text-[#1FB8CD] mb-2">89%</div>
                 <div className="text-gray-300 text-sm">of users report feeling more prepared</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">+27%</div>
+                <div className="text-4xl md:text-5xl font-medium text-[#1FB8CD] mb-2">+27%</div>
                 <div className="text-gray-300 text-sm">average mock exam score improvement</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">15K+</div>
-                <div className="text-gray-300 text-sm">candidates have used our platform</div>
+                <div className="text-4xl md:text-5xl font-medium text-[#1FB8CD] mb-2">100%</div>
+                <div className="text-gray-300 text-sm">checked by Charterholders</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#1FB8CD] mb-2">4.8</div>
+                <div className="text-4xl md:text-5xl font-medium text-[#1FB8CD] mb-2">4.8</div>
                 <div className="text-gray-300 text-sm">average user rating out of 5</div>
               </div>
             </div>
-            <p className="text-center text-gray-500 text-xs mt-8">
+            <p className="text-center text-white/60 text-xs mt-8">
               Based on self-reported user data and feedback surveys. Individual results may vary.
             </p>
           </div>
@@ -273,7 +291,7 @@ export default function Home() {
             <ScrollReveal>
               <div className="text-center mb-16">
                 <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">See It In Action</p>
-                <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+                <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl">
                   A Platform Built for Success
                 </h2>
                 <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -283,36 +301,121 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={200}>
-              <div className="relative mx-auto max-w-5xl">
-                {/* Browser mockup frame */}
-                <div className="rounded-2xl bg-gray-900 p-2 shadow-2xl">
-                  <div className="flex items-center gap-2 px-4 py-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                    </div>
-                    <div className="flex-1 mx-4">
-                      <div className="bg-gray-800 rounded-md px-4 py-1.5 text-sm text-gray-400 text-center">
-                        analysttrainer.com
+              <div className="flex flex-col items-center">
+                {/* Video-style demo - light mode */}
+                <div className="relative w-full max-w-2xl">
+                  <div className="rounded-2xl bg-white border border-gray-200 p-6 shadow-xl">
+                    {/* Question */}
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="px-2 py-1 bg-[#1FB8CD]/10 text-[#1FB8CD] text-xs rounded font-medium">Ethics</span>
+                        <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded">Q.42</span>
                       </div>
+                      <p className="text-gray-900 text-lg leading-relaxed">
+                        A CFA Charterholder discovers their firm is about to recommend a stock they own personally. According to the Code of Ethics, what is the <span className="text-[#1FB8CD] font-medium">required action</span> before proceeding?
+                      </p>
                     </div>
+
+                    {/* Options */}
+                    <div className="space-y-3 mb-6">
+                      {['A. Disclose the conflict to compliance', 'B. Sell the personal position immediately', 'C. Obtain client approval to proceed', 'D. Inform the regulator'].map((opt, i) => (
+                        <div
+                          key={i}
+                          onClick={() => { setSelectedOption(i); setUserInteracted(true); }}
+                          className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${
+                            selectedOption === i
+                              ? i === 0
+                                ? 'border-green-500 bg-green-50'
+                                : 'border-red-500 bg-red-50'
+                              : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+                          }`}
+                        >
+                          <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-medium ${
+                            selectedOption === i
+                              ? i === 0 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                              : 'bg-gray-200 text-gray-600'
+                          }`}>
+                            {String.fromCharCode(65 + i)}
+                          </span>
+                          <span className={selectedOption === i ? (i === 0 ? 'text-green-700' : 'text-red-700') : 'text-gray-700'}>{opt}</span>
+                          {selectedOption === i && i === 0 && (
+                            <svg className="w-5 h-5 text-green-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          {selectedOption === i && i !== 0 && (
+                            <svg className="w-5 h-5 text-red-500 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Answer reveal */}
+                    {selectedOption === 0 && (
+                      <div className="rounded-xl bg-green-50 border-2 border-green-500 p-4 animate-fadeIn">
+                        <div className="flex items-center gap-2 mb-2">
+                          <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-green-700 font-medium">Correct!</span>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          <strong className="text-gray-900">Answer: A — Disclose the conflict to compliance</strong><br/><br/>
+                          Under <strong>Standard VI(A) Conflicts of Interest</strong>, when a member discovers a potential conflict — such as owning a personal position in a stock about to be recommended — they must <strong>disclose the conflict in writing to their employer</strong> and obtain written consent before proceeding with the recommendation. This ensures the employer can review and manage the conflict appropriately. Simply selling the position (B) doesn't satisfy the requirement to disclose. The conflict disclosure must happen before any recommendation is made.
+                        </p>
+                      </div>
+                    )}
+                    {selectedOption === 1 && (
+                      <div className="rounded-xl bg-red-50 border-2 border-red-500 p-4 animate-fadeIn">
+                        <div className="flex items-center gap-2 mb-2">
+                          <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          <span className="text-red-700 font-medium">Incorrect</span>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          <strong className="text-gray-900">Answer: B is not correct.</strong> Selling the personal position might appear to resolve the conflict, but it doesn't satisfy the ethical obligation under <strong>Standard VI(A)</strong>. The member must <strong>disclose the conflict in writing to their employer</strong> before proceeding with any recommendation. Selling without disclosure could be seen as front-running or concealing a conflict. The requirement is disclosure and written approval — not simply liquidating the position.
+                        </p>
+                      </div>
+                    )}
+                    {selectedOption === 2 && (
+                      <div className="rounded-xl bg-red-50 border-2 border-red-500 p-4 animate-fadeIn">
+                        <div className="flex items-center gap-2 mb-2">
+                          <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          <span className="text-red-700 font-medium">Incorrect</span>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          <strong className="text-gray-900">Answer: C is not correct.</strong> While client approval is valuable in some contexts, <strong>Standard VI(A)</strong> specifically requires disclosure to your <strong>employer</strong> — not the client — when a personal conflict exists. The member must inform their firm so compliance can review and approve the recommendation. Client approval is not the primary mechanism for managing employer-level conflicts of interest under the Standards.
+                        </p>
+                      </div>
+                    )}
+                    {selectedOption === 3 && (
+                      <div className="rounded-xl bg-red-50 border-2 border-red-500 p-4 animate-fadeIn">
+                        <div className="flex items-center gap-2 mb-2">
+                          <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          <span className="text-red-700 font-medium">Incorrect</span>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          <strong className="text-gray-900">Answer: D is not correct.</strong> Informing the regulator is not the required first step. Under <strong>Standard VI(A)</strong>, the member must first <strong>disclose the conflict to their employer</strong> and obtain written consent. Regulators are not the appropriate first contact for internal conflict resolution. Only after employer disclosure and approval should the member consider whether additional reporting obligations apply.
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  <div className="rounded-lg overflow-hidden">
-                    <Image
-                      src="/images/questionpage.png"
-                      alt="AnalystTrainer Question Bank Interface"
-                      width={1200}
-                      height={800}
-                      className="w-full h-auto"
-                      priority
-                    />
+
+                  {/* Video indicator */}
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-lg">
+                    <div className="w-3 h-3 rounded-full bg-[#1FB8CD] relative">
+                      <span className="absolute inset-0 rounded-full bg-[#1FB8CD] animate-ping opacity-75"></span>
+                    </div>
+                    <span className="text-gray-700 text-sm font-medium">Interactive Demo</span>
                   </div>
                 </div>
-
-                {/* Decorative elements */}
-                <div className="absolute -z-10 -top-4 -left-4 w-72 h-72 bg-blue-100 rounded-full opacity-20 blur-3xl"></div>
-                <div className="absolute -z-10 -bottom-4 -right-4 w-72 h-72 bg-purple-100 rounded-full opacity-20 blur-3xl"></div>
               </div>
             </ScrollReveal>
 
@@ -362,13 +465,13 @@ export default function Home() {
           <div className="mx-auto max-w-7xl">
             <ScrollReveal>
               <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium mb-4">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   100% FREE — No Credit Card Required
                 </div>
-                <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl mb-4">
+                <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl mb-4">
                   Master CFA Concepts with Free Flashcards
                 </h2>
                 <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -440,7 +543,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-gray-900 mb-1">Ready to test yourself?</p>
+                    <p className="text-lg font-medium text-gray-900 mb-1">Ready to test yourself?</p>
                     <p className="text-gray-600 text-sm max-w-md">
                       Once you've mastered the concepts, put your knowledge to the test with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 sample questions</Link> featuring 2,500+ practice questions with detailed explanations.
                     </p>
@@ -461,7 +564,7 @@ export default function Home() {
         <section className="bg-[#fbfaf4] px-4 py-24 sm:px-6 lg:px-8 border-y border-gray-100">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl">
                 Why Preparation Matters
               </h2>
               <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -513,7 +616,7 @@ export default function Home() {
         <section id="features" className="px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl">
                 A Complete Preparation Experience
               </h2>
               <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -577,7 +680,7 @@ export default function Home() {
               <div className="flex items-end justify-between mb-10">
                 <div>
                   <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">Voices from Our Community</p>
-                  <h2 className="text-2xl font-semibold text-gray-900">Stories of Success</h2>
+                  <h2 className="text-2xl font-medium text-gray-900">Stories of Success</h2>
                 </div>
                 <div className="hidden sm:flex gap-2">
                   <button
@@ -652,7 +755,7 @@ export default function Home() {
           <div className="mx-auto max-w-5xl">
             <div className="text-center mb-12">
               <p className="text-sm uppercase tracking-widest text-gray-500 mb-3">Pricing</p>
-              <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl">
                 Choose Your Plan
               </h2>
               <p className="mt-4 text-lg text-gray-600">
@@ -721,7 +824,7 @@ export default function Home() {
 
               {/* 6 Month - Most Popular */}
               <div className="pill-card relative ring-2 ring-green-500">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-medium px-3 py-1 rounded-full">
                   Most Popular
                 </div>
                 <div className="text-center pb-6 border-b border-gray-100">
@@ -846,7 +949,7 @@ export default function Home() {
         <section id="faq" className="px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl">
+              <h2 className="text-3xl font-medium text-gray-900 sm:text-4xl">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -921,7 +1024,7 @@ export default function Home() {
             <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">
               Start Today
             </p>
-            <h2 className="mb-6 text-3xl font-semibold text-gray-900 sm:text-4xl">
+            <h2 className="mb-6 text-3xl font-medium text-gray-900 sm:text-4xl">
               Begin Your CFA Level 1 Journey
             </h2>
             <p className="mb-10 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -975,12 +1078,12 @@ export default function Home() {
                   <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
                 </Link>
                 <p className="mt-4 text-sm text-gray-600">
-                  The leading platform for CFA Level 1 exam preparation.
+                  A leading platform for CFA Level 1 exam preparation.
                 </p>
               </div>
 
               <div>
-                <h4 className="mb-4 font-semibold text-gray-900">Product</h4>
+                <h4 className="mb-4 font-medium text-gray-900">Product</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li><a href="#features" className="hover:text-gray-900">Features</a></li>
                   <li><a href="#pricing" className="hover:text-gray-900">Pricing</a></li>
@@ -990,7 +1093,7 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="mb-4 font-semibold text-gray-900">Resources</h4>
+                <h4 className="mb-4 font-medium text-gray-900">Resources</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li><Link href="/blog" className="hover:text-gray-900">Blog</Link></li>
                   <li><Link href="/help" className="hover:text-gray-900">Help Center</Link></li>
@@ -998,7 +1101,7 @@ export default function Home() {
               </div>
 
               <div>
-                <h4 className="mb-4 font-semibold text-gray-900">Legal</h4>
+                <h4 className="mb-4 font-medium text-gray-900">Legal</h4>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li><Link href="/privacy" className="hover:text-gray-900">Privacy Policy</Link></li>
                   <li><Link href="/terms" className="hover:text-gray-900">Terms of Service</Link></li>
@@ -1009,7 +1112,7 @@ export default function Home() {
 
             <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
               <p>© 2026 AnalystTrainer. All rights reserved.</p>
-              <p className="mt-2">Not affiliated with or endorsed by the CFA Institute.</p>
+              <p className="mt-2">CFA Institute does not endorse, promote, or warrant the accuracy or quality of AnalystTrainer. CFA® and Chartered Financial Analyst® are registered trademarks owned by CFA Institute.</p>
             </div>
           </div>
         </footer>

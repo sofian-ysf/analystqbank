@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Host_Grotesk } from "next/font/google";
+import { Source_Serif_4 } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import ExitIntentWrapper from "@/components/ExitIntentWrapper";
 
-const hostGrotesk = Host_Grotesk({
-  variable: "--font-host-grotesk",
+const sourceSerif4 = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -86,7 +86,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${hostGrotesk.variable} antialiased`}
+        className={`${sourceSerif4.variable} antialiased`}
       >
         {children}
         <ExitIntentWrapper />
