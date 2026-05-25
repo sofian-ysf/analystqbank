@@ -28,7 +28,7 @@ export default function Sidebar({ user, onSignOut }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Determine flashcard href based on login status
-  const flashcardHref = user ? "/flashcards/study/ethics" : "/flashcards";
+  const flashcardHref = user ? "/flashcards/decks" : "/flashcards";
 
   const navItems = [
     { href: "/dashboard", icon: House, label: "Dashboard" },

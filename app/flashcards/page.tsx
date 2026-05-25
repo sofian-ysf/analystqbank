@@ -116,9 +116,9 @@ export default function FlashcardsPage() {
     )
   }
 
-  // If user is logged in, redirect to the study page
+  // If user is logged in, redirect to the decks page
   if (user) {
-    router.push('/flashcards/study/ethics')
+    router.push('/flashcards/decks')
     return null
   }
 
