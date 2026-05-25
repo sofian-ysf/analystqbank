@@ -37,6 +37,8 @@ export default function Sidebar({ user, onSignOut }: SidebarProps) {
     { href: "/practice/mock-exam", icon: Exam, label: "Mock Exams" },
     { href: "/settings", icon: Gear, label: "Settings" },
   ];
+
+  const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     onSignOut();
