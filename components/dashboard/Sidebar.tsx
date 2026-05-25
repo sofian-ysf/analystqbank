@@ -23,22 +23,20 @@ interface SidebarProps {
   onSignOut: () => void;
 }
 
-// Determine flashcard href based on login status
-const flashcardHref = user ? "/flashcards/study/ethics" : "/flashcards";
-
-const navItems = [
-  { href: "/dashboard", icon: House, label: "Dashboard" },
-  { href: "/question-bank", icon: Books, label: "Question Bank" },
-  { href: flashcardHref, icon: Cards, label: "Flashcards", badge: "FREE" },
-  { href: "/practice/mock-exam", icon: Exam, label: "Mock Exams" },
-  { href: "/settings", icon: Gear, label: "Settings" },
-];
-
 export default function Sidebar({ user, onSignOut }: SidebarProps) {
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const handleSignOut = async () => {
+  // Determine flashcard href based on login status
+  const flashcardHref = user ? "/flashcards/study/ethics" : "/flashcards";
+
+  const navItems = [
+    { href: "/dashboard", icon: House, label: "Dashboard" },
+    { href: "/question-bank", icon: Books, label: "Question Bank" },
+    { href: flashcardHref, icon: Cards, label: "Flashcards", badge: "FREE" },
+    { href: "/practice/mock-exam", icon: Exam, label: "Mock Exams" },
+    { href: "/settings", icon: Gear, label: "Settings" },
+  ];
     const supabase = createClient();
     await supabase.auth.signOut();
     onSignOut();
