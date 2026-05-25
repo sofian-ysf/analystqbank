@@ -3,13 +3,36 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import MathText from "@/components/MathText";
 import { useSubscription } from "@/hooks/useSubscription";
 import { UpgradePrompt } from "@/components/UpgradePrompt";
 import { PlanType } from "@/lib/plans";
+import {
+  CaretDown,
+  SignOut,
+  CaretLeft,
+  CaretRight,
+  Check,
+  X,
+  Clock,
+  Scales,
+  ChartBar,
+  Globe,
+  ClipboardText,
+  Buildings,
+  ChartLineUp,
+  Bank,
+  ArrowsClockwise,
+  Hammer,
+  Briefcase,
+  List,
+  PaperPlaneTilt,
+  ArrowLeft,
+  Trophy,
+} from "@phosphor-icons/react";
+import Sidebar from "@/components/dashboard/Sidebar";
 
 // CFA Level 1 exam weightings - 180 total questions
 const MOCK_EXAM_DISTRIBUTION: { [key: string]: { topicName: string; questions: number; weight: string } } = {
@@ -65,6 +88,8 @@ export default function MockExam() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [examStarted, setExamStarted] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyAttempts, setHistoryAttempts] = useState<any[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -74,13 +99,13 @@ export default function MockExam() {
   const [navigatorPage, setNavigatorPage] = useState(0);
   const [navigatorFilter, setNavigatorFilter] = useState<'correct' | 'wrong' | 'pending' | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [examTimer, setExamTimer] = useState<number>(0); // In seconds
+  const [examTimer, setExamTimer] = useState<number>(0);
   const [timerRunning, setTimerRunning] = useState(false);
   const [mockExamAttemptId, setMockExamAttemptId] = useState<string | null>(null);
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const supabase = createClient();
 
-  // Subscription access control
   const {
     subscription,
     loading: subscriptionLoading,
@@ -89,15 +114,13 @@ export default function MockExam() {
   } = useSubscription();
 
   const QUESTIONS_PER_PAGE = 50;
-  const TOTAL_EXAM_TIME = 4.5 * 60 * 60; // 4.5 hours in seconds (CFA L1 format)
+  const TOTAL_EXAM_TIME = 4.5 * 60 * 60;
 
-  // Calculate score
   const score = {
     correct: Object.values(answeredQuestions).filter(a => a.isCorrect).length,
     total: Object.keys(answeredQuestions).length
   };
 
-  // Timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (timerRunning && examTimer < TOTAL_EXAM_TIME) {
@@ -120,15 +143,13 @@ export default function MockExam() {
   const fetchMockExamQuestions = useCallback(async () => {
     const allQuestions: Question[] = [];
 
-    // Mock exams have full access to all questions (no plan-based limits)
-    // Fetch questions from each category based on the distribution
     for (const [, config] of Object.entries(MOCK_EXAM_DISTRIBUTION)) {
       const { data, error } = await supabase
         .from("questions")
         .select("*")
         .eq("topic_area", config.topicName)
         .eq("is_active", true)
-        .limit(config.questions * 2); // Fetch extra to ensure we have enough
+        .limit(config.questions * 2);
 
       if (error) {
         console.error(`Error fetching questions for ${config.topicName}:`, error);
@@ -136,18 +157,12 @@ export default function MockExam() {
       }
 
       if (data && data.length > 0) {
-        // Shuffle and take the required number
         const shuffled = shuffleArray(data);
         const selected = shuffled.slice(0, Math.min(config.questions, data.length));
         allQuestions.push(...selected);
-      } else {
-        console.warn(`No questions available for ${config.topicName}`);
       }
     }
 
-    console.log(`Fetched ${allQuestions.length} questions for mock exam`);
-
-    // Shuffle all questions for random order
     return shuffleArray(allQuestions);
   }, [supabase]);
 
@@ -159,10 +174,48 @@ export default function MockExam() {
         return;
       }
       setUser(user);
+
+      // Fetch mock exam history
+      const { data: attempts } = await supabase
+        .from('user_mock_exam_attempts')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'completed')
+        .order('completed_at', { ascending: false });
+
+      if (attempts) {
+        setHistoryAttempts(attempts);
+      }
+
       setLoading(false);
     };
     checkUser();
   }, [router, supabase]);
+
+  const formatHistoryDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const getTopicScores = (topicScores: any) => {
+    if (!topicScores) return [];
+    return Object.entries(topicScores).map(([topic, scores]: [string, any]) => ({
+      topic,
+      correct: scores.correct,
+      total: scores.total,
+      percentage: scores.total > 0 ? Math.round((scores.correct / scores.total) * 100) : 0
+    }));
+  };
+
+  const getStrongestTopics = (topicScores: any) => {
+    const topics = getTopicScores(topicScores);
+    return topics.sort((a, b) => b.percentage - a.percentage).slice(0, 3);
+  };
+
+  const getWeakestTopics = (topicScores: any) => {
+    const topics = getTopicScores(topicScores);
+    return topics.sort((a, b) => a.percentage - b.percentage).slice(0, 3);
+  };
 
   const handleStartExam = async () => {
     if (!user) return;
@@ -170,12 +223,11 @@ export default function MockExam() {
     setLoading(true);
 
     try {
-      // Create mock exam attempt record immediately when starting
       const { data: attemptData, error: attemptError } = await supabase
         .from('user_mock_exam_attempts')
         .insert({
           user_id: user.id,
-          mock_exam_id: null, // Can be updated if you have specific mock exam IDs
+          mock_exam_id: null,
           status: 'in_progress',
           started_at: new Date().toISOString(),
         })
@@ -200,7 +252,6 @@ export default function MockExam() {
         return;
       }
 
-      console.log(`Starting exam with ${fetchedQuestions.length} questions`);
       setQuestions(fetchedQuestions);
       setExamStarted(true);
       setTimerRunning(true);
@@ -336,7 +387,6 @@ export default function MockExam() {
     setTimerRunning(false);
 
     try {
-      // Calculate results by topic
       const resultsByTopic: { [key: string]: { correct: number; total: number } } = {};
       questions.forEach((question, index) => {
         const topicArea = question.topic_area;
@@ -349,7 +399,6 @@ export default function MockExam() {
         }
       });
 
-      // Update the existing mock exam attempt record
       const totalScore = score.correct;
       const percentageScore = questions.length > 0 ? (score.correct / questions.length) * 100 : 0;
 
@@ -371,7 +420,6 @@ export default function MockExam() {
         console.error('Error updating mock exam record:', mockExamError);
       }
 
-      // Prepare question attempts for batch insert
       const attempts = Object.entries(answeredQuestions).map(([indexStr, attempt]) => {
         const index = parseInt(indexStr, 10);
         const question = questions[index];
@@ -386,7 +434,6 @@ export default function MockExam() {
         };
       });
 
-      // Insert all attempts
       const { error: attemptsError } = await supabase
         .from('user_question_attempts')
         .insert(attempts);
@@ -406,7 +453,7 @@ export default function MockExam() {
 
   if (loading || subscriptionLoading) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
+      <div className="h-screen bg-[#F8F9FA] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1FB8CD] mx-auto"></div>
           <p className="mt-4 text-[#5f6368]">Loading...</p>
@@ -415,23 +462,50 @@ export default function MockExam() {
     );
   }
 
-  // Check subscription access
+  // No access screen
   if (!canAccessMockExams) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/dashboard">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
+      <div className="h-screen bg-[#F8F9FA] flex">
+        <Sidebar user={user!} onSignOut={handleSignOut} />
+        <div className="flex-1 flex flex-col lg:ml-0">
+          <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+            <div className="px-4 lg:px-8 py-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-semibold text-gray-900">Mock Exam</h1>
+                <div className="relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                      {user?.email?.[0]?.toUpperCase() || "U"}
+                    </div>
+                    <CaretDown size={16} className="text-gray-400" />
+                  </button>
+                  {isUserMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
-          </nav>
-        </header>
-        <UpgradePrompt
-          plan={plan}
-          mockExamsRemaining={subscription?.mockExamsRemaining}
-        />
+          </header>
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+            <UpgradePrompt
+              plan={plan}
+              mockExamsRemaining={subscription?.mockExamsRemaining}
+            />
+          </main>
+        </div>
       </div>
     );
   }
@@ -439,265 +513,199 @@ export default function MockExam() {
   // Pre-exam screen
   if (!examStarted) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        {/* Header */}
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/dashboard">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-[#5f6368]">{user?.email}</span>
+      <div className="h-screen bg-[#F8F9FA] flex">
+        <Sidebar user={user!} onSignOut={handleSignOut} />
+        <div className="flex-1 flex flex-col lg:ml-0">
+          <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+            <div className="px-4 lg:px-8 py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-xl font-semibold text-gray-900">Mock Exams</h1>
+                </div>
+                <div className="relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                      {user?.email?.[0]?.toUpperCase() || "U"}
+                    </div>
+                    <CaretDown size={16} className="text-gray-400" />
+                  </button>
+                  {isUserMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-          </nav>
-        </header>
-
-        <div className="max-w-3xl mx-auto px-4 py-12">
-          {/* Usage Banner for limited users */}
-          {subscription && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm font-medium text-blue-900">
-                    {subscription.mockExamsRemaining} mock exam{subscription.mockExamsRemaining === 1 ? '' : 's'} remaining
-                  </span>
+          </header>
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div className="max-w-5xl mx-auto">
+              {/* Usage Banner */}
+              {subscription && subscription.mockExamsRemaining !== null && subscription.mockExamsRemaining > 0 && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Clock size={20} className="text-blue-600" />
+                      <span className="text-sm font-medium text-blue-900">
+                        {subscription.mockExamsRemaining} mock exam{subscription.mockExamsRemaining === 1 ? '' : 's'} remaining
+                      </span>
+                    </div>
+                    {subscription.mockExamsRemaining <= 2 && (
+                      <Link href="/pricing" className="text-sm font-medium text-blue-700 hover:text-blue-800">
+                        Upgrade for more →
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                {subscription.mockExamsRemaining <= 2 && (
-                  <Link href="/pricing" className="text-sm font-medium text-blue-700 hover:text-blue-800">
-                    Upgrade for more →
-                  </Link>
+              )}
+
+              {/* Start New Exam Card */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
+                      <Trophy size={28} className="text-gray-700" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-900">Test Live Conditions</h2>
+                      <p className="text-sm text-gray-500">180 questions, 4.5 hours, no interruptions</p>
+                    </div>
+                  </div>
+                  {subscription && subscription.mockExamsRemaining === 0 ? (
+                    <Link
+                      href="/pricing"
+                      className="bg-[#1FB8CD] text-white px-6 py-3 rounded-xl font-medium hover:bg-[#1A6872] transition-colors"
+                    >
+                      Upgrade to Access
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={handleStartExam}
+                      className="bg-gray-900 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-800 transition-colors"
+                    >
+                      Start Exam
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* History Section */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-lg font-semibold text-gray-900">Previous Mock Exams</h2>
+                  <span className="text-sm text-gray-500">{historyAttempts.length} exam{historyAttempts.length !== 1 ? 's' : ''} taken</span>
+                </div>
+
+                {historyAttempts.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Trophy size={28} className="text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No mock exams yet</h3>
+                    <p className="text-gray-500">Take your first mock exam to see your history here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {historyAttempts.map((attempt, index) => {
+                      const percentage = attempt.percentage_score ? Math.round(attempt.percentage_score) : 0;
+                      const passed = percentage >= 70;
+                      const timeTaken = attempt.time_taken_minutes
+                        ? `${Math.floor(attempt.time_taken_minutes / 60)}h ${attempt.time_taken_minutes % 60}m`
+                        : 'N/A';
+                      const strongest = getStrongestTopics(attempt.topic_scores);
+                      const weakest = getWeakestTopics(attempt.topic_scores);
+
+                      return (
+                        <div key={attempt.id} className="border border-gray-200 rounded-xl p-4 hover:border-gray-300 transition-colors">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                passed ? 'bg-green-50' : 'bg-red-50'
+                              }`}>
+                                <span className={`text-xl font-semibold ${passed ? 'text-green-600' : 'text-red-600'}`}>
+                                  {percentage}%
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-gray-900">
+                                  {passed ? 'Passed' : 'Did not pass'}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {formatHistoryDate(attempt.completed_at)} • {timeTaken} • {attempt.total_score}/{attempt.total_score + (attempt.total_questions - attempt.total_score)} correct
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Strengths & Weaknesses */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-green-50/50 rounded-lg p-3">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Check size={16} className="text-green-600" />
+                                <span className="text-sm font-medium text-gray-900">Strengths</span>
+                              </div>
+                              <div className="space-y-1">
+                                {strongest.length > 0 ? strongest.map((t, i) => (
+                                  <div key={i} className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-600">{t.topic}</span>
+                                    <span className="text-green-600 font-medium">{t.percentage}%</span>
+                                  </div>
+                                )) : (
+                                  <span className="text-sm text-gray-400">No data</span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="bg-red-50/50 rounded-lg p-3">
+                              <div className="flex items-center gap-2 mb-2">
+                                <X size={16} className="text-red-600" />
+                                <span className="text-sm font-medium text-gray-900">Areas to Improve</span>
+                              </div>
+                              <div className="space-y-1">
+                                {weakest.length > 0 ? weakest.map((t, i) => (
+                                  <div key={i} className="flex items-center justify-between text-sm">
+                                    <span className="text-gray-600">{t.topic}</span>
+                                    <span className="text-red-600 font-medium">{t.percentage}%</span>
+                                  </div>
+                                )) : (
+                                  <span className="text-sm text-gray-400">No data</span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Topic Breakdown */}
+                          <div className="mt-4 pt-4 border-t border-gray-100">
+                            <p className="text-xs text-gray-500 mb-2">Topic Breakdown</p>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                              {getTopicScores(attempt.topic_scores).map((t, i) => (
+                                <div key={i} className="bg-gray-50 rounded-lg p-2 text-center">
+                                  <p className="text-xs text-gray-500 truncate">{t.topic.split(' ')[0]}</p>
+                                  <p className={`text-sm font-semibold ${t.percentage >= 70 ? 'text-green-600' : 'text-red-600'}`}>
+                                    {t.percentage}%
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             </div>
-          )}
-
-          <div className="bg-white rounded-xl shadow-sm border border-[#EAEEEF] p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-[#13343B] mb-2">CFA Level 1 Mock Exam</h1>
-              <p className="text-[#5f6368]">Simulate the real exam experience</p>
-            </div>
-
-            {/* Exam Details */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-[#F3F3EE] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-[#13343B]">180</p>
-                <p className="text-sm text-[#5f6368]">Questions</p>
-              </div>
-              <div className="bg-[#F3F3EE] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-[#13343B]">4.5</p>
-                <p className="text-sm text-[#5f6368]">Hours</p>
-              </div>
-              <div className="bg-[#F3F3EE] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-[#13343B]">10</p>
-                <p className="text-sm text-[#5f6368]">Topics</p>
-              </div>
-              <div className="bg-[#F3F3EE] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-[#13343B]">70%</p>
-                <p className="text-sm text-[#5f6368]">Pass Rate</p>
-              </div>
-            </div>
-
-            {/* Topic Distribution */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold text-[#13343B] mb-4">Question Distribution</h2>
-              <div className="space-y-2">
-                {Object.entries(MOCK_EXAM_DISTRIBUTION).map(([id, config]) => (
-                  <div key={id} className="flex items-center justify-between py-2 border-b border-[#EAEEEF]">
-                    <span className="text-sm text-[#13343B]">{config.topicName}</span>
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs text-[#5f6368]">{config.weight}</span>
-                      <span className="text-sm font-medium text-[#1FB8CD]">{config.questions} Q</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Instructions */}
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
-              <h3 className="font-semibold text-amber-800 mb-2">Instructions</h3>
-              <ul className="text-sm text-amber-700 space-y-1">
-                <li>- You can navigate between questions freely</li>
-                <li>- The timer will track your total time</li>
-                <li>- Submit the exam when you are finished</li>
-                <li>- Your results will be saved for review</li>
-              </ul>
-            </div>
-
-            {/* Check if user has mock exams remaining */}
-            {subscription && subscription.mockExamsRemaining === 0 ? (
-              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6">
-                <div className="text-center mb-6">
-                  <svg className="w-16 h-16 text-amber-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    You've used all your mock exams
-                  </h3>
-                  <p className="text-gray-700 mb-6">
-                    {subscription?.mockExamsRemaining === 0
-                      ? "You've completed all your mock exams. Upgrade for unlimited access:"
-                      : "Choose a plan to continue taking mock exams:"
-                    }
-                  </p>
-                </div>
-
-                {/* Plan Cards */}
-                <div className="grid md:grid-cols-3 gap-4 mb-6">
-                  {/* 2 Month Plan */}
-                  <div className="bg-white rounded-lg border-2 border-gray-200 p-6 hover:border-[#1FB8CD] transition-all">
-                    <div className="text-center mb-4">
-                      <h4 className="text-lg font-bold text-gray-900 mb-1">2 Month</h4>
-                      <div className="flex items-baseline justify-center gap-1 mb-2">
-                        <span className="text-3xl font-bold text-gray-900">£25</span>
-                        <span className="text-gray-600 text-sm">one-time</span>
-                      </div>
-                      <p className="text-xs text-gray-500">£0.42/day</p>
-                    </div>
-                    <ul className="space-y-2 mb-6 text-sm text-gray-700">
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>2,000+ questions</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Unlimited mock exams</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Detailed explanations</span>
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleUpgrade('2month')}
-                      disabled={isUpgrading}
-                      className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUpgrading ? 'Processing...' : 'Get 2 Month'}
-                    </button>
-                  </div>
-
-                  {/* 6 Month Plan */}
-                  <div className="bg-white rounded-lg border-2 border-gray-200 p-6 hover:border-[#1FB8CD] transition-all">
-                    <div className="text-center mb-4">
-                      <h4 className="text-lg font-bold text-gray-900 mb-1">6 Month</h4>
-                      <div className="flex items-baseline justify-center gap-1 mb-2">
-                        <span className="text-3xl font-bold text-gray-900">£40</span>
-                        <span className="text-gray-600 text-sm">one-time</span>
-                      </div>
-                      <p className="text-xs text-gray-500">£0.22/day</p>
-                    </div>
-                    <ul className="space-y-2 mb-6 text-sm text-gray-700">
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>2,000+ questions</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Unlimited mock exams</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Detailed explanations</span>
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleUpgrade('6month')}
-                      disabled={isUpgrading}
-                      className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUpgrading ? 'Processing...' : 'Get 6 Month'}
-                    </button>
-                  </div>
-
-                  {/* Lifetime Plan */}
-                  <div className="bg-white rounded-lg border-2 border-[#1FB8CD] p-6 relative">
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-[#1FB8CD] text-white text-xs font-bold px-3 py-1 rounded-full">
-                        BEST VALUE
-                      </span>
-                    </div>
-                    <div className="text-center mb-4">
-                      <h4 className="text-lg font-bold text-gray-900 mb-1">Lifetime</h4>
-                      <div className="flex items-baseline justify-center gap-1 mb-2">
-                        <span className="text-3xl font-bold text-[#1FB8CD]">£70</span>
-                        <span className="text-gray-600 text-sm">one-time</span>
-                      </div>
-                      <p className="text-xs text-gray-500">Best value</p>
-                    </div>
-                    <ul className="space-y-2 mb-6 text-sm text-gray-700">
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="font-semibold">2,000+ questions</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="font-semibold">Unlimited mock exams</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Priority email support</span>
-                      </li>
-                    </ul>
-                    <button
-                      onClick={() => handleUpgrade('lifetime')}
-                      disabled={isUpgrading}
-                      className="w-full bg-[#1FB8CD] text-white py-3 rounded-lg font-semibold hover:bg-[#1A6872] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUpgrading ? 'Processing...' : 'Get Lifetime'}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="text-center">
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-600 hover:text-gray-900 text-sm"
-                  >
-                    ← Back to Dashboard
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={handleStartExam}
-                  className="bg-[#1FB8CD] text-white px-8 py-4 rounded-lg font-medium hover:bg-[#1A6872] transition-colors text-lg"
-                >
-                  Start Mock Exam
-                </button>
-                <Link
-                  href="/question-bank"
-                  className="border border-[#EAEEEF] text-[#5f6368] px-8 py-4 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors text-center"
-                >
-                  Back to Question Bank
-                </Link>
-              </div>
-            )}
-          </div>
+          </main>
         </div>
       </div>
     );
@@ -708,7 +716,6 @@ export default function MockExam() {
     const percentage = score.total > 0 ? Math.round((score.correct / score.total) * 100) : 0;
     const passed = percentage >= 70;
 
-    // Calculate results by topic for display
     const resultsByTopic: { [key: string]: { correct: number; total: number } } = {};
     questions.forEach((question, index) => {
       const topicArea = question.topic_area;
@@ -722,94 +729,126 @@ export default function MockExam() {
     });
 
     return (
-      <div className="min-h-screen bg-[#FBFAF4]">
-        <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-          <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-            <div className="flex h-16 items-center justify-between">
-              <Link href="/dashboard">
-                <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-              </Link>
-            </div>
-          </nav>
-        </header>
-
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <div className="bg-white rounded-xl shadow-sm border border-[#EAEEEF] p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-[#13343B] mb-2">Mock Exam Complete!</h1>
-              <p className={`text-lg font-medium ${passed ? 'text-green-600' : 'text-red-600'}`}>
-                {passed ? 'Congratulations! You passed!' : 'Keep practicing!'}
-              </p>
-            </div>
-
-            {/* Score Display */}
-            <div className="flex justify-center mb-8">
-              <div className={`text-8xl font-bold ${passed ? 'text-green-600' : 'text-red-600'}`}>
-                {percentage}%
-              </div>
-            </div>
-
-            {/* Summary Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-[#F3F3EE] rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-[#13343B]">{score.total}</p>
-                <p className="text-sm text-[#5f6368]">Attempted</p>
-              </div>
-              <div className="bg-green-50 rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-green-600">{score.correct}</p>
-                <p className="text-sm text-[#5f6368]">Correct</p>
-              </div>
-              <div className="bg-red-50 rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-red-600">{score.total - score.correct}</p>
-                <p className="text-sm text-[#5f6368]">Incorrect</p>
-              </div>
-              <div className="bg-blue-50 rounded-lg p-4 text-center">
-                <p className="text-2xl font-bold text-blue-600">{formatTime(examTimer)}</p>
-                <p className="text-sm text-[#5f6368]">Time Taken</p>
-              </div>
-            </div>
-
-            {/* Results by Topic */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold text-[#13343B] mb-4">Performance by Topic</h2>
-              <div className="space-y-3">
-                {Object.entries(resultsByTopic).map(([topic, results]) => {
-                  const topicPercentage = results.total > 0 ? Math.round((results.correct / results.total) * 100) : 0;
-                  return (
-                    <div key={topic} className="bg-[#F3F3EE] rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-[#13343B]">{topic}</span>
-                        <span className={`text-sm font-bold ${topicPercentage >= 70 ? 'text-green-600' : 'text-red-600'}`}>
-                          {topicPercentage}% ({results.correct}/{results.total})
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full ${topicPercentage >= 70 ? 'bg-green-500' : 'bg-red-500'}`}
-                          style={{ width: `${topicPercentage}%` }}
-                        ></div>
-                      </div>
+      <div className="h-screen bg-[#F8F9FA] flex">
+        <Sidebar user={user!} onSignOut={handleSignOut} />
+        <div className="flex-1 flex flex-col lg:ml-0">
+          <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+            <div className="px-4 lg:px-8 py-4">
+              <div className="flex items-center justify-between">
+                <h1 className="text-xl font-semibold text-gray-900">Mock Exam Results</h1>
+                <div className="relative">
+                  <button
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                      {user?.email?.[0]?.toUpperCase() || "U"}
                     </div>
-                  );
-                })}
+                    <CaretDown size={16} className="text-gray-400" />
+                  </button>
+                  {isUserMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                        <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                          Dashboard
+                        </Link>
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
+          </header>
+          <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Trophy size={32} className="text-gray-700" />
+                  </div>
+                  <h1 className="text-3xl font-semibold text-gray-900 mb-2">Mock Exam Complete!</h1>
+                  <p className={`text-lg font-medium ${passed ? 'text-green-600' : 'text-red-600'}`}>
+                    {passed ? 'Congratulations! You passed!' : 'Keep practicing!'}
+                  </p>
+                </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/practice/mock-exam"
-                className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors text-center"
-              >
-                Take Another Mock Exam
-              </Link>
-              <Link
-                href="/question-bank"
-                className="border border-[#EAEEEF] text-[#5f6368] px-6 py-3 rounded-lg font-medium hover:bg-[#F3F3EE] transition-colors text-center"
-              >
-                Back to Question Bank
-              </Link>
+                {/* Score Display */}
+                <div className="flex justify-center mb-8">
+                  <div className={`text-8xl font-semibold ${passed ? 'text-green-600' : 'text-red-600'}`}>
+                    {percentage}%
+                  </div>
+                </div>
+
+                {/* Summary Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                    <p className="text-2xl font-semibold text-gray-900">{score.total}</p>
+                    <p className="text-sm text-gray-500 mt-1">Attempted</p>
+                  </div>
+                  <div className="bg-green-50 rounded-xl p-4 text-center">
+                    <p className="text-2xl font-semibold text-green-600">{score.correct}</p>
+                    <p className="text-sm text-gray-500 mt-1">Correct</p>
+                  </div>
+                  <div className="bg-red-50 rounded-xl p-4 text-center">
+                    <p className="text-2xl font-semibold text-red-600">{score.total - score.correct}</p>
+                    <p className="text-sm text-gray-500 mt-1">Incorrect</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-4 text-center">
+                    <p className="text-2xl font-semibold text-gray-700">{formatTime(examTimer)}</p>
+                    <p className="text-sm text-gray-500 mt-1">Time Taken</p>
+                  </div>
+                </div>
+
+                {/* Results by Topic */}
+                <div className="mb-8">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Performance by Topic</h2>
+                  <div className="space-y-3">
+                    {Object.entries(resultsByTopic).map(([topic, results]) => {
+                      const topicPercentage = results.total > 0 ? Math.round((results.correct / results.total) * 100) : 0;
+                      return (
+                        <div key={topic} className="bg-gray-50 rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-gray-700">{topic}</span>
+                            <span className={`text-sm font-semibold ${topicPercentage >= 70 ? 'text-green-600' : 'text-red-600'}`}>
+                              {topicPercentage}% ({results.correct}/{results.total})
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${topicPercentage >= 70 ? 'bg-green-500' : 'bg-red-500'}`}
+                              style={{ width: `${topicPercentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link
+                    href="/practice/mock-exam"
+                    className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors text-center"
+                  >
+                    Take Another Mock Exam
+                  </Link>
+                  <Link
+                    href="/question-bank"
+                    className="border border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors text-center"
+                  >
+                    Back to Question Bank
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
     );
@@ -819,9 +858,9 @@ export default function MockExam() {
 
   if (!currentQuestion) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
+      <div className="h-screen bg-[#F8F9FA] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#5f6368]">No questions available</p>
+          <p className="text-gray-500">No questions available</p>
           <Link href="/question-bank" className="text-[#1FB8CD] hover:underline mt-4 block">
             Return to Question Bank
           </Link>
@@ -831,401 +870,413 @@ export default function MockExam() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header with Timer */}
-      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/dashboard">
-              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-            </Link>
-            <div className="flex items-center space-x-6">
-              <div className="bg-[#1FB8CD] text-white px-4 py-2 rounded-lg font-mono text-lg font-bold">
-                {formatTime(examTimer)}
-              </div>
-              <span className="text-sm text-[#5f6368]">
-                Q {currentIndex + 1} of {questions.length}
-              </span>
-              <span className="text-sm font-medium text-[#1FB8CD]">
-                {score.correct}/{score.total}
-              </span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
-                    {user?.email?.charAt(0).toUpperCase()}
-                  </div>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <button
-                    onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+    <div className="h-screen bg-[#F8F9FA] flex">
+      <Sidebar user={user!} onSignOut={handleSignOut} />
 
-      {/* Progress Bar */}
-      <div className="bg-white border-b border-[#EAEEEF]">
-        <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <div className="flex justify-between text-xs text-[#5f6368] mb-1">
-                <span className="font-medium text-[#13343B]">Mock Exam</span>
-                <span>
-                  {Math.round((Object.keys(answeredQuestions).length / questions.length) * 100)}% complete
-                  ({Object.keys(answeredQuestions).length}/{questions.length})
+      <div className="flex-1 flex flex-col lg:ml-0">
+        {/* Top Header */}
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+          <div className="px-4 lg:px-8 py-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <Link href="/dashboard" className="text-gray-500 hover:text-gray-700">
+                  <ArrowLeft size={20} />
+                </Link>
+                <h1 className="text-lg font-semibold text-gray-900">Mock Exam</h1>
+              </div>
+
+              <div className="flex items-center gap-6">
+                <div className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-mono text-lg font-medium">
+                  {formatTime(examTimer)}
+                </div>
+                <span className="text-sm text-gray-500">
+                  Q {currentIndex + 1} of {questions.length}
+                </span>
+                <span className="text-sm font-medium text-gray-700">
+                  {score.correct}/{score.total}
                 </span>
               </div>
-              <div className="w-full bg-[#EAEEEF] rounded-full h-2">
-                <div
-                  className="bg-[#1FB8CD] h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(Object.keys(answeredQuestions).length / questions.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-            <button
-              onClick={handleSubmitExam}
-              disabled={isSubmitting}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                isSubmitting
-                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                  : 'bg-red-600 text-white hover:bg-red-700'
-              }`}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Exam'}
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex gap-6">
-          {/* Question Card */}
-          <div className="flex-1">
-            <div className="bg-white rounded-xl shadow-sm border border-[#EAEEEF] p-6 sm:p-8">
-              {/* Question Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-[#5f6368]">Question {currentIndex + 1}</span>
-                  <span className="text-xs px-2 py-1 bg-[#1FB8CD]/10 text-[#1FB8CD] rounded-full font-medium">
-                    {currentQuestion.topic_area}
-                  </span>
-                  {currentQuestion.has_table && (
-                    <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded font-medium">Table</span>
-                  )}
-                </div>
-                <span
-                  className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    currentQuestion.difficulty_level === "beginner"
-                      ? "bg-green-100 text-green-700"
-                      : currentQuestion.difficulty_level === "intermediate"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
                 >
-                  {currentQuestion.difficulty_level}
-                </span>
-              </div>
-
-              {/* Question Text */}
-              <div className="text-lg text-[#13343B] mb-6 leading-relaxed">
-                <MathText text={currentQuestion.question_text} />
-              </div>
-
-              {/* Table Display */}
-              {currentQuestion.has_table && currentQuestion.table_data && (
-                <div className="mb-8 bg-white border border-amber-200 rounded-lg overflow-hidden shadow-sm">
-                  <div className="bg-amber-50 px-4 py-2 border-b border-amber-200">
-                    <h4 className="font-medium text-amber-900 text-sm">{currentQuestion.table_data.title}</h4>
+                  <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                    {user?.email?.[0]?.toUpperCase() || "U"}
                   </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="bg-gray-50">
-                          {currentQuestion.table_data.headers.map((header: string, idx: number) => (
-                            <th key={idx} className="px-4 py-3 text-left text-gray-700 font-semibold border-b border-gray-200">
-                              {header}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {currentQuestion.table_data.rows.map((row: { label?: string; values: (string | number)[] }, rowIdx: number) => (
-                          <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                            {row.label && (
-                              <td className="px-4 py-3 text-gray-700 font-medium border-b border-gray-100">{row.label}</td>
-                            )}
-                            {row.values.map((value: string | number, valIdx: number) => (
-                              <td key={valIdx} className="px-4 py-3 text-gray-900 border-b border-gray-100">
-                                {typeof value === 'number' ? value.toLocaleString() : value}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  {currentQuestion.table_data.footnote && (
-                    <div className="px-4 py-2 text-xs text-gray-500 italic border-t border-gray-200 bg-gray-50">
-                      {currentQuestion.table_data.footnote}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Answer Options */}
-              <div className="space-y-3">
-                {["A", "B", "C"].map((option) => {
-                  const optionKey = `option_${option.toLowerCase()}` as keyof Question;
-                  const optionText = currentQuestion[optionKey] as string;
-                  const isSelected = selectedAnswer === option;
-                  const isCorrect = option === currentQuestion.correct_answer;
-
-                  let buttonClass = "w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ";
-
-                  if (showExplanation) {
-                    if (isCorrect) {
-                      buttonClass += "border-green-500 bg-green-50 text-green-800";
-                    } else if (isSelected && !isCorrect) {
-                      buttonClass += "border-red-500 bg-red-50 text-red-800";
-                    } else {
-                      buttonClass += "border-[#EAEEEF] bg-[#F3F3EE] text-[#5f6368]";
-                    }
-                  } else {
-                    if (isSelected) {
-                      buttonClass += "border-[#1FB8CD] bg-[#1FB8CD]/10 text-[#13343B]";
-                    } else {
-                      buttonClass += "border-[#EAEEEF] hover:border-[#1FB8CD] text-[#13343B]";
-                    }
-                  }
-
-                  return (
-                    <button
-                      key={option}
-                      onClick={() => handleAnswerSelect(option)}
-                      className={buttonClass}
-                      disabled={showExplanation}
-                    >
-                      <div className="flex items-start">
-                        <span className="font-semibold mr-3 text-[#5f6368]">{option}.</span>
-                        <span><MathText text={optionText} /></span>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Explanation */}
-              {showExplanation && (
-                <div className="mt-6 p-4 bg-[#F3F3EE] rounded-lg">
-                  <div className="flex items-center mb-2">
-                    {selectedAnswer === currentQuestion.correct_answer ? (
-                      <span className="text-green-600 font-medium">Correct!</span>
-                    ) : (
-                      <span className="text-red-600 font-medium">
-                        Incorrect. The correct answer is {currentQuestion.correct_answer}.
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-[#5f6368] text-sm">
-                    <MathText text={currentQuestion.explanation} />
-                  </div>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="mt-8 flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  {currentIndex > 0 && (
-                    <button
-                      onClick={handlePrevious}
-                      className="px-4 py-2 rounded-lg font-medium transition-colors border border-[#EAEEEF] text-[#5f6368] hover:bg-[#F3F3EE] flex items-center gap-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                      Previous
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-3">
-                  {!showExplanation && (
-                    <button
-                      onClick={handleNext}
-                      className="px-6 py-3 rounded-lg font-medium transition-colors border border-[#EAEEEF] text-[#5f6368] hover:bg-[#F3F3EE]"
-                    >
-                      Skip
-                    </button>
-                  )}
-
-                  {!showExplanation ? (
-                    <button
-                      onClick={handleSubmit}
-                      disabled={!selectedAnswer}
-                      className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-                        selectedAnswer
-                          ? "bg-[#1FB8CD] text-white hover:bg-[#1A6872]"
-                          : "bg-[#EAEEEF] text-[#5f6368] cursor-not-allowed"
-                      }`}
-                    >
-                      Submit Answer
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleNext}
-                      className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors flex items-center gap-1"
-                    >
-                      {currentIndex < questions.length - 1 ? (
-                        <>
-                          Next
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </>
-                      ) : (
-                        "Finish Exam"
-                      )}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Question Navigator Panel */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-sm border border-[#EAEEEF] p-4 sticky top-24">
-              {(() => {
-                const filteredIndices = questions.map((_, i) => i).filter(index => {
-                  if (!navigatorFilter) return true;
-                  const answered = answeredQuestions[index];
-                  if (navigatorFilter === 'correct') return answered?.isCorrect === true;
-                  if (navigatorFilter === 'wrong') return answered && !answered.isCorrect;
-                  if (navigatorFilter === 'pending') return !answered;
-                  return true;
-                });
-
-                const totalPages = Math.ceil(filteredIndices.length / QUESTIONS_PER_PAGE);
-                const displayedIndices = filteredIndices.slice(
-                  navigatorPage * QUESTIONS_PER_PAGE,
-                  (navigatorPage + 1) * QUESTIONS_PER_PAGE
-                );
-
-                return (
+                  <CaretDown size={16} className="text-gray-400" />
+                </button>
+                {isUserMenuOpen && (
                   <>
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-sm font-semibold text-[#13343B]">
-                        Navigator
-                        {navigatorFilter && (
-                          <button
-                            onClick={() => { setNavigatorFilter(null); setNavigatorPage(0); }}
-                            className="ml-2 text-xs text-[#1FB8CD] hover:underline font-normal"
-                          >
-                            Clear
-                          </button>
-                        )}
-                      </h3>
-                      {filteredIndices.length > QUESTIONS_PER_PAGE && (
-                        <span className="text-xs text-[#5f6368]">
-                          {navigatorPage * QUESTIONS_PER_PAGE + 1}-{Math.min((navigatorPage + 1) * QUESTIONS_PER_PAGE, filteredIndices.length)} of {filteredIndices.length}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
+                    <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
                       <button
-                        onClick={() => setNavigatorPage(prev => Math.max(0, prev - 1))}
-                        disabled={navigatorPage === 0}
-                        className={`p-1 rounded ${navigatorPage === 0 ? 'text-gray-300 cursor-not-allowed' : 'text-[#5f6368] hover:bg-[#F3F3EE]'}`}
+                        onClick={handleSignOut}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-
-                      <div className="flex-1 grid grid-cols-5 gap-1.5">
-                        {displayedIndices.length === 0 ? (
-                          <div className="col-span-5 text-center text-xs text-[#5f6368] py-4">No questions</div>
-                        ) : (
-                          displayedIndices.map((index) => {
-                            const answered = answeredQuestions[index];
-                            let bgColor = "bg-[#F3F3EE] hover:bg-[#EAEEEF]";
-                            let textColor = "text-[#5f6368]";
-                            let borderColor = "border-transparent";
-
-                            if (answered) {
-                              if (answered.isCorrect) {
-                                bgColor = "bg-green-100 hover:bg-green-200";
-                                textColor = "text-green-700";
-                              } else {
-                                bgColor = "bg-red-100 hover:bg-red-200";
-                                textColor = "text-red-700";
-                              }
-                            }
-
-                            if (index === currentIndex) {
-                              borderColor = "border-[#1FB8CD]";
-                            }
-
-                            return (
-                              <button
-                                key={index}
-                                onClick={() => handleGoToQuestion(index)}
-                                className={`w-8 h-8 rounded ${bgColor} ${textColor} text-xs font-medium border-2 ${borderColor} transition-all duration-150`}
-                              >
-                                {index + 1}
-                              </button>
-                            );
-                          })
-                        )}
-                      </div>
-
-                      <button
-                        onClick={() => setNavigatorPage(prev => Math.min(totalPages - 1, prev + 1))}
-                        disabled={navigatorPage >= totalPages - 1}
-                        className={`p-1 rounded ${navigatorPage >= totalPages - 1 ? 'text-gray-300 cursor-not-allowed' : 'text-[#5f6368] hover:bg-[#F3F3EE]'}`}
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                        Sign Out
                       </button>
                     </div>
                   </>
-                );
-              })()}
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
 
-              <div className="mt-4 pt-4 border-t border-[#EAEEEF]">
-                <div className="flex items-center justify-between text-xs text-[#5f6368]">
-                  <button
-                    onClick={() => { setNavigatorFilter(navigatorFilter === 'correct' ? null : 'correct'); setNavigatorPage(0); }}
-                    className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${navigatorFilter === 'correct' ? 'bg-green-100 ring-2 ring-green-400' : 'hover:bg-gray-100'}`}
-                  >
-                    <div className="w-3 h-3 rounded bg-green-100 border border-green-300"></div>
-                    <span>Correct</span>
-                  </button>
-                  <button
-                    onClick={() => { setNavigatorFilter(navigatorFilter === 'wrong' ? null : 'wrong'); setNavigatorPage(0); }}
-                    className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${navigatorFilter === 'wrong' ? 'bg-red-100 ring-2 ring-red-400' : 'hover:bg-gray-100'}`}
-                  >
-                    <div className="w-3 h-3 rounded bg-red-100 border border-red-300"></div>
-                    <span>Wrong</span>
-                  </button>
-                  <button
-                    onClick={() => { setNavigatorFilter(navigatorFilter === 'pending' ? null : 'pending'); setNavigatorPage(0); }}
-                    className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${navigatorFilter === 'pending' ? 'bg-gray-200 ring-2 ring-gray-400' : 'hover:bg-gray-100'}`}
-                  >
-                    <div className="w-3 h-3 rounded bg-[#F3F3EE] border border-[#EAEEEF]"></div>
-                    <span>Pending</span>
-                  </button>
+        {/* Progress Bar */}
+        <div className="bg-white border-b border-gray-200 flex-shrink-0">
+          <div className="max-w-[960px] mx-auto px-4 sm:px-6 py-3">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <div className="flex justify-between text-xs text-gray-500 mb-1.5">
+                  <span className="font-medium text-gray-700">Progress</span>
+                  <span>
+                    {Math.round((Object.keys(answeredQuestions).length / questions.length) * 100)}% complete
+                    ({Object.keys(answeredQuestions).length}/{questions.length})
+                  </span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-2">
+                  <div
+                    className="bg-[#1FB8CD] h-2 rounded-full transition-all"
+                    style={{ width: `${(Object.keys(answeredQuestions).length / questions.length) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+              <button
+                onClick={handleSubmitExam}
+                disabled={isSubmitting}
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
+                  isSubmitting
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-red-50 text-red-700 hover:bg-red-100'
+                }`}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Exam'}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="flex gap-6">
+              {/* Question Card */}
+              <div className="flex-1">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                  {/* Question Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-medium text-gray-500">Question {currentIndex + 1}</span>
+                      <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium">
+                        {currentQuestion.topic_area}
+                      </span>
+                      {currentQuestion.has_table && (
+                        <span className="bg-amber-50 text-amber-700 text-xs px-2 py-1 rounded-full font-medium">Table</span>
+                      )}
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full font-medium ${
+                        currentQuestion.difficulty_level === "beginner"
+                          ? "bg-green-50 text-green-700"
+                          : currentQuestion.difficulty_level === "intermediate"
+                          ? "bg-yellow-50 text-yellow-700"
+                          : "bg-red-50 text-red-700"
+                      }`}
+                    >
+                      {currentQuestion.difficulty_level}
+                    </span>
+                  </div>
+
+                  {/* Question Text */}
+                  <div className="text-lg text-gray-900 mb-6 leading-relaxed">
+                    <MathText text={currentQuestion.question_text} />
+                  </div>
+
+                  {/* Table Display */}
+                  {currentQuestion.has_table && currentQuestion.table_data && (
+                    <div className="mb-8 bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
+                      <div className="bg-gray-100 px-4 py-2 border-b border-gray-200">
+                        <h4 className="font-medium text-gray-900 text-sm">{currentQuestion.table_data.title}</h4>
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="bg-gray-50">
+                              {currentQuestion.table_data.headers.map((header: string, idx: number) => (
+                                <th key={idx} className="px-4 py-3 text-left text-gray-700 font-medium border-b border-gray-200">
+                                  {header}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {currentQuestion.table_data.rows.map((row: { label?: string; values: (string | number)[] }, rowIdx: number) => (
+                              <tr key={rowIdx} className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                {row.label && (
+                                  <td className="px-4 py-3 text-gray-700 font-medium border-b border-gray-100">{row.label}</td>
+                                )}
+                                {row.values.map((value: string | number, valIdx: number) => (
+                                  <td key={valIdx} className="px-4 py-3 text-gray-900 border-b border-gray-100">
+                                    {typeof value === 'number' ? value.toLocaleString() : value}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {currentQuestion.table_data.footnote && (
+                        <div className="px-4 py-2 text-xs text-gray-500 italic border-t border-gray-200 bg-gray-50">
+                          {currentQuestion.table_data.footnote}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Answer Options */}
+                  <div className="space-y-3">
+                    {["A", "B", "C"].map((option) => {
+                      const optionKey = `option_${option.toLowerCase()}` as keyof Question;
+                      const optionText = currentQuestion[optionKey] as string;
+                      const isSelected = selectedAnswer === option;
+                      const isCorrect = option === currentQuestion.correct_answer;
+
+                      let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ";
+
+                      if (showExplanation) {
+                        if (isCorrect) {
+                          buttonClass += "border-green-500 bg-green-50 text-green-800";
+                        } else if (isSelected && !isCorrect) {
+                          buttonClass += "border-red-500 bg-red-50 text-red-800";
+                        } else {
+                          buttonClass += "border-gray-200 bg-gray-50 text-gray-500";
+                        }
+                      } else {
+                        if (isSelected) {
+                          buttonClass += "border-[#1FB8CD] bg-[#1FB8CD]/10 text-gray-900";
+                        } else {
+                          buttonClass += "border-gray-200 hover:border-gray-300 text-gray-700";
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={option}
+                          onClick={() => handleAnswerSelect(option)}
+                          className={buttonClass}
+                          disabled={showExplanation}
+                        >
+                          <div className="flex items-start">
+                            <span className="font-semibold mr-3 text-gray-500">{option}.</span>
+                            <span><MathText text={optionText} /></span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Explanation */}
+                  {showExplanation && (
+                    <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+                      <div className="flex items-center mb-2">
+                        {selectedAnswer === currentQuestion.correct_answer ? (
+                          <span className="text-green-600 font-medium flex items-center gap-2">
+                            <Check size={18} /> Correct!
+                          </span>
+                        ) : (
+                          <span className="text-red-600 font-medium flex items-center gap-2">
+                            <X size={18} /> Incorrect. The correct answer is {currentQuestion.correct_answer}.
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-gray-600 text-sm">
+                        <MathText text={currentQuestion.explanation} />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="mt-8 flex justify-between items-center">
+                    <div className="flex items-center gap-3">
+                      {currentIndex > 0 && (
+                        <button
+                          onClick={handlePrevious}
+                          className="px-4 py-2 rounded-xl font-medium transition-colors border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center gap-1"
+                        >
+                          <CaretLeft size={16} />
+                          Previous
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {!showExplanation && (
+                        <button
+                          onClick={handleNext}
+                          className="px-4 py-2 rounded-xl font-medium transition-colors border border-gray-200 text-gray-500 hover:bg-gray-50"
+                        >
+                          Skip
+                        </button>
+                      )}
+
+                      {!showExplanation ? (
+                        <button
+                          onClick={handleSubmit}
+                          disabled={!selectedAnswer}
+                          className={`px-6 py-3 rounded-xl font-medium transition-colors ${
+                            selectedAnswer
+                              ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          Submit Answer
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleNext}
+                          className="bg-gray-100 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors flex items-center gap-1"
+                        >
+                          {currentIndex < questions.length - 1 ? (
+                            <>
+                              Next
+                              <CaretRight size={16} />
+                            </>
+                          ) : (
+                            "Finish"
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Question Navigator Panel */}
+              <div className="hidden lg:block w-64 flex-shrink-0">
+                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 sticky top-4">
+                  {(() => {
+                    const filteredIndices = questions.map((_, i) => i).filter(index => {
+                      if (!navigatorFilter) return true;
+                      const answered = answeredQuestions[index];
+                      if (navigatorFilter === 'correct') return answered?.isCorrect === true;
+                      if (navigatorFilter === 'wrong') return answered && !answered.isCorrect;
+                      if (navigatorFilter === 'pending') return !answered;
+                      return true;
+                    });
+
+                    const totalPages = Math.ceil(filteredIndices.length / QUESTIONS_PER_PAGE);
+                    const displayedIndices = filteredIndices.slice(
+                      navigatorPage * QUESTIONS_PER_PAGE,
+                      (navigatorPage + 1) * QUESTIONS_PER_PAGE
+                    );
+
+                    return (
+                      <>
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-sm font-semibold text-gray-900">
+                            Navigator
+                            {navigatorFilter && (
+                              <button
+                                onClick={() => { setNavigatorFilter(null); setNavigatorPage(0); }}
+                                className="ml-2 text-xs text-[#1FB8CD] hover:underline font-normal"
+                              >
+                                Clear
+                              </button>
+                            )}
+                          </h3>
+                          {filteredIndices.length > QUESTIONS_PER_PAGE && (
+                            <span className="text-xs text-gray-400">
+                              {navigatorPage * QUESTIONS_PER_PAGE + 1}-{Math.min((navigatorPage + 1) * QUESTIONS_PER_PAGE, filteredIndices.length)}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setNavigatorPage(prev => Math.max(0, prev - 1))}
+                            disabled={navigatorPage === 0}
+                            className={`p-1 rounded ${navigatorPage === 0 ? 'text-gray-300' : 'text-gray-500 hover:bg-gray-100'}`}
+                          >
+                            <CaretLeft size={16} />
+                          </button>
+
+                          <div className="flex-1 grid grid-cols-5 gap-1.5">
+                            {displayedIndices.length === 0 ? (
+                              <div className="col-span-5 text-center text-xs text-gray-400 py-4">No questions</div>
+                            ) : (
+                              displayedIndices.map((index) => {
+                                const answered = answeredQuestions[index];
+                                let bgColor = "bg-gray-50 hover:bg-gray-100";
+                                let textColor = "text-gray-600";
+                                let borderColor = "border-transparent";
+
+                                if (answered) {
+                                  if (answered.isCorrect) {
+                                    bgColor = "bg-green-100 hover:bg-green-200";
+                                    textColor = "text-green-700";
+                                  } else {
+                                    bgColor = "bg-red-100 hover:bg-red-200";
+                                    textColor = "text-red-700";
+                                  }
+                                }
+
+                                if (index === currentIndex) {
+                                  borderColor = "border-[#1FB8CD]";
+                                }
+
+                                return (
+                                  <button
+                                    key={index}
+                                    onClick={() => handleGoToQuestion(index)}
+                                    className={`w-8 h-8 rounded ${bgColor} ${textColor} text-xs font-medium border-2 ${borderColor} transition-all duration-150`}
+                                  >
+                                    {index + 1}
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => setNavigatorPage(prev => Math.min(totalPages - 1, prev + 1))}
+                            disabled={navigatorPage >= totalPages - 1}
+                            className={`p-1 rounded ${navigatorPage >= totalPages - 1 ? 'text-gray-300' : 'text-gray-500 hover:bg-gray-100'}`}
+                          >
+                            <CaretRight size={16} />
+                          </button>
+                        </div>
+                      </>
+                    );
+                  })()}
+
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <button
+                        onClick={() => { setNavigatorFilter(navigatorFilter === 'correct' ? null : 'correct'); setNavigatorPage(0); }}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${navigatorFilter === 'correct' ? 'bg-green-100 ring-2 ring-green-400' : 'hover:bg-gray-100'}`}
+                      >
+                        <div className="w-3 h-3 rounded bg-green-100 border border-green-300"></div>
+                        <span>Correct</span>
+                      </button>
+                      <button
+                        onClick={() => { setNavigatorFilter(navigatorFilter === 'wrong' ? null : 'wrong'); setNavigatorPage(0); }}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${navigatorFilter === 'wrong' ? 'bg-red-100 ring-2 ring-red-400' : 'hover:bg-gray-100'}`}
+                      >
+                        <div className="w-3 h-3 rounded bg-red-100 border border-red-300"></div>
+                        <span>Wrong</span>
+                      </button>
+                      <button
+                        onClick={() => { setNavigatorFilter(navigatorFilter === 'pending' ? null : 'pending'); setNavigatorPage(0); }}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded transition-colors ${navigatorFilter === 'pending' ? 'bg-gray-200 ring-2 ring-gray-400' : 'hover:bg-gray-100'}`}
+                      >
+                        <div className="w-3 h-3 rounded bg-gray-50 border border-gray-300"></div>
+                        <span>Pending</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -3,10 +3,20 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { PLAN_LIMITS } from "@/lib/plans";
+import {
+  CaretDown,
+  User as UserIcon,
+  Calendar,
+  CreditCard,
+  Gear,
+  Check,
+  Clock,
+  Warning,
+} from "@phosphor-icons/react";
+import Sidebar from "@/components/dashboard/Sidebar";
 
 interface SubscriptionData {
   subscription_plan: string;
@@ -21,9 +31,10 @@ export default function Settings() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [managingBilling, setManagingBilling] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Form states
   const [fullName, setFullName] = useState("");
@@ -76,33 +87,58 @@ export default function Settings() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setMessage("");
+    setMessage(null);
 
     if (!user) {
-      setMessage("User not found");
+      setMessage({ type: 'error', text: "User not found" });
       setSaving(false);
       return;
     }
 
     try {
-      // Update or insert user profile in database
-      const { error: upsertError } = await supabase
+      // First try to update existing profile
+      const { data: existingProfile } = await supabase
         .from('user_profiles')
-        .upsert({
-          id: user.id,
-          email: user.email,
-          full_name: fullName,
-          exam_date: examDate || null,
-          exam_level: 'Level I',
-          study_goal: studyGoal,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'id'
-        });
+        .select('id')
+        .eq('id', user.id)
+        .single();
 
-      if (upsertError) {
-        console.error('Error saving profile:', upsertError);
-        setMessage("Error saving settings. Please try again.");
+      let error;
+
+      if (existingProfile) {
+        // Update existing profile
+        const { error: updateError } = await supabase
+          .from('user_profiles')
+          .update({
+            full_name: fullName,
+            exam_date: examDate || null,
+            exam_level: 'Level I',
+            study_goal: studyGoal,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user.id);
+
+        error = updateError;
+      } else {
+        // Insert new profile
+        const { error: insertError } = await supabase
+          .from('user_profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            full_name: fullName,
+            exam_date: examDate || null,
+            exam_level: 'Level I',
+            study_goal: studyGoal,
+            updated_at: new Date().toISOString()
+          });
+
+        error = insertError;
+      }
+
+      if (error) {
+        console.error('Error saving profile:', error);
+        setMessage({ type: 'error', text: "Error saving settings. Please try again." });
         setSaving(false);
         return;
       }
@@ -114,12 +150,12 @@ export default function Settings() {
         }
       });
 
-      setMessage("Settings saved successfully!");
-      setTimeout(() => setMessage(""), 3000);
+      setMessage({ type: 'success', text: "Settings saved successfully!" });
+      setTimeout(() => setMessage(null), 3000);
 
-    } catch (error) {
-      console.error("Error saving settings:", error);
-      setMessage("An error occurred while saving settings.");
+    } catch (err) {
+      console.error("Error saving settings:", err);
+      setMessage({ type: 'error', text: "An error occurred while saving settings." });
     }
 
     setSaving(false);
@@ -135,17 +171,17 @@ export default function Settings() {
   };
 
   const getPlanDisplayName = () => {
-    if (!subscription) return "No Plan";
+    if (!subscription) return "Free Plan";
     const plan = subscription.subscription_plan;
     if (plan === '2month') return "2 Month";
     if (plan === '6month') return "6 Month";
     if (plan === 'lifetime') return "Lifetime";
-    return "No Plan";
+    return "Free Plan";
   };
 
   const handleManageBilling = async () => {
     if (!subscription?.stripe_customer_id) {
-      setMessage("No billing information found. Please contact support.");
+      setMessage({ type: 'error', text: "No billing information found. Please contact support." });
       return;
     }
 
@@ -161,11 +197,11 @@ export default function Settings() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setMessage("Failed to open billing portal. Please try again.");
+        setMessage({ type: 'error', text: "Failed to open billing portal. Please try again." });
       }
     } catch (error) {
       console.error('Error opening billing portal:', error);
-      setMessage("Failed to open billing portal. Please try again.");
+      setMessage({ type: 'error', text: "Failed to open billing portal. Please try again." });
     }
     setManagingBilling(false);
   };
@@ -187,12 +223,12 @@ export default function Settings() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setMessage('Failed to start checkout. Please try again.');
+        setMessage({ type: 'error', text: 'Failed to start checkout. Please try again.' });
         setManagingBilling(false);
       }
     } catch (error) {
       console.error('Upgrade error:', error);
-      setMessage('Failed to start checkout. Please try again.');
+      setMessage({ type: 'error', text: 'Failed to start checkout. Please try again.' });
       setManagingBilling(false);
     }
   };
@@ -204,9 +240,9 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
+      <div className="h-screen bg-[#F8F9FA] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#13343B] mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1FB8CD] mx-auto"></div>
           <p className="mt-4 text-[#5f6368]">Loading settings...</p>
         </div>
       </div>
@@ -216,341 +252,334 @@ export default function Settings() {
   const daysUntilExam = calculateDaysUntilExam();
 
   return (
-    <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/dashboard">
-              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-            </Link>
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/dashboard" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Dashboard
-              </Link>
-              <Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Practice
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-medium">
-                    {user?.email?.charAt(0).toUpperCase()}
+    <div className="h-screen bg-[#F8F9FA] flex">
+      <Sidebar user={user!} onSignOut={handleSignOut} />
+
+      <div className="flex-1 flex flex-col lg:ml-0">
+        {/* Top Header */}
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+          <div className="px-4 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                    {user?.email?.[0]?.toUpperCase() || "U"}
                   </div>
+                  <CaretDown size={16} className="text-gray-400" />
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link href="/settings" className="block px-4 py-2 text-[#13343B] bg-[#F3F3EE] font-medium">
-                    Settings
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="block w-full text-left px-4 py-2 text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]"
-                  >
-                    Sign Out
-                  </button>
-                </div>
+                {isUserMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                      <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
-        </nav>
-      </header>
+        </header>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-          <p className="text-gray-600">
-            Manage your account preferences and exam details.
-          </p>
-        </div>
-
-        {/* Message */}
-        {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            message.includes('Error') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
-          }`}>
-            {message}
-          </div>
-        )}
-
-        <form onSubmit={handleSave} className="space-y-8">
-          {/* Profile Information */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Profile Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">Email cannot be changed from settings</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Subscription & Billing */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Subscription & Billing</h3>
-
-            {/* Current Plan */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#1FB8CD]/10 to-[#1FB8CD]/5 rounded-lg border border-[#1FB8CD]/20">
-                <div>
-                  <p className="text-sm text-gray-600">Current Plan</p>
-                  <p className="text-2xl font-bold text-[#13343B]">{getPlanDisplayName()}</p>
-                  {subscription?.subscription_status === 'lifetime' && (
-                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Lifetime Access
-                    </span>
-                  )}
-                  {subscription?.subscription_status === 'active' && (
-                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Active
-                    </span>
-                  )}
-                  {subscription?.subscription_status === 'refunded' && (
-                    <span className="inline-flex items-center px-2 py-1 mt-2 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      Refunded
-                    </span>
-                  )}
-                </div>
-                <div className="text-right">
-                  {subscription?.subscription_plan === '2month' && (
-                    <p className="text-xl font-bold text-gray-900">£25<span className="text-sm font-normal text-gray-500 block">2 Month</span></p>
-                  )}
-                  {subscription?.subscription_plan === '6month' && (
-                    <p className="text-xl font-bold text-gray-900">£40<span className="text-sm font-normal text-gray-500 block">6 Month</span></p>
-                  )}
-                  {subscription?.subscription_plan === 'lifetime' && (
-                    <p className="text-xl font-bold text-gray-900">£70<span className="text-sm font-normal text-gray-500 block">Lifetime</span></p>
-                  )}
-                  {(subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
-                    <p className="text-xl font-bold text-gray-900">Free</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Plan Features */}
-            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm font-medium text-gray-700 mb-2">Your plan includes:</p>
-              <ul className="space-y-1">
-                {(() => {
-                  const planKey = subscription?.subscription_plan as keyof typeof PLAN_LIMITS || '2month';
-                  const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS['2month'];
-                  return limits.features.map((feature: string, index: number) => (
-                    <li key={index} className="flex items-center text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ));
-                })()}
-              </ul>
-            </div>
-
-            {/* Upgrade Options */}
-            {(!subscription || subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
-              <div className="space-y-3 mb-6">
-                <p className="text-sm font-medium text-gray-700">Get access:</p>
-                <div className="grid grid-cols-1 gap-4">
-                  <button
-                    onClick={() => handleUpgrade('2month')}
-                    disabled={managingBilling}
-                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">2 Month</p>
-                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
-                    </div>
-                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£25'}</p>
-                  </button>
-                  <button
-                    onClick={() => handleUpgrade('6month')}
-                    disabled={managingBilling}
-                    className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg hover:border-[#1FB8CD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">6 Month</p>
-                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
-                    </div>
-                    <p className="font-bold text-gray-900">{managingBilling ? '...' : '£40'}</p>
-                  </button>
-                  <button
-                    onClick={() => handleUpgrade('lifetime')}
-                    disabled={managingBilling}
-                    className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-lg bg-[#1FB8CD]/5 hover:bg-[#1FB8CD]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Lifetime</p>
-                      <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams, priority support</p>
-                    </div>
-                    <p className="font-bold text-[#1FB8CD]">{managingBilling ? '...' : '£70'}</p>
-                  </button>
-                </div>
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+          <div className="max-w-3xl mx-auto">
+            {/* Message */}
+            {message && (
+              <div className={`mb-6 p-4 rounded-xl ${
+                message.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
+              }`}>
+                <span className="flex items-center gap-2">
+                  {message.type === 'error' ? <Warning size={18} /> : <Check size={18} />}
+                  {message.text}
+                </span>
               </div>
             )}
 
-            {/* View Invoices - for paying customers */}
-            {subscription?.stripe_customer_id && subscription?.subscription_status === 'lifetime' && (
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-4">
-                <div>
-                  <h4 className="font-medium text-gray-900">View Invoices</h4>
-                  <p className="text-sm text-gray-600">Access your payment history and invoices</p>
+            <form onSubmit={handleSave} className="space-y-6">
+              {/* Profile Information */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <UserIcon size={20} className="text-gray-700" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Profile Information</h2>
                 </div>
-                <button
-                  onClick={handleManageBilling}
-                  disabled={managingBilling}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                >
-                  {managingBilling ? "Opening..." : "View"}
-                </button>
-              </div>
-            )}
-
-            {/* Info for users without a plan */}
-            {(!subscription?.stripe_customer_id && subscription?.subscription_status !== 'lifetime') && (
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-sm text-gray-600">
-                  Choose a plan above to get started with full access.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Exam Information */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Exam Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  CFA Level
-                </label>
-                <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700 font-medium">
-                  CFA Level 1
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent text-gray-900"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      disabled
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-500"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label htmlFor="examDate" className="block text-sm font-medium text-gray-700 mb-2">
-                  Exam Date
-                </label>
-                <input
-                  type="date"
-                  id="examDate"
-                  value={examDate}
-                  onChange={(e) => setExamDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label htmlFor="studyGoal" className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Study Goal (hours)
-                </label>
-                <select
-                  id="studyGoal"
-                  value={studyGoal}
-                  onChange={(e) => setStudyGoal(parseInt(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                >
-                  <option value={1}>1 hour</option>
-                  <option value={2}>2 hours</option>
-                  <option value={3}>3 hours</option>
-                  <option value={4}>4 hours</option>
-                  <option value={5}>5+ hours</option>
-                </select>
-              </div>
-            </div>
 
-            {/* Exam Countdown */}
-            {examDate && (
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-blue-800 font-medium">
-                    {daysUntilExam !== null ? (
-                      daysUntilExam > 0 ? (
-                        `${daysUntilExam} days until your CFA Level 1 exam`
-                      ) : daysUntilExam === 0 ? (
-                        `Your CFA Level 1 exam is today! Good luck!`
-                      ) : (
-                        `Your CFA Level 1 exam was ${Math.abs(daysUntilExam)} days ago`
-                      )
-                    ) : (
-                      "Invalid exam date"
+              {/* Subscription & Billing */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <CreditCard size={20} className="text-gray-700" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Subscription & Billing</h2>
+                </div>
+
+                {/* Current Plan */}
+                <div className="mb-6 p-4 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-500">Current Plan</p>
+                      <p className="text-xl font-semibold text-gray-900">{getPlanDisplayName()}</p>
+                    </div>
+                    {subscription?.subscription_status === 'lifetime' && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        <Check size={14} /> Lifetime Access
+                      </span>
                     )}
-                  </span>
+                    {subscription?.subscription_status === 'active' && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        <Clock size={14} /> Active
+                      </span>
+                    )}
+                    {subscription?.subscription_status === 'refunded' && (
+                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                        Refunded
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Plan Features */}
+                {subscription?.subscription_plan && subscription.subscription_plan !== 'free' && (
+                  <div className="mb-6 p-4 bg-gray-50 rounded-xl">
+                    <p className="text-sm font-medium text-gray-700 mb-3">Your plan includes:</p>
+                    <ul className="space-y-2">
+                      {(() => {
+                        const planKey = subscription?.subscription_plan as keyof typeof PLAN_LIMITS || '2month';
+                        const limits = PLAN_LIMITS[planKey] || PLAN_LIMITS['2month'];
+                        return limits.features.map((feature: string, index: number) => (
+                          <li key={index} className="flex items-center text-sm text-gray-600">
+                            <Check size={16} className="text-green-500 mr-2" />
+                            {feature}
+                          </li>
+                        ));
+                      })()}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Upgrade Options */}
+                {(!subscription || subscription?.subscription_plan === 'free' || !subscription?.subscription_plan) && (
+                  <div className="space-y-3 mb-6">
+                    <p className="text-sm font-medium text-gray-700">Upgrade your plan:</p>
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        onClick={() => handleUpgrade('2month')}
+                        disabled={managingBilling}
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left"
+                      >
+                        <div>
+                          <p className="font-medium text-gray-900">2 Month</p>
+                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
+                        </div>
+                        <p className="font-semibold text-gray-900">{managingBilling ? '...' : '£25'}</p>
+                      </button>
+                      <button
+                        onClick={() => handleUpgrade('6month')}
+                        disabled={managingBilling}
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left"
+                      >
+                        <div>
+                          <p className="font-medium text-gray-900">6 Month</p>
+                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
+                        </div>
+                        <p className="font-semibold text-gray-900">{managingBilling ? '...' : '£40'}</p>
+                      </button>
+                      <button
+                        onClick={() => handleUpgrade('lifetime')}
+                        disabled={managingBilling}
+                        className="flex items-center justify-between p-4 border-2 border-[#1FB8CD] rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-left relative"
+                      >
+                        <div>
+                          <p className="font-medium text-gray-900">Lifetime</p>
+                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams, priority support</p>
+                        </div>
+                        <p className="font-semibold text-[#1FB8CD]">{managingBilling ? '...' : '£70'}</p>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* View Invoices */}
+                {subscription?.stripe_customer_id && subscription?.subscription_status === 'lifetime' && (
+                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                    <div>
+                      <h4 className="font-medium text-gray-900">View Invoices</h4>
+                      <p className="text-sm text-gray-500">Access your payment history</p>
+                    </div>
+                    <button
+                      onClick={handleManageBilling}
+                      disabled={managingBilling}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors disabled:opacity-50"
+                    >
+                      {managingBilling ? "Opening..." : "View"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Exam Information */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Calendar size={20} className="text-gray-700" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Exam Information</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      CFA Level
+                    </label>
+                    <div className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-700 font-medium">
+                      CFA Level 1
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="examDate" className="block text-sm font-medium text-gray-700 mb-2">
+                      Exam Date
+                    </label>
+                    <input
+                      type="date"
+                      id="examDate"
+                      value={examDate}
+                      onChange={(e) => setExamDate(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent text-gray-900"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="studyGoal" className="block text-sm font-medium text-gray-700 mb-2">
+                      Daily Study Goal
+                    </label>
+                    <select
+                      id="studyGoal"
+                      value={studyGoal}
+                      onChange={(e) => setStudyGoal(parseInt(e.target.value))}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1FB8CD] focus:border-transparent text-gray-900"
+                    >
+                      <option value={1}>1 hour</option>
+                      <option value={2}>2 hours</option>
+                      <option value={3}>3 hours</option>
+                      <option value={4}>4 hours</option>
+                      <option value={5}>5+ hours</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Exam Countdown */}
+                {examDate && (
+                  <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <Clock size={18} className="text-blue-600" />
+                      <span className="text-blue-800 font-medium">
+                        {daysUntilExam !== null ? (
+                          daysUntilExam > 0 ? (
+                            `${daysUntilExam} days until your CFA Level 1 exam`
+                          ) : daysUntilExam === 0 ? (
+                            `Your CFA Level 1 exam is today! Good luck!`
+                          ) : (
+                            `Your CFA Level 1 exam was ${Math.abs(daysUntilExam)} days ago`
+                          )
+                        ) : (
+                          "Invalid exam date"
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Account Actions */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Gear size={20} className="text-gray-700" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-gray-900">Account Actions</h2>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
+                    <div>
+                      <h4 className="font-medium text-gray-900">Change Password</h4>
+                      <p className="text-sm text-gray-500">Update your account password</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                    >
+                      Change Password
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-4 border border-red-200 rounded-xl">
+                    <div>
+                      <h4 className="font-medium text-red-900">Delete Account</h4>
+                      <p className="text-sm text-red-600">Permanently delete your account and all data</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-red-50 text-red-700 rounded-xl font-medium hover:bg-red-100 transition-colors"
+                    >
+                      Delete Account
+                    </button>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Account Actions */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">Account Actions</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                <div>
-                  <h4 className="font-medium text-gray-900">Change Password</h4>
-                  <p className="text-sm text-gray-600">Update your account password</p>
-                </div>
+              {/* Save Button */}
+              <div className="flex justify-end">
                 <button
-                  type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                  type="submit"
+                  disabled={saving}
+                  className="bg-gray-900 text-white px-8 py-3 rounded-xl font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  Change Password
+                  {saving ? "Saving..." : "Save Settings"}
                 </button>
               </div>
-
-              <div className="flex items-center justify-between p-4 border border-red-200 rounded-lg">
-                <div>
-                  <h4 className="font-medium text-red-900">Delete Account</h4>
-                  <p className="text-sm text-red-600">Permanently delete your account and all data</p>
-                </div>
-                <button
-                  type="button"
-                  className="px-4 py-2 border border-red-300 rounded-lg text-red-700 hover:bg-red-50"
-                >
-                  Delete Account
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-gray-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {saving ? "Saving..." : "Save Settings"}
-            </button>
-          </div>
-        </form>
+        </main>
       </div>
     </div>
   );

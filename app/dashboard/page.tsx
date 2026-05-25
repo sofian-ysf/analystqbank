@@ -4,10 +4,22 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  CaretDown,
+  Calendar,
+  DotsThree,
+  Books,
+  Exam,
+  Cards,
+} from "@phosphor-icons/react";
 import { createClient } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { cfaLevel1Curriculum } from "@/lib/curriculum";
-import { Icon } from "@phosphor-icons/react";
+import Sidebar from "@/components/dashboard/Sidebar";
+import SearchDropdown from "@/components/dashboard/SearchDropdown";
+import TopicLeaderboard from "@/components/dashboard/TopicLeaderboard";
+import PerformanceChart from "@/components/dashboard/PerformanceChart";
+import TopicAffinityRadar from "@/components/dashboard/TopicAffinityRadar";
 
 // Mapping from curriculum topic ID to database topic_area name
 const topicIdToDbName: { [key: string]: string } = {
@@ -42,22 +54,9 @@ export default function Dashboard() {
   const [topicStats, setTopicStats] = useState<TopicStats>({});
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [examDate, setExamDate] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [weeklyData, setWeeklyData] = useState<{ day: string; questions: number; accuracy: number }[]>([]);
   const supabase = createClient();
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-    if (!isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-    document.body.style.overflow = '';
-  };
 
   const fetchUserStats = useCallback(async (userId: string) => {
     try {
@@ -88,7 +87,7 @@ export default function Dashboard() {
       let allCorrectCount = 0;
 
       try {
-        let allAttempts: { question_id: string; is_correct: boolean; topic_area: string }[] = [];
+        let allAttempts: { question_id: string; is_correct: boolean; topic_area: string; attempted_at: string }[] = [];
         let page = 0;
         const pageSize = 1000;
         let hasMore = true;
@@ -96,7 +95,7 @@ export default function Dashboard() {
         while (hasMore) {
           const { data: attempts, error: attemptsError } = await supabase
             .from('user_question_attempts')
-            .select('question_id, is_correct, topic_area')
+            .select('question_id, is_correct, topic_area, attempted_at')
             .eq('user_id', userId)
             .range(page * pageSize, (page + 1) * pageSize - 1);
 
@@ -133,6 +132,39 @@ export default function Dashboard() {
         });
 
         allAttemptedCount = uniqueQuestions.size;
+
+        // Build weekly performance data (cumulative by date)
+        // Group attempts by date
+        const attemptsByDate: { [date: string]: { total: number; correct: number } } = {};
+        allAttempts.forEach((attempt) => {
+          if (attempt.attempted_at) {
+            const date = new Date(attempt.attempted_at).toISOString().split('T')[0];
+            if (!attemptsByDate[date]) {
+              attemptsByDate[date] = { total: 0, correct: 0 };
+            }
+            attemptsByDate[date].total++;
+            if (attempt.is_correct) {
+              attemptsByDate[date].correct++;
+            }
+          }
+        });
+
+        // Sort dates and build cumulative data
+        const sortedDates = Object.keys(attemptsByDate).sort();
+        let cumulativeQuestions = 0;
+        let cumulativeCorrect = 0;
+        const weeklyDataPoints = sortedDates.slice(-30).map((date) => {
+          cumulativeQuestions += attemptsByDate[date].total;
+          cumulativeCorrect += attemptsByDate[date].correct;
+          const accuracy = cumulativeQuestions > 0 ? Math.round((cumulativeCorrect / cumulativeQuestions) * 100) : 0;
+          return {
+            day: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            questions: cumulativeQuestions,
+            accuracy,
+          };
+        });
+
+        setWeeklyData(weeklyDataPoints);
       } catch {
         console.log('Note: User attempts data not available');
       }
@@ -169,7 +201,6 @@ export default function Dashboard() {
         // Estimate time from sessions (roughly 1 minute per question attempted)
         if (sessions) {
           sessions.forEach(session => {
-            // Rough estimate: count each session
             totalSeconds += 30 * 60; // Assume 30 mins per session as fallback
           });
         }
@@ -198,7 +229,6 @@ export default function Dashboard() {
           .limit(1000);
 
         if (recentAttempts && recentAttempts.length > 0) {
-          // Get unique dates
           const uniqueDates = new Set<string>();
           recentAttempts.forEach(attempt => {
             if (attempt.attempted_at) {
@@ -207,15 +237,12 @@ export default function Dashboard() {
             }
           });
 
-          // Sort dates descending
           const sortedDates = Array.from(uniqueDates).sort().reverse();
 
-          // Count consecutive days from today
           let streak = 0;
           const today = new Date().toISOString().split('T')[0];
           const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-          // Check if the most recent activity is today or yesterday
           if (sortedDates[0] === today || sortedDates[0] === yesterday) {
             let checkDate = sortedDates[0] === today ? new Date() : new Date(Date.now() - 86400000);
 
@@ -277,6 +304,7 @@ export default function Dashboard() {
     router.push("/");
   };
 
+  
   const getAccuracyRate = () => {
     if (totalAttempted === 0) return 0;
     return Math.round((totalCorrect / totalAttempted) * 100);
@@ -292,21 +320,20 @@ export default function Dashboard() {
     return diffDays;
   };
 
-  const getTopicProgress = (topicId: string) => {
-    const stats = topicStats[topicId];
-    if (!stats || stats.totalQuestions === 0) return 0;
-    return Math.round((stats.attemptedQuestions / stats.totalQuestions) * 100);
-  };
-
-  const getTopicAccuracy = (topicId: string) => {
-    const stats = topicStats[topicId];
-    if (!stats || stats.attemptedQuestions === 0) return null;
-    return Math.round((stats.correctAnswers / stats.attemptedQuestions) * 100);
+  const formatStudyTime = () => {
+    if (studyHours === 0) return "0h";
+    if (studyHours < 1) return "< 1h";
+    if (studyHours >= 24) {
+      const days = Math.floor(studyHours / 24);
+      const hours = studyHours % 24;
+      return `${days}d ${hours}h`;
+    }
+    return `${studyHours}h`;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FBFAF4] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#1FB8CD] mx-auto"></div>
           <p className="mt-4 text-[#5f6368]">Loading your dashboard...</p>
@@ -316,296 +343,199 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBFAF4]">
-      {/* Dashboard Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200/50 bg-white/70 backdrop-blur-xl">
-        <nav className="mx-auto max-w-[960px] px-4 sm:px-6">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <Link href="/dashboard">
-              <Image src="/logo.png" alt="AnalystTrainer" width={180} height={40} className="h-8 w-auto" />
-            </Link>
+    <div className="h-screen bg-[#F8F9FA] flex overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar user={user!} onSignOut={handleSignOut} />
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link href="/dashboard" className="text-[#13343B] font-medium transition-colors">
-                Dashboard
-              </Link>
-              <Link href="/flashcards" className="text-[#5f6368] hover:text-[#13343B] transition-colors flex items-center gap-1.5">
-                Flashcards
-                <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded">FREE</span>
-              </Link>
-              <Link href="/question-bank" className="text-[#5f6368] hover:text-[#13343B] transition-colors">
-                Practice
-              </Link>
-            </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col lg:ml-0">
+        {/* Top Header - Fixed */}
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-gray-200 flex-shrink-0">
+          <div className="px-4 lg:px-8 py-4">
+            <div className="flex items-center justify-between gap-4">
+              {/* Page Title - hidden on mobile */}
+              <h1 className="hidden lg:block text-xl font-semibold text-gray-900">Dashboard</h1>
 
-            {/* User Menu */}
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-[#5f6368] hover:text-[#13343B] transition-colors">
-                  <span className="text-sm">{user?.email}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#EAEEEF] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <Link href="/settings" className="block px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
-                    Settings
-                  </Link>
+              {/* Search Bar */}
+              <SearchDropdown className="flex-1 max-w-md hidden md:block" />
+
+              {/* Right Side Actions */}
+              <div className="flex items-center gap-3">
+                {/* User Menu */}
+                <div className="relative">
                   <button
-                    onClick={handleSignOut}
-                    className="w-full text-left px-4 py-2 text-sm text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]"
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-100 transition-colors"
                   >
-                    Sign Out
+                    <div className="w-8 h-8 rounded-full bg-[#1FB8CD] flex items-center justify-center text-white font-semibold text-sm">
+                      {user?.email?.[0]?.toUpperCase() || "U"}
+                    </div>
+                    <CaretDown size={16} className="text-gray-400 hidden sm:block" />
                   </button>
+                  {isUserMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
+                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
+                        <Link href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                          Settings
+                        </Link>
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]"
-              onClick={toggleMobileMenu}
-              aria-label="Open menu"
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
           </div>
-        </nav>
-      </header>
+        </header>
 
-      {/* Mobile Menu Overlay */}
-      <div
-        className={`fixed inset-0 z-40 bg-black/50 transition-opacity ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-        onClick={closeMobileMenu}
-      />
-
-      {/* Mobile Menu */}
-      <div className={`fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-xl transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <Link href="/dashboard" onClick={closeMobileMenu}>
-            <Image src="/logo.png" alt="AnalystTrainer" width={140} height={32} className="h-7 w-auto" />
-          </Link>
-          <button
-            onClick={closeMobileMenu}
-            className="p-2 rounded-lg text-[#5f6368] hover:text-[#13343B] hover:bg-[#F3F3EE]"
-            aria-label="Close menu"
-          >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="p-4 space-y-2">
-          <Link href="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#13343B] font-medium bg-[#F3F3EE]">
-            Dashboard
-          </Link>
-          <Link href="/flashcards" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B] flex items-center gap-2">
-            Flashcards
-            <span className="text-[10px] font-semibold bg-green-100 text-green-700 px-1.5 py-0.5 rounded">FREE</span>
-          </Link>
-          <Link href="/question-bank" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
-            Practice
-          </Link>
-          <Link href="/settings" onClick={closeMobileMenu} className="block px-4 py-3 rounded-lg text-[#5f6368] hover:bg-[#F3F3EE] hover:text-[#13343B]">
-            Settings
-          </Link>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-          <button
-            onClick={handleSignOut}
-            className="w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 text-left"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
-
-      {/* Welcome Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl p-8 text-white">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">
-                Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ''}!
-              </h1>
-              <p className="text-gray-200">
-                {totalAttempted > 0
-                  ? `You've practiced ${totalAttempted} questions with ${getAccuracyRate()}% accuracy. Keep it up!`
-                  : "Start your journey to exam success. Let's begin practicing!"}
-              </p>
-            </div>
-            <div className="text-right hidden sm:block">
-              {(() => {
-                const daysUntilExam = getDaysUntilExam();
-                if (daysUntilExam !== null) {
-                  return (
-                    <>
-                      <p className="text-gray-200 text-sm">Days Until Exam</p>
-                      <p className={`font-bold text-3xl ${daysUntilExam <= 30 ? 'text-yellow-300' : 'text-white'}`}>
-                        {daysUntilExam > 0 ? daysUntilExam : daysUntilExam === 0 ? 'Today!' : 'Passed'}
-                      </p>
-                      <Link href="/settings" className="text-gray-300 text-xs hover:text-white underline">
-                        {daysUntilExam > 0 ? 'CFA Level 1' : 'Update exam date'}
-                      </Link>
-                    </>
-                  );
-                }
-                return (
-                  <>
-                    <p className="text-gray-200 text-sm">Exam Date</p>
-                    <p className="text-white font-bold text-lg">Not Set</p>
-                    <Link href="/settings" className="text-gray-300 text-xs hover:text-white underline">
-                      Set exam date
-                    </Link>
-                  </>
-                );
-              })()}
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/flashcards"
-              className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center gap-2"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-              Free Flashcards
-            </Link>
-            <Link
-              href="/question-bank"
-              className="bg-white text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-            >
-              Start Practicing
-            </Link>
-            <Link
-              href="/practice/mock-exam"
-              className="bg-[#1FB8CD] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1A6872] transition-colors"
-            >
-              Take Mock Exam
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Progress</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{totalAttempted.toLocaleString()}</p>
-            <p className="text-sm text-gray-600 mt-1">Questions Practiced</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{getAccuracyRate()}%</p>
-            <p className="text-sm text-gray-600 mt-1">Accuracy Rate</p>
-            {totalAttempted > 0 && (
-              <p className="text-xs text-gray-500 mt-1">{totalCorrect} correct answers</p>
-            )}
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{studyHours}</p>
-            <p className="text-sm text-gray-600 mt-1">Study Hours</p>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div className="bg-orange-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">{dayStreak}</p>
-            <p className="text-sm text-gray-600 mt-1">Day Streak</p>
-            {dayStreak > 0 && (
-              <p className="text-xs text-gray-500 mt-1">Keep it going!</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Performance by Topic */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-900">Performance by Topic</h3>
-            <Link href="/question-bank" className="text-sm text-[#1FB8CD] hover:text-[#1A6872] font-medium">
-              Practice Now →
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {cfaLevel1Curriculum.map((topic) => {
-              const progress = getTopicProgress(topic.id);
-              const accuracy = getTopicAccuracy(topic.id);
-              const stats = topicStats[topic.id];
-
-              return (
-                <div key={topic.id} className="p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                      <div className={`w-8 h-8 ${topic.color} rounded flex items-center justify-center text-white mr-3`}>
-                        {topic.icon && <topic.icon size={16} weight="fill" />}
-                      </div>
-                      <div>
-                        <span className="text-gray-900 font-medium text-sm">{topic.name}</span>
-                        <p className="text-xs text-gray-500">{topic.examWeight}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      {accuracy !== null ? (
-                        <span className={`text-sm font-bold ${accuracy >= 70 ? 'text-green-600' : accuracy >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
-                          {accuracy}%
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+          {/* Campaign Meta Card (Study Session Card) */}
+          <div className="mb-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  {/* CFA Badge */}
+                  <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <span className="text-gray-900 font-semibold text-lg">CFA</span>
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">Level 1 Exam Prep</h2>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Active
+                      </span>
+                      {examDate && (
+                        <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                          <Calendar size={14} />
+                          {new Date(examDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>
-                      ) : (
-                        <span className="text-xs text-gray-400">Not started</span>
                       )}
                     </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-1">
-                    <div
-                      className={`h-2 rounded-full ${topic.color}`}
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between text-xs text-gray-500">
-                    <span>{stats?.attemptedQuestions || 0} / {stats?.totalQuestions || 0} questions</span>
-                    {stats?.attemptedQuestions > 0 && (
-                      <span>{stats.correctAnswers} correct</span>
-                    )}
-                  </div>
                 </div>
-              );
-            })}
+
+                {/* Exam Countdown */}
+                {(() => {
+                  const daysUntil = getDaysUntilExam();
+                  if (daysUntil !== null) {
+                    return (
+                      <div className="flex items-center gap-6">
+                        <div className="text-center">
+                          <p className={`text-3xl font-semibold ${daysUntil <= 30 ? 'text-red-600' : 'text-gray-900'}`}>
+                            {daysUntil > 0 ? daysUntil : "Today!"}
+                          </p>
+                          <p className="text-xs text-gray-500">Days Until Exam</p>
+                        </div>
+                        <button className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-600">
+                          <DotsThree size={24} weight="bold" />
+                        </button>
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link
+                      href="/settings"
+                      className="text-sm text-[#1FB8CD] hover:text-[#1A6872] font-medium"
+                    >
+                      Set exam date →
+                    </Link>
+                  );
+                })()}
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mt-6">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-gray-500">Overall Progress</span>
+                  <span className="font-medium text-gray-900">
+                    {totalAttempted} / {totalQuestions} questions
+                  </span>
+                </div>
+                <div className="w-full bg-gray-100 rounded-full h-2.5">
+                  <div
+                    className="bg-gradient-to-r from-[#1FB8CD] to-[#10B981] h-2.5 rounded-full transition-all duration-500"
+                    style={{ width: `${totalQuestions > 0 ? Math.min((totalAttempted / totalQuestions) * 100, 100) : 0}%` }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+
+          
+          {/* Analytics Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Topic Leaderboard */}
+            <div className="lg:col-span-1">
+              <TopicLeaderboard topicStats={topicStats} />
+            </div>
+
+            {/* Performance Chart */}
+            <div className="lg:col-span-1">
+              <PerformanceChart weeklyData={weeklyData} />
+            </div>
+
+            {/* Topic Affinity Radar */}
+            <div className="lg:col-span-1">
+              <TopicAffinityRadar topicStats={topicStats} />
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              href="/flashcards"
+              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#1FB8CD]/30 transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-100 transition-colors">
+                  <Cards size={24} className="text-gray-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Free Flashcards</h3>
+                  <p className="text-sm text-gray-500">Review key concepts</p>
+                </div>
+              </div>
+            </Link>
+
+            <Link
+              href="/question-bank"
+              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#1FB8CD]/30 transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                  <Books size={24} className="text-gray-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Practice Questions</h3>
+                  <p className="text-sm text-gray-500">{totalQuestions - totalAttempted} remaining</p>
+                </div>
+              </div>
+            </Link>
+
+            <Link
+              href="/practice/mock-exam"
+              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#1FB8CD]/30 transition-all group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                  <Exam size={24} className="text-gray-700" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Mock Exam</h3>
+                  <p className="text-sm text-gray-500">Test your knowledge</p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </main>
       </div>
     </div>
   );
