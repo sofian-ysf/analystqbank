@@ -93,15 +93,19 @@ export default function FlashcardsDecksPage() {
     setCurrentIndex(0)
     setShowAnswer(false)
     setSessionStats({ again: 0, hard: 0, good: 0, easy: 0 })
+    setDecks([]) // Hide deck grid when studying
 
     try {
       const res = await fetch(`/api/flashcards/decks/${deck.id}/study?limit=20`)
       if (res.ok) {
         const data = await res.json()
+        console.log('Cards received:', data.cards.length)
+        console.log('First card:', data.cards[0]?.front.substring(0, 50))
         if (data.cards.length === 0) {
           setSessionComplete(true)
         } else {
           setStudyCards(data.cards)
+          console.log('studyCards state updated, count:', data.cards.length)
         }
       }
     } catch (e) {
@@ -138,12 +142,18 @@ export default function FlashcardsDecksPage() {
     }
   }
 
-  const exitStudySession = () => {
+  const exitStudySession = async () => {
     setStudyingDeck(null)
     setStudyCards([])
     setCurrentIndex(0)
     setShowAnswer(false)
     setSessionComplete(false)
+    // Refetch decks to show them again
+    const decksRes = await fetch('/api/flashcards/decks')
+    if (decksRes.ok) {
+      const data = await decksRes.json()
+      setDecks(data.decks || [])
+    }
   }
 
   const getTopicIcon = (topicId: string) => {
@@ -227,20 +237,22 @@ export default function FlashcardsDecksPage() {
         {/* Scrollable Content */}
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">
           <div className="max-w-6xl mx-auto">
-            {/* Hero */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
-              <div className="text-center">
-                <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-                  CFA Level 1 Flashcards
-                </h1>
-                <p className="text-gray-500">
-                  Master key concepts with spaced repetition. Free flashcards for all 10 CFA topics.
-                </p>
+            {/* Hero - only show when not studying */}
+            {!studyingDeck && (
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+                <div className="text-center">
+                  <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+                    CFA Level 1 Flashcards
+                  </h1>
+                  <p className="text-gray-500">
+                    Master key concepts with spaced repetition. Free flashcards for all 10 CFA topics.
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Deck Grid */}
-            {decks.length === 0 ? (
+            {/* Deck Grid - shown when not studying */}
+            {!studyingDeck && decks.length === 0 && (
               <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
                 <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-2xl flex items-center justify-center">
                   <Cards size={28} className="text-gray-400" />
@@ -248,79 +260,42 @@ export default function FlashcardsDecksPage() {
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">No Flashcard Decks Yet</h2>
                 <p className="text-gray-600">Check back soon - we&apos;re adding flashcards!</p>
               </div>
-            ) : (
+            )}
+
+            {/* Deck Grid */}
+            {!studyingDeck && decks.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {decks.map((deck) => {
                   const cardsToStudy = (deck.stats?.due || 0) + (deck.stats?.new || 0)
-
                   return (
-                    <div
-                      key={deck.id}
-                      className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-                    >
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-12 h-12 ${getTopicColor(deck.topic_area)} rounded-xl flex items-center justify-center`}>
-                            {getTopicIcon(deck.topic_area)}
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 text-sm leading-tight">
-                              {deck.name}
-                            </h3>
-                            <p className="text-xs text-gray-500">
-                              {deck.card_count} cards
-                            </p>
-                          </div>
+                    <div key={deck.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                      <div className="flex items-start gap-3 mb-4">
+                        <div className={`w-12 h-12 ${getTopicColor(deck.topic_area)} rounded-xl flex items-center justify-center`}>
+                          {getTopicIcon(deck.topic_area)}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-sm">{deck.name}</h3>
+                          <p className="text-xs text-gray-500">{deck.card_count} cards</p>
                         </div>
                       </div>
-
-                      {/* Stats */}
                       {deck.stats && (
                         <div className="mb-4">
                           <div className="flex justify-between text-xs text-gray-500 mb-1">
                             <span>{deck.stats.masteryPercentage}% mastered</span>
-                            <span>{deck.stats.mastered}/{deck.card_count}</span>
                           </div>
-                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-green-500 rounded-full transition-all duration-300"
-                              style={{ width: `${deck.stats.masteryPercentage}%` }}
-                            />
+                          <div className="h-2 bg-gray-100 rounded-full">
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: `${deck.stats.masteryPercentage}%` }} />
                           </div>
                         </div>
                       )}
-
-                      {/* Study Info */}
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
-                        {deck.stats && deck.stats.due > 0 && (
-                          <span className="flex items-center gap-1">
-                            <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                            {deck.stats.due} due
-                          </span>
-                        )}
-                        {deck.stats && deck.stats.new > 0 && (
-                          <span className="flex items-center gap-1">
-                            <span className="w-2 h-2 bg-[#1FB8CD] rounded-full"></span>
-                            {deck.stats.new} new
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Study Button */}
                       <button
                         onClick={() => startStudySession(deck)}
                         disabled={cardsToStudy === 0}
-                        className={`w-full text-center py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                          cardsToStudy > 0
-                            ? 'bg-gray-900 text-white hover:bg-gray-800'
-                            : 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                        className={`w-full py-2.5 rounded-xl text-sm font-medium ${
+                          cardsToStudy > 0 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'
                         }`}
                       >
-                        {cardsToStudy > 0
-                          ? `Study (${cardsToStudy})`
-                          : 'All Caught Up!'
-                        }
+                        {cardsToStudy > 0 ? `Study (${cardsToStudy})` : 'All Caught Up!'}
                       </button>
                     </div>
                   )
@@ -328,7 +303,7 @@ export default function FlashcardsDecksPage() {
               </div>
             )}
 
-            {/* Study Session View */}
+            {/* Study Session View - shown when studying */}
             {studyingDeck && (
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 {/* Study Header */}
@@ -428,7 +403,7 @@ export default function FlashcardsDecksPage() {
                       <div className="border-t border-gray-100 pt-6 mb-6">
                         <div className="bg-gray-50 rounded-xl p-4 mb-4">
                           <p className="text-sm font-medium text-gray-500 mb-2">Answer:</p>
-                          <p className="text-gray-900">{studyCards[currentIndex]?.back}</p>
+                          <div className="text-gray-900 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: studyCards[currentIndex]?.back || '' }} />
                         </div>
 
                         {/* Rating Buttons */}
