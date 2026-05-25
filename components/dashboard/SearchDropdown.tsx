@@ -10,7 +10,6 @@ import {
   Exam,
   Gear,
   ChartLineUp,
-  Settings,
   User,
   Lightning,
   Scales,
