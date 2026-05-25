@@ -116,6 +116,12 @@ export default function FlashcardsPage() {
     )
   }
 
+  // If user is logged in, redirect to the study page
+  if (user) {
+    router.push('/flashcards/study/ethics')
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-[#FBFAF4]">
       {/* Header */}

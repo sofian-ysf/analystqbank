@@ -23,10 +23,13 @@ interface SidebarProps {
   onSignOut: () => void;
 }
 
+// Determine flashcard href based on login status
+const flashcardHref = user ? "/flashcards/study/ethics" : "/flashcards";
+
 const navItems = [
   { href: "/dashboard", icon: House, label: "Dashboard" },
   { href: "/question-bank", icon: Books, label: "Question Bank" },
-  { href: "/flashcards", icon: Cards, label: "Flashcards", badge: "FREE" },
+  { href: flashcardHref, icon: Cards, label: "Flashcards", badge: "FREE" },
   { href: "/practice/mock-exam", icon: Exam, label: "Mock Exams" },
   { href: "/settings", icon: Gear, label: "Settings" },
 ];
