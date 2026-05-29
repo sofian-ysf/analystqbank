@@ -311,24 +311,24 @@ export default function FlashcardsPage() {
 
           {/* CTA */}
           {!user && (
-            <div className="bg-gradient-to-br from-[#13343B] to-[#1a5a65] rounded-3xl p-8 md:p-12 text-center">
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+            <div className="bg-[#FDF8F3] border border-[#2D3748] rounded-2xl p-8 md:p-10 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#1A202C] mb-3">
                 Ready to master the CFA curriculum?
               </h2>
-              <p className="text-white/80 mb-8 max-w-lg mx-auto">
+              <p className="text-[#4A5568] mb-6 max-w-md mx-auto text-sm">
                 Create a free account to access all flashcards, track your progress, and ace your exam.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
                   href="/signup"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-[#13343B] rounded-xl font-semibold hover:bg-gray-100 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1FB8CD] text-white rounded-lg font-medium hover:bg-[#1a9fb3] transition-colors"
                 >
-                  <SignIn size={20} />
+                  <SignIn size={18} />
                   Create Free Account
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 text-white border border-white/20 rounded-xl font-semibold hover:bg-white/20 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#2D3748] border border-[#2D3748] rounded-lg font-medium hover:bg-[#2D3748] hover:text-white transition-colors"
                 >
                   Sign In
                 </Link>
