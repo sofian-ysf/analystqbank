@@ -5,10 +5,11 @@ import Navigation from '../components/Navigation'
 import { PassGuaranteeCompact } from '@/components/PassGuarantee'
 import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbSchema'
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
+import DemoQuestion from '@/components/DemoQuestion'
 
 export const metadata: Metadata = {
-  title: '2,500+ CFA Practice Questions 2026 | With Detailed Answers',
-  description: 'Master the CFA exam with 2,500+ CFA practice questions covering all 10 topics. Step-by-step explanations, instant feedback, and performance tracking. Start your free trial.',
+  title: 'CFA Level 1 Question Bank 2026 | 2,500+ Practice Questions & Answers',
+  description: 'Free CFA Level 1 question bank for 2026. Practise 2,500+ exam-style questions with detailed answers. Try a sample question instantly — no signup needed.',
   keywords: 'cfa practice questions, cfa exam practice questions, cfa level 1 practice questions, cfa sample questions, cfa practice test, cfa level 1 questions, cfa exam questions with answers, cfa mock exam questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
@@ -22,16 +23,16 @@ export const metadata: Metadata = {
 }
 
 const topics = [
-  { name: 'Ethical & Professional Standards', questions: 250, weight: '15-20%' },
-  { name: 'Quantitative Methods', questions: 200, weight: '6-9%' },
-  { name: 'Economics', questions: 200, weight: '6-9%' },
-  { name: 'Financial Statement Analysis', questions: 350, weight: '11-14%' },
-  { name: 'Corporate Issuers', questions: 200, weight: '6-9%' },
-  { name: 'Equity Investments', questions: 300, weight: '11-14%' },
-  { name: 'Fixed Income', questions: 300, weight: '11-14%' },
-  { name: 'Derivatives', questions: 200, weight: '5-8%' },
-  { name: 'Alternative Investments', questions: 150, weight: '5-8%' },
-  { name: 'Portfolio Management', questions: 350, weight: '8-12%' },
+  { name: 'Ethical & Professional Standards', slug: 'ethical-professional-standards', questions: 250, weight: '15-20%' },
+  { name: 'Quantitative Methods', slug: 'quantitative-methods', questions: 200, weight: '6-9%' },
+  { name: 'Economics', slug: 'economics', questions: 200, weight: '6-9%' },
+  { name: 'Financial Statement Analysis', slug: 'financial-statement-analysis', questions: 350, weight: '11-14%' },
+  { name: 'Corporate Issuers', slug: 'corporate-issuers', questions: 200, weight: '6-9%' },
+  { name: 'Equity Investments', slug: 'equity-investments', questions: 300, weight: '11-14%' },
+  { name: 'Fixed Income', slug: 'fixed-income', questions: 300, weight: '11-14%' },
+  { name: 'Derivatives', slug: 'derivatives', questions: 200, weight: '5-8%' },
+  { name: 'Alternative Investments', slug: 'alternative-investments', questions: 150, weight: '5-8%' },
+  { name: 'Portfolio Management', slug: 'portfolio-management', questions: 350, weight: '8-12%' },
 ]
 
 export default function CFALevel1PracticeQuestions() {
@@ -161,7 +162,7 @@ export default function CFALevel1PracticeQuestions() {
               Updated for 2026 CFA Exam
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CFA Level 1 Practice Questions & Sample Questions with Answers
+              CFA Level 1 Question Bank 2026 — 2,500+ Practice Questions
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
               Master the CFA Level 1 exam with <strong className="text-white">2,500+ practice questions</strong> and example questions covering all 10 topic areas. Detailed explanations for every question.
@@ -180,6 +181,18 @@ export default function CFALevel1PracticeQuestions() {
                 View Pricing
               </Link>
             </div>
+
+            {/* Interactive demo question — try before you commit */}
+            <div className="mb-8">
+              <DemoQuestion />
+              <p className="mt-6 text-lg text-gray-200">
+                Want 2,500 more questions like this?{' '}
+                <Link href="/signup" className="font-semibold text-[#1FB8CD] hover:text-white underline underline-offset-4 transition-colors">
+                  Sign up free →
+                </Link>
+              </p>
+            </div>
+
             <div className="flex justify-center mb-12">
               <PassGuaranteeCompact />
             </div>
@@ -212,47 +225,6 @@ export default function CFALevel1PracticeQuestions() {
           </div>
         </section>
 
-        {/* Why Practice Questions Matter */}
-        <section className="py-20 px-4 bg-gray-50">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              Why CFA Level 1 Practice Questions Are Essential
-            </h2>
-            <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
-              The CFA Level 1 exam tests your ability to apply knowledge under pressure. Practice questions are the most effective way to prepare.
-            </p>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-2xl shadow-sm">
-                <div className="w-12 h-12 bg-[#1FB8CD]/10 rounded-xl flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Exam-Realistic Format</h3>
-                <p className="text-gray-600">Our questions mirror the actual CFA exam format, difficulty, and topic weighting so you know exactly what to expect.</p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-sm">
-                <div className="w-12 h-12 bg-[#1FB8CD]/10 rounded-xl flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Learn from Mistakes</h3>
-                <p className="text-gray-600">Every question includes a detailed explanation showing exactly why the correct answer is right and others are wrong.</p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-sm">
-                <div className="w-12 h-12 bg-[#1FB8CD]/10 rounded-xl flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Track Your Progress</h3>
-                <p className="text-gray-600">Identify weak areas with our performance analytics and focus your study time where it matters most.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Topic Coverage */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
@@ -264,15 +236,19 @@ export default function CFALevel1PracticeQuestions() {
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {topics.map((topic) => (
-                <div key={topic.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <Link
+                  key={topic.name}
+                  href={`/topics/${topic.slug}`}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-transparent hover:border-[#1FB8CD] hover:bg-white transition-colors group"
+                >
                   <div>
-                    <h3 className="font-semibold text-gray-900">{topic.name}</h3>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-[#1FB8CD]">{topic.name}</h3>
                     <p className="text-sm text-gray-500">{topic.questions}+ questions</p>
                   </div>
                   <span className="px-3 py-1 bg-[#1FB8CD]/10 text-[#1FB8CD] rounded-full text-sm font-medium">
                     {topic.weight}
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

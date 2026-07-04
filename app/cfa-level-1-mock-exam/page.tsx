@@ -3,10 +3,11 @@ import Link from 'next/link'
 import Navigation from '../components/Navigation'
 import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbSchema'
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
+import MockPreview from '@/components/MockPreview'
 
 export const metadata: Metadata = {
-  title: 'CFA Mock Exam 2026 | 180 Questions + Detailed Answers',
-  description: 'Take a full CFA mock exam with 180 questions matching the real CFA exam format. Timed sessions, instant scoring, and detailed explanations. Prepare for exam day with AnalystTrainer.',
+  title: 'Free CFA Mock Exam 2026 — 180 Questions | AnalystTrainer',
+  description: 'Take a free CFA Level 1 mock exam with 180 questions. Timed sessions matching the real exam format. Try 5 sample mock questions instantly — no signup required.',
   keywords: 'cfa mock exam, cfa mock test, cfa exam practice, cfa practice exam, cfa level 1 mock exam, mock exam cfa, cfa practice test, cfa exam simulation, cfa mock questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',
@@ -130,10 +131,10 @@ export default function CFALevel1MockExam() {
         <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white pt-28 pb-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <span className="inline-block px-4 py-1 bg-[#1FB8CD]/20 rounded-full text-[#1FB8CD] text-sm font-medium mb-6">
-              Exam Format 2026
+              Free Mock Exam — Updated for 2026
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              CFA Level 1 Mock Exam - 180 Question Practice Test
+              Free CFA Level 1 Mock Exam 2026 — 180 Questions
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
               Experience the real CFA exam with our <strong className="text-white">180-question mock test</strong>. Timed sessions, realistic difficulty, and comprehensive score reports. Start your mock exam today.
@@ -177,55 +178,71 @@ export default function CFALevel1MockExam() {
                 </svg>
                 <span>Topic Analysis</span>
               </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>No Signup Required</span>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Mock Exam Features */}
+        {/* Mock Exam vs Real CFA Exam */}
         <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              Why Take CFA Mock Exams?
+              Mock Exam vs Real CFA Exam
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
-              Mock exams are the closest thing to the real CFA experience. They build confidence, improve time management, and reveal weak areas.
+              Our mock exam mirrors the real thing so there are no surprises on exam day.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="text-center p-6">
-                <div className="w-16 h-16 bg-[#1FB8CD]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* AnalystTrainer column */}
+              <div className="rounded-2xl border-2 border-[#1FB8CD] bg-[#1FB8CD]/5 overflow-hidden">
+                <div className="bg-[#1FB8CD] px-6 py-4 text-center">
+                  <h3 className="text-lg font-bold text-white">AnalystTrainer Mock Exam</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Real Exam Timing</h3>
-                <p className="text-gray-600 text-sm">Practice with the same 4.5-hour time limit as the actual CFA Level 1 exam</p>
+                <dl className="divide-y divide-[#1FB8CD]/20">
+                  {[
+                    { label: 'Number of Questions', value: '180' },
+                    { label: 'Time Limit', value: '2h 15m per session' },
+                    { label: 'Format', value: 'Computer-based, multiple choice' },
+                    { label: 'Topic Coverage', value: 'All 10 topics, exam-weighted' },
+                    { label: 'Scoring', value: 'Instant results with topic breakdown' },
+                  ].map((row) => (
+                    <div key={row.label} className="px-6 py-4">
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-[#13343B]/60 mb-1">{row.label}</dt>
+                      <dd className="flex items-start gap-2 text-gray-900 font-medium">
+                        <svg className="w-5 h-5 flex-shrink-0 text-[#1FB8CD] mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                        {row.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
-              <div className="text-center p-6">
-                <div className="w-16 h-16 bg-[#1FB8CD]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
+
+              {/* Real CFA exam column */}
+              <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+                <div className="bg-gray-100 px-6 py-4 text-center">
+                  <h3 className="text-lg font-bold text-gray-900">CFA Level 1 Exam</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Detailed Score Report</h3>
-                <p className="text-gray-600 text-sm">Get topic-by-topic breakdown showing exactly where to focus</p>
-              </div>
-              <div className="text-center p-6">
-                <div className="w-16 h-16 bg-[#1FB8CD]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Realistic Difficulty</h3>
-                <p className="text-gray-600 text-sm">Questions calibrated to match actual CFA exam difficulty</p>
-              </div>
-              <div className="text-center p-6">
-                <div className="w-16 h-16 bg-[#1FB8CD]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-[#1FB8CD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Full Explanations</h3>
-                <p className="text-gray-600 text-sm">Review every question with detailed answer explanations</p>
+                <dl className="divide-y divide-gray-100">
+                  {[
+                    { label: 'Number of Questions', value: '180' },
+                    { label: 'Time Limit', value: '2h 15m per session' },
+                    { label: 'Format', value: 'Computer-based, multiple choice' },
+                    { label: 'Topic Coverage', value: 'All 10 topics, exam-weighted' },
+                    { label: 'Scoring', value: 'Results after exam window' },
+                  ].map((row) => (
+                    <div key={row.label} className="px-6 py-4">
+                      <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">{row.label}</dt>
+                      <dd className="text-gray-700 font-medium">{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
             </div>
           </div>
@@ -276,35 +293,50 @@ export default function CFALevel1MockExam() {
           </div>
         </section>
 
-        {/* How to Use Mock Exams */}
+        {/* How & When to Use Mock Exams — condensed */}
         <section className="py-20 px-4 bg-white">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              How to Use CFA Mock Exams for Maximum Results
+              How to Use Mock Exams
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
-              Mock exams are most effective when used strategically. Follow this proven approach used by successful candidates.
+              Four simple steps to turn mock exams into real exam-day results.
             </p>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-gray-50 p-8 rounded-2xl">
-                <div className="w-12 h-12 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4">1</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Simulate Real Conditions</h3>
-                <p className="text-gray-600 mb-4">Take mock exams in a quiet environment with no distractions. Do not pause the timer or look up answers. Use only a CFA-approved calculator.</p>
-                <p className="text-gray-600">This builds the mental stamina needed for the actual 4.5-hour exam and helps you learn to manage anxiety under pressure.</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-gray-50 p-6 rounded-2xl">
+                <div className="w-11 h-11 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">1</div>
+                <h3 className="font-semibold text-gray-900 mb-2">Take a baseline mock</h3>
+                <p className="text-gray-600 text-sm">Around 8 weeks out, sit a full mock under real conditions — timed, no pausing, no notes — to see where you stand.</p>
               </div>
-              <div className="bg-gray-50 p-8 rounded-2xl">
-                <div className="w-12 h-12 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4">2</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Review Thoroughly</h3>
-                <p className="text-gray-600 mb-4">After completing a mock, spend 2-3 hours reviewing every question—including ones you got right. Understanding why you got questions right is just as important.</p>
-                <p className="text-gray-600">Create a list of concepts you need to review and schedule time to study those topics before your next mock.</p>
+              <div className="bg-gray-50 p-6 rounded-2xl">
+                <div className="w-11 h-11 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">2</div>
+                <h3 className="font-semibold text-gray-900 mb-2">Review every question</h3>
+                <p className="text-gray-600 text-sm">Go through each answer — including the ones you got right — and note the concepts you need to revisit.</p>
               </div>
-              <div className="bg-gray-50 p-8 rounded-2xl">
-                <div className="w-12 h-12 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-xl mb-4">3</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Track Your Progress</h3>
-                <p className="text-gray-600 mb-4">Record your scores by topic for each mock exam. Look for patterns—some topics may consistently be weak points that need extra attention.</p>
-                <p className="text-gray-600">Your goal is steady improvement. If your scores are not increasing, you may need to change your study approach.</p>
+              <div className="bg-gray-50 p-6 rounded-2xl">
+                <div className="w-11 h-11 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">3</div>
+                <h3 className="font-semibold text-gray-900 mb-2">Target weak areas &amp; retest</h3>
+                <p className="text-gray-600 text-sm">Study your lowest-scoring topics, then take another mock every 1–2 weeks to measure improvement.</p>
+              </div>
+              <div className="bg-gray-50 p-6 rounded-2xl">
+                <div className="w-11 h-11 bg-[#1FB8CD] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">4</div>
+                <h3 className="font-semibold text-gray-900 mb-2">Final mock, 1 week out</h3>
+                <p className="text-gray-600 text-sm">Sit one last full mock to lock in timing and build confidence, then review only your weak spots before exam day.</p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Mini Mock Preview — try a mock question */}
+        <section className="py-20 px-4 bg-white">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+              Try a Mock Question
+            </h2>
+            <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
+              Feel the pressure of the clock. Answer these three exam-style questions, then submit to see the correct answers and explanations.
+            </p>
+            <MockPreview />
           </div>
         </section>
 
@@ -339,70 +371,6 @@ export default function CFALevel1MockExam() {
               <p className="text-gray-700 text-center">
                 <strong>Important:</strong> Mock exam scores are indicators, not guarantees. The actual CFA exam may feel different due to exam-day nerves. Aim to score consistently above 70% on mocks to build a comfortable margin.
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Mock Exam Strategy Timeline */}
-        <section className="py-20 px-4 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              When to Take Your Mock Exams
-            </h2>
-            <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
-              Timing matters. Here is the recommended mock exam schedule for CFA Level 1 candidates.
-            </p>
-            <div className="space-y-6">
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <span className="text-[#1FB8CD] font-semibold">8 weeks out</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 mt-1 bg-[#1FB8CD] rounded-full"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">First Baseline Mock</h4>
-                  <p className="text-gray-600">Take your first full mock exam to establish where you stand. This score is your starting point—do not be discouraged if it is low.</p>
-                </div>
-              </div>
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <span className="text-[#1FB8CD] font-semibold">6 weeks out</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 mt-1 bg-[#1FB8CD] rounded-full"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Second Mock</h4>
-                  <p className="text-gray-600">After focused study on weak areas identified in your first mock, take another to measure improvement. You should see progress.</p>
-                </div>
-              </div>
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <span className="text-[#1FB8CD] font-semibold">4 weeks out</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 mt-1 bg-[#1FB8CD] rounded-full"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Third Mock</h4>
-                  <p className="text-gray-600">Continue the cycle of mock, review, and targeted study. By now you should be consistently above 65%.</p>
-                </div>
-              </div>
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <span className="text-[#1FB8CD] font-semibold">2 weeks out</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 mt-1 bg-[#1FB8CD] rounded-full"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Fourth Mock</h4>
-                  <p className="text-gray-600">Your second-to-last mock. Focus on refining time management and building confidence.</p>
-                </div>
-              </div>
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-24 text-right">
-                  <span className="text-[#1FB8CD] font-semibold">1 week out</span>
-                </div>
-                <div className="flex-shrink-0 w-4 h-4 mt-1 bg-[#1FB8CD] rounded-full"></div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Final Mock</h4>
-                  <p className="text-gray-600">Your last full mock exam. This builds confidence and ensures you are exam-ready. Spend the remaining days reviewing weak areas only.</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
