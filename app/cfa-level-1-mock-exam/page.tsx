@@ -6,7 +6,7 @@ import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 import MockPreview from '@/components/MockPreview'
 
 export const metadata: Metadata = {
-  title: 'Free CFA Mock Exam 2026 — 180 Questions | AnalystTrainer',
+  title: 'Free CFA Mock Exam 2026 — 180 Questions',
   description: 'Take a free CFA Level 1 mock exam with 180 questions. Timed sessions matching the real exam format. Try 5 sample mock questions instantly — no signup required.',
   keywords: 'cfa mock exam, cfa mock test, cfa exam practice, cfa practice exam, cfa level 1 mock exam, mock exam cfa, cfa practice test, cfa exam simulation, cfa mock questions',
   alternates: {
@@ -141,10 +141,10 @@ export default function CFALevel1MockExam() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link
-                href="/signup"
+                href="/try-free"
                 className="px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
               >
-                Start Mock Exam
+                Try Free Now — No Credit Card
               </Link>
               <Link
                 href="/pricing"
@@ -385,12 +385,12 @@ export default function CFALevel1MockExam() {
               Take your first CFA Level 1 mock exam today and see where you stand.
             </p>
             <Link
-              href="/signup"
+              href="/try-free"
               className="inline-block px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
             >
-              Start Mock Exam
+              Try Free Mock Exam Now
             </Link>
-            <p className="mt-4 text-gray-400 text-sm">Mock exams included with all paid plans. No credit card required.</p>
+            <p className="mt-4 text-gray-400 text-sm">Try 5 mock questions free — no signup required.</p>
           </div>
         </section>
 
@@ -401,15 +401,6 @@ export default function CFALevel1MockExam() {
               Mock Exam FAQs
             </h2>
             <div className="space-y-4">
-              <details className="group bg-gray-50 rounded-xl p-6">
-                <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
-                  How to access CFA mock exam?
-                  <svg className="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </summary>
-                <p className="mt-4 text-gray-600">To access the CFA Level 1 mock exam on AnalystTrainer: 1) Sign up for an account, 2) Navigate to "Mock Exams" from your dashboard, 3) Click "Start Mock Exam" to begin. Basic and Premium plans include multiple mock exams.</p>
-              </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
                   How to access CFA mock exam?
