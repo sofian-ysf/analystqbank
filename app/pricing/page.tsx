@@ -3,14 +3,17 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import Script from 'next/script'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 
 export default function Pricing() {
-  const [billingCycle, setBillingCycle] = useState<'lifetime' | 'monthly'>('lifetime')
   const [showPromoCode, setShowPromoCode] = useState(false)
   const [promoCode, setPromoCode] = useState('')
+
+  useEffect(() => {
+    document.title = 'Pricing — AnalystTrainer CFA Level 1 Exam Prep'
+  }, [])
 
   // Product Schema for SEO
   const productSchema = {
@@ -48,11 +51,6 @@ export default function Pricing() {
         "priceValidUntil": "2026-12-31"
       }
     ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "500"
-    }
   }
 
   // FAQ Schema for pricing FAQs
@@ -65,7 +63,7 @@ export default function Pricing() {
         "name": "Can I upgrade later?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes! You can upgrade from Basic to Premium at any time. We'll credit your original purchase toward the upgrade."
+          "text": "Yes! You can upgrade at any time. We'll credit your original purchase toward the upgrade."
         }
       },
       {
@@ -73,7 +71,7 @@ export default function Pricing() {
         "name": "Can I try before I buy?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes! Visit /try-free to practice 15 demo questions instantly with no signup required. This lets you experience our question quality before purchasing."
+          "text": "Yes! Try 15 demo questions instantly with no signup required. This lets you experience our question quality before purchasing."
         }
       },
       {
@@ -81,7 +79,7 @@ export default function Pricing() {
         "name": "Is there a refund policy?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with AnalystTrainer, we'll refund your purchase—no questions asked."
+          "text": "Yes, we offer a 30-day money-back guarantee. If you're not satisfied with AnalystTrainer, we'll refund your purchase — no questions asked."
         }
       }
     ]
@@ -162,7 +160,7 @@ export default function Pricing() {
   const faqs = [
     {
       question: 'Can I upgrade later?',
-      answer: "Yes! You can upgrade from Basic to Premium at any time. We'll credit your original purchase toward the upgrade.",
+      answer: "Yes! You can upgrade at any time. We'll credit your original purchase toward the upgrade.",
     },
     {
       question: 'Is there a refund policy?',
@@ -220,13 +218,13 @@ export default function Pricing() {
       <Breadcrumbs />
 
       {/* Hero */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gradient-to-b from-[#fbfaf4] to-white mb-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl mb-4">
-            Simple, Transparent Pricing
+          <h1 className="text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl mb-4">
+            Simple, <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Transparent</span> Pricing
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose the plan that fits your CFA Level 1 preparation needs. <Link href="/try-free" className="text-[#1FB8CD] hover:underline">Try 15 free demo questions</Link> before purchasing.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Choose the plan that fits your CFA Level 1 preparation. <Link href="/try-free" className="text-[#1FB8CD] hover:underline font-medium">Try 15 free demo questions</Link> before purchasing.
           </p>
         </div>
       </section>
@@ -337,7 +335,7 @@ export default function Pricing() {
       {/* Feature Comparison Table */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 text-center mb-12">
             Compare Plans
           </h2>
 
@@ -413,7 +411,7 @@ export default function Pricing() {
       {/* FAQs */}
       <section className="px-4 py-16 sm:px-6 lg:px-8 bg-white">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 text-center mb-12">
             Frequently Asked Questions
           </h2>
 
@@ -431,7 +429,7 @@ export default function Pricing() {
       {/* CTA */}
       <section className="px-4 py-16 sm:px-6 lg:px-8 bg-gradient-to-r from-[#13343B] to-[#1a4a54]">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-white mb-4">
             Ready to pass CFA Level 1?
           </h2>
           <p className="text-xl text-white/80 mb-8">
