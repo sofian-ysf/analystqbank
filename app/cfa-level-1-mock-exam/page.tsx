@@ -129,53 +129,50 @@ export default function CFALevel1MockExam() {
 
         {/* ===== HERO ===== */}
         <section className="hero-section relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl w-full">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Left: Text Content */}
-              <div className="text-center lg:text-left">
-                <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                  Free CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Mock Exam</span> — 180 Questions <em>Timed & Scored</em>
-                </h1>
-                <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
-                  Try 3 mock questions below — no signup needed. Timed, scored, with detailed explanations. The full mock matches the real CFA exam format.
-                </p>
-                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
-                  <Link
-                    href="/try-free"
-                    className="pill-btn pill-btn-primary pill-btn-lg"
-                  >
-                    Try Free Mock Now
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="pill-btn pill-btn-secondary pill-btn-lg"
-                  >
-                    View Plans
-                  </Link>
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+              Free CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Mock Exam</span> — 180 Questions <em>Timed & Scored</em>
+            </h1>
+            <p className="mb-8 max-w-2xl text-lg text-gray-600 mx-auto">
+              Try 3 mock questions below — no signup needed. Timed, scored, with detailed explanations.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row justify-center mb-10">
+              <Link
+                href="/try-free"
+                className="pill-btn pill-btn-primary pill-btn-lg"
+              >
+                Try Free Mock Now
+              </Link>
+              <Link
+                href="/pricing"
+                className="pill-btn pill-btn-secondary pill-btn-lg"
+              >
+                View Plans
+              </Link>
+            </div>
+            <div className="flex justify-center mb-16">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-12 gap-y-4">
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">180</div>
+                  <div className="text-xs text-gray-600">Questions</div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">180</div>
-                    <div className="text-xs text-gray-600">Questions</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">2h 15m</div>
-                    <div className="text-xs text-gray-600">Per Session</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">10</div>
-                    <div className="text-xs text-gray-600">Topics Covered</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">Unlimited</div>
-                    <div className="text-xs text-gray-600">Mock Exams</div>
-                  </div>
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">2h 15m</div>
+                  <div className="text-xs text-gray-600">Per Session</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">10</div>
+                  <div className="text-xs text-gray-600">Topics Covered</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">Unlimited</div>
+                  <div className="text-xs text-gray-600">Mock Exams</div>
                 </div>
               </div>
-              {/* Right: Interactive Mock Preview */}
-              <div className="lg:pl-8">
-                <MockPreview />
-              </div>
+            </div>
+            {/* Interactive Mock Preview — Centered Below */}
+            <div className="max-w-2xl mx-auto">
+              <MockPreview />
             </div>
           </div>
         </section>

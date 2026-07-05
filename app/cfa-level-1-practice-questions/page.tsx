@@ -106,54 +106,57 @@ export default function CFALevel1PracticeQuestions() {
 
         {/* ===== HERO ===== */}
         <section className="hero-section relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl w-full">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              {/* Left: Text Content */}
-              <div className="text-center lg:text-left">
-                <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-                  CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Question Bank</span> 2026 — <em>2,500+ Questions</em> by Charterholders
-                </h1>
-                <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
-                  Try a real question below — no signup needed. Pick an answer and see instant explanations.
-                </p>
-                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
-                  <Link
-                    href="/try-free"
-                    className="pill-btn pill-btn-primary pill-btn-lg"
-                  >
-                    Try 15 Free Questions
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="pill-btn pill-btn-secondary pill-btn-lg"
-                  >
-                    View Plans
-                  </Link>
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+              CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Question Bank</span> 2026 — <em>2,500+ Questions</em> by Charterholders
+            </h1>
+            <p className="mb-8 max-w-2xl text-lg text-gray-600 mx-auto">
+              Try a real question below — no signup needed. Pick an answer and see instant explanations.
+            </p>
+            <div className="flex flex-col gap-4 sm:flex-row justify-center mb-10">
+              <Link
+                href="/try-free"
+                className="pill-btn pill-btn-primary pill-btn-lg"
+              >
+                Try 15 Free Questions
+              </Link>
+              <Link
+                href="/pricing"
+                className="pill-btn pill-btn-secondary pill-btn-lg"
+              >
+                View Plans
+              </Link>
+            </div>
+            <div className="flex justify-center mb-16">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-12 gap-y-4">
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">2,500+</div>
+                  <div className="text-xs text-gray-600">Questions</div>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">2,500+</div>
-                    <div className="text-xs text-gray-600">Questions</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">10</div>
-                    <div className="text-xs text-gray-600">Topic Areas</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">1,600+</div>
-                    <div className="text-xs text-gray-600">Flashcards</div>
-                  </div>
-                  <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">Lifetime</div>
-                    <div className="text-xs text-gray-600">Access</div>
-                  </div>
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">10</div>
+                  <div className="text-xs text-gray-600">Topic Areas</div>
                 </div>
-              </div>
-              {/* Right: Interactive Demo */}
-              <div className="lg:pl-8">
-                <DemoQuestion />
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">1,600+</div>
+                  <div className="text-xs text-gray-600">Flashcards</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-medium text-gray-900">Lifetime</div>
+                  <div className="text-xs text-gray-600">Access</div>
+                </div>
               </div>
             </div>
+            {/* Interactive Demo — Centered Below */}
+            <div className="max-w-2xl mx-auto">
+              <DemoQuestion />
+            </div>
+            <p className="mt-6 text-base text-gray-500">
+              Want 2,500 more?{' '}
+              <Link href="/try-free" className="font-medium text-[#1FB8CD] hover:text-gray-900 underline underline-offset-4 transition-colors">
+                Try 15 free demo questions →
+              </Link>
+            </p>
           </div>
         </section>
 
