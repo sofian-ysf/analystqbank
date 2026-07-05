@@ -64,7 +64,7 @@ export default function TryFreePage() {
     const percentage = Math.round((score / demoQuestions.length) * 100)
 
     return (
-      <>
+      <div className="min-h-screen bg-[#fbfaf4] flex flex-col">
         <Script
           id="product-json-ld"
           type="application/ld+json"
@@ -75,7 +75,7 @@ export default function TryFreePage() {
               name: 'Free CFA Level 1 Demo Questions',
               description: '15 free CFA Level 1 practice questions with detailed explanations (no signup required)',
               brand: { '@type': 'Brand', name: 'AnalystTrainer' },
-              offers: { ' @type': 'Offer', priceCurrency: 'GBP', price: '0', availability: 'https://schema.org/InStock' },
+              offers: { '@type': 'Offer', priceCurrency: 'GBP', price: '0', availability: 'https://schema.org/InStock' },
             }),
           }}
           strategy="beforeInteractive"
@@ -130,7 +130,6 @@ export default function TryFreePage() {
           </div>
         </main>
       </div>
-      </>
     )
   }
 
