@@ -6,15 +6,15 @@ import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 import DemoQuestion from '@/components/DemoQuestion'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Question Bank 2026 | 2,500+ Practice Questions & Answers',
-  description: 'Free CFA Level 1 question bank for 2026. Practise 2,500+ exam-style questions with detailed answers. Try a sample question instantly — no signup needed.',
+  title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Qbank by Charterholders',
+  description: '2,500+ CFA Level 1 practice questions written by charterholders. Covers all 10 topics with detailed explanations. Try a sample question instantly — no signup needed.',
   keywords: 'cfa practice questions, cfa exam practice questions, cfa level 1 practice questions, cfa sample questions, cfa practice test, cfa level 1 questions, cfa exam questions with answers, cfa mock exam questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
   openGraph: {
-    title: '2,500+ CFA Practice Questions 2026 | CFA Exam Prep',
-    description: '2,500+ CFA practice questions covering all 10 CFA Level 1 topics. Detailed explanations, instant feedback.',
+    title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Qbank by Charterholders',
+    description: '2,500+ CFA practice questions covering all 10 CFA Level 1 topics, written by charterholders. Detailed explanations, instant feedback.',
     url: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
     type: 'website',
   },

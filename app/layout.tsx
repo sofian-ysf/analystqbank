@@ -12,7 +12,7 @@ const sourceSerif4 = Source_Serif_4({
 
 export const metadata: Metadata = {
   title: {
-    default: "Free CFA Level 1 Exam Prep 2026 | 2,500+ Questions & Mock Exams",
+    default: "CFA Level 1 Exam Prep 2026 | 2,500+ Questions & Mock Exams | AnalystTrainer",
     template: "%s | AnalystTrainer",
   },
   icons: {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.analysttrainer.com",
   },
-  description: "Prepare for CFA Level 1 with 2,500+ free practice questions, mock exams, and flashcards. Instant feedback, detailed explanations. Start your free trial - no credit card required!",
+  description: "Prepare for CFA Level 1 with 2,500+ practice questions, mock exams, and flashcards. Written by charterholders. Instant feedback, detailed explanations. Start free — no credit card required.",
   keywords: "free cfa level 1 practice questions, cfa level 1 mock exam, example cfa level 1 questions, cfa level 1 sample questions, cfa mock exam free, practice cfa level 1 questions, cfa level 1 questions with answers, cfa level 1 practice test, cfa exam sample questions, free cfa mock exam",
   authors: [{ name: "AnalystTrainer" }],
   creator: "AnalystTrainer",
