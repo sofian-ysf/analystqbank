@@ -10,6 +10,7 @@ export default function TryFreePage() {
   useEffect(() => {
     document.title = 'Free CFA Level 1 Demo — 15 Practice Questions | AnalystTrainer'
   }, [])
+
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [hasSubmitted, setHasSubmitted] = useState(false)
@@ -65,22 +66,6 @@ export default function TryFreePage() {
 
     return (
       <div className="min-h-screen bg-[#fbfaf4] flex flex-col">
-        <Script
-          id="product-json-ld"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Product',
-              name: 'Free CFA Level 1 Demo Questions',
-              description: '15 free CFA Level 1 practice questions with detailed explanations (no signup required)',
-              brand: { '@type': 'Brand', name: 'AnalystTrainer' },
-              offers: { '@type': 'Offer', priceCurrency: 'GBP', price: '0', availability: 'https://schema.org/InStock' },
-            }),
-          }}
-          strategy="beforeInteractive"
-        />
-        <div className="min-h-screen bg-[#fbfaf4] flex flex-col">
         <header className="bg-white border-b border-gray-200 px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="AnalystTrainer" width={150} height={32} className="h-7 w-auto" />
@@ -134,28 +119,7 @@ export default function TryFreePage() {
   }
 
   return (
-    <>
-      <Script
-        id="product-json-ld"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            name: 'Free CFA Level 1 Demo Questions',
-            description: '15 free CFA Level 1 practice questions with detailed explanations (no signup required)',
-            brand: { '@type': 'Brand', name: 'AnalystTrainer' },
-            offers: {
-              '@type': 'Offer',
-              priceCurrency: 'GBP',
-              price: '0',
-              availability: 'https://schema.org/InStock',
-            },
-          }),
-        }}
-        strategy="beforeInteractive"
-      />
-      <div className="h-screen flex flex-col bg-[#fbfaf4] overflow-hidden">
+    <div className="h-screen flex flex-col bg-[#fbfaf4] overflow-hidden">
       {/* Mobile Header */}
       <header className="lg:hidden bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between flex-shrink-0">
         <Link href="/" className="flex items-center gap-2">
@@ -455,6 +419,6 @@ export default function TryFreePage() {
           Get Started
         </Link>
       </div>
-    </>
+    </div>
   )
 }
