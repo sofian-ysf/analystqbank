@@ -303,42 +303,111 @@ export default function CFALevel1MockExam() {
           </div>
         </section>
 
-        {/* ===== PRICING OVERVIEW ===== */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 mb-4">
-              Choose Your Plan
-            </h2>
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-              Start free, upgrade when you&apos;re ready.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl p-8 shadow-sm border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Free</h3>
-                <p className="text-3xl font-bold text-gray-900 mb-4">£0</p>
-                <p className="text-gray-600 text-sm mb-6">Try 5 mock questions and see what a full exam feels like.</p>
-                <Link href="/try-free" className="block w-full px-4 py-3 border-2 border-[#1FB8CD] text-[#1FB8CD] rounded-full font-semibold hover:bg-[#1FB8CD] hover:text-white transition-colors">
-                  Try Free
+        {/* ===== PRICING ===== */}
+        <section id="pricing" className="px-4 py-24 sm:px-6 lg:px-8 bg-[#fbfaf4]">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 mb-4">
+                Choose Your Plan
+              </h2>
+              <p className="text-lg text-gray-600">
+                Try 15 free demo questions at{' '}
+                <a href="https://www.analysttrainer.com/try-free" className="text-[#1FB8CD] hover:underline font-medium">
+                  analysttrainer.com/try-free
+                </a>
+                . Choose your plan when you're ready.
+              </p>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* 2 Month */}
+              <div className="rounded-2xl bg-white p-8 shadow-sm border">
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">2 Month</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-light text-gray-900">£25</span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">£0.42/day</p>
+                </div>
+                <div className="py-6 space-y-3">
+                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/signup?plan=2month" className="block w-full text-center py-3 border-2 border-gray-200 text-gray-900 rounded-full font-medium hover:bg-gray-50 transition-colors">
+                  Get Started
                 </Link>
               </div>
-              <div className="bg-white rounded-2xl p-8 shadow-md border-2 border-[#1FB8CD] relative">
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-[#1FB8CD] text-white text-xs font-semibold rounded-full">Popular</span>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Premium</h3>
-                <p className="text-3xl font-bold text-gray-900 mb-1">£40</p>
-                <p className="text-gray-600 text-sm mb-6">Unlimited mock exams, 2,500+ questions, lifetime access.</p>
-                <Link href="/signup" className="block w-full px-4 py-3 bg-[#1FB8CD] text-white rounded-full font-semibold hover:bg-[#18a3b5] transition-colors">
-                  Get Premium
+
+              {/* 6 Month — Most Popular */}
+              <div className="rounded-2xl bg-white p-8 shadow-md border-2 border-green-500 relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-medium px-3 py-1 rounded-full">
+                  Most Popular
+                </div>
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">6 Month</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-light text-gray-900">£40</span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">£0.22/day</p>
+                </div>
+                <div className="py-6 space-y-3">
+                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/signup?plan=6month" className="block w-full text-center py-3 bg-[#1FB8CD] text-white rounded-full font-semibold hover:bg-[#18a3b5] transition-colors">
+                  Get Started
                 </Link>
               </div>
-              <div className="bg-white rounded-2xl p-8 shadow-sm border">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Basic</h3>
-                <p className="text-3xl font-bold text-gray-900 mb-4">£25</p>
-                <p className="text-gray-600 text-sm mb-6">5 mock exams and 1,500 questions. Good for targeted practice.</p>
-                <Link href="/signup" className="block w-full px-4 py-3 border-2 border-[#1FB8CD] text-[#1FB8CD] rounded-full font-semibold hover:bg-[#1FB8CD] hover:text-white transition-colors">
-                  Get Basic
+
+              {/* Lifetime — Best Value */}
+              <div className="rounded-2xl bg-white p-8 shadow-sm border">
+                <div className="text-center pb-6 border-b border-gray-100">
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Lifetime</h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-light text-gray-900">£70</span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-500">one-time</p>
+                  <p className="mt-1 text-xs text-green-600 font-medium">Best value</p>
+                </div>
+                <div className="py-6 space-y-3">
+                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'].map((feature) => (
+                    <div key={feature} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-gray-700 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/signup?plan=lifetime" className="block w-full text-center py-3 border-2 border-gray-200 text-gray-900 rounded-full font-medium hover:bg-gray-50 transition-colors">
+                  Get Started
                 </Link>
               </div>
             </div>
+
+            <p className="mt-8 text-center text-xs text-gray-400">
+              Secure payment via Stripe. All cards accepted.
+            </p>
           </div>
         </section>
 
