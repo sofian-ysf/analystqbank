@@ -128,76 +128,55 @@ export default function CFALevel1MockExam() {
         </div>
 
         {/* ===== HERO ===== */}
-        <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white pt-28 pb-20 px-4">
-          <div className="max-w-6xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-[#1FB8CD]/20 rounded-full text-[#1FB8CD] text-sm font-medium mb-6">
-              Free Mock Exam — Updated for 2026
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              Free CFA Level 1 Mock Exam 2026 — 180 Questions
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Timed sessions matching the real exam format. Try 3 sample questions below to see how it works.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link
-                href="/try-free"
-                className="px-8 py-4 bg-[#1FB8CD] text-white rounded-full font-semibold text-lg hover:bg-[#18a3b5] transition-colors"
-              >
-                Try Free Now — No Credit Card
-              </Link>
-              <Link
-                href="/pricing"
-                className="px-8 py-4 border-2 border-white/30 text-white rounded-full font-semibold text-lg hover:bg-white/10 transition-colors"
-              >
-                View All Plans
-              </Link>
-            </div>
-            <div className="flex flex-wrap justify-center gap-8 text-sm">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>180 Questions Per Exam</span>
+        <section className="hero-section relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl w-full">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left: Text Content */}
+              <div className="text-center lg:text-left">
+                <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+                  Free CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Mock Exam</span> — 180 Questions <em>Timed & Scored</em>
+                </h1>
+                <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
+                  Try 3 mock questions below — no signup needed. Timed, scored, with detailed explanations. The full mock matches the real CFA exam format.
+                </p>
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
+                  <Link
+                    href="/try-free"
+                    className="pill-btn pill-btn-primary pill-btn-lg"
+                  >
+                    Try Free Mock Now
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    className="pill-btn pill-btn-secondary pill-btn-lg"
+                  >
+                    View Plans
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">180</div>
+                    <div className="text-xs text-gray-600">Questions</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">2h 15m</div>
+                    <div className="text-xs text-gray-600">Per Session</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">10</div>
+                    <div className="text-xs text-gray-600">Topics Covered</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">Unlimited</div>
+                    <div className="text-xs text-gray-600">Mock Exams</div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>Timed Sessions</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>Detailed Scoring</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>Topic Analysis</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>No Signup Required</span>
+              {/* Right: Interactive Mock Preview */}
+              <div className="lg:pl-8">
+                <MockPreview />
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* ===== MINI MOCK PREVIEW ===== */}
-        <section className="py-20 px-4">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
-              Try a Mock Question
-            </h2>
-            <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
-              Feel the pressure of the clock. Answer these three exam-style questions, then submit to see correct answers and explanations.
-            </p>
-            <MockPreview />
           </div>
         </section>
 

@@ -105,54 +105,53 @@ export default function CFALevel1PracticeQuestions() {
         </div>
 
         {/* ===== HERO ===== */}
-        <section className="bg-gradient-to-b from-[#13343B] to-[#1a4a54] text-white pt-28 pb-20 px-4">
-          <div className="max-w-6xl mx-auto text-center">
-            <span className="inline-block px-4 py-1 bg-[#1FB8CD]/20 rounded-full text-[#1FB8CD] text-sm font-medium mb-6">
-              Try a Real CFA Question — No Signup Needed
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-              CFA Level 1 Question Bank 2026
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8">
-              2,500+ exam-style questions. Pick an answer below to see how it works.
-            </p>
-
-            {/* Interactive demo — the entire hero centres on this */}
-            <div className="mb-6">
-              <DemoQuestion />
-            </div>
-
-            <p className="text-lg text-gray-200 mb-8">
-              Want 2,500 more?{' '}
-              <Link href="/try-free" className="font-semibold text-[#1FB8CD] hover:text-white underline underline-offset-4 transition-colors">
-                Try 15 free questions now →
-              </Link>
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-8 text-sm">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>2,500+ Questions</span>
+        <section className="hero-section relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl w-full">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left: Text Content */}
+              <div className="text-center lg:text-left">
+                <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+                  CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Question Bank</span> 2026 — <em>2,500+ Questions</em> by Charterholders
+                </h1>
+                <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
+                  Try a real question below — no signup needed. Pick an answer and see instant explanations.
+                </p>
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start mb-10">
+                  <Link
+                    href="/try-free"
+                    className="pill-btn pill-btn-primary pill-btn-lg"
+                  >
+                    Try 15 Free Questions
+                  </Link>
+                  <Link
+                    href="/pricing"
+                    className="pill-btn pill-btn-secondary pill-btn-lg"
+                  >
+                    View Plans
+                  </Link>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">2,500+</div>
+                    <div className="text-xs text-gray-600">Questions</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">10</div>
+                    <div className="text-xs text-gray-600">Topic Areas</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">1,600+</div>
+                    <div className="text-xs text-gray-600">Flashcards</div>
+                  </div>
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl font-medium text-gray-900">Lifetime</div>
+                    <div className="text-xs text-gray-600">Access</div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
-                </svg>
-                <span>Detailed Explanations</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span>All 10 Topics</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#1FB8CD]" fill="currentColor" viewBox="0 0 20 20">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
-                </svg>
-                <span>Performance Analytics</span>
+              {/* Right: Interactive Demo */}
+              <div className="lg:pl-8">
+                <DemoQuestion />
               </div>
             </div>
           </div>
