@@ -180,7 +180,7 @@ export default function CFALevel1MockExam() {
         {/* ===== MOCK EXAM VS REAL EXAM ===== */}
         <section className="py-20 px-4 bg-gray-50">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-center text-gray-900 mb-4">
               Mock Exam vs Real CFA Exam
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
@@ -189,7 +189,7 @@ export default function CFALevel1MockExam() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="rounded-2xl border-2 border-[#1FB8CD] bg-[#1FB8CD]/5 overflow-hidden">
                 <div className="bg-[#1FB8CD] px-6 py-4 text-center">
-                  <h3 className="text-lg font-bold text-white">AnalystTrainer Mock Exam</h3>
+                  <h3 className="text-lg font-semibold text-white">AnalystTrainer Mock Exam</h3>
                 </div>
                 <dl className="divide-y divide-[#1FB8CD]/20">
                   {[
@@ -213,7 +213,7 @@ export default function CFALevel1MockExam() {
               </div>
               <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
                 <div className="bg-gray-100 px-6 py-4 text-center">
-                  <h3 className="text-lg font-bold text-gray-900">CFA Level 1 Exam</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">CFA Level 1 Exam</h3>
                 </div>
                 <dl className="divide-y divide-gray-100">
                   {[
@@ -237,7 +237,7 @@ export default function CFALevel1MockExam() {
         {/* ===== HOW TO USE MOCK EXAMS ===== */}
         <section className="py-20 px-4">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-center text-gray-900 mb-4">
               How to Use Mock Exams
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
@@ -271,7 +271,7 @@ export default function CFALevel1MockExam() {
         {/* ===== WHAT YOUR SCORE MEANS ===== */}
         <section className="py-20 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-center text-gray-900 mb-4">
               What Your Score Means
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
@@ -306,7 +306,7 @@ export default function CFALevel1MockExam() {
         {/* ===== PRICING OVERVIEW ===== */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 mb-4">
               Choose Your Plan
             </h2>
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
@@ -345,7 +345,7 @@ export default function CFALevel1MockExam() {
         {/* ===== CTA ===== */}
         <section className="py-20 px-4 bg-[#13343B]">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-white mb-6">
               Ready to Test Yourself?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
@@ -364,7 +364,7 @@ export default function CFALevel1MockExam() {
         {/* ===== FAQ ===== */}
         <section className="py-20 px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            <h2 className="text-3xl font-medium tracking-tight text-center text-gray-900 mb-12">
               Mock Exam FAQs
             </h2>
             <div className="space-y-4">
@@ -394,7 +394,7 @@ export default function CFALevel1MockExam() {
         {/* ===== RELATED RESOURCES ===== */}
         <section className="py-16 px-4 bg-gray-50 border-t">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">More CFA Level 1 Resources</h2>
+            <h2 className="text-2xl font-medium tracking-tight text-gray-900 mb-8 text-center">More CFA Level 1 Resources</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Practice Questions</h3>

@@ -163,7 +163,7 @@ export default function CFALevel1PracticeQuestions() {
         {/* ===== TOPIC COVERAGE ===== */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-center text-gray-900 mb-4">
               All 10 CFA Level 1 Topics
             </h2>
             <p className="text-xl text-gray-600 text-center max-w-3xl mx-auto mb-12">
@@ -192,7 +192,7 @@ export default function CFALevel1PracticeQuestions() {
         {/* ===== PRICING OVERVIEW ===== */}
         <section className="py-20 px-4 bg-gray-50">
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-gray-900 mb-4">
               Choose Your Plan
             </h2>
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
@@ -231,7 +231,7 @@ export default function CFALevel1PracticeQuestions() {
         {/* ===== CTA ===== */}
         <section className="py-20 px-4 bg-[#13343B]">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-white mb-6">
               Ready to Practise 2,500+ Questions?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
@@ -250,7 +250,7 @@ export default function CFALevel1PracticeQuestions() {
         {/* ===== FAQ ===== */}
         <section className="py-20 px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            <h2 className="text-3xl font-medium tracking-tight text-center text-gray-900 mb-12">
               Frequently Asked Questions
             </h2>
             <div className="space-y-4">
@@ -277,7 +277,7 @@ export default function CFALevel1PracticeQuestions() {
         {/* ===== RELATED RESOURCES ===== */}
         <section className="py-16 px-4 bg-gray-50 border-t">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">More CFA Level 1 Resources</h2>
+            <h2 className="text-2xl font-medium tracking-tight text-gray-900 mb-8 text-center">More CFA Level 1 Resources</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Mock Exams</h3>
