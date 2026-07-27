@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .join(' ')
 
     return {
-      title: `${fallbackTitle} | AnalystTrainer`,
+      title: fallbackTitle,
       description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
     }
   }
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         .join(' ')
 
       return {
-        title: `${fallbackTitle} | AnalystTrainer`,
+        title: fallbackTitle,
         description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
       }
     }
@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .join(' ')
 
     return {
-      title: `${fallbackTitle} | AnalystTrainer`,
+      title: fallbackTitle,
       description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
     }
   }
