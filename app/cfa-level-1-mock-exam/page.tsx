@@ -7,7 +7,7 @@ import MockPreview from '@/components/MockPreview'
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Mock Exam 2026 | 180 Questions, Timed & Scored',
-  description: 'Full-length CFA Level 1 mock exam with 180 timed questions. Instant scoring and detailed explanations for every answer. Try 5 questions now — no signup required.',
+  description: 'Free CFA Level 1 mock exam sample — 180 timed questions with instant scoring. Detailed answer explanations. Try 5 questions now, no signup required.',
   keywords: 'cfa mock exam, cfa mock test, cfa exam practice, cfa practice exam, cfa level 1 mock exam, mock exam cfa, cfa practice test, cfa exam simulation, cfa mock questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-mock-exam',

@@ -7,7 +7,7 @@ import DemoQuestion from '@/components/DemoQuestion'
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Qbank by Charterholders',
-  description: '2,500+ CFA Level 1 practice questions written by charterholders. Covers all 10 topics with detailed explanations. Try a sample question instantly — no signup needed.',
+  description: 'Free CFA Level 1 practice questions — 2,500+ written by charterholders. Covers all 10 topics with detailed explanations. Try sample questions instantly, no signup required.',
   keywords: 'cfa practice questions, cfa exam practice questions, cfa level 1 practice questions, cfa sample questions, cfa practice test, cfa level 1 questions, cfa exam questions with answers, cfa mock exam questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
