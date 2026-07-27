@@ -22,15 +22,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    // During build, return fallback metadata
+    // During build, return fallback metadata — handle acronyms properly
     const fallbackTitle = slug
       .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => {
+        if (word === 'cfa') return 'CFA'
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      })
       .join(' ')
 
     return {
-      title: fallbackTitle,
-      description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+      title: `${fallbackTitle} | AnalystTrainer`,
+      description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
     }
   }
 
@@ -48,12 +51,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // Generate a fallback title from the slug
       const fallbackTitle = slug
         .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map(word => {
+          if (word === 'cfa') return 'CFA'
+          return word.charAt(0).toUpperCase() + word.slice(1)
+        })
         .join(' ')
 
       return {
-        title: fallbackTitle,
-        description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+        title: `${fallbackTitle} | AnalystTrainer`,
+        description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
       }
     }
 
@@ -75,12 +81,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Generate a fallback title from the slug on any error
     const fallbackTitle = slug
       .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => {
+        if (word === 'cfa') return 'CFA'
+        return word.charAt(0).toUpperCase() + word.slice(1)
+      })
       .join(' ')
 
     return {
-      title: fallbackTitle,
-      description: `Read our article about ${fallbackTitle.toLowerCase()} for CFA Level 1 exam preparation.`,
+      title: `${fallbackTitle} | AnalystTrainer`,
+      description: `Free CFA Level 1 practice questions covering Ethics, Quant, FSA, and more. Test your knowledge with sample questions and detailed answer explanations.`,
     }
   }
 }
