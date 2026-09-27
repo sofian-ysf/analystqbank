@@ -14,7 +14,7 @@ export default function FAQ() {
     },
     {
       question: "How do I get started?",
-      answer: "Try 15 free demo questions at /try-free with no signup required. When you're ready, choose between our Basic (£50) or Premium (£75) plans to access the full question bank and mock exams."
+      answer: "Try 15 free demo questions at /try-free with no signup required. When you're ready, choose between 2 Month (£25), 6 Month (£40), or Lifetime (£70) access to the full question bank and mock exams."
     },
     {
       question: "What's the difference between Basic and Premium plans?",

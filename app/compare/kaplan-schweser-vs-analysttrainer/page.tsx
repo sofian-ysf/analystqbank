@@ -53,7 +53,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
     },
     {
       feature: 'Pricing',
-      analystTrainer: 'From £25 lifetime access',
+      analystTrainer: 'Lifetime access £70',
       kaplan: 'From £300+ for packages',
       winner: 'AnalystTrainer'
     },
@@ -170,7 +170,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
               Better Questions. Better Value. Better Results.
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              With 2,500+ practice questions, unlimited mock exams, and lifetime access from £25, AnalystTrainer provides exceptional value for CFA Level 1 candidates.
+              With 2,500+ practice questions, unlimited mock exams, and lifetime access for £70, AnalystTrainer provides exceptional value for CFA Level 1 candidates.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white p-6 rounded-xl">
@@ -182,7 +182,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                 <div className="text-gray-600">Mock Exams</div>
               </div>
               <div className="bg-white p-6 rounded-xl">
-                <div className="text-3xl font-bold text-[#1FB8CD] mb-2">£25</div>
+                <div className="text-3xl font-bold text-[#1FB8CD] mb-2">£70</div>
                 <div className="text-gray-600">Lifetime Access</div>
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                       <svg className="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      <span>Lifetime access from £25 (12x cheaper)</span>
+                      <span>Lifetime access £70 (4x cheaper)</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-600">
                       <svg className="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -433,7 +433,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">Kaplan Schweser packages start at around £300 for basic packages and can go up to £1,000+ for premium packages with video lectures and tutoring. AnalystTrainer offers lifetime access from just £25, making it significantly more affordable.</p>
+                <p className="mt-4 text-gray-600">Kaplan Schweser packages start at around £300 for basic packages and can go up to £1,000+ for premium packages with video lectures and tutoring. AnalystTrainer offers lifetime access for just £70, making it significantly more affordable.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">

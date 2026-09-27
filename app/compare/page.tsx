@@ -49,7 +49,7 @@ export default function ComparePage() {
                   <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> Unlimited mock exams
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> £75 lifetime access
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> £70 lifetime access
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> 1,600+ free flashcards
