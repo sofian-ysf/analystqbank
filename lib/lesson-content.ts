@@ -1,11 +1,13 @@
 /**
  * Server-side renderer for lesson markdown.
  *
- * Supported markdown: ## and ### headings, paragraphs, - / * bullet lists,
- * 1. ordered lists, > blockquotes, --- rules, **bold**, *italic*, `code`.
+ * Supported markdown: # / ## / ### headings, paragraphs, - / * bullet lists,
+ * 1. ordered lists, > blockquotes, pipe tables, --- rules, **bold**,
+ * *italic*, `code`.
  * Math is rendered with KaTeX at request time: \( inline \), \[ display \]
  * and $$ display $$. Single $ is intentionally NOT a math delimiter (same
- * rule as components/MathText.tsx) so prices like £50 never get eaten.
+ * rule as components/MathText.tsx) so currency like $120,000 never gets
+ * eaten. Lesson bodies use $$...$$ for all math.
  */
 import katex from 'katex'
 
@@ -52,6 +54,32 @@ function renderInline(text: string): string {
   return out
 }
 
+function splitTableRow(line: string): string[] {
+  return line
+    .replace(/^\|/, '')
+    .replace(/\|$/, '')
+    .split('|')
+    .map((cell) => cell.trim())
+}
+
+function renderTable(lines: string[]): string {
+  const rows = lines.filter((l) => !/^\|[\s:|-]+\|$/.test(l))
+  if (!rows.length) return ''
+  const [head, ...body] = rows
+  const thead = `<thead><tr>${splitTableRow(head)
+    .map((c) => `<th>${renderInline(c)}</th>`)
+    .join('')}</tr></thead>`
+  const tbody = `<tbody>${body
+    .map(
+      (r) =>
+        `<tr>${splitTableRow(r)
+          .map((c) => `<td>${renderInline(c)}</td>`)
+          .join('')}</tr>`
+    )
+    .join('')}</tbody>`
+  return `<div class="table-wrap"><table>${thead}${tbody}</table></div>`
+}
+
 export function renderLessonContent(markdown: string): string {
   const { text, segments } = extractMath(markdown)
   const html: string[] = []
@@ -69,18 +97,32 @@ export function renderLessonContent(markdown: string): string {
     }
   }
 
-  for (const rawLine of text.split('\n')) {
-    const line = rawLine.trim()
+  const lines = text.split('\n')
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim()
     if (!line) {
       flush()
       continue
     }
-    if (line.startsWith('### ')) {
+    if (line.startsWith('|')) {
+      flush()
+      const tableLines: string[] = []
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        tableLines.push(lines[i].trim())
+        i++
+      }
+      i--
+      html.push(renderTable(tableLines))
+    } else if (line.startsWith('### ')) {
       flush()
       html.push(`<h3>${renderInline(line.slice(4))}</h3>`)
     } else if (line.startsWith('## ')) {
       flush()
       html.push(`<h2>${renderInline(line.slice(3))}</h2>`)
+    } else if (line.startsWith('# ')) {
+      // Body-level title duplicates the page h1; render it as a section heading.
+      flush()
+      html.push(`<h2>${renderInline(line.slice(2))}</h2>`)
     } else if (line.startsWith('> ')) {
       flush()
       html.push(`<blockquote>${renderInline(line.slice(2))}</blockquote>`)

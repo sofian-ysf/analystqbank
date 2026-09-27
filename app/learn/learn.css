@@ -399,3 +399,37 @@
     padding: 28px 22px;
   }
 }
+
+/* Markdown tables in lesson bodies */
+.learn-lesson-content .table-wrap {
+  overflow-x: auto;
+  margin: 0 0 22px;
+}
+
+.learn-lesson-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background: #ffffff;
+  border: 1px solid #e8e5da;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.learn-lesson-content th,
+.learn-lesson-content td {
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid #efece1;
+  vertical-align: top;
+}
+
+.learn-lesson-content th {
+  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+  background: #f6f3e9;
+}
+
+.learn-lesson-content tr:last-child td {
+  border-bottom: none;
+}

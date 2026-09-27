@@ -19,6 +19,7 @@ interface Lesson {
   id: string
   topic: string
   module_code: string
+  module_name: string | null
   slug: string
   title: string
   description: string | null
@@ -131,7 +132,7 @@ export default async function LessonPage({ params }: Props) {
         <article className="learn-lesson">
           <header className="learn-lesson-header">
             <div className="learn-lesson-chips">
-              <span className="learn-chip">{lesson.module_code}</span>
+              <span className="learn-chip">{lesson.module_name || lesson.module_code}</span>
               {lesson.is_free ? (
                 <span className="learn-chip learn-chip-free">Free sample</span>
               ) : (

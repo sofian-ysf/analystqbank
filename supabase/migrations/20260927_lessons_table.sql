@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS lessons (
     'Portfolio Management'
   )),
   module_code TEXT NOT NULL,
+  module_name TEXT,
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
@@ -53,11 +54,12 @@ CREATE POLICY "Allow public read access to free published lessons"
 
 -- Seed: one free sample lesson per topic, mapped to the first curriculum
 -- module and its live learning-outcome codes from the question bank.
-INSERT INTO lessons (topic, module_code, slug, title, description, los_codes, content, status, is_free, read_time_minutes, sort_order, published_at)
+INSERT INTO lessons (topic, module_code, module_name, slug, title, description, los_codes, content, status, is_free, read_time_minutes, sort_order, published_at)
 VALUES
 (
   'Ethical and Professional Standards',
   'ethics-trust',
+  'Ethics and Trust in the Investment Profession',
   'ethics-and-trust-in-the-investment-profession',
   'Ethics and Trust in the Investment Profession',
   'Why ethics sits at the centre of the investment profession, how ethical conduct differs from legal compliance, and a framework for ethical decisions.',
@@ -82,6 +84,7 @@ The CFA Institute framework asks you to identify the relevant facts and duties, 
 (
   'Quantitative Methods',
   'rates-returns',
+  'Rates and Returns',
   'rates-and-returns',
   'Rates and Returns',
   'Three interpretations of an interest rate, the premiums that build a required return, and the holding period return.',
@@ -110,6 +113,7 @@ For a share bought at 50, sold at 54, with a dividend of 2, \( R = (54 - 50 + 2)
 (
   'Economics',
   'firm-market-structures',
+  'The Firm and Market Structures',
   'the-firm-and-market-structures',
   'The Firm and Market Structures',
   'Perfect competition, monopolistic competition, oligopoly and monopoly: how market structure drives pricing power and long-run profit.',
@@ -133,6 +137,7 @@ In the short run a firm keeps producing while price covers average variable cost
 (
   'Financial Statement Analysis',
   'fsa-intro',
+  'Introduction to Financial Statement Analysis',
   'introduction-to-financial-statement-analysis',
   'Introduction to Financial Statement Analysis',
   'What the principal financial statements show, the accounting equation behind all of them, and the difference between reporting and analysis.',
@@ -160,6 +165,7 @@ Reports follow standards such as IFRS or US GAAP, and an auditor gives an opinio
 (
   'Corporate Issuers',
   'organizational-forms',
+  'Organizational Forms, Corporate Issuer Features, and Ownership',
   'organizational-forms-corporate-issuer-features-and-ownership',
   'Organizational Forms, Corporate Issuer Features, and Ownership',
   'Sole proprietorships, partnerships and corporations: how the legal form sets liability, taxation and access to capital.',
@@ -182,6 +188,7 @@ Corporations may be privately held or listed on an exchange. Listing gives acces
 (
   'Equity Investments',
   'market-organization',
+  'Market Organization and Structure',
   'market-organization-and-structure',
   'Market Organization and Structure',
   'What the financial system does, long and short positions, market and limit orders, and the roles of primary and secondary markets.',
@@ -209,6 +216,7 @@ Securities are created in primary markets (IPOs and placements) and then trade b
 (
   'Fixed Income',
   'fi-features',
+  'Fixed-Income Instrument Features',
   'fixed-income-instrument-features',
   'Fixed-Income Instrument Features',
   'Issuer, maturity, par value and coupon: the defining elements of a bond, and the price-yield relationship that drives the whole topic.',
@@ -236,6 +244,7 @@ where \( C_t \) is the coupon in period \( t \), \( F \) is the par value and \(
 (
   'Derivatives',
   'derivative-features',
+  'Derivative Instrument and Derivative Market Features',
   'derivative-instrument-and-derivative-market-features',
   'Derivative Instrument and Derivative Market Features',
   'What makes a derivative a derivative, the four basic contracts, and the difference between exchange-traded and over-the-counter markets.',
@@ -259,6 +268,7 @@ Exchange-traded contracts are standardised, liquid and backed by a clearing hous
 (
   'Alternative Investments',
   'alt-features',
+  'Alternative Investment Features, Methods, and Structures',
   'alternative-investment-features-methods-and-structures',
   'Alternative Investment Features, Methods, and Structures',
   'Private capital, real assets, hedge funds and digital assets: what counts as an alternative investment and why investors use them.',
@@ -286,6 +296,7 @@ Usually through fund structures in which a general partner manages money for lim
 (
   'Portfolio Management',
   'portfolio-risk-return-1',
+  'Portfolio Risk and Return: Part I',
   'portfolio-risk-and-return-part-i',
   'Portfolio Risk and Return: Part I',
   'Holding period returns, arithmetic versus geometric mean returns, and what risk aversion means for required returns.',

@@ -17,6 +17,7 @@ interface LessonRow {
   title: string
   description: string | null
   module_code: string
+  module_name: string | null
   los_codes: string[]
   is_free: boolean
   read_time_minutes: number | null
@@ -28,7 +29,7 @@ async function getLessons(topicName: string): Promise<LessonRow[]> {
     const supabase = createAdminClient()
     const { data } = await supabase
       .from('lessons')
-      .select('slug, title, description, module_code, los_codes, is_free, read_time_minutes, sort_order')
+      .select('slug, title, description, module_code, module_name, los_codes, is_free, read_time_minutes, sort_order')
       .eq('topic', topicName)
       .eq('status', 'published')
       .order('sort_order', { ascending: true })
@@ -83,7 +84,7 @@ export default async function TopicLessonsPage({ params }: Props) {
                 className="learn-lesson-card"
               >
                 <div className="learn-lesson-card-top">
-                  <span className="learn-chip">{lesson.module_code}</span>
+                  <span className="learn-chip">{lesson.module_name || lesson.module_code}</span>
                   {lesson.is_free ? (
                     <span className="learn-chip learn-chip-free">Free sample</span>
                   ) : (
