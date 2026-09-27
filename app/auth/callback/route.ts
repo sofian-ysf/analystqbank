@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     if (user) {
       let { data: profile } = await supabase
         .from('user_profiles')
-        .select('subscription_plan, subscription_status, full_name')
+        .select('subscription_plan, subscription_status, current_period_end, full_name')
         .eq('id', user.id)
         .single()
 
@@ -109,8 +109,13 @@ export async function GET(request: NextRequest) {
         }
       }
 
-      // If user has a valid paid subscription with lifetime status, send login notification and go to dashboard
-      if (profile?.subscription_status === 'lifetime') {
+      // If user has a valid paid subscription (lifetime, or time-limited and
+      // not yet expired), send login notification and go to dashboard
+      const hasPaidAccess = profile?.subscription_status === 'lifetime' ||
+        (profile?.subscription_status === 'active' &&
+          !!profile?.current_period_end &&
+          new Date(profile.current_period_end).getTime() > Date.now())
+      if (hasPaidAccess) {
         console.log('User has lifetime subscription, sending login notification and redirecting to dashboard');
         try {
           await fetch(`${requestUrl.origin}/api/notify-discord`, {

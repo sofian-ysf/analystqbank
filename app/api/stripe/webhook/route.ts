@@ -3,8 +3,43 @@ import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase';
 import Stripe from 'stripe';
 import { sendDiscordNotification, createCheckoutCompleteNotification } from '@/lib/discord';
+import { PLAN_LIMITS, PlanType } from '@/lib/plans';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+// Add calendar months, clamping to the last day of the target month when it has
+// fewer days (e.g. Aug 31 + 6 months -> Feb 28, not Mar 3).
+function addMonthsClamped(date: Date, months: number): Date {
+  const result = new Date(date.getTime());
+  const originalDay = result.getUTCDate();
+  result.setUTCDate(1);
+  result.setUTCMonth(result.getUTCMonth() + months);
+  const lastDayOfMonth = new Date(Date.UTC(result.getUTCFullYear(), result.getUTCMonth() + 1, 0)).getUTCDate();
+  result.setUTCDate(Math.min(originalDay, lastDayOfMonth));
+  return result;
+}
+
+// Map a purchased plan to the subscription fields stored on user_profiles.
+// Time-limited plans get status 'active' with an expiry; lifetime keeps
+// status 'lifetime' with no period end.
+function getPlanSubscriptionFields(plan: PlanType, purchasedAt: Date) {
+  const limits = PLAN_LIMITS[plan];
+  const durationMonths: number | null = limits.isLifetime ? null : limits.durationMonths;
+  if (durationMonths === null) {
+    return {
+      subscription_plan: plan,
+      subscription_status: 'lifetime',
+      current_period_end: null,
+      cancel_at: null,
+    };
+  }
+  return {
+    subscription_plan: plan,
+    subscription_status: 'active',
+    current_period_end: addMonthsClamped(purchasedAt, durationMonths).toISOString(),
+    cancel_at: null,
+  };
+}
 
 export async function POST(request: NextRequest) {
   console.log('=== Stripe Webhook START ===');
@@ -52,13 +87,21 @@ export async function POST(request: NextRequest) {
         if (userId && plan) {
           console.log('Updating user profile for user:', userId);
 
-          // Build the update object explicitly
+          if (!(plan in PLAN_LIMITS)) {
+            console.error('Unknown plan in session metadata, skipping profile update:', plan);
+            break;
+          }
+
+          // Purchase time from the Stripe session, so expiry is anchored to
+          // when the customer actually paid.
+          const purchasedAt = new Date(session.created * 1000);
+
+          // Build the update object explicitly: status and expiry depend on
+          // the purchased plan (2month/6month expire, lifetime does not).
+          const planFields = getPlanSubscriptionFields(plan as PlanType, purchasedAt);
           const updateData = {
-            subscription_plan: plan,
-            subscription_status: 'lifetime',
+            ...planFields,
             stripe_customer_id: customerId,
-            current_period_end: null,
-            cancel_at: null,
           };
 
           console.log('Update data:', JSON.stringify(updateData));
@@ -83,8 +126,7 @@ export async function POST(request: NextRequest) {
                 id: userId,
                 email: session.customer_details?.email || '',
                 full_name: session.customer_details?.name || '',
-                subscription_plan: plan,
-                subscription_status: 'lifetime',
+                ...planFields,
                 stripe_customer_id: customerId,
               })
               .select();
@@ -187,7 +229,7 @@ export async function POST(request: NextRequest) {
             }
           }
 
-          console.log(`Lifetime access activated for user ${userId}: ${plan}`);
+          console.log(`Access activated for user ${userId}: ${plan} (status=${updateData.subscription_status}, period_end=${updateData.current_period_end})`);
         } else {
           console.log('Missing userId or plan in session metadata!');
         }

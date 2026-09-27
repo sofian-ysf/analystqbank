@@ -101,12 +101,17 @@ export async function middleware(request: NextRequest) {
     // For /signup without plan param, check subscription status
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('subscription_status')
+      .select('subscription_status, current_period_end')
       .eq('id', user.id)
       .single()
 
-    // If user has lifetime subscription, go to dashboard; otherwise go to signup with plan
-    if (profile?.subscription_status === 'lifetime') {
+    // If user has a paid subscription (lifetime, or time-limited and not yet
+    // expired), go to dashboard; otherwise go to signup with plan
+    const hasPaidAccess = profile?.subscription_status === 'lifetime' ||
+      (profile?.subscription_status === 'active' &&
+        !!profile?.current_period_end &&
+        new Date(profile.current_period_end).getTime() > Date.now())
+    if (hasPaidAccess) {
       return NextResponse.redirect(new URL('/dashboard', request.url))
     }
     return NextResponse.redirect(new URL('/signup?plan=6month', request.url))

@@ -18,7 +18,7 @@ export async function GET() {
     // Get user profile with subscription info
     const { data: profile, error } = await supabase
       .from('user_profiles')
-      .select('subscription_plan, subscription_status, trial_ends_at, account_created_at')
+      .select('subscription_plan, subscription_status, current_period_end, trial_ends_at, account_created_at')
       .eq('id', user.id)
       .single();
 
@@ -94,9 +94,16 @@ export async function GET() {
       ? null
       : limits.questions;
 
-    // Check access - valid statuses for paid users
-    const hasValidStatus = status === 'active' || status === 'lifetime';
-    const isExpired = status === 'expired';
+    // Check access - valid statuses for paid users.
+    // 'active' only counts while current_period_end is still in the future;
+    // one-time 2month/6month purchases expire when that timestamp passes.
+    const currentPeriodEnd = profile?.current_period_end
+      ? new Date(profile.current_period_end).getTime()
+      : null;
+    const periodHasExpired = status === 'active' &&
+      (currentPeriodEnd === null || currentPeriodEnd <= Date.now());
+    const hasValidStatus = status === 'lifetime' || (status === 'active' && !periodHasExpired);
+    const isExpired = status === 'expired' || periodHasExpired;
 
     console.log('hasValidStatus:', hasValidStatus, 'isExpired:', isExpired);
 
