@@ -11,6 +11,7 @@ import {
   Exam,
   Gear,
   SignOut,
+  Notebook,
   Lightning,
   X,
   List,
@@ -33,6 +34,7 @@ export default function Sidebar({ user, onSignOut }: SidebarProps) {
   const navItems = [
     { href: "/dashboard", icon: House, label: "Dashboard" },
     { href: "/question-bank", icon: Books, label: "Question Bank" },
+    { href: "/lessons", icon: Notebook, label: "Lessons" },
     { href: flashcardHref, icon: Cards, label: "Flashcards", badge: "FREE" },
     { href: "/practice/mock-exam", icon: Exam, label: "Mock Exams" },
     { href: "/settings", icon: Gear, label: "Settings" },
