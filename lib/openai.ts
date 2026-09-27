@@ -446,7 +446,7 @@ CONVERSION REQUIREMENTS:
 - Include a clear CTA in the introduction mentioning practice questions or free trial
 - Add a CTA after every 2-3 sections encouraging readers to practice
 - Conclude with a strong CTA to start free trial or access question bank
-- Mention specific benefits: "2,500+ practice questions", "mock exams", "detailed explanations"
+- Mention specific benefits: "2,300+ practice questions", "mock exams", "detailed explanations"
 - Create urgency: "start preparing today", "don't wait until exam day"
 
 CONTENT REQUIREMENTS:
@@ -781,7 +781,7 @@ Your writing style:
 
 What to include:
 - Ask about their exam timeline ("When are you planning to take your CFA?")
-- Offer specific help ("We have a question bank with 500+ practice questions, detailed explanations...")
+- Offer specific help ("We have a question bank with 2,300+ practice questions, detailed explanations...")
 - Keep it short and punchy - 3-4 short paragraphs max
 - Always include signup link as hyperlink: https://www.analysttrainer.com/signup?plan=6month
 - NO email signature (Gmail handles that)

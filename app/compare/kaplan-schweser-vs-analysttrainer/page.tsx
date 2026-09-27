@@ -23,7 +23,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
   const comparisonPoints = [
     {
       feature: 'Practice Questions',
-      analystTrainer: '2,500+ questions with detailed explanations',
+      analystTrainer: '2,300+ questions with detailed explanations',
       kaplan: '1,000+ questions in QBank',
       winner: 'AnalystTrainer'
     },
@@ -85,7 +85,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                 name: 'Is Kaplan Schweser better than AnalystTrainer for CFA Level 1?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'AnalystTrainer offers more practice questions (2,500+ vs 1,000+), better pricing, and more detailed analytics. Kaplan Schweser offers more comprehensive study notes. For most candidates, AnalystTrainer provides better value, especially for question practice.',
+                  text: 'AnalystTrainer offers more practice questions (2,300+ vs 1,000+), better pricing, and more detailed analytics. Kaplan Schweser offers more comprehensive study notes. For most candidates, AnalystTrainer provides better value, especially for question practice.',
                 },
               },
               {
@@ -101,7 +101,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                 name: 'Which CFA prep provider has better practice questions?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'AnalystTrainer has more practice questions (2,500+) with more detailed explanations and better performance analytics. Kaplan Schweser has around 1,000 questions. For pure question practice, AnalystTrainer is the better choice.',
+                  text: 'AnalystTrainer has more practice questions (2,300+) with more detailed explanations and better performance analytics. Kaplan Schweser has around 1,000 questions. For pure question practice, AnalystTrainer is the better choice.',
                 },
               },
             ],
@@ -170,11 +170,11 @@ export default function KaplanSchweserVsAnalystTrainer() {
               Better Questions. Better Value. Better Results.
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              With 2,500+ practice questions, unlimited mock exams, and lifetime access from £25, AnalystTrainer provides exceptional value for CFA Level 1 candidates.
+              With 2,300+ practice questions, unlimited mock exams, and lifetime access from £25, AnalystTrainer provides exceptional value for CFA Level 1 candidates.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white p-6 rounded-xl">
-                <div className="text-3xl font-bold text-[#1FB8CD] mb-2">2,500+</div>
+                <div className="text-3xl font-bold text-[#1FB8CD] mb-2">2,300+</div>
                 <div className="text-gray-600">Practice Questions</div>
               </div>
               <div className="bg-white p-6 rounded-xl">
@@ -254,7 +254,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                       <svg className="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      <span>2,500+ practice questions (2.5x more than Kaplan)</span>
+                      <span>2,300+ practice questions (2.3x more than Kaplan)</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-600">
                       <svg className="w-5 h-5 text-green-500 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -345,7 +345,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                       <svg className="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                       </svg>
-                      <span>Fewer practice questions (1,000+ vs 2,500+)</span>
+                      <span>Fewer practice questions (1,000+ vs 2,300+)</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-600">
                       <svg className="w-5 h-5 text-red-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
@@ -406,7 +406,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">AnalystTrainer offers more practice questions (2,500+ vs 1,000+), better pricing (from £25 vs £300+), and more detailed analytics. Kaplan Schweser offers more comprehensive study notes. For most candidates focused on passing the exam, AnalystTrainer provides better value.</p>
+                <p className="mt-4 text-gray-600">AnalystTrainer offers more practice questions (2,300+ vs 1,000+), better pricing (from £25 vs £300+), and more detailed analytics. Kaplan Schweser offers more comprehensive study notes. For most candidates focused on passing the exam, AnalystTrainer provides better value.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -424,7 +424,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </summary>
-                <p className="mt-4 text-gray-600">AnalystTrainer has more practice questions (2,500+) with more detailed explanations and better performance analytics. Kaplan Schweser has around 1,000 questions. For pure question practice and learning from explanations, AnalystTrainer is the better choice.</p>
+                <p className="mt-4 text-gray-600">AnalystTrainer has more practice questions (2,300+) with more detailed explanations and better performance analytics. Kaplan Schweser has around 1,000 questions. For pure question practice and learning from explanations, AnalystTrainer is the better choice.</p>
               </details>
               <details className="group bg-gray-50 rounded-xl p-6">
                 <summary className="flex justify-between items-center cursor-pointer font-semibold text-gray-900">
@@ -455,7 +455,7 @@ export default function KaplanSchweserVsAnalystTrainer() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ CFA practice questions with detailed explanations</p>
+                <p className="text-gray-600 text-sm">2,300+ CFA practice questions with detailed explanations</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Mock Exams</h3>

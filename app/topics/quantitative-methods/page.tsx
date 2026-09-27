@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Quantitative Methods Questions & Study Guide 2026 | Free Practice',
-  description: 'Master Quantitative Methods for CFA Level 1 (6-9% of exam) with 140+ practice questions. Learn time value of money, statistics, probability, and regression. Start free.',
+  description: 'Master Quantitative Methods for CFA Level 1 (6-9% of exam) with 250+ practice questions. Learn time value of money, statistics, probability, and regression. Start free.',
   keywords: 'cfa level 1 quantitative methods questions, quant methods cfa practice, time value of money cfa, hypothesis testing cfa, cfa quantitative methods study guide',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/quantitative-methods',
@@ -118,7 +118,7 @@ export default function QuantitativeMethodsTopicPage() {
               CFA Level 1 Quantitative Methods Study Guide
             </h1>
             <p className="text-xl text-blue-100 mb-8">
-              Master time value of money, statistics, probability, and hypothesis testing with 140+ practice questions and detailed explanations.
+              Master time value of money, statistics, probability, and hypothesis testing with 250+ practice questions and detailed explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -324,7 +324,7 @@ export default function QuantitativeMethodsTopicPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-blue-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600">All Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ questions across all 10 topics</p>
+                <p className="text-gray-600 text-sm">2,300+ questions across all 10 topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-blue-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600">Mock Exams</h3>

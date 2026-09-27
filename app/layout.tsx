@@ -12,7 +12,7 @@ const sourceSerif4 = Source_Serif_4({
 
 export const metadata: Metadata = {
   title: {
-    default: "CFA Level 1 Exam Prep 2026 | 2,500+ Questions & Mock Exams | AnalystTrainer",
+    default: "CFA Level 1 Exam Prep 2026 | 2,300+ Questions & Mock Exams | AnalystTrainer",
     template: "%s | AnalystTrainer",
   },
   icons: {
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.analysttrainer.com",
   },
-  description: "Prepare for CFA Level 1 with 2,500+ practice questions, mock exams, and flashcards. Written by charterholders. Instant feedback, detailed explanations. Start free — no credit card required.",
+  description: "Prepare for CFA Level 1 with 2,300+ practice questions, mock exams, and flashcards. Written by charterholders. Instant feedback, detailed explanations. Start free — no credit card required.",
   keywords: "free cfa level 1 practice questions, cfa level 1 mock exam, example cfa level 1 questions, cfa level 1 sample questions, cfa mock exam free, practice cfa level 1 questions, cfa level 1 questions with answers, cfa level 1 practice test, cfa exam sample questions, free cfa mock exam",
   authors: [{ name: "AnalystTrainer" }],
   creator: "AnalystTrainer",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.analysttrainer.com"),
   openGraph: {
     title: "CFA Level 1 Practice Questions & Mock Exams 2026 | AnalystTrainer",
-    description: "Pass CFA Level 1 first time with 2,500+ practice questions, realistic mock exams & detailed explanations. Start your free trial today.",
+    description: "Pass CFA Level 1 first time with 2,300+ practice questions, realistic mock exams & detailed explanations. Start your free trial today.",
     url: "https://www.analysttrainer.com",
     siteName: "AnalystTrainer",
     images: [
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "CFA Level 1 Practice Questions & Mock Exams 2026",
-    description: "Pass CFA Level 1 with 2,500+ practice questions & mock exams. Start free trial today!",
+    description: "Pass CFA Level 1 with 2,300+ practice questions & mock exams. Start free trial today!",
     images: ["/twitter-image.png"],
     creator: "@analysttrainer",
   },

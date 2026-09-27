@@ -195,7 +195,7 @@ export default function Home() {
                 </div>
 
                 <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl hover-target">
-                  Pass <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">CFA Level 1</span></span> <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">First Time</span></span> — <em>2,500+ Questions</em> by Charterholders
+                  Pass <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">CFA Level 1</span></span> <span className="inline-block transition-transform duration-300"><span className="underline decoration-3 decoration-gray-900 underline-offset-4">First Time</span></span> — <em>2,300+ Questions</em> by Charterholders
                 </h1>
 
                 <p className="mb-8 max-w-xl text-lg text-gray-600 mx-auto lg:mx-0">
@@ -230,7 +230,7 @@ export default function Home() {
                     <div className="text-xs text-gray-600">User Rating</div>
                   </div>
                   <div className="text-center lg:text-left">
-                    <div className="text-2xl font-medium text-gray-900">2,500+</div>
+                    <div className="text-2xl font-medium text-gray-900">2,300+</div>
                     <div className="text-xs text-gray-600">Questions</div>
                   </div>
                   <div className="text-center lg:text-left">
@@ -545,7 +545,7 @@ export default function Home() {
                   <div>
                     <p className="text-lg font-medium text-gray-900 mb-1">Ready to test yourself?</p>
                     <p className="text-gray-600 text-sm max-w-md">
-                      Once you've mastered the concepts, put your knowledge to the test with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 sample questions</Link> featuring 2,500+ practice questions with detailed explanations.
+                      Once you've mastered the concepts, put your knowledge to the test with our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline font-medium">free CFA Level 1 sample questions</Link> featuring 2,300+ practice questions with detailed explanations.
                     </p>
                   </div>
                   <Link
@@ -580,7 +580,7 @@ export default function Home() {
               </div>
 
               <div className="pill-card text-center">
-                <div className="text-4xl font-light text-gray-900 mb-3">2,500+</div>
+                <div className="text-4xl font-light text-gray-900 mb-3">2,300+</div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Practice Questions</h3>
                 <p className="text-gray-600 text-sm">Carefully curated questions aligned with the CFA curriculum, each with detailed explanations to deepen your understanding.</p>
               </div>
@@ -632,7 +632,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-3">Expert-Crafted Questions</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">Over 2,500 questions developed by CFA charterholders, aligned with the curriculum and accompanied by comprehensive explanations.</p>
+                <p className="text-gray-600 text-sm leading-relaxed">Over 2,300 questions developed by CFA charterholders, aligned with the curriculum and accompanied by comprehensive explanations.</p>
               </div>
 
               <div className="text-center">
@@ -786,7 +786,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
+                    <span className="text-gray-700 text-sm">2,300+ practice questions</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -843,7 +843,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
+                    <span className="text-gray-700 text-sm">2,300+ practice questions</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -897,7 +897,7 @@ export default function Home() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 text-sm">2,000+ practice questions</span>
+                    <span className="text-gray-700 text-sm">2,300+ practice questions</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
@@ -1051,7 +1051,7 @@ export default function Home() {
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>2,500+ Practice Questions</span>
+                <span>2,300+ Practice Questions</span>
               </div>
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

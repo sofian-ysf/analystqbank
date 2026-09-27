@@ -331,7 +331,7 @@ export default function CFALevel1MockExam() {
                   <p className="mt-1 text-xs text-green-600 font-medium">£0.42/day</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,7 +361,7 @@ export default function CFALevel1MockExam() {
                   <p className="mt-1 text-xs text-green-600 font-medium">£0.22/day</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -388,7 +388,7 @@ export default function CFALevel1MockExam() {
                   <p className="mt-1 text-xs text-green-600 font-medium">Best value</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -467,7 +467,7 @@ export default function CFALevel1MockExam() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ CFA Level 1 practice questions with explanations</p>
+                <p className="text-gray-600 text-sm">2,300+ CFA Level 1 practice questions with explanations</p>
               </Link>
               <Link href="/free-cfa-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Free Questions</h3>

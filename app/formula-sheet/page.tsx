@@ -255,7 +255,7 @@ export default function FormulaSheetPage() {
             Ready for More? Try Our Full Question Bank
           </h3>
           <p className="text-gray-600 mb-6">
-            2,500+ practice questions with detailed explanations. Sign up to access.
+            2,300+ practice questions with detailed explanations. Sign up to access.
           </p>
           <Link
             href="/signup"

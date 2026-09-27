@@ -411,7 +411,7 @@ export default function Settings() {
                       >
                         <div>
                           <p className="font-medium text-gray-900">2 Month</p>
-                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
+                          <p className="text-sm text-gray-500">2,300+ questions, unlimited mock exams</p>
                         </div>
                         <p className="font-semibold text-gray-900">{managingBilling ? '...' : '£25'}</p>
                       </button>
@@ -422,7 +422,7 @@ export default function Settings() {
                       >
                         <div>
                           <p className="font-medium text-gray-900">6 Month</p>
-                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams</p>
+                          <p className="text-sm text-gray-500">2,300+ questions, unlimited mock exams</p>
                         </div>
                         <p className="font-semibold text-gray-900">{managingBilling ? '...' : '£40'}</p>
                       </button>
@@ -433,7 +433,7 @@ export default function Settings() {
                       >
                         <div>
                           <p className="font-medium text-gray-900">Lifetime</p>
-                          <p className="text-sm text-gray-500">2,000+ questions, unlimited mock exams, priority support</p>
+                          <p className="text-sm text-gray-500">2,300+ questions, unlimited mock exams, priority support</p>
                         </div>
                         <p className="font-semibold text-[#1FB8CD]">{managingBilling ? '...' : '£70'}</p>
                       </button>

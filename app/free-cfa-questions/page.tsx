@@ -79,7 +79,7 @@ export default function FreeCFAQuestions() {
       price: 25,
       period: 'one-time',
       perDay: '£0.42/day',
-      features: ['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'],
+      features: ['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'],
       href: '/signup?plan=2month',
       popular: false,
     },
@@ -88,7 +88,7 @@ export default function FreeCFAQuestions() {
       price: 40,
       period: 'one-time',
       perDay: '£0.22/day',
-      features: ['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'],
+      features: ['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'],
       href: '/signup?plan=6month',
       popular: true,
     },
@@ -97,7 +97,7 @@ export default function FreeCFAQuestions() {
       price: 70,
       period: 'one-time',
       perDay: 'Best value',
-      features: ['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'],
+      features: ['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'],
       href: '/signup?plan=lifetime',
       popular: false,
     },
@@ -189,7 +189,7 @@ export default function FreeCFAQuestions() {
                   <div className="text-xs text-gray-600">No Signup</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-medium text-gray-900">2,500+</div>
+                  <div className="text-2xl font-medium text-gray-900">2,300+</div>
                   <div className="text-xs text-gray-600">With Upgrade</div>
                 </div>
               </div>
@@ -215,7 +215,7 @@ export default function FreeCFAQuestions() {
                 Upgrade to the Full Question Bank
               </h2>
               <p className="text-lg text-gray-600">
-                Liked the demo? Unlock 2,500+ questions, unlimited mock exams, and detailed analytics.
+                Liked the demo? Unlock 2,300+ questions, unlimited mock exams, and detailed analytics.
               </p>
             </div>
 
@@ -315,7 +315,7 @@ export default function FreeCFAQuestions() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Full Question Bank</h3>
-                <p className="text-gray-600 text-sm">2,500+ CFA Level 1 practice questions with explanations</p>
+                <p className="text-gray-600 text-sm">2,300+ CFA Level 1 practice questions with explanations</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Mock Exams</h3>

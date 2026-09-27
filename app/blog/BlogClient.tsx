@@ -191,7 +191,7 @@ export default function BlogClient({ posts, currentPage, totalPages }: BlogClien
               <div className="grid md:grid-cols-3 gap-4">
                 <Link href="/cfa-level-1-practice-questions" className="p-5 bg-white rounded-xl border border-gray-200 hover:border-[#1FB8CD] transition-colors group">
                   <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#1FB8CD]">Practice Questions</h3>
-                  <p className="text-gray-600 text-sm">2,500+ exam-style questions</p>
+                  <p className="text-gray-600 text-sm">2,300+ exam-style questions</p>
                 </Link>
                 <Link href="/cfa-level-1-mock-exam" className="p-5 bg-white rounded-xl border border-gray-200 hover:border-[#1FB8CD] transition-colors group">
                   <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-[#1FB8CD]">Mock Exams</h3>

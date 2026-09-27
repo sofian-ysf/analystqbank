@@ -10,7 +10,7 @@ export default function FAQ() {
   const generalFaqs = [
     {
       question: "What is AnalystTrainer?",
-      answer: "AnalystTrainer is a comprehensive CFA Level 1 exam preparation platform with over 2,000+ practice questions, mock exams, flashcards, and formula sheets designed to help you pass the CFA exam."
+      answer: "AnalystTrainer is a comprehensive CFA Level 1 exam preparation platform with over 2,300+ practice questions, mock exams, flashcards, and formula sheets designed to help you pass the CFA exam."
     },
     {
       question: "How do I get started?",

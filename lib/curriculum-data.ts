@@ -22,7 +22,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "ethical-professional-standards",
     name: "Ethical and Professional Standards",
     examWeight: "15-20%",
-    questionCount: 320,
+    questionCount: 422,
     color: "bg-yellow-500",
     description: "Ethics, professional standards, and GIPS",
     subtopics: [
@@ -37,7 +37,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "quantitative-methods",
     name: "Quantitative Methods",
     examWeight: "6-9%",
-    questionCount: 140,
+    questionCount: 279,
     color: "bg-blue-500",
     description: "Statistics, probability, and quantitative analysis",
     subtopics: [
@@ -58,7 +58,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "economics",
     name: "Economics",
     examWeight: "6-9%",
-    questionCount: 140,
+    questionCount: 183,
     color: "bg-green-500",
     description: "Micro and macroeconomics, international trade",
     subtopics: [
@@ -76,7 +76,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "financial-statement-analysis",
     name: "Financial Statement Analysis",
     examWeight: "11-14%",
-    questionCount: 230,
+    questionCount: 269,
     color: "bg-purple-500",
     description: "Financial reporting, analysis, and interpretation",
     subtopics: [
@@ -98,7 +98,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "corporate-issuers",
     name: "Corporate Issuers",
     examWeight: "6-9%",
-    questionCount: 140,
+    questionCount: 110,
     color: "bg-gray-500",
     description: "Corporate governance, capital structure, investments",
     subtopics: [
@@ -115,12 +115,12 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "equity-investments",
     name: "Equity Investments",
     examWeight: "11-14%",
-    questionCount: 230,
+    questionCount: 371,
     color: "bg-red-500",
     description: "Equity securities, markets, and valuation",
     subtopics: [
       { id: "market-organization", name: "Market Organization and Structure", learningOutcomes: 12 },
-      { id: "market-indexes", name: "Security Market Indexes", learningOutcomes: 10 },
+      { id: "market-indexes", name: "Security Market Indexes", learningOutcomes: 11 },
       { id: "market-efficiency", name: "Market Efficiency", learningOutcomes: 7 },
       { id: "equity-securities", name: "Overview of Equity Securities", learningOutcomes: 8 },
       { id: "company-analysis-present", name: "Company Analysis: Past and Present", learningOutcomes: 5 },
@@ -133,7 +133,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "fixed-income",
     name: "Fixed Income",
     examWeight: "11-14%",
-    questionCount: 230,
+    questionCount: 255,
     color: "bg-indigo-500",
     description: "Bonds, fixed-income securities, and credit analysis",
     subtopics: [
@@ -162,7 +162,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "derivatives",
     name: "Derivatives",
     examWeight: "5-8%",
-    questionCount: 108,
+    questionCount: 106,
     color: "bg-pink-500",
     description: "Forwards, futures, options, and swaps",
     subtopics: [
@@ -182,7 +182,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "alternative-investments",
     name: "Alternative Investments",
     examWeight: "7-10%",
-    questionCount: 162,
+    questionCount: 170,
     color: "bg-orange-500",
     description: "Private equity, real estate, hedge funds, commodities",
     subtopics: [
@@ -199,7 +199,7 @@ export const cfaLevel1Curriculum: Topic[] = [
     id: "portfolio-management",
     name: "Portfolio Management",
     examWeight: "8-12%",
-    questionCount: 180,
+    questionCount: 200,
     color: "bg-teal-500",
     description: "Portfolio theory, CAPM, and risk management",
     subtopics: [
