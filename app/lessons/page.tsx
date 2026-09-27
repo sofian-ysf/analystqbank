@@ -58,15 +58,13 @@ export default async function LessonsIndex() {
         {LESSON_TOPICS.map((topic) => {
           const rows = lessons.filter((l) => l.topic === topic.name)
           if (!rows.length) return null
-          const visible = rows.filter((l) => paid || l.is_free)
-          if (!visible.length) return null
           return (
             <section key={topic.slug} className="mb-8">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-3">
                 {topic.name}
               </h2>
               <div className="space-y-2">
-                {visible.map((lesson) => {
+                {rows.map((lesson) => {
                   const locked = !paid && !lesson.is_free
                   const href = `/lessons/${topic.slug}/${lesson.slug}`
                   const inner = (
