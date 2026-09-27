@@ -44,14 +44,19 @@ function LoginForm() {
       // Get full name from profile
       const { data: profileData } = await supabase
         .from('user_profiles')
-        .select('subscription_plan, subscription_status, full_name')
+        .select('subscription_plan, subscription_status, current_period_end, full_name')
         .eq('id', data.user.id)
         .single()
 
       console.log("Profile after login:", JSON.stringify(profileData));
 
-      // If user has lifetime status (paying user), go to dashboard - no Discord notification
-      if (profileData?.subscription_status === 'lifetime') {
+      // If user has paid access (lifetime, or time-limited and not yet
+      // expired), go to dashboard - no Discord notification
+      const hasPaidAccess = profileData?.subscription_status === 'lifetime' ||
+        (profileData?.subscription_status === 'active' &&
+          !!profileData?.current_period_end &&
+          new Date(profileData.current_period_end).getTime() > Date.now())
+      if (hasPaidAccess) {
         console.log("User has lifetime status, going to dashboard");
         router.push("/dashboard");
       } else {

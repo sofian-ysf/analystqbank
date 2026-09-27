@@ -17,7 +17,7 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
   // Get user profile with subscription info
   const { data: profile, error } = await supabase
     .from('user_profiles')
-    .select('subscription_plan, subscription_status')
+    .select('subscription_plan, subscription_status, current_period_end')
     .eq('id', userId)
     .single();
 
@@ -42,8 +42,13 @@ export async function getSubscriptionInfo(userId: string): Promise<SubscriptionI
     ? null
     : Math.max(0, limits.questions - questionsAnswered);
 
-  // Check access - 'lifetime' status is for paid users
-  const hasValidStatus = status === 'active' || status === 'lifetime';
+  // Check access - 'lifetime' never expires; 'active' only counts while
+  // current_period_end is still in the future.
+  const currentPeriodEnd = profile.current_period_end
+    ? new Date(profile.current_period_end).getTime()
+    : null;
+  const hasValidStatus = status === 'lifetime' ||
+    (status === 'active' && currentPeriodEnd !== null && currentPeriodEnd > Date.now());
 
   const canAccessMockExams = hasValidStatus &&
     (mockExamsRemaining === null || mockExamsRemaining > 0);

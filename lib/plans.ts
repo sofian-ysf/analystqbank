@@ -5,6 +5,7 @@ export const PLAN_LIMITS = {
     mockExams: Infinity,
     questions: Infinity,
     durationHours: null,
+    durationMonths: 2,
     price: 25,
     isLifetime: false,
     features: [
@@ -20,6 +21,7 @@ export const PLAN_LIMITS = {
     mockExams: Infinity,
     questions: Infinity,
     durationHours: null,
+    durationMonths: 6,
     price: 40,
     isLifetime: false,
     features: [
@@ -35,6 +37,7 @@ export const PLAN_LIMITS = {
     mockExams: Infinity,
     questions: Infinity,
     durationHours: null,
+    durationMonths: null,
     price: 70,
     isLifetime: true,
     features: [
