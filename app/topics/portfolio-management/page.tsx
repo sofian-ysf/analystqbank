@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Portfolio Management Questions & Study Guide 2026 | Free Practice',
-  description: 'Master Portfolio Management for CFA Level 1 (8-12% of exam) with 180+ practice questions. Learn CAPM, efficient frontier, behavioral finance, and risk management. Start free.',
+  description: 'Master Portfolio Management for CFA Level 1 (8-12% of exam) with 200+ practice questions. Learn CAPM, efficient frontier, behavioral finance, and risk management. Start free.',
   keywords: 'cfa level 1 portfolio management questions, portfolio management cfa practice, capm cfa, efficient frontier cfa, cfa portfolio management study guide',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/portfolio-management',
@@ -117,7 +117,7 @@ export default function PortfolioManagementTopicPage() {
               CFA Level 1 Portfolio Management Study Guide
             </h1>
             <p className="text-xl text-teal-100 mb-8">
-              Master portfolio theory, CAPM, risk management, and behavioral finance with 180+ practice questions and detailed explanations.
+              Master portfolio theory, CAPM, risk management, and behavioral finance with 200+ practice questions and detailed explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -323,7 +323,7 @@ export default function PortfolioManagementTopicPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-teal-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-teal-600">All Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ questions across all 10 topics</p>
+                <p className="text-gray-600 text-sm">2,300+ questions across all 10 topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-teal-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-teal-600">Mock Exams</h3>

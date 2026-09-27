@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Alternative Investments Questions & Study Guide 2026 | Free Practice',
-  description: 'Master Alternative Investments for CFA Level 1 (7-10% of exam) with 162+ practice questions. Learn hedge funds, private equity, real estate, and commodities. Start free.',
+  description: 'Master Alternative Investments for CFA Level 1 (7-10% of exam) with 150+ practice questions. Learn hedge funds, private equity, real estate, and commodities. Start free.',
   keywords: 'cfa level 1 alternative investments questions, hedge funds cfa, private equity cfa, real estate cfa, cfa alternative investments study guide',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/alternative-investments',
@@ -117,7 +117,7 @@ export default function AlternativeInvestmentsTopicPage() {
               CFA Level 1 Alternative Investments Study Guide
             </h1>
             <p className="text-xl text-orange-100 mb-8">
-              Master hedge funds, private equity, real estate, and commodities with 162+ practice questions and detailed explanations.
+              Master hedge funds, private equity, real estate, and commodities with 150+ practice questions and detailed explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -323,7 +323,7 @@ export default function AlternativeInvestmentsTopicPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-orange-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-orange-600">All Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ questions across all 10 topics</p>
+                <p className="text-gray-600 text-sm">2,300+ questions across all 10 topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-orange-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-orange-600">Mock Exams</h3>

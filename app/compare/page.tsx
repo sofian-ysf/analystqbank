@@ -43,7 +43,7 @@ export default function ComparePage() {
               <h3 className="text-xl font-bold mb-4">AnalystTrainer</h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
-                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> 2,500+ questions
+                  <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> 2,300+ questions
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckIcon size={16} className="text-green-500 flex-shrink-0" /> Unlimited mock exams
@@ -72,7 +72,7 @@ export default function ComparePage() {
       <section className="py-20 px-4 bg-[#13343B] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Try AnalystTrainer Today</h2>
-          <p className="text-xl mb-8">2,500+ questions and unlimited mock exams included with paid plans.</p>
+          <p className="text-xl mb-8">2,300+ questions and unlimited mock exams included with paid plans.</p>
           <Link href="/signup" className="inline-block px-8 py-4 bg-[#1FB8CD] rounded-full font-semibold">
             Get Started
           </Link>

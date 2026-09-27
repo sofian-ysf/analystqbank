@@ -427,7 +427,7 @@ export default function DailyQuestionArchivePage() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-purple-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600">Full Question Bank</h3>
-                <p className="text-gray-600 text-sm">2,500+ practice questions across all topics</p>
+                <p className="text-gray-600 text-sm">2,300+ practice questions across all topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-purple-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600">Mock Exams</h3>

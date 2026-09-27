@@ -184,7 +184,7 @@ export default function StudyEstimator() {
         <div className="max-w-[800px] mx-auto bg-gradient-to-br from-[#1FB8CD] to-[#1A6872] rounded-2xl p-8 text-center text-white">
           <h2 className="text-2xl font-bold mb-4">Ready to start your study plan?</h2>
           <p className="text-lg mb-6 opacity-90">
-            Access 2,000+ practice questions and structured study guides.
+            Access 2,300+ practice questions and structured study guides.
           </p>
           <Link
             href="/signup?plan=basic"

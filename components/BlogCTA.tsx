@@ -35,7 +35,7 @@ export function BlogCTABox() {
           Put Your Knowledge to the Test
         </h3>
         <p className="text-gray-600 mb-6">
-          Master CFA Level 1 with 2,500+ exam-style practice questions. Every question includes detailed explanations written by CFA charterholders.
+          Master CFA Level 1 with 2,300+ exam-style practice questions. Every question includes detailed explanations written by CFA charterholders.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -62,7 +62,7 @@ export function BlogCTASidebar() {
     <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm sticky top-24">
       <h4 className="font-semibold text-gray-900 mb-2">Practice CFA Questions</h4>
       <p className="text-sm text-gray-600 mb-4">
-        2,500+ questions with detailed explanations. Try 15 demo questions free.
+        2,300+ questions with detailed explanations. Try 15 demo questions free.
       </p>
       <Link
         href="/try-free"
@@ -97,7 +97,7 @@ export function BlogCTAEndOfArticle() {
           Ready to Pass CFA Level 1?
         </h3>
         <p className="text-gray-300 mb-6">
-          Join thousands of candidates who passed their CFA Level 1 exam using AnalystTrainer. Get instant access to <Link href="/cfa-level-1-practice-questions" className="underline hover:text-white">2,500+ practice questions</Link>, <Link href="/cfa-level-1-mock-exam" className="underline hover:text-white">mock exams</Link>, and detailed explanations.
+          Join thousands of candidates who passed their CFA Level 1 exam using AnalystTrainer. Get instant access to <Link href="/cfa-level-1-practice-questions" className="underline hover:text-white">2,300+ practice questions</Link>, <Link href="/cfa-level-1-mock-exam" className="underline hover:text-white">mock exams</Link>, and detailed explanations.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link

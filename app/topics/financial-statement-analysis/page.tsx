@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Financial Statement Analysis Guide 2026 | 350+ Questions',
-  description: 'Master Financial Statement Analysis for CFA Level 1. 350+ practice questions covering balance sheets, income statements, cash flow, and ratio analysis. 11-14% of exam.',
+  description: 'Master Financial Statement Analysis for CFA Level 1. 250+ practice questions covering balance sheets, income statements, cash flow, and ratio analysis. 11-14% of exam.',
   keywords: 'cfa financial statement analysis, financial statement analysis cfa level 1, cfa level 1 fsa, balance sheet analysis cfa, ratio analysis cfa',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/financial-statement-analysis',
@@ -66,7 +66,7 @@ export default function FinancialStatementAnalysis() {
               CFA Level 1 Financial Statement Analysis Study Guide
             </h1>
             <p className="text-xl text-blue-100 mb-8">
-              Master balance sheets, income statements, cash flow analysis, and financial ratios with 350+ practice questions and comprehensive explanations.
+              Master balance sheets, income statements, cash flow analysis, and financial ratios with 250+ practice questions and comprehensive explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -230,7 +230,7 @@ export default function FinancialStatementAnalysis() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/topics/corporate-issuers" className="p-6 bg-white rounded-xl border hover:border-blue-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600">Corporate Issuers</h3>
-                <p className="text-gray-600 text-sm">200+ questions on corporate governance</p>
+                <p className="text-gray-600 text-sm">100+ questions on corporate governance</p>
               </Link>
               <Link href="/topics/equity-investments" className="p-6 bg-white rounded-xl border hover:border-blue-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600">Equity Investments</h3>

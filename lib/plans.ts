@@ -9,7 +9,7 @@ export const PLAN_LIMITS = {
     price: 25,
     isLifetime: false,
     features: [
-      '2,000+ practice questions',
+      '2,300+ practice questions',
       'Unlimited mock exams',
       'Detailed explanations',
       'Performance analytics',
@@ -25,7 +25,7 @@ export const PLAN_LIMITS = {
     price: 40,
     isLifetime: false,
     features: [
-      '2,000+ practice questions',
+      '2,300+ practice questions',
       'Unlimited mock exams',
       'Detailed explanations',
       'Performance analytics',
@@ -41,7 +41,7 @@ export const PLAN_LIMITS = {
     price: 70,
     isLifetime: true,
     features: [
-      '2,000+ practice questions',
+      '2,300+ practice questions',
       'Unlimited mock exams',
       'Detailed explanations',
       'Performance analytics',

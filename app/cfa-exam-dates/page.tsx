@@ -243,7 +243,7 @@ export default function CFAExamDates() {
               Ready to Pass Your CFA Exam?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
-              Start preparing with 2,500+ practice questions and realistic mock exams.
+              Start preparing with 2,300+ practice questions and realistic mock exams.
             </p>
             <Link
               href="/signup"
@@ -317,7 +317,7 @@ export default function CFAExamDates() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ CFA practice questions with detailed explanations</p>
+                <p className="text-gray-600 text-sm">2,300+ CFA practice questions with detailed explanations</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-[#1FB8CD] transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-[#1FB8CD]">Mock Exams</h3>

@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Ethics Questions & Study Guide 2026 | Free Practice',
-  description: 'Master CFA Level 1 Ethics & Professional Standards with 250+ free practice questions, scenarios, and study tips. 15-20% of exam. Start practicing now!',
+  description: 'Master CFA Level 1 Ethics & Professional Standards with 400+ free practice questions, scenarios, and study tips. 15-20% of exam. Start practicing now!',
   keywords: 'cfa level 1 ethics questions, ethics cfa level 1, cfa ethics practice questions, cfa ethical and professional standards, cfa level 1 ethics sample questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/cfa-level-1-ethics',
@@ -116,7 +116,7 @@ export default function CFALevel1Ethics() {
               CFA Level 1 Ethics & Professional Standards Study Guide
             </h1>
             <p className="text-xl text-purple-100 mb-8">
-              Master the Code of Ethics and Standards of Professional Conduct with 250+ practice questions, real-world scenarios, and proven study strategies.
+              Master the Code of Ethics and Standards of Professional Conduct with 400+ practice questions, real-world scenarios, and proven study strategies.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -322,7 +322,7 @@ export default function CFALevel1Ethics() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-purple-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600">All Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ questions across all 10 topics</p>
+                <p className="text-gray-600 text-sm">2,300+ questions across all 10 topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-purple-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-purple-600">Mock Exams</h3>

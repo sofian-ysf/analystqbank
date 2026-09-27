@@ -5,7 +5,7 @@ import BreadcrumbSchema, { BreadcrumbNavigation } from '@/components/BreadcrumbS
 
 export const metadata: Metadata = {
   title: 'CFA Level 1 Corporate Issuers Questions & Study Guide 2026 | Free Practice',
-  description: 'Master Corporate Issuers for CFA Level 1 (6-9% of exam) with 140+ practice questions. Learn corporate governance, capital structure, and working capital. Start free.',
+  description: 'Master Corporate Issuers for CFA Level 1 (6-9% of exam) with 100+ practice questions. Learn corporate governance, capital structure, and working capital. Start free.',
   keywords: 'cfa level 1 corporate issuers questions, corporate issuers cfa practice, capital structure cfa, corporate governance cfa, cfa corporate issuers study guide',
   alternates: {
     canonical: 'https://www.analysttrainer.com/topics/corporate-issuers',
@@ -117,7 +117,7 @@ export default function CorporateIssuersTopicPage() {
               CFA Level 1 Corporate Issuers Study Guide
             </h1>
             <p className="text-xl text-gray-100 mb-8">
-              Master corporate governance, capital structure, and capital allocation with 140+ practice questions and detailed explanations.
+              Master corporate governance, capital structure, and capital allocation with 100+ practice questions and detailed explanations.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -323,7 +323,7 @@ export default function CorporateIssuersTopicPage() {
             <div className="grid md:grid-cols-3 gap-6">
               <Link href="/cfa-level-1-practice-questions" className="p-6 bg-white rounded-xl border hover:border-gray-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-600">All Practice Questions</h3>
-                <p className="text-gray-600 text-sm">2,500+ questions across all 10 topics</p>
+                <p className="text-gray-600 text-sm">2,300+ questions across all 10 topics</p>
               </Link>
               <Link href="/cfa-level-1-mock-exam" className="p-6 bg-white rounded-xl border hover:border-gray-500 transition-colors group">
                 <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-gray-600">Mock Exams</h3>

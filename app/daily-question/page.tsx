@@ -340,7 +340,7 @@ export default function DailyQuestionPage() {
             Want More Than One Question a Day?
           </h3>
           <p className="text-gray-600 mb-6">
-            Get unlimited access to 2,500+ practice questions with our full question bank.
+            Get unlimited access to 2,300+ practice questions with our full question bank.
           </p>
           <Link
             href="/signup"

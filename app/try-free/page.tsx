@@ -111,7 +111,7 @@ export default function TryFreePage() {
             >
               Get Started
             </Link>
-            <p className="text-xs text-gray-500">2,500+ questions with detailed explanations</p>
+            <p className="text-xs text-gray-500">2,300+ questions with detailed explanations</p>
           </div>
         </main>
       </div>

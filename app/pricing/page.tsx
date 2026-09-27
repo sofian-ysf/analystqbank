@@ -20,7 +20,7 @@ export default function Pricing() {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": "AnalystTrainer CFA Level 1 Exam Prep",
-    "description": "Comprehensive CFA Level 1 exam preparation with 2,000+ practice questions, unlimited mock exams, and detailed explanations.",
+    "description": "Comprehensive CFA Level 1 exam preparation with 2,300+ practice questions, unlimited mock exams, and detailed explanations.",
     "brand": {
       "@type": "Brand",
       "name": "AnalystTrainer"
@@ -99,7 +99,7 @@ export default function Pricing() {
         period: 'one-time',
         description: 'Essential exam preparation',
         features: [
-          '2,000+ practice questions',
+          '2,300+ practice questions',
           'Unlimited mock exams',
           'Detailed explanations',
           'Performance analytics',
@@ -116,7 +116,7 @@ export default function Pricing() {
         period: 'one-time',
         description: 'Extended exam mastery',
         features: [
-          '2,000+ practice questions',
+          '2,300+ practice questions',
           'Unlimited mock exams',
           'Detailed explanations',
           'Performance analytics',
@@ -133,7 +133,7 @@ export default function Pricing() {
         period: 'one-time',
         description: 'Complete lifetime access',
         features: [
-          '2,000+ practice questions',
+          '2,300+ practice questions',
           'Unlimited mock exams',
           'Detailed explanations',
           'Performance analytics',
@@ -149,7 +149,7 @@ export default function Pricing() {
   }
 
   const comparisonFeatures = [
-    { name: 'Practice Questions', tier2: '2,000+', tier6: '2,000+', tierLifetime: '2,000+' },
+    { name: 'Practice Questions', tier2: '2,300+', tier6: '2,300+', tierLifetime: '2,300+' },
     { name: 'Mock Exams', tier2: 'Unlimited', tier6: 'Unlimited', tierLifetime: 'Unlimited' },
     { name: 'Detailed Explanations', tier2: true, tier6: true, tierLifetime: true },
     { name: 'Performance Analytics', tier2: true, tier6: true, tierLifetime: true },

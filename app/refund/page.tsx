@@ -279,7 +279,7 @@ export default function Refund() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Your CFA Journey?</h2>
             <p className="text-gray-600 mb-6">
-              Try our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline">2,500+ practice questions</Link> with confidence. Our 7-day guarantee means you can explore risk-free.
+              Try our <Link href="/cfa-level-1-practice-questions" className="text-[#1FB8CD] hover:underline">2,300+ practice questions</Link> with confidence. Our 7-day guarantee means you can explore risk-free.
             </p>
             <Link
               href="/free-cfa-questions"

@@ -6,15 +6,15 @@ import FloatingGetStartedButton from '../components/FloatingGetStartedButton'
 import DemoQuestion from '@/components/DemoQuestion'
 
 export const metadata: Metadata = {
-  title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Qbank by Charterholders',
-  description: 'Free CFA Level 1 practice questions — 2,500+ written by charterholders. Covers all 10 topics with detailed explanations. Try sample questions instantly, no signup required.',
+  title: 'CFA Level 1 Practice Questions 2026 | 2,300+ Qbank by Charterholders',
+  description: 'Free CFA Level 1 practice questions — 2,300+ written by charterholders. Covers all 10 topics with detailed explanations. Try sample questions instantly, no signup required.',
   keywords: 'cfa practice questions, cfa exam practice questions, cfa level 1 practice questions, cfa sample questions, cfa practice test, cfa level 1 questions, cfa exam questions with answers, cfa mock exam questions',
   alternates: {
     canonical: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
   },
   openGraph: {
-    title: 'CFA Level 1 Practice Questions 2026 | 2,500+ Qbank by Charterholders',
-    description: '2,500+ CFA practice questions covering all 10 CFA Level 1 topics, written by charterholders. Detailed explanations, instant feedback.',
+    title: 'CFA Level 1 Practice Questions 2026 | 2,300+ Qbank by Charterholders',
+    description: '2,300+ CFA practice questions covering all 10 CFA Level 1 topics, written by charterholders. Detailed explanations, instant feedback.',
     url: 'https://www.analysttrainer.com/cfa-level-1-practice-questions',
     type: 'website',
   },
@@ -38,7 +38,7 @@ export default function CFALevel1PracticeQuestions() {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: 'CFA Level 1 Practice Questions',
-    description: '2,500+ CFA Level 1 practice questions with detailed explanations',
+    description: '2,300+ CFA Level 1 practice questions with detailed explanations',
     brand: { '@type': 'Brand', name: 'AnalystTrainer' },
     offers: {
       '@type': 'AggregateOffer',
@@ -56,7 +56,7 @@ export default function CFALevel1PracticeQuestions() {
       {
         '@type': 'Question',
         name: 'How many CFA Level 1 practice questions are included?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Our question bank includes over 2,500 CFA Level 1 practice questions covering all 10 topic areas. Questions are regularly updated to reflect the latest CFA curriculum.' },
+        acceptedAnswer: { '@type': 'Answer', text: 'Our question bank includes over 2,300 CFA Level 1 practice questions covering all 10 topic areas. Questions are regularly updated to reflect the latest CFA curriculum.' },
       },
       {
         '@type': 'Question',
@@ -108,7 +108,7 @@ export default function CFALevel1PracticeQuestions() {
         <section className="hero-section relative pt-24 pb-16 sm:pt-32 sm:pb-24 bg-gradient-to-b from-[#fbfaf4] to-white px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <h1 className="mb-6 text-4xl font-normal tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Question Bank</span> 2026 — <em>2,500+ Questions</em> by Charterholders
+              CFA Level 1 <span className="underline decoration-3 decoration-gray-900 underline-offset-4">Question Bank</span> 2026 — <em>2,300+ Questions</em> by Charterholders
             </h1>
             <p className="mb-8 max-w-2xl text-lg text-gray-600 mx-auto">
               Try a real question below — no signup needed. Pick an answer and see instant explanations.
@@ -130,7 +130,7 @@ export default function CFALevel1PracticeQuestions() {
             <div className="flex justify-center mb-16">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-12 gap-y-4">
                 <div>
-                  <div className="text-2xl font-medium text-gray-900">2,500+</div>
+                  <div className="text-2xl font-medium text-gray-900">2,300+</div>
                   <div className="text-xs text-gray-600">Questions</div>
                 </div>
                 <div>
@@ -152,7 +152,7 @@ export default function CFALevel1PracticeQuestions() {
               <DemoQuestion />
             </div>
             <p className="mt-6 text-base text-gray-500">
-              Want 2,500 more?{' '}
+              Want 2,300 more?{' '}
               <Link href="/try-free" className="font-medium text-[#1FB8CD] hover:text-gray-900 underline underline-offset-4 transition-colors">
                 Try 15 free demo questions →
               </Link>
@@ -217,7 +217,7 @@ export default function CFALevel1PracticeQuestions() {
                   <p className="mt-1 text-xs text-green-600 font-medium">£0.42/day</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -247,7 +247,7 @@ export default function CFALevel1PracticeQuestions() {
                   <p className="mt-1 text-xs text-green-600 font-medium">£0.22/day</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Performance analytics'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -274,7 +274,7 @@ export default function CFALevel1PracticeQuestions() {
                   <p className="mt-1 text-xs text-green-600 font-medium">Best value</p>
                 </div>
                 <div className="py-6 space-y-3">
-                  {['2,000+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'].map((feature) => (
+                  {['2,300+ practice questions', 'Unlimited mock exams', 'Detailed explanations', 'Priority email support'].map((feature) => (
                     <div key={feature} className="flex items-center gap-3">
                       <div className="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                         <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -301,7 +301,7 @@ export default function CFALevel1PracticeQuestions() {
         <section className="py-20 px-4 bg-[#13343B]">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-medium tracking-tight text-white mb-6">
-              Ready to Practise 2,500+ Questions?
+              Ready to Practise 2,300+ Questions?
             </h2>
             <p className="text-xl text-gray-300 mb-8">
               Try 15 questions free — no credit card needed.
@@ -324,7 +324,7 @@ export default function CFALevel1PracticeQuestions() {
             </h2>
             <div className="space-y-4">
               {[
-                { q: 'How many CFA Level 1 practice questions are included?', a: 'Our question bank includes over 2,500 CFA Level 1 practice questions covering all 10 topic areas. Questions are regularly updated to reflect the latest CFA curriculum.' },
+                { q: 'How many CFA Level 1 practice questions are included?', a: 'Our question bank includes over 2,300 CFA Level 1 practice questions covering all 10 topic areas. Questions are regularly updated to reflect the latest CFA curriculum.' },
                 { q: 'Are the questions similar to the actual CFA exam?', a: 'Yes! Our questions mirror the actual CFA Level 1 exam format, difficulty, and topic weighting. Many candidates find our questions slightly harder than the real exam, which better prepares them.' },
                 { q: 'Do practice questions include explanations?', a: 'Every question includes a detailed explanation — why the correct answer is right and why each incorrect option is wrong. This helps you learn from mistakes and understand the underlying concepts.' },
                 { q: 'Can I try CFA Level 1 questions for free?', a: 'Yes! Try a sample question on this page right now — no signup required. When you\'re ready, access 15 more free demo questions and see our full question bank.' },
