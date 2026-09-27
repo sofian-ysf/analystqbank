@@ -80,8 +80,23 @@ function renderTable(lines: string[]): string {
   return `<div class="table-wrap"><table>${thead}${tbody}</table></div>`
 }
 
+
+// New template practice blocks ('**Module N.M practice (LOS-CODE)**' followed
+// by raw question-reference bullets) become a sentinel line; the renderer swaps
+// the sentinel for a styled CTA box. Raw UUIDs never reach the page.
+function practiceSentinels(markdown: string): string {
+  return markdown.replace(
+    /\*\*(Module [\d.]+ practice \([A-Za-z0-9-]+\))\*\*[ \t]*\n+((?:[ \t]*[-*]\s+`(?:[0-9a-f]{8}-\.\.\.|[0-9a-f-]{36})`[^\n]*\n?)+)/g,
+    (_m, label: string, bullets: string) => {
+      const count = (bullets.match(/`(?:[0-9a-f]{8}-\.\.\.|[0-9a-f-]{36})`/g) || []).length
+      const clean = label.replace(/ \([A-Za-z0-9-]+\)$/, '')
+      return `\n@@PRACTICE|${clean}|${count}@@\n`
+    }
+  )
+}
+
 export function renderLessonContent(markdown: string): string {
-  const { text, segments } = extractMath(markdown)
+  const { text, segments } = extractMath(practiceSentinels(markdown))
   const html: string[] = []
   let bullets: string[] = []
   let ordered: string[] = []
@@ -116,6 +131,10 @@ export function renderLessonContent(markdown: string): string {
     } else if (line.startsWith('### ')) {
       flush()
       html.push(`<h3>${renderInline(line.slice(4))}</h3>`)
+    } else if (/^\*\*Module \d+(\.\d+)? [^*]+\*\*$/.test(line)) {
+      // Provider-template module heading written as a bold paragraph.
+      flush()
+      html.push(`<h3>${renderInline(line.replace(/\*\*/g, ''))}</h3>`)
     } else if (line.startsWith('## ')) {
       flush()
       html.push(`<h2>${renderInline(line.slice(3))}</h2>`)
@@ -125,16 +144,45 @@ export function renderLessonContent(markdown: string): string {
       html.push(`<h2>${renderInline(line.slice(2))}</h2>`)
     } else if (line.startsWith('> ')) {
       flush()
-      html.push(`<blockquote>${renderInline(line.slice(2))}</blockquote>`)
+      const quoteLines: string[] = []
+      while (i < lines.length && /^>/.test(lines[i].trim())) {
+        const q = lines[i].trim().replace(/^>\s?/, '')
+        if (q) quoteLines.push(q)
+        i++
+      }
+      i--
+      html.push(
+        `<blockquote>${quoteLines.map((q) => `<p>${renderInline(q)}</p>`).join('')}</blockquote>`
+      )
     } else if (line === '---') {
       flush()
       html.push('<hr />')
     } else if (/^[-*]\s+/.test(line)) {
       if (ordered.length) flush()
-      bullets.push(`<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`)
+      const indent = (lines[i].match(/^\s*/) || [''])[0].length
+      const item = `<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`
+      if (indent >= 2 && bullets.length) {
+        const last = bullets.length - 1
+        bullets[last] = bullets[last].endsWith('</ul></li>')
+          ? bullets[last].replace(/<\/ul><\/li>$/, `${item}</ul></li>`)
+          : bullets[last].replace(/<\/li>$/, `<ul>${item}</ul></li>`)
+      } else {
+        bullets.push(item)
+      }
     } else if (/^\d+[.)]\s+/.test(line)) {
       if (bullets.length) flush()
       ordered.push(`<li>${renderInline(line.replace(/^\d+[.)]\s+/, ''))}</li>`)
+    } else if (line.startsWith('@@PRACTICE|')) {
+      flush()
+      const [, label, count] = line.split('|')
+      const n = parseInt(count, 10) || 0
+      html.push(
+        `<div class="learn-practice-inline"><span class="learn-practice-inline-label">${escapeHtml(
+          label
+        )}</span><span class="learn-practice-inline-count">Check your knowledge: ${n} question${
+          n === 1 ? '' : 's'
+        }</span><a href="/question-bank" class="learn-cta-primary">Open in the question bank</a></div>`
+      )
     } else if (/^\u0000\d+\u0000$/.test(line)) {
       // A standalone display-math block: never wrap block-level HTML in <p>.
       flush()
@@ -145,17 +193,52 @@ export function renderLessonContent(markdown: string): string {
     }
   }
   flush()
-  return restoreMath(html.join('\n'), segments)
+  let out = html.join('\n')
+  const callouts: Array<[RegExp, string]> = [
+    [/<blockquote><p><strong>EXAMPLE:/g, 'learn-example'],
+    [/<blockquote><p><strong>Answer:/g, 'learn-answer'],
+    [/<blockquote><p><strong>EXAM NOTE:?/g, 'learn-exam-note'],
+    [/<blockquote><p><strong>PROFESSOR(&#39;|')S NOTE:?/g, 'learn-professor-note'],
+  ]
+  for (const [pattern, cls] of callouts) {
+    out = out.replace(pattern, (m) => m.replace('<blockquote>', `<blockquote class="${cls}">`))
+  }
+  return restoreMath(out, segments)
 }
 
 /**
- * Free-preview markdown for the paywall: everything before the first ##
- * section heading, or the first two paragraphs when there are no headings.
+ * Strip the leading title block from stored lesson content. The page header
+ * already renders the title, module line and LOS list, so the body skips the
+ * '# Title' heading and the bold '**Module N of M...**' paragraph.
+ */
+export function stripLessonHeader(markdown: string): string {
+  let out = markdown.replace(/^#\s+[^\n]*\n+/, '')
+  out = out.replace(/^\*\*Module [^\n]*\*\*\n+/, '')
+  return out
+}
+
+/**
+ * Drop the trailing '## Practice: ...' section. The page renders its own
+ * practice CTA with a live question count; the stored section is raw question
+ * references, not display content.
+ */
+export function stripPracticeSection(markdown: string): string {
+  const i = markdown.search(/\n## Practice:/)
+  return i > 0 ? markdown.slice(0, i).trimEnd() : markdown
+}
+
+/**
+ * Free-preview markdown for the paywall: the opening block plus the first
+ * section (Learning objectives), so anonymous visitors get a real teaser.
+ * Falls back to the first two paragraphs when there are no headings.
  */
 export function lessonPreviewMarkdown(markdown: string): string {
-  const splitAt = markdown.search(/\n## /)
-  if (splitAt > 0) {
-    return markdown.slice(0, splitAt).trim()
+  const headings = [...markdown.matchAll(/\n## /g)].map((m) => m.index!)
+  if (headings.length >= 2) {
+    return markdown.slice(0, headings[1]).trim()
+  }
+  if (headings.length === 1) {
+    return markdown.slice(0, headings[0]).trim()
   }
   const paragraphs = markdown.split(/\n\s*\n/).filter(Boolean)
   return paragraphs.slice(0, 2).join('\n\n')

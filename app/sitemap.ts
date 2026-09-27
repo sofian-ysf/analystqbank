@@ -282,67 +282,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]
   }
 
-  let learnPages: MetadataRoute.Sitemap = []
-  try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-    if (supabaseUrl && supabaseServiceKey) {
-      const supabase = createAdminClient()
-      const { data: lessons } = await supabase
-        .from('lessons')
-        .select('topic, slug, updated_at, published_at')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-
-      const topicSlug = (topicName: string) =>
-        topicName.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-
-      learnPages = [
-        {
-          url: `${baseUrl}/learn`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.8,
-        },
-        ...(lessons || []).map((lesson) => ({
-          url: `${baseUrl}/learn/${topicSlug(lesson.topic)}/${lesson.slug}`,
-          lastModified: new Date(lesson.updated_at || lesson.published_at),
-          changeFrequency: 'monthly' as const,
-          priority: 0.6,
-        })),
-      ]
-    } else {
-      learnPages = [
-        {
-          url: `${baseUrl}/learn`,
-          lastModified: new Date(),
-          changeFrequency: 'weekly',
-          priority: 0.8,
-        },
-      ]
-    }
-  } catch (error) {
-    console.error('Error fetching lessons for sitemap:', error)
-    learnPages = [
-      {
-        url: `${baseUrl}/learn`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.8,
-      },
-    ]
-  }
-
   return [
     ...staticPages,
-    ...faqPages,
-    ...toolsPages,
-    ...comparePages,
-    ...topicsHub,
-    ...topicPages,
-    ...landingPages,
     ...blogPages,
-    ...learnPages,
   ]
 }
