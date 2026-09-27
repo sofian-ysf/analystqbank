@@ -5,7 +5,12 @@ import Navigation from '../../../components/Navigation'
 import { createAdminClient } from '@/lib/supabase'
 import { createClient } from '@/app/lib/supabase/server'
 import { topicBySlug } from '@/lib/lesson-topics'
-import { renderLessonContent, lessonPreviewMarkdown } from '@/lib/lesson-content'
+import {
+  renderLessonContent,
+  lessonPreviewMarkdown,
+  stripLessonHeader,
+  stripPracticeSection,
+} from '@/lib/lesson-content'
 import '../../learn.css'
 
 // Reads auth cookies for the paywall check, so this page is always dynamic.
@@ -114,7 +119,9 @@ export default async function LessonPage({ params }: Props) {
   const access = lesson.is_free || (await hasPaidAccess())
   const questionCount = await practiceQuestionCount(lesson.los_codes || [])
 
-  const markdown = access ? lesson.content : lessonPreviewMarkdown(lesson.content)
+  const markdown = access
+    ? stripLessonHeader(stripPracticeSection(lesson.content))
+    : stripLessonHeader(lessonPreviewMarkdown(lesson.content))
   const html = renderLessonContent(markdown)
 
   return (
@@ -160,9 +167,9 @@ export default async function LessonPage({ params }: Props) {
             <div className="learn-paywall">
               <h2>Keep reading with a paid plan</h2>
               <p>
-                This sample is free. The full lesson library is included with
-                every paid AnalystTrainer plan, alongside the question bank,
-                mock exams and flashcards.
+                The full lesson library is included with every paid
+                AnalystTrainer plan, alongside the question bank, mock exams
+                and flashcards.
               </p>
               <div className="learn-paywall-actions">
                 <Link href="/signup?plan=6month" className="learn-cta-primary">

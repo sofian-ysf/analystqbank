@@ -276,6 +276,58 @@
   color: #55534c;
 }
 
+
+.learn-practice-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 28px 0;
+  padding: 16px 20px;
+  background: #f6f3e9;
+  border: 1px solid #e8e5da;
+  border-radius: 12px;
+}
+
+.learn-practice-inline-label {
+  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.learn-practice-inline-count {
+  font-size: 14px;
+  color: #55534c;
+  margin-right: auto;
+}
+
+.learn-practice-inline .learn-cta-primary {
+  font-size: 14px;
+  padding: 10px 18px;
+}
+
+.learn-lesson-content blockquote.learn-example {
+  background: #eef3f8;
+  border-left-color: #7aa5c4;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+}
+
+.learn-lesson-content blockquote.learn-professor-note {
+  background: #f6f3e9;
+  border-left-color: #c9a86a;
+  border-radius: 0 10px 10px 0;
+  padding: 12px 16px;
+}
+
+.learn-lesson-content blockquote p {
+  margin: 0 0 8px;
+}
+
+.learn-lesson-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
 .learn-lesson-content code {
   background: #f1efe6;
   border-radius: 5px;
