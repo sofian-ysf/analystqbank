@@ -159,7 +159,16 @@ export function renderLessonContent(markdown: string): string {
       html.push('<hr />')
     } else if (/^[-*]\s+/.test(line)) {
       if (ordered.length) flush()
-      bullets.push(`<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`)
+      const indent = (lines[i].match(/^\s*/) || [''])[0].length
+      const item = `<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`
+      if (indent >= 2 && bullets.length) {
+        const last = bullets.length - 1
+        bullets[last] = bullets[last].endsWith('</ul></li>')
+          ? bullets[last].replace(/<\/ul><\/li>$/, `${item}</ul></li>`)
+          : bullets[last].replace(/<\/li>$/, `<ul>${item}</ul></li>`)
+      } else {
+        bullets.push(item)
+      }
     } else if (/^\d+[.)]\s+/.test(line)) {
       if (bullets.length) flush()
       ordered.push(`<li>${renderInline(line.replace(/^\d+[.)]\s+/, ''))}</li>`)
