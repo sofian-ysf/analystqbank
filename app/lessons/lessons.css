@@ -286,6 +286,10 @@
   margin-bottom: 10px;
 }
 
+.learn-lesson-content li > ul {
+  margin: 8px 0 2px;
+}
+
 .learn-lesson-content blockquote {
   border-left: 3px solid #c9a86a;
   margin: 0 0 18px;
