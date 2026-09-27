@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import 'katex/dist/katex.min.css'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import MemberShell from '@/components/dashboard/MemberShell'
