@@ -80,6 +80,9 @@ export default function Navigation() {
             <Link href="/blog" className="pill-nav-item">
               Blog
             </Link>
+            <Link href="/learn" className="pill-nav-item">
+              Lessons
+            </Link>
           </div>
 
           {/* Right Pill - CTA */}
@@ -148,6 +151,9 @@ export default function Navigation() {
             </Link>
             <Link href="/blog" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
               Blog
+            </Link>
+            <Link href="/learn" className="pill-mobile-nav-link" onClick={closeMobileMenu}>
+              Lessons
             </Link>
           </div>
 
