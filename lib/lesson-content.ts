@@ -243,3 +243,52 @@ export function lessonPreviewMarkdown(markdown: string): string {
   const paragraphs = markdown.split(/\n\s*\n/).filter(Boolean)
   return paragraphs.slice(0, 2).join('\n\n')
 }
+
+export interface LessonModuleSlice {
+  /** Full heading text without the leading '## ', e.g. 'MODULE 3: BONDS' */
+  heading: string
+  /** Markdown body of this module, heading line included */
+  markdown: string
+}
+
+/**
+ * Split stored lesson content into an intro (everything before the first
+ * '## MODULE' heading) and one slice per module. Lessons without module
+ * headings (legacy seed format) return an empty modules array and the caller
+ * keeps the single-page rendering path.
+ */
+export function splitLessonModules(markdown: string): {
+  intro: string
+  modules: LessonModuleSlice[]
+} {
+  const matches = [...markdown.matchAll(/^## MODULE .*$/gm)]
+  if (!matches.length) return { intro: markdown, modules: [] }
+  const intro = markdown.slice(0, matches[0].index).trimEnd()
+  const modules: LessonModuleSlice[] = matches.map((m, i) => {
+    const start = m.index!
+    const end = i + 1 < matches.length ? matches[i + 1].index! : markdown.length
+    const slice = markdown.slice(start, end).trim()
+    return { heading: m[0].replace(/^## /, ''), markdown: slice }
+  })
+  return { intro, modules }
+}
+
+/**
+ * Display label for a module heading: 'MODULE 1.2: YIELDS' -> { num: '1.2',
+ * title: 'Yields' }. Falls back to the raw heading when the shape differs.
+ */
+export function moduleHeadingParts(heading: string): { num: string; title: string } {
+  const m = heading.match(/^MODULE ([\d.]+):\s*(.+)$/i)
+  if (!m) return { num: '', title: heading }
+  const small = new Set(['a','an','and','as','at','but','by','for','in','of','on','or','the','to','vs','with'])
+  const title = m[2]
+    .toLowerCase()
+    .split(' ')
+    .map((w, i) => {
+      if (/^(i|ii|iii|iv|vi?|vii|viii|ix|x)$/.test(w)) return w.toUpperCase()
+      if (i > 0 && small.has(w)) return w
+      return w.charAt(0).toUpperCase() + w.slice(1)
+    })
+    .join(' ')
+  return { num: m[1], title }
+}

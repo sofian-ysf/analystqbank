@@ -544,3 +544,183 @@
   border-radius: 0 10px 10px 0;
   padding: 12px 16px;
 }
+
+/* Module stepper: tear-sheet navigation, completion ticks, competence rating */
+
+.learn-stepper {
+  margin-top: 28px;
+}
+
+.learn-stepper-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.learn-step-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.learn-step-chip {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid #e8e5da;
+  background: #fff;
+  color: #55534c;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.learn-step-chip:hover {
+  border-color: #c9a86a;
+}
+
+.learn-step-chip.is-active {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fbfaf4;
+}
+
+.learn-step-chip.is-done:not(.is-active) {
+  border-color: #9db8a4;
+  color: #3f6b4f;
+}
+
+.learn-step-chip-tick {
+  margin-right: 5px;
+}
+
+.learn-step-chip.is-active .learn-step-chip-tick {
+  color: #a9d3b6;
+}
+
+.learn-stepper-progress {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  color: #8a877d;
+  margin: 0;
+}
+
+.learn-stepper-heading {
+  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+  margin: 0 0 18px;
+}
+
+.learn-module-panel {
+  margin: 36px 0 0;
+  padding: 22px 26px;
+  background: #f6f3e9;
+  border: 1px solid #e8e5da;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.learn-module-panel-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.learn-module-panel-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.learn-rating {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.learn-rating-btn {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #e8e5da;
+  background: #fff;
+  color: #55534c;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.learn-rating-btn:hover {
+  border-color: #c9a86a;
+}
+
+.learn-rating-btn.is-picked {
+  background: #1a1a1a;
+  border-color: #1a1a1a;
+  color: #fbfaf4;
+}
+
+.learn-complete-btn {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid #1a1a1a;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.learn-complete-btn.is-done {
+  background: #3f6b4f;
+  border-color: #3f6b4f;
+  color: #fff;
+}
+
+.learn-save-error {
+  font-size: 13px;
+  color: #b3452e;
+}
+
+.learn-stepper-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 32px 0 0;
+}
+
+.learn-nav-btn {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid #e8e5da;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.learn-nav-btn:hover {
+  border-color: #c9a86a;
+}
+
+.learn-nav-next {
+  border: none;
+  cursor: pointer;
+}
